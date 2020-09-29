@@ -23,7 +23,7 @@ pub async fn lens_form_handler(data: web::Data<AppData>, _req:HttpRequest) -> im
 }
 
 #[post("/lens_form")]
-pub async fn handle_lenses_form_input(data: web::Data<AppData>, req: HttpRequest, form: web::Form<FormLens>) -> impl Responder {
+pub async fn handle_lenses_form_input(_data: web::Data<AppData>, req: HttpRequest, form: web::Form<FormLens>) -> impl Responder {
     println!("Handling Post Request: {:?}", req);
 
     println!("{:?}", form);
