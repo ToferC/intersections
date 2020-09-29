@@ -10,8 +10,6 @@ use diesel::r2d2::{self, ConnectionManager};
 mod models;
 mod handlers;
 
-use models::{Domain, Lens, LivedStatement};
-
 pub struct AppData {
     tmpl: Tera
 }

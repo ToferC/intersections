@@ -31,27 +31,18 @@ pub async fn handle_lenses_form_input(data: web::Data<AppData>, req: HttpRequest
     let mut p = Person::new(01);
 
     let mut lived_statements = vec!();
-    let mut inclusivity: f64;
+    let inclusivity: f64;
 
     if &form.response_1 != "" {
-        let ls = LivedStatement {
-            adjective: form.response_1.to_owned()
-        };
-        lived_statements.push(ls);
+        lived_statements.push(LivedStatement::new(form.response_1.to_owned()));
     };
 
     if &form.response_2 != "" {
-        let ls = LivedStatement {
-            adjective: form.response_2.to_owned()
-        };
-        lived_statements.push(ls);
+        lived_statements.push(LivedStatement::new(form.response_2.to_owned()));
     };
 
     if &form.response_3 != "" {
-        let ls = LivedStatement {
-            adjective: form.response_3.to_owned()
-        };
-        lived_statements.push(ls);
+        lived_statements.push(LivedStatement::new(form.response_3.to_owned()));
     };
 
     inclusivity = form.inclusivity as f64 / 100.0;
