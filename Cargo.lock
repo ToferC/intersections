@@ -950,7 +950,7 @@ dependencies = [
  "diesel_derives",
  "pq-sys",
  "r2d2",
- "uuid 0.8.1",
+ "uuid",
 ]
 
 [[package]]
@@ -1524,7 +1524,6 @@ checksum = "55e2e4c765aa53a0424761bf9f41aa7a6ac1efa87238f59560640e27fca028f2"
 dependencies = [
  "autocfg",
  "hashbrown",
- "serde",
 ]
 
 [[package]]
@@ -1558,8 +1557,8 @@ dependencies = [
  "env_logger",
  "futures",
  "graphql_client",
- "juniper",
  "r2d2",
+ "rand",
  "reqwest",
  "serde",
  "serde_derive",
@@ -1607,33 +1606,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "ca059e81d9486668f12d455a4ea6daa600bd408134cd17e3d3fb5a32d1f016f8"
 dependencies = [
  "wasm-bindgen",
-]
-
-[[package]]
-name = "juniper"
-version = "0.14.2"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f662ba51e2fbc3d6dd1ca66be70b44963606a34473156abddcb0351fc6caa668"
-dependencies = [
- "chrono",
- "fnv",
- "indexmap",
- "juniper_codegen",
- "serde",
- "serde_derive",
- "url",
- "uuid 0.7.4",
-]
-
-[[package]]
-name = "juniper_codegen"
-version = "0.14.2"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d40af234d8e971a9d7dda93ffbcc8a44a93f17e69e3067f72ce7a6894c41d51b"
-dependencies = [
- "proc-macro2",
- "quote",
- "syn",
 ]
 
 [[package]]
@@ -2981,21 +2953,15 @@ dependencies = [
 
 [[package]]
 name = "uuid"
-version = "0.7.4"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "90dbc611eb48397705a6b0f6e917da23ae517e4d127123d2cf7674206627d32a"
-
-[[package]]
-name = "uuid"
 version = "0.8.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "9fde2f6a4bea1d6e007c4ad38c6839fa71cbb63b6dbf5b595aa38dc9b1093c11"
 
 [[package]]
 name = "v_escape"
-version = "0.13.0"
+version = "0.13.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "05f4cff00d3dcfad00221a513085d5e1e4869b83257fef86ef50ff682838b525"
+checksum = "5b6314c83e6ae8556969799ae20138813dfc3d0959c16208d867cbdd7fe73eb3"
 dependencies = [
  "buf-min",
  "v_escape_derive",
@@ -3003,9 +2969,9 @@ dependencies = [
 
 [[package]]
 name = "v_escape_derive"
-version = "0.8.2"
+version = "0.8.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "23d6063660a51b72d258a710e72cdfa0962eb03061feba019199e547a9f79814"
+checksum = "b84a391de8678b76ec6c1ff762a77688a6132f6ea58a35c744afd8ad070786c2"
 dependencies = [
  "nom",
  "proc-macro2",
@@ -3015,9 +2981,9 @@ dependencies = [
 
 [[package]]
 name = "v_htmlescape"
-version = "0.10.2"
+version = "0.10.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "dc487b8434a86070f49299ff0be3a5b079c8c4d951ced6e0885ff54228dd5bd7"
+checksum = "42ed178900cccc57f65a0f6515376b8673a2f165ddfa0b509c708c761a372b4b"
 dependencies = [
  "cfg-if",
  "v_escape",

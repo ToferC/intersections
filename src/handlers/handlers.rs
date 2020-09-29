@@ -3,7 +3,7 @@ use crate::AppData;
 use tera::{Context};
 
 #[get("/")]
-async fn index(data: web::Data<AppData>, _req:HttpRequest) -> impl Responder {
+pub async fn index(data: web::Data<AppData>, _req:HttpRequest) -> impl Responder {
     let ctx = Context::new(); 
     let rendered = data.tmpl.render("index.html", &ctx).unwrap();
     HttpResponse::Ok().body(rendered)

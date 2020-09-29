@@ -1,4 +1,5 @@
 use serde::{Serialize, Deserialize};
+use chrono::Utc;
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
 /// Represents an intersectional lens of lived human experience.
@@ -8,6 +9,7 @@ use serde::{Serialize, Deserialize};
 /// https://www.aecf.org/m/blogdoc/PersonRoleSystemFramework-2013.pdf
 pub struct Lens {
     pub name: String,
+    pub date_created: chrono::DateTime<Utc>,
     pub domain: Domain,
     pub statements: Vec<LivedStatement>,
     pub inclusivity: f64,
@@ -17,6 +19,7 @@ impl Lens {
     pub fn new(name: String, domain: Domain, statements: Vec<LivedStatement>, inclusivity: f64) -> Self {
         Lens {
             name: name,
+            date_created: Utc::now(),
             domain: domain,
             statements: statements,
             inclusivity: inclusivity,  
