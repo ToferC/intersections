@@ -23,7 +23,7 @@ impl Person {
     }
 }
 
-fn generate_unique_code() -> String {
+pub fn generate_unique_code() -> String {
     let rand_string: String = thread_rng()
         .sample_iter(&Alphanumeric)
         .take(9)

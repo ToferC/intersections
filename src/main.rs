@@ -53,10 +53,8 @@ async fn main() -> std::io::Result<()> {
             "templates/**/*").unwrap();
 
         App::new()
+            .configure(handlers::init_routes)
             .data(AppData {tmpl: tera} )
-            .service(handlers::index)
-            .service(handlers::lens_form_handler)
-            .service(handlers::handle_lenses_form_input)
     })
     .bind(format!("{}:{}", host, port))?
     .run()
