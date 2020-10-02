@@ -1,11 +1,13 @@
 use actix_web::{web, get, HttpResponse, HttpRequest, Responder};
 use crate::AppData;
 use tera::{Context};
+
+use num_bigint::{BigInt, ToBigInt};
 use bigdecimal::BigDecimal;
-use num_bigint::ToBigInt;
 
 use crate::models::{Person, Lens, Domain};
-use crate::handlers::{lens_form_handler, handle_lens_form_input};
+use crate::handlers::{lens_form_handler, handle_lens_form_input,
+    };
 
 pub fn init_routes(config: &mut web::ServiceConfig) {
     config.service(index);
@@ -35,11 +37,14 @@ pub async fn find_person() -> impl Responder {
 
 #[get("/lens/{id}")]
 pub async fn find_lens() -> impl Responder {
+
+    let r: i64 = 88;
+    
     HttpResponse::Ok().json(Lens::new(
         String::from("Default"),
         Domain::Person,
         vec!(),
-        88,     
+        BigDecimal::new(r.to_bigint().unwrap(), -2),     
     ))
 }
 

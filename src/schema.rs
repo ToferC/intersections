@@ -16,8 +16,8 @@ table! {
         id -> Int4,
         lens_name -> Varchar,
         date_created -> Timestamp,
-        domain -> Varchar,
-        inclusivity -> Int4,
+        domain_token -> Domain,
+        inclusivity -> Numeric,
         statements -> Nullable<Array<Text>>,
         person_id -> Int4,
     }

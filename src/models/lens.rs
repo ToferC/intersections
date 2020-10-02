@@ -1,7 +1,7 @@
 #[macro_use]
 use serde::{Serialize, Deserialize};
-use diesel::prelude::*;
 use diesel_derive_enum::DbEnum;
+use bigdecimal::BigDecimal;
 
 use crate::schema::lenses;
 use super::person::Person;
@@ -18,20 +18,20 @@ pub struct Lens {
     pub person_id: i32,
     pub lens_name: String,
     pub date_created: chrono::NaiveDateTime,
-    pub domain: Domain,
+    pub domain_token: Domain,
     // A lived statement of experience based on the lens.
     // Expressed as "In the workplace, this lens makes me feel {adjective}."
     pub statements: Vec<String>,
-    pub inclusivity: i32,
+    pub inclusivity: BigDecimal,
 }
 
 impl Lens {
-    pub fn new(name: String, domain: Domain, statements: Vec<String>, inclusivity: i32) -> Self {
+    pub fn new(name: String, domain: Domain, statements: Vec<String>, inclusivity: BigDecimal) -> Self {
         Lens {
             person_id: 1,  
             lens_name: name,
             date_created: chrono::NaiveDate::from_ymd(2020, 6, 6).and_hms(3, 3, 3),
-            domain: domain,
+            domain_token: domain,
             statements: statements,
             inclusivity: inclusivity,
         }

@@ -2,7 +2,6 @@ use rand::{thread_rng, Rng};
 use rand::distributions::Alphanumeric;
 use serde::{Serialize, Deserialize};
 use chrono::prelude::*;
-use diesel::prelude::*;
 
 use super::lens::Lens;
 use crate::schema::{lenses, persons};
