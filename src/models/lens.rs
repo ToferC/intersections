@@ -6,7 +6,7 @@ use bigdecimal::BigDecimal;
 use crate::schema::lenses;
 use super::person::Person;
 
-#[derive(Serialize, Deserialize, Debug, Clone, Associations, Queryable, PartialEq)]
+#[derive(Serialize, Deserialize, Debug, Clone, Associations, Insertable, Queryable, PartialEq)]
 #[belongs_to(Person)]
 #[table_name = "lenses"]
 /// Represents an intersectional lens of lived human experience.
