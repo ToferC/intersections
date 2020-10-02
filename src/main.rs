@@ -1,14 +1,22 @@
+#[macro_use]
 extern crate diesel;
+
+#[macro_use]
+extern crate diesel_migrations;
 
 use std::env;
 use actix_web::{App, HttpServer, web, middleware};
 use tera::Tera;
+use listenfd::ListenFd;
 
 use diesel::prelude::*;
 use diesel::r2d2::{self, ConnectionManager};
 
 mod models;
 mod handlers;
+mod schema;
+mod database;
+mod error_handler;
 
 pub struct AppData {
     tmpl: Tera
@@ -35,17 +43,9 @@ async fn main() -> std::io::Result<()> {
         (String::from("127.0.0.1"), String::from("8088"))
     };
 
-    /*
-    // create database connection pool
-    // Diesel Postgres
-    let database_url = std::env::var("DATABASE_URL").expect("DATABASE_URL must be set");
+    database::init();
 
-    let manager = ConnectionManager::<PgConnection>::new(database_url);
-    let pool: Pool = r2d2::Pool::builder()
-        .build(manager)
-        .expect("Failed to create pool.");
-
-    */
+    let mut listenfd = ListenFd::from_env();
 
     HttpServer::new(move || {
 

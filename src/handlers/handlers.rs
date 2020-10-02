@@ -1,6 +1,8 @@
 use actix_web::{web, get, HttpResponse, HttpRequest, Responder};
 use crate::AppData;
 use tera::{Context};
+use bigdecimal::BigDecimal;
+use num_bigint::ToBigInt;
 
 use crate::models::{Person, Lens, Domain};
 use crate::handlers::{lens_form_handler, handle_lens_form_input};
@@ -28,7 +30,7 @@ pub async fn api_base() -> impl Responder {
 
 #[get("/person/{id}")]
 pub async fn find_person() -> impl Responder {
-    HttpResponse::Ok().json(Person::new(2))
+    HttpResponse::Ok().json(Person::new())
 }
 
 #[get("/lens/{id}")]
@@ -37,7 +39,8 @@ pub async fn find_lens() -> impl Responder {
         String::from("Default"),
         Domain::Person,
         vec!(),
-        0.88))
+        88,     
+    ))
 }
 
 

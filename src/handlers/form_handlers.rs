@@ -1,9 +1,11 @@
 use actix_web::{web, HttpRequest, HttpResponse, Responder, post, get};
+use bigdecimal::BigDecimal;
+use num_bigint::ToBigInt;
 use tera::Context;
 use serde::Deserialize;
 
 use crate::AppData;
-use crate::models::{Lens, Domain, LivedStatement, Person};
+use crate::models::{Lens, Domain, Person};
 
 #[derive(Deserialize, Debug)]
 pub struct FormLens {
@@ -28,24 +30,24 @@ pub async fn handle_lens_form_input(_data: web::Data<AppData>, req: HttpRequest,
 
     println!("{:?}", form);
 
-    let mut p = Person::new(01);
+    let mut p = Person::new();
 
     let mut lived_statements = vec!();
-    let inclusivity: f64;
+    let inclusivity: i32;
 
     if &form.response_1 != "" {
-        lived_statements.push(LivedStatement::new(form.response_1.to_owned()));
+        lived_statements.push(form.response_1.to_owned());
     };
 
     if &form.response_2 != "" {
-        lived_statements.push(LivedStatement::new(form.response_2.to_owned()));
+        lived_statements.push(form.response_2.to_owned());
     };
 
     if &form.response_3 != "" {
-        lived_statements.push(LivedStatement::new(form.response_3.to_owned()));
+        lived_statements.push(form.response_3.to_owned());
     };
 
-    inclusivity = form.inclusivity as f64 / 100.0;
+    inclusivity = form.inclusivity;
 
     let l = Lens::new(
         form.name.to_owned(),
@@ -54,9 +56,7 @@ pub async fn handle_lens_form_input(_data: web::Data<AppData>, req: HttpRequest,
         inclusivity,
     );
 
-    p.lenses.push(l);
-
-    println!("{:?}", p);
+    println!("{:?} -- {:?}", l, p);
 
     HttpResponse::Found().header("Location", "/lens_form").finish()
 }

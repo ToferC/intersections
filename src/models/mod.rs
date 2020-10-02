@@ -1,5 +1,5 @@
 pub mod lens;
 pub mod person;
 
-pub use lens::{Domain, Lens, LivedStatement};
-pub use person::Person;
+pub use lens::{Domain, Lens};
+pub use person::{Person, generate_unique_code};
