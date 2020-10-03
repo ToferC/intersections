@@ -2,10 +2,10 @@ use actix_web::{web, get, HttpResponse, HttpRequest, Responder};
 use crate::AppData;
 use tera::{Context};
 
-use num_bigint::{BigInt, ToBigInt};
+use num_bigint::{ToBigInt};
 use bigdecimal::BigDecimal;
 
-use crate::models::{Person, Lens, Domain};
+use crate::models::{Person, Lens};
 use crate::handlers::{lens_form_handler, handle_lens_form_input,
     };
 
@@ -42,7 +42,7 @@ pub async fn find_lens() -> impl Responder {
     
     HttpResponse::Ok().json(Lens::new(
         String::from("Default"),
-        Domain::Person,
+        String::from("Person"),
         vec!(),
         BigDecimal::new(r.to_bigint().unwrap(), -2),     
     ))

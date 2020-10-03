@@ -6,18 +6,11 @@ CREATE TABLE persons (
     date_created TIMESTAMP NOT NULL default CURRENT_DATE
 );
 
-CREATE TYPE domain AS ENUM ('person', 'role', 'system');
-
-CREATE TABLE domains (
-    id SERIAL PRIMARY KEY,
-    domain_token domain NOT NULL
-);
-
 CREATE TABLE lenses (
     id SERIAL PRIMARY KEY,
     lens_name VARCHAR(255) NOT NULL,
     date_created TIMESTAMP NOT NULL default CURRENT_DATE,
-    domain_token domain NOT NULL,
+    domain_token VARCHAR(10) NOT NULL,
     inclusivity NUMERIC NOT NULL,
     statements TEXT[],
     person_id INT NOT NULL,

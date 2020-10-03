@@ -1,16 +1,16 @@
 use actix_web::{web, HttpRequest, HttpResponse, Responder, post, get};
 use bigdecimal::BigDecimal;
-use num_bigint::ToBigInt;
+use num_bigint::{BigInt, ToBigInt};
 use tera::Context;
 use serde::Deserialize;
 
 use crate::AppData;
-use crate::models::{Lens, Domain, Person};
+use crate::models::{Lens, Person};
 
 #[derive(Deserialize, Debug)]
 pub struct FormLens {
     name: String,
-    domain: Domain,
+    domain: String,
     response_1: String,
     response_2: String,
     response_3: String,

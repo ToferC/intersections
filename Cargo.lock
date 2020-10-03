@@ -659,17 +659,6 @@ dependencies = [
  "num-bigint 0.2.6",
  "num-integer",
  "num-traits",
-]
-
-[[package]]
-name = "bigdecimal"
-version = "0.2.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "cc403c26e6b03005522e6e8053384c4e881dfe5b2bf041c0c2c49be33d64a539"
-dependencies = [
- "num-bigint 0.3.0",
- "num-integer",
- "num-traits",
  "serde",
 ]
 
@@ -975,7 +964,7 @@ version = "1.4.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "3e2de9deab977a153492a1468d1b1c0662c1cf39e5ea87d0c060ecd59ef18d8c"
 dependencies = [
- "bigdecimal 0.1.2",
+ "bigdecimal",
  "bitflags",
  "byteorder",
  "chrono",
@@ -1603,12 +1592,11 @@ dependencies = [
  "actix-files",
  "actix-multipart",
  "actix-rt",
- "actix-service",
  "actix-web 3.1.0",
  "actix-web-httpauth",
  "alcoholic_jwt",
  "bdays",
- "bigdecimal 0.2.0",
+ "bigdecimal",
  "bytes",
  "calamine",
  "chrono",
@@ -1624,7 +1612,7 @@ dependencies = [
  "lazy_static",
  "listenfd",
  "num",
- "num-bigint 0.3.0",
+ "num-bigint 0.2.6",
  "r2d2",
  "rand",
  "reqwest",

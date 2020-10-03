@@ -18,7 +18,7 @@ pub struct Lens {
     pub person_id: i32,
     pub lens_name: String,
     pub date_created: chrono::NaiveDateTime,
-    pub domain_token: Domain,
+    pub domain_token: String,
     // A lived statement of experience based on the lens.
     // Expressed as "In the workplace, this lens makes me feel {adjective}."
     pub statements: Vec<String>,
@@ -26,7 +26,7 @@ pub struct Lens {
 }
 
 impl Lens {
-    pub fn new(name: String, domain: Domain, statements: Vec<String>, inclusivity: BigDecimal) -> Self {
+    pub fn new(name: String, domain: String, statements: Vec<String>, inclusivity: BigDecimal) -> Self {
         Lens {
             person_id: 1,  
             lens_name: name,
