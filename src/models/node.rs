@@ -7,7 +7,7 @@ use crate::database;
 
 use crate::schema::nodes;
 
-#[derive(Serialize, Deserialize, Debug, Clone, Insertable, Queryable, PartialEq)]
+#[derive(Debug, Serialize, Deserialize, AsChangeset, Insertable)]
 #[table_name = "nodes"]
 pub struct Node {
     node_name: String,
@@ -30,7 +30,7 @@ impl Node {
     }
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone, Insertable, Queryable, PartialEq)]
+#[derive(Serialize, Deserialize, Queryable, Insertable)]
 #[table_name = "nodes"]
 pub struct Nodes {
     id: i32,
@@ -60,7 +60,7 @@ impl Nodes {
         Ok(node)
     }
 
-    pub fn update(id: i32, node: &Node) -> result<Vec<Self>, CustomError> {
+    pub fn update(id: i32, node: &Node) -> Result<Vec<Self>, CustomError> {
         let conn = database::connection()?;
         let node = diesel::update(nodes::table)
             .filter(nodes::id.eq(id))
@@ -70,7 +70,7 @@ impl Nodes {
     }
 
     pub fn delete(id: i32) -> Result<usize, CustomError> {
-        let conn = database::connection();
+        let conn = database::connection()?;
         let res = diesel::delete(nodes::table.filter(nodes::id.eq(id))).execute(&conn)?;
         Ok(res)
     }

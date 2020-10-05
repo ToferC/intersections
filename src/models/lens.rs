@@ -12,7 +12,7 @@ use super::node::Node;
 
 use crate::schema::{lenses, people};
 
-#[derive(Serialize, Deserialize, Debug, Clone, Associations, Insertable, Queryable, PartialEq)]
+#[derive(Debug, Serialize, Deserialize, AsChangeset, Insertable, Associations)]
 #[belongs_to(Person, Node)]
 #[table_name = "lenses"]
 /// Represents an intersectional lens of lived human experience.
@@ -47,12 +47,13 @@ impl Lens {
             person_id: lens.person_id,
             node_id: lens.node_id, 
             date_created: lens.date_created,
-            statements: lens.statements,
-            inclusivity: lens.inclusivity,
+            statements: lens.statements.clone(),
+            inclusivity: lens.inclusivity.clone(),
         }
     }
 }
 
+/*
 #[derive(Serialize, Deserialize, Queryable, Insertable, Associations)]
 #[belongs_to(Person, Node)]
 #[table_name = "lenses"]
@@ -104,3 +105,4 @@ impl Lenses {
         Ok(res)
     }
 }
+*/

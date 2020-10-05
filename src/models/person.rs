@@ -3,6 +3,7 @@ use rand::distributions::Alphanumeric;
 use serde::{Serialize, Deserialize};
 use chrono::prelude::*;
 use diesel::prelude::*;
+use diesel::RunQueryDsl;
 
 use crate::schema::{people};
 use crate::error_handler::CustomError;
@@ -49,11 +50,11 @@ pub struct People {
 impl People {
     pub fn create(person: &Person) -> Result<Vec<Self>, CustomError> {
         let conn = database::connection()?;
-        let p = Person::from(person);
-        let p = diesel::insert_into(people::table)
-            .values(p)
+        let person = Person::from(person);
+        let person = diesel::insert_into(people::table)
+            .values(person)
             .get_results(&conn)?;
-        Ok(p)
+        Ok(person)
     }
 
     pub fn find_all() -> Result<Vec<Self>, CustomError> {

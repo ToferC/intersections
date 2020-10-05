@@ -6,6 +6,7 @@ use serde::Deserialize;
 
 use crate::AppData;
 use crate::models::{Lens, Person, People};
+use crate::schema::people;
 
 #[derive(Deserialize, Debug)]
 pub struct FormLens {
