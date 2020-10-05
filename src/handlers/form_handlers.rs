@@ -5,7 +5,7 @@ use tera::Context;
 use serde::Deserialize;
 
 use crate::AppData;
-use crate::models::{Lens, Person, Persons};
+use crate::models::{Lens, Person, People};
 
 #[derive(Deserialize, Debug)]
 pub struct FormLens {
@@ -58,7 +58,7 @@ pub async fn handle_lens_form_input(_data: web::Data<AppData>, req: HttpRequest,
     );
 
     // Post person to db
-    let persons = Persons::create(&p).expect("Unable to add person to DB");
+    let people = People::create(&p).expect("Unable to add person to DB");
 
     // Check if node exists, if not create it
 

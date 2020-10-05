@@ -1,4 +1,4 @@
-CREATE TABLE persons (
+CREATE TABLE people (
     id SERIAL PRIMARY KEY,
     code VARCHAR(9) NOT NULL,
     hash_code VARCHAR(30) NOT NULL,
@@ -21,5 +21,5 @@ CREATE TABLE lenses (
         REFERENCES nodes(id) on DELETE CASCADE,
     person_id INT NOT NULL,
     FOREIGN KEY(person_id)
-        REFERENCES persons(id) ON DELETE CASCADE
+        REFERENCES people(id) ON DELETE CASCADE
 );

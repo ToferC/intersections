@@ -24,7 +24,7 @@ table! {
 table! {
     use diesel::sql_types::*;
 
-    persons (id) {
+    people (id) {
         id -> Int4,
         code -> Varchar,
         hash_code -> Varchar,
@@ -33,10 +33,10 @@ table! {
 }
 
 joinable!(lenses -> nodes (node_id));
-joinable!(lenses -> persons (person_id));
+joinable!(lenses -> people (person_id));
 
 allow_tables_to_appear_in_same_query!(
     lenses,
     nodes,
-    persons,
+    people,
 );

@@ -2,14 +2,14 @@ use rand::{thread_rng, Rng};
 use rand::distributions::Alphanumeric;
 use serde::{Serialize, Deserialize};
 use chrono::prelude::*;
-use diesel::RunQueryDsl;
+use diesel::prelude::*;
 
-use crate::schema::{persons};
+use crate::schema::{people};
 use crate::error_handler::CustomError;
 use crate::database;
 
 #[derive(Debug, Serialize, Deserialize, AsChangeset, Insertable)]
-#[table_name = "persons"]
+#[table_name = "people"]
 pub struct Person {
     pub code: String,
     pub hash_code: String,
@@ -38,22 +38,49 @@ impl Person {
 }
 
 #[derive(Serialize, Deserialize, Queryable, Insertable)]
-#[table_name = "persons"]
-pub struct Persons {
+#[table_name = "people"]
+pub struct People {
     pub id: i32,
     pub code: String,
     pub hash_code: String,
     pub date_created: NaiveDateTime,
 }
 
-impl Persons {
+impl People {
     pub fn create(person: &Person) -> Result<Vec<Self>, CustomError> {
         let conn = database::connection()?;
         let p = Person::from(person);
-        let p = diesel::insert_into(persons::table)
+        let p = diesel::insert_into(people::table)
             .values(p)
             .get_results(&conn)?;
         Ok(p)
+    }
+
+    pub fn find_all() -> Result<Vec<Self>, CustomError> {
+        let conn = database::connection()?;
+        let people = people::table.load::<People>(&conn)?;
+        Ok(people)
+    }
+
+    pub fn find(id: i32) -> Result<Self, CustomError> {
+        let conn = database::connection()?;
+        let person = people::table.filter(people::id.eq(id)).first(&conn)?;
+        Ok(person)
+    }
+
+    pub fn update(id: i32, person: Person) -> Result<Vec<Self>, CustomError> {
+        let conn = database::connection()?;
+        let person = diesel::update(people::table)
+            .filter(people::id.eq(id))
+            .set(person)
+            .get_results(&conn)?;
+        Ok(person)
+    }
+
+    pub fn delete(id: i32) -> Result<usize, CustomError> {
+        let conn = database::connection()?;
+        let res = diesel::delete(people::table.filter(people::id.eq(id))).execute(&conn)?;
+        Ok(res)
     }
 }
 

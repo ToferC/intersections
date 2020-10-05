@@ -1,18 +1,22 @@
 #[macro_use]
 use serde::{Serialize, Deserialize};
+use chrono::prelude::*;
+use diesel::prelude::*;
 use bigdecimal::BigDecimal;
 
+use crate::error_handler::CustomError;
+use crate::database;
+
 use crate::schema::lenses;
-use super::person::Person;
 
 #[derive(Serialize, Deserialize, Debug, Clone, Associations, Insertable, Queryable, PartialEq)]
-#[belongs_to(Person)]
+#[belongs_to(Person, Node)]
 #[table_name = "lenses"]
 /// Represents an intersectional lens of lived human experience.
-/// Each person will have many lenses, each of which represents one part of their
+/// Each lens will have many lenses, each of which represents one part of their
 /// sum experiences.
-/// Based off the Person-Role-System framework found here: 
-/// https://www.aecf.org/m/blogdoc/PersonRoleSystemFramework-2013.pdf
+/// Based off the Lens-Role-System framework found here: 
+/// https://www.aecf.org/m/blogdoc/LensRoleSystemFramework-2013.pdf
 pub struct Lens {
     pub person_id: i32,
     pub node_id: i32,
@@ -33,13 +37,67 @@ impl Lens {
             inclusivity: inclusivity,
         }
     }
+
+    pub fn from(lens: &Lens) -> Lens {
+        let now = Utc::now().naive_utc();
+        Lens {
+            person_id: lens.person_id,
+            node_id: lens.node_id, 
+            date_created: lens.date_created,
+            statements: lens.statements,
+            inclusivity: lens.inclusivity,
+        }
+    }
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
-/// A lived statement of experience based on the lens.
-/// Expressed as "In the worksplace, this lens makes me feel {adjective}."
-pub enum Domain {
-    Person,
-    Role,
-    System,
+#[derive(Serialize, Deserialize, Queryable, Insertable, Associations)]
+#[belongs_to(Person, Node)]
+#[table_name = "lenses"]
+pub struct Lenses {
+    pub id: i32,
+    pub person_id: i32,
+    pub node_id: i32,
+    pub date_created: chrono::NaiveDateTime,
+    // A lived statement of experience based on the lens.
+    // Expressed as "In the workplace, this lens makes me feel {adjective}."
+    pub statements: Vec<String>,
+    pub inclusivity: BigDecimal,
+}
+
+impl Lenses {
+    pub fn create(lens: &Lens) -> Result<Vec<Self>, CustomError> {
+        let conn = database::connection()?;
+        let p = Lens::from(lens);
+        let p = diesel::insert_into(lenses::table)
+            .values(p)
+            .get_results(&conn)?;
+        Ok(p)
+    }
+
+    pub fn find_all() -> Result<Vec<Self>, CustomError> {
+        let conn = database::connection()?;
+        let lenses = lenses::table.load::<Lenses>(&conn)?;
+        Ok(lenses)
+    }
+
+    pub fn find(id: i32) -> Result<Self, CustomError> {
+        let conn = database::connection()?;
+        let lens = lenses::table.filter(lenses::id.eq(id)).first(&conn)?;
+        Ok(lens)
+    }
+
+    pub fn update(id: i32, lens: Lens) -> Result<Vec<Self>, CustomError> {
+        let conn = database::connection()?;
+        let lens = diesel::update(lenses::table)
+            .filter(lenses::id.eq(id))
+            .set(lens)
+            .get_results(&conn)?;
+        Ok(lens)
+    }
+
+    pub fn delete(id: i32) -> Result<usize, CustomError> {
+        let conn = database::connection()?;
+        let res = diesel::delete(lenses::table.filter(lenses::id.eq(id))).execute(&conn)?;
+        Ok(res)
+    }
 }
