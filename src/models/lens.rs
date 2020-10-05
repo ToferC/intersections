@@ -7,7 +7,10 @@ use bigdecimal::BigDecimal;
 use crate::error_handler::CustomError;
 use crate::database;
 
-use crate::schema::lenses;
+use super::person::Person;
+use super::node::Node;
+
+use crate::schema::{lenses, people};
 
 #[derive(Serialize, Deserialize, Debug, Clone, Associations, Insertable, Queryable, PartialEq)]
 #[belongs_to(Person, Node)]

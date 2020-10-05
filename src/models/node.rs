@@ -1,11 +1,11 @@
 #[macro_use]
 use serde::{Serialize, Deserialize};
 use diesel::prelude::*;
+
 use crate::error_handler::CustomError;
 use crate::database;
 
 use crate::schema::nodes;
-use super::lens::Lens;
 
 #[derive(Serialize, Deserialize, Debug, Clone, Insertable, Queryable, PartialEq)]
 #[table_name = "nodes"]
@@ -55,7 +55,7 @@ impl Nodes {
     }
 
     pub fn find(id: i32) -> Result<Self, CustomError> {
-        let conn = database::connecton()?;
+        let conn = database::connection()?;
         let node = nodes::table.filter(nodes::id.eq(id)).first(&conn)?;
         Ok(node)
     }
