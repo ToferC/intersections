@@ -57,8 +57,12 @@ pub async fn handle_lens_form_input(_data: web::Data<AppData>, req: HttpRequest,
         inclusivity,
     );
 
-    // Post to db
-    let persons = Person::create(persons.into_inner()).expect("Unable to add person to DB");
+    // Post person to db
+    let persons = Persons::create(&p).expect("Unable to add person to DB");
+
+    // Check if node exists, if not create it
+
+    // Insert lens to db
 
     println!("{:?} -- {:?}", l, p);
 

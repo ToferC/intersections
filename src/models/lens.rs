@@ -15,9 +15,8 @@ use super::person::Person;
 /// https://www.aecf.org/m/blogdoc/PersonRoleSystemFramework-2013.pdf
 pub struct Lens {
     pub person_id: i32,
-    pub lens_name: String,
+    pub node_id: i32,
     pub date_created: chrono::NaiveDateTime,
-    pub domain_token: String,
     // A lived statement of experience based on the lens.
     // Expressed as "In the workplace, this lens makes me feel {adjective}."
     pub statements: Vec<String>,
@@ -27,10 +26,9 @@ pub struct Lens {
 impl Lens {
     pub fn new(name: String, domain: String, statements: Vec<String>, inclusivity: BigDecimal) -> Self {
         Lens {
-            person_id: 1,  
-            lens_name: name,
+            person_id: 1,
+            node_id: 1, 
             date_created: chrono::NaiveDate::from_ymd(2020, 6, 6).and_hms(3, 3, 3),
-            domain_token: domain,
             statements: statements,
             inclusivity: inclusivity,
         }
