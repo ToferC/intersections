@@ -1,6 +1,5 @@
 #[macro_use]
 use serde::{Serialize, Deserialize};
-use diesel_derive_enum::DbEnum;
 use bigdecimal::BigDecimal;
 
 use crate::schema::lenses;
@@ -38,7 +37,7 @@ impl Lens {
     }
 }
 
-#[derive(Serialize, Deserialize, Debug, Clone, PartialEq, DbEnum)]
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 /// A lived statement of experience based on the lens.
 /// Expressed as "In the worksplace, this lens makes me feel {adjective}."
 pub enum Domain {

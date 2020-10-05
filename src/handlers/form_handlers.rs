@@ -1,11 +1,11 @@
 use actix_web::{web, HttpRequest, HttpResponse, Responder, post, get};
 use bigdecimal::BigDecimal;
-use num_bigint::{BigInt, ToBigInt};
+use num_bigint::{ToBigInt};
 use tera::Context;
 use serde::Deserialize;
 
 use crate::AppData;
-use crate::models::{Lens, Person};
+use crate::models::{Lens, Person, Persons};
 
 #[derive(Deserialize, Debug)]
 pub struct FormLens {
@@ -57,19 +57,22 @@ pub async fn handle_lens_form_input(_data: web::Data<AppData>, req: HttpRequest,
         inclusivity,
     );
 
+    // Post to db
+    let persons = Person::create(persons.into_inner()).expect("Unable to add person to DB");
+
     println!("{:?} -- {:?}", l, p);
 
     HttpResponse::Found().header("Location", "/add_lens_form").finish()
 }
 
-#[get("/first_lens_form")]
+#[get("/add_lens_form")]
 pub async fn add_lens_form_handler(data: web::Data<AppData>, _req:HttpRequest) -> impl Responder {
     let ctx = Context::new(); 
     let rendered = data.tmpl.render("lens_form.html", &ctx).unwrap();
     HttpResponse::Ok().body(rendered)
 }
 
-#[post("/first_lens_form")]
+#[post("/add_lens_form")]
 pub async fn add_handle_lens_form_input(_data: web::Data<AppData>, req: HttpRequest, form: web::Form<FormLens>) -> impl Responder {
     println!("Handling Post Request: {:?}", req);
 
