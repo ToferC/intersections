@@ -13,13 +13,13 @@ CREATE TABLE nodes (
 
 CREATE TABLE lenses (
     id SERIAL PRIMARY KEY,
-    date_created TIMESTAMP NOT NULL default CURRENT_DATE,
-    inclusivity NUMERIC NOT NULL,
-    statements TEXT[],
+    person_id INT NOT NULL,
+    FOREIGN KEY(person_id)
+        REFERENCES people(id) ON DELETE CASCADE,
     node_id INT NOT NULL,
     FOREIGN KEY(node_id)
         REFERENCES nodes(id) on DELETE CASCADE,
-    person_id INT NOT NULL,
-    FOREIGN KEY(person_id)
-        REFERENCES people(id) ON DELETE CASCADE
+    date_created TIMESTAMP NOT NULL default CURRENT_DATE,
+    statements TEXT[],
+    inclusivity NUMERIC NOT NULL
 );

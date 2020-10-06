@@ -38,7 +38,7 @@ impl Person {
     }
 }
 
-#[derive(Serialize, Deserialize, Queryable, Insertable)]
+#[derive(Serialize, Deserialize, Queryable, Insertable, Debug)]
 #[table_name = "people"]
 pub struct People {
     pub id: i32,

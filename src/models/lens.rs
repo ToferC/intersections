@@ -1,7 +1,6 @@
-#[macro_use]
 use serde::{Serialize, Deserialize};
-use chrono::prelude::*;
 use diesel::prelude::*;
+use diesel::QueryDsl;
 use bigdecimal::BigDecimal;
 
 use crate::error_handler::CustomError;
@@ -10,10 +9,11 @@ use crate::database;
 use super::person::Person;
 use super::node::Node;
 
-use crate::schema::{lenses, people};
+use crate::schema::{lenses};
 
 #[derive(Debug, Serialize, Deserialize, AsChangeset, Insertable, Associations)]
-#[belongs_to(Person, Node)]
+#[belongs_to(Person)]
+#[belongs_to(Node)]
 #[table_name = "lenses"]
 /// Represents an intersectional lens of lived human experience.
 /// Each lens will have many lenses, each of which represents one part of their
@@ -26,23 +26,22 @@ pub struct Lens {
     pub date_created: chrono::NaiveDateTime,
     // A lived statement of experience based on the lens.
     // Expressed as "In the workplace, this lens makes me feel {adjective}."
-    pub statements: Vec<String>,
+    pub statements: Option<Vec<String>>,
     pub inclusivity: BigDecimal,
 }
 
 impl Lens {
-    pub fn new(name: String, domain: String, statements: Vec<String>, inclusivity: BigDecimal) -> Self {
+    pub fn new(statements: Vec<String>, inclusivity: BigDecimal) -> Self {
         Lens {
             person_id: 1,
             node_id: 1, 
             date_created: chrono::NaiveDate::from_ymd(2020, 6, 6).and_hms(3, 3, 3),
-            statements: statements,
+            statements: Some(statements),
             inclusivity: inclusivity,
         }
     }
 
     pub fn from(lens: &Lens) -> Lens {
-        let now = Utc::now().naive_utc();
         Lens {
             person_id: lens.person_id,
             node_id: lens.node_id, 
@@ -53,9 +52,9 @@ impl Lens {
     }
 }
 
-/*
 #[derive(Serialize, Deserialize, Queryable, Insertable, Associations)]
-#[belongs_to(Person, Node)]
+#[belongs_to(Person)]
+#[belongs_to(Node)]
 #[table_name = "lenses"]
 pub struct Lenses {
     pub id: i32,
@@ -64,7 +63,7 @@ pub struct Lenses {
     pub date_created: chrono::NaiveDateTime,
     // A lived statement of experience based on the lens.
     // Expressed as "In the workplace, this lens makes me feel {adjective}."
-    pub statements: Vec<String>,
+    pub statements: Option<Vec<String>>,
     pub inclusivity: BigDecimal,
 }
 
@@ -105,4 +104,3 @@ impl Lenses {
         Ok(res)
     }
 }
-*/

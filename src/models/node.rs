@@ -1,4 +1,3 @@
-#[macro_use]
 use serde::{Serialize, Deserialize};
 use diesel::prelude::*;
 

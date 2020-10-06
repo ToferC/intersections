@@ -5,12 +5,8 @@ extern crate diesel;
 extern crate diesel_migrations;
 
 use std::env;
-use actix_web::{App, HttpServer, web, middleware};
+use actix_web::{App, HttpServer};
 use tera::Tera;
-use listenfd::ListenFd;
-
-use diesel::prelude::*;
-use diesel::r2d2::{self, ConnectionManager};
 
 mod models;
 mod handlers;
@@ -44,8 +40,6 @@ async fn main() -> std::io::Result<()> {
     };
 
     database::init();
-
-    let mut listenfd = ListenFd::from_env();
 
     HttpServer::new(move || {
 

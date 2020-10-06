@@ -6,7 +6,6 @@ use serde::Deserialize;
 
 use crate::AppData;
 use crate::models::{Lens, Person, People};
-use crate::schema::people;
 
 #[derive(Deserialize, Debug)]
 pub struct FormLens {
@@ -52,8 +51,6 @@ pub async fn handle_lens_form_input(_data: web::Data<AppData>, req: HttpRequest,
     let inclusivity = BigDecimal::new(inclusivity.to_bigint().unwrap(), -2); 
 
     let l = Lens::new(
-        form.name.to_owned(),
-        form.domain.to_owned(),
         lived_statements,
         inclusivity,
     );
@@ -65,7 +62,7 @@ pub async fn handle_lens_form_input(_data: web::Data<AppData>, req: HttpRequest,
 
     // Insert lens to db
 
-    println!("{:?} -- {:?}", l, p);
+    println!("{:?} -- {:?}", l, people);
 
     HttpResponse::Found().header("Location", "/add_lens_form").finish()
 }
@@ -104,8 +101,6 @@ pub async fn add_handle_lens_form_input(_data: web::Data<AppData>, req: HttpRequ
     let inclusivity = BigDecimal::new(inclusivity.to_bigint().unwrap(), -2);
 
     let l = Lens::new(
-        form.name.to_owned(),
-        form.domain.to_owned(),
         lived_statements,
         inclusivity,
     );

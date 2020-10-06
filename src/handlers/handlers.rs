@@ -20,6 +20,7 @@ pub fn init_routes(config: &mut web::ServiceConfig) {
 
 #[get("/")]
 pub async fn index(data: web::Data<AppData>, _req:HttpRequest) -> impl Responder {
+    println!("Access index");
     let ctx = Context::new(); 
     let rendered = data.tmpl.render("index.html", &ctx).unwrap();
     HttpResponse::Ok().body(rendered)
@@ -41,8 +42,6 @@ pub async fn find_lens() -> impl Responder {
     let r: i64 = 88;
     
     HttpResponse::Ok().json(Lens::new(
-        String::from("Default"),
-        String::from("Person"),
         vec!(),
         BigDecimal::new(r.to_bigint().unwrap(), -2),     
     ))
