@@ -32,6 +32,8 @@ pub async fn find_lens() -> impl Responder {
     let r: i64 = 88;
     
     HttpResponse::Ok().json(Lens::new(
+        0,
+        0,
         vec!(),
         BigDecimal::new(r.to_bigint().unwrap(), -2),     
     ))

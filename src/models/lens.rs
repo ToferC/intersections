@@ -31,11 +31,11 @@ pub struct Lens {
 }
 
 impl Lens {
-    pub fn new(statements: Vec<String>, inclusivity: BigDecimal) -> Self {
+    pub fn new(person_id: i32, node_id: i32, statements: Vec<String>, inclusivity: BigDecimal) -> Self {
         Lens {
-            person_id: 1,
-            node_id: 1, 
-            date_created: chrono::NaiveDate::from_ymd(2020, 6, 6).and_hms(3, 3, 3),
+            person_id: person_id,
+            node_id: node_id, 
+            date_created: chrono::Utc::now().naive_utc(),
             statements: Some(statements),
             inclusivity: inclusivity,
         }

@@ -25,7 +25,11 @@ pub async fn lens_form_handler(data: web::Data<AppData>, _req:HttpRequest) -> im
 }
 
 #[post("/first_lens_form")]
-pub async fn handle_lens_form_input(_data: web::Data<AppData>, req: HttpRequest, form: web::Form<FormLens>) -> impl Responder {
+pub async fn handle_lens_form_input(
+    _data: web::Data<AppData>, 
+    req: HttpRequest, 
+    form: web::Form<FormLens>
+) -> impl Responder {
     println!("Handling Post Request: {:?}", req);
 
     println!("{:?}", form);
@@ -55,26 +59,35 @@ pub async fn handle_lens_form_input(_data: web::Data<AppData>, req: HttpRequest,
 
     let inclusivity = BigDecimal::new(inclusivity.to_bigint().unwrap(), -2); 
 
-    let l = Lens::new(
-        lived_statements,
-        inclusivity,
-    );
-
+    
     // Post person to db
     let new_person = People::create(&person).expect("Unable to add person to DB");
-
+    
     // Check if node exists, if not create it
     let nodes = Nodes::find_all().unwrap();
 
-    if let Some(target_node) = nodes.iter().find(|n| n.node_name == node.node_name) {
-        target_node
-    } else {
-        &Nodes::create(&node).expect("Unable to create node.")
+    let target_node: Nodes;
+
+    let tn = nodes.iter().find(|n| n.node_name == node.node_name);
+
+    let target_node: &Nodes = match tn {
+        Some(target) => {
+            target
+        }
+        None => {
+            &Nodes::create(&node).expect("Unable to create node.")
+        }
     };
-
+    
     // Insert lens to db
-
-    println!("{:?} -- {:?}", l, new_person);
+    let l = Lens::new(
+        new_person.id,
+        target_node.id,
+        lived_statements,
+        inclusivity,
+    );
+    
+    println!("{:?} -- {:?}", l, &new_person);
 
     HttpResponse::Found().header("Location", format!("/add_lens_form/{}", new_person.code)).finish()
 }
@@ -132,6 +145,8 @@ pub async fn add_handle_lens_form_input(
     let inclusivity = BigDecimal::new(inclusivity.to_bigint().unwrap(), -2);
 
     let l = Lens::new(
+        0,
+        0,
         lived_statements,
         inclusivity,
     );
