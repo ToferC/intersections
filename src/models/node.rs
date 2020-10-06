@@ -38,12 +38,12 @@ pub struct Nodes {
 }
 
 impl Nodes {
-    pub fn create(node: &Node) -> Result<Vec<Self>, CustomError> {
+    pub fn create(node: &Node) -> Result<Self, CustomError> {
         let conn = database::connection()?;
         let n = Node::from(node);
         let n = diesel::insert_into(nodes::table)
             .values(n)
-            .get_results(&conn)?;
+            .get_result(&conn)?;
         Ok(n)
     }
 
@@ -59,12 +59,18 @@ impl Nodes {
         Ok(node)
     }
 
-    pub fn update(id: i32, node: &Node) -> Result<Vec<Self>, CustomError> {
+    pub fn find_by_name(node_name: String) -> Result<Self, CustomError> {
+        let conn = database::connection()?;
+        let node = nodes::table.filter(nodes::node_name.eq(node_name)).first(&conn)?;
+        Ok(node)
+    }
+
+    pub fn update(id: i32, node: &Node) -> Result<Self, CustomError> {
         let conn = database::connection()?;
         let node = diesel::update(nodes::table)
             .filter(nodes::id.eq(id))
             .set(node)
-            .get_results(&conn)?;
+            .get_result(&conn)?;
         Ok(node)
     }
 

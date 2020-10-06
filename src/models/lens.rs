@@ -68,12 +68,12 @@ pub struct Lenses {
 }
 
 impl Lenses {
-    pub fn create(lens: &Lens) -> Result<Vec<Self>, CustomError> {
+    pub fn create(lens: &Lens) -> Result<Self, CustomError> {
         let conn = database::connection()?;
         let p = Lens::from(lens);
         let p = diesel::insert_into(lenses::table)
             .values(p)
-            .get_results(&conn)?;
+            .get_result(&conn)?;
         Ok(p)
     }
 
@@ -89,12 +89,12 @@ impl Lenses {
         Ok(lens)
     }
 
-    pub fn update(id: i32, lens: Lens) -> Result<Vec<Self>, CustomError> {
+    pub fn update(id: i32, lens: Lens) -> Result<Self, CustomError> {
         let conn = database::connection()?;
         let lens = diesel::update(lenses::table)
             .filter(lenses::id.eq(id))
             .set(lens)
-            .get_results(&conn)?;
+            .get_result(&conn)?;
         Ok(lens)
     }
 

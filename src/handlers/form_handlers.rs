@@ -64,12 +64,12 @@ pub async fn handle_lens_form_input(_data: web::Data<AppData>, req: HttpRequest,
     let new_person = People::create(&person).expect("Unable to add person to DB");
 
     // Check if node exists, if not create it
-    let nodes = Nodes::find_all();
+    let nodes = Nodes::find_all().unwrap();
 
-    if nodes.iter().any(|n| n.node_name == node.node_name) {
-        println!("Found match");
+    if let Some(target_node) = nodes.iter().find(|n| n.node_name == node.node_name) {
+        target_node
     } else {
-        let new_node = Nodes::create(&node).expect("Unable to create node.");
+        &Nodes::create(&node).expect("Unable to create node.")
     };
 
     // Insert lens to db

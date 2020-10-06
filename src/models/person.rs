@@ -48,12 +48,12 @@ pub struct People {
 }
 
 impl People {
-    pub fn create(person: &Person) -> Result<Vec<Self>, CustomError> {
+    pub fn create(person: &Person) -> Result<Self, CustomError> {
         let conn = database::connection()?;
         let person = Person::from(person);
         let person = diesel::insert_into(people::table)
             .values(person)
-            .get_results(&conn)?;
+            .get_result(&conn)?;
         Ok(person)
     }
 
@@ -75,12 +75,12 @@ impl People {
         Ok(person)
     }
 
-    pub fn update(id: i32, person: Person) -> Result<Vec<Self>, CustomError> {
+    pub fn update(id: i32, person: Person) -> Result<Self, CustomError> {
         let conn = database::connection()?;
         let person = diesel::update(people::table)
             .filter(people::id.eq(id))
             .set(person)
-            .get_results(&conn)?;
+            .get_result(&conn)?;
         Ok(person)
     }
 
