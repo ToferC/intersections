@@ -69,6 +69,12 @@ impl People {
         Ok(person)
     }
 
+    pub fn find_from_code(code: String) -> Result<Self, CustomError> {
+        let conn = database::connection()?;
+        let person = people::table.filter(people::code.eq(code)).first(&conn)?;
+        Ok(person)
+    }
+
     pub fn update(id: i32, person: Person) -> Result<Vec<Self>, CustomError> {
         let conn = database::connection()?;
         let person = diesel::update(people::table)

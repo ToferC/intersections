@@ -9,8 +9,8 @@ use crate::schema::nodes;
 #[derive(Debug, Serialize, Deserialize, AsChangeset, Insertable)]
 #[table_name = "nodes"]
 pub struct Node {
-    node_name: String,
-    domain_token: String,
+    pub node_name: String,
+    pub domain_token: String,
 }
 
 impl Node {
@@ -32,9 +32,9 @@ impl Node {
 #[derive(Serialize, Deserialize, Queryable, Insertable)]
 #[table_name = "nodes"]
 pub struct Nodes {
-    id: i32,
-    node_name: String,
-    domain_token: String,
+    pub id: i32,
+    pub node_name: String,
+    pub domain_token: String,
 }
 
 impl Nodes {

@@ -6,17 +6,7 @@ use num_bigint::{ToBigInt};
 use bigdecimal::BigDecimal;
 
 use crate::models::{Person, Lens};
-use crate::handlers::{lens_form_handler, handle_lens_form_input,
-    };
 
-pub fn init_routes(config: &mut web::ServiceConfig) {
-    config.service(index);
-    config.service(find_person);
-    config.service(find_lens);
-    config.service(api_base);
-    config.service(lens_form_handler);
-    config.service(handle_lens_form_input);
-}
 
 #[get("/")]
 pub async fn index(data: web::Data<AppData>, _req:HttpRequest) -> impl Responder {
