@@ -1,7 +1,6 @@
 CREATE TABLE people (
     id SERIAL PRIMARY KEY,
     code VARCHAR(9) NOT NULL,
-    hash_code VARCHAR(30) NOT NULL,
     date_created TIMESTAMP NOT NULL default CURRENT_DATE,
     related_codes TEXT[] NOT NULL
 );

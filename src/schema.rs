@@ -27,7 +27,6 @@ table! {
     people (id) {
         id -> Int4,
         code -> Varchar,
-        hash_code -> Varchar,
         date_created -> Timestamp,
         related_codes -> Array<Text>,
     }

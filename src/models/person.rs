@@ -13,7 +13,6 @@ use crate::database;
 #[table_name = "people"]
 pub struct Person {
     pub code: String,
-    pub hash_code: String,
     pub date_created: chrono::NaiveDateTime,
     pub related_codes: Vec<String>
 }
@@ -22,7 +21,6 @@ impl Person {
     pub fn new() -> Person {
         Person {
             code: generate_unique_code(),
-            hash_code: String::from("Barking Willow Tree"),
             date_created: chrono::NaiveDate::from_ymd(2020, 6, 6).and_hms(3, 3, 3),
             related_codes: Vec::new(),
         }
@@ -34,7 +32,6 @@ impl Person {
 
         Person {
             code: person.code.to_owned(),
-            hash_code: person.hash_code.to_owned(),
             date_created: now,
             related_codes: Vec::new(),
         }
@@ -46,7 +43,6 @@ impl Person {
 pub struct People {
     pub id: i32,
     pub code: String,
-    pub hash_code: String,
     pub date_created: NaiveDateTime,
     pub related_codes: Vec<String>
 }
