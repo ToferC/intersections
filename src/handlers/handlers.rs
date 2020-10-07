@@ -24,7 +24,7 @@ pub async fn index(data: web::Data<AppData>, _req:HttpRequest) -> impl Responder
 #[get("/api")]
 pub async fn api_base() -> impl Responder {
 
-    let data = Lenses::load_all_data().unwrap();
+    let data = Lenses::load_graph_data().unwrap();
 
     HttpResponse::Ok().json(data)
 }

@@ -33,7 +33,7 @@ impl NewPerson {
         NewPerson {
             code: person.code.to_owned(),
             date_created: now,
-            related_codes: Vec::new(),
+            related_codes: person.related_codes.to_owned(),
         }
     }
 }

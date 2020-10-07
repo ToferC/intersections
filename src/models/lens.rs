@@ -79,7 +79,7 @@ impl Lenses {
         Ok(lenses)
     }
 
-    pub fn load_all_data() -> Result<(Vec<(People, Vec<Lenses>)>, Vec<Nodes>), CustomError> {
+    pub fn load_graph_data() -> Result<(Vec<(People, Vec<Lenses>)>, Vec<Nodes>), CustomError> {
         let conn = database::connection()?;
         let people = People::find_all()?;
 
