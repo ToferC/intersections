@@ -79,11 +79,15 @@ impl Lenses {
         Ok(lenses)
     }
 
-    pub fn load_all_data() -> Result<Vec<(People, Vec<Lenses>)>, CustomError> {
+    pub fn load_all_data() -> Result<(Vec<(People, Vec<Lenses>)>, Vec<Nodes>), CustomError> {
         let conn = database::connection()?;
         let people = People::find_all()?;
 
         let nodes = Nodes::find_all()?;
+
+        let node_lenses = Lenses::belonging_to(&nodes)
+            .load::<Lenses>(&conn)
+            .expect("Error loading nodes");
 
         let lenses = Lenses::belonging_to(&people)
             .load::<Lenses>(&conn)
@@ -96,7 +100,7 @@ impl Lenses {
             .zip(grouped_lenses)
             .collect();
 
-        Ok(result)
+        Ok((result, nodes))
     }
 
     pub fn find(id: i32) -> Result<Self, CustomError> {
