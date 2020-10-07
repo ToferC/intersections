@@ -9,6 +9,7 @@ use crate::handlers::{
     api_base,
     add_lens_form_handler,
     add_handle_lens_form_input,
+    find_person_from_code,
     };
 
 pub fn init_routes(config: &mut web::ServiceConfig) {
@@ -20,4 +21,5 @@ pub fn init_routes(config: &mut web::ServiceConfig) {
     config.service(handle_lens_form_input);
     config.service(add_lens_form_handler);
     config.service(add_handle_lens_form_input);
+    config.service(find_person_from_code);
 }

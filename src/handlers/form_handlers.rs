@@ -5,7 +5,7 @@ use tera::Context;
 use serde::Deserialize;
 
 use crate::AppData;
-use crate::models::{Lens, Lenses, Person, People, Node, Nodes};
+use crate::models::{Lens, Lenses, NewPerson, People, Node, Nodes};
 
 #[derive(Deserialize, Debug)]
 pub struct FirstLensForm {
@@ -45,7 +45,7 @@ pub async fn handle_lens_form_input(
 
     println!("{:?}", form);
 
-    let mut person = Person::new();
+    let mut person = NewPerson::new();
 
     // Get related persons
     if &form.related_code != "" {
@@ -116,7 +116,7 @@ pub async fn add_lens_form_handler(
 ) -> impl Responder {
     let mut ctx = Context::new(); 
 
-    let p = People::find_from_code(code).unwrap();
+    let p = People::find_from_code(&code).unwrap();
 
     ctx.insert("user_code", &p.code);
 
@@ -132,13 +132,16 @@ pub async fn add_handle_lens_form_input(
     form: web::Form<AddLensForm>
 ) -> impl Responder {
 
-    let p = People::find_from_code(code).unwrap();
+    println!("Find person");
+    let p = People::find_from_code(&code).unwrap();
 
+    println!("Create Node");
     let node = Node::new(
         form.name.to_owned(),
         form.domain.to_owned(),
     );
 
+    println!("Get statements");
     let mut lived_statements = vec!();
 
     if &form.response_1 != "" {
@@ -158,6 +161,7 @@ pub async fn add_handle_lens_form_input(
     let inclusivity = BigDecimal::new(inclusivity.to_bigint().unwrap(), 2);
     
     // Check if node exists, if not create it
+    println!("Get Nodes");
     let nodes = Nodes::find_all().unwrap();
 
     let tn = nodes.iter().find(|n| n.node_name == node.node_name);
@@ -172,6 +176,7 @@ pub async fn add_handle_lens_form_input(
         }
     };
     
+    println!("Add lens");
     // Insert lens to db
     let l = Lens::new(
         p.id,
@@ -184,5 +189,6 @@ pub async fn add_handle_lens_form_input(
     
     println!("{:?} -- {:?} -- {:?}", new_lens, &p, node);
 
-    HttpResponse::Found().header("Location", format!("/add_lens_form/{}", p.code)).finish()
+    println!("Forward");
+    HttpResponse::Found().header("Location", format!("/add_lens_form/{}", code)).finish()
 }

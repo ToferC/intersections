@@ -11,26 +11,26 @@ use crate::database;
 
 #[derive(Debug, Serialize, Deserialize, AsChangeset, Insertable, Clone)]
 #[table_name = "people"]
-pub struct Person {
+pub struct NewPerson {
     pub code: String,
     pub date_created: chrono::NaiveDateTime,
     pub related_codes: Vec<String>
 }
 
-impl Person {
-    pub fn new() -> Person {
-        Person {
+impl NewPerson {
+    pub fn new() -> NewPerson {
+        NewPerson {
             code: generate_unique_code(),
             date_created: chrono::NaiveDate::from_ymd(2020, 6, 6).and_hms(3, 3, 3),
             related_codes: Vec::new(),
         }
     }
 
-    pub fn from(person: &Person) -> Person {
+    pub fn from(person: &NewPerson) -> NewPerson {
 
         let now = Utc::now().naive_utc();
 
-        Person {
+        NewPerson {
             code: person.code.to_owned(),
             date_created: now,
             related_codes: Vec::new(),
@@ -48,9 +48,9 @@ pub struct People {
 }
 
 impl People {
-    pub fn create(person: &Person) -> Result<Self, CustomError> {
+    pub fn create(person: &NewPerson) -> Result<Self, CustomError> {
         let conn = database::connection()?;
-        let person = Person::from(person);
+        let person = NewPerson::from(person);
         let person = diesel::insert_into(people::table)
             .values(person)
             .get_result(&conn)?;
@@ -69,13 +69,13 @@ impl People {
         Ok(person)
     }
 
-    pub fn find_from_code(code: String) -> Result<Self, CustomError> {
+    pub fn find_from_code(code: &String) -> Result<Self, CustomError> {
         let conn = database::connection()?;
         let person = people::table.filter(people::code.eq(code)).first(&conn)?;
         Ok(person)
     }
 
-    pub fn update(id: i32, person: Person) -> Result<Self, CustomError> {
+    pub fn update(id: i32, person: NewPerson) -> Result<Self, CustomError> {
         let conn = database::connection()?;
         let person = diesel::update(people::table)
             .filter(people::id.eq(id))
