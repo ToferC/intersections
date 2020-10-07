@@ -16,14 +16,32 @@
                         <input name="name">
                     </label>
 
+                    <hr>
+
                     <label>
-                        Domain:
-                        <select name="domain">
-                            <option value="Person">Person</option>
-                            <option value="Role">Role</option>
-                            <option value="System">System</option>
-                        </select>
+                        If you have a code from a previous entry, you can enter it here to connect the results:
+                        <input name="related_code">
                     </label>
+
+                    <hr>
+
+                        <p>Choose a Domain for this lens:</p>
+                        <div>
+                            <input type="radio" id="person" name="domain" value="Person" checked>
+                            <label for="person">Person</label>
+                        </div>
+
+                        <div>
+                            <input type="radio" id="role" name="domain" value="Role">
+                            <label for="role">Role</label>
+                        </div>
+
+                        <div>
+                            <input type="radio" id="system" name="domain" value="System">
+                            <label for="system">System</label>
+                        </div>
+
+                    <hr>
 
                     <p>For each of the statements below, please complete the phrase. Use as many as you like.</p>
 

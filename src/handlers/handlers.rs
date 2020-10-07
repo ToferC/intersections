@@ -5,7 +5,9 @@ use tera::{Context};
 use num_bigint::{ToBigInt};
 use bigdecimal::BigDecimal;
 
-use crate::models::{Person, Lens};
+use crate::models::{Person, Lens, Lenses, Node, Nodes, People};
+
+use crate::schema::{people, lenses, nodes};
 
 
 #[get("/")]
@@ -18,7 +20,10 @@ pub async fn index(data: web::Data<AppData>, _req:HttpRequest) -> impl Responder
 
 #[get("/api")]
 pub async fn api_base() -> impl Responder {
-    HttpResponse::Ok().body("Placeholder for API for Government of Canada payscales")
+
+    let data = Lenses::load_all_data().unwrap();
+
+    HttpResponse::Ok().json(data)
 }
 
 #[get("/person/{id}")]

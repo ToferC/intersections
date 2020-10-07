@@ -8,7 +8,18 @@ use crate::AppData;
 use crate::models::{Lens, Lenses, Person, People, Node, Nodes};
 
 #[derive(Deserialize, Debug)]
-pub struct FormLens {
+pub struct FirstLensForm {
+    name: String,
+    domain: String,
+    response_1: String,
+    response_2: String,
+    response_3: String,
+    inclusivity: BigDecimal,
+    related_code: String,
+}
+
+#[derive(Deserialize, Debug)]
+pub struct AddLensForm {
     name: String,
     domain: String,
     response_1: String,
@@ -20,7 +31,7 @@ pub struct FormLens {
 #[get("/first_lens_form")]
 pub async fn lens_form_handler(data: web::Data<AppData>, _req:HttpRequest) -> impl Responder {
     let ctx = Context::new(); 
-    let rendered = data.tmpl.render("lens_form.html", &ctx).unwrap();
+    let rendered = data.tmpl.render("first_lens_form.html", &ctx).unwrap();
     HttpResponse::Ok().body(rendered)
 }
 
@@ -28,13 +39,18 @@ pub async fn lens_form_handler(data: web::Data<AppData>, _req:HttpRequest) -> im
 pub async fn handle_lens_form_input(
     _data: web::Data<AppData>, 
     req: HttpRequest, 
-    form: web::Form<FormLens>
+    form: web::Form<FirstLensForm>
 ) -> impl Responder {
     println!("Handling Post Request: {:?}", req);
 
     println!("{:?}", form);
 
-    let person = Person::new();
+    let mut person = Person::new();
+
+    // Get related persons
+    if &form.related_code != "" {
+        person.related_codes.push(form.related_code.to_owned());
+    };
 
     let node = Node::new(
         form.name.to_owned(),
@@ -57,37 +73,37 @@ pub async fn handle_lens_form_input(
 
     let inclusivity = &form.inclusivity;
 
-    let inclusivity = BigDecimal::new(inclusivity.to_bigint().unwrap(), -2); 
+    let inclusivity = BigDecimal::new(inclusivity.to_bigint().unwrap(), 2);
 
-    
     // Post person to db
-    let new_person = People::create(&person).expect("Unable to add person to DB");
+    let new_person = People::create(&person.clone()).expect("Unable to add person to DB");
     
     // Check if node exists, if not create it
     let nodes = Nodes::find_all().unwrap();
 
-    let target_node: Nodes;
-
     let tn = nodes.iter().find(|n| n.node_name == node.node_name);
-
-    let target_node: &Nodes = match tn {
+    
+    let node_id: i32 = match &tn {
         Some(target) => {
-            target
+            target.id
         }
         None => {
-            &Nodes::create(&node).expect("Unable to create node.")
+            let new_node = Nodes::create(&node).expect("Unable to create node.");
+            new_node.id
         }
     };
     
     // Insert lens to db
     let l = Lens::new(
         new_person.id,
-        target_node.id,
+        node_id,
         lived_statements,
         inclusivity,
     );
+
+    let new_lens = Lenses::create(&l).expect("Unable to create lens.");
     
-    println!("{:?} -- {:?}", l, &new_person);
+    println!("{:?} -- {:?} -- {:?}", new_lens, &new_person, node);
 
     HttpResponse::Found().header("Location", format!("/add_lens_form/{}", new_person.code)).finish()
 }
@@ -112,19 +128,16 @@ pub async fn add_lens_form_handler(
 pub async fn add_handle_lens_form_input(
     web::Path(code): web::Path<String>,
     _data: web::Data<AppData>, 
-    req: HttpRequest, 
-    form: web::Form<FormLens>
+    _req: HttpRequest, 
+    form: web::Form<AddLensForm>
 ) -> impl Responder {
-
-    let mut ctx = Context::new(); 
-
-    println!("Handling Post Request: {:?}", req);
-
-    println!("{:?}", form);
 
     let p = People::find_from_code(code).unwrap();
 
-    ctx.insert("user_code", &p.code);
+    let node = Node::new(
+        form.name.to_owned(),
+        form.domain.to_owned(),
+    );
 
     let mut lived_statements = vec!();
 
@@ -142,16 +155,34 @@ pub async fn add_handle_lens_form_input(
 
     let inclusivity = &form.inclusivity;
 
-    let inclusivity = BigDecimal::new(inclusivity.to_bigint().unwrap(), -2);
+    let inclusivity = BigDecimal::new(inclusivity.to_bigint().unwrap(), 2);
+    
+    // Check if node exists, if not create it
+    let nodes = Nodes::find_all().unwrap();
 
+    let tn = nodes.iter().find(|n| n.node_name == node.node_name);
+    
+    let node_id: i32 = match &tn {
+        Some(target) => {
+            target.id
+        }
+        None => {
+            let new_node = Nodes::create(&node).expect("Unable to create node.");
+            new_node.id
+        }
+    };
+    
+    // Insert lens to db
     let l = Lens::new(
-        0,
-        0,
+        p.id,
+        node_id,
         lived_statements,
         inclusivity,
     );
 
-    println!("{:?} -- {:?}", l, p);
+    let new_lens = Lenses::create(&l).expect("Unable to create lens.");
+    
+    println!("{:?} -- {:?} -- {:?}", new_lens, &p, node);
 
-    HttpResponse::Found().header("Location", "/add_lens_form").finish()
+    HttpResponse::Found().header("Location", format!("/add_lens_form/{}", p.code)).finish()
 }

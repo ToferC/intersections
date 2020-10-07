@@ -29,7 +29,7 @@ impl Node {
     }
 }
 
-#[derive(Serialize, Deserialize, Queryable, Insertable)]
+#[derive(Serialize, Deserialize, Queryable, Insertable, Debug, Clone, Associations, Identifiable)]
 #[table_name = "nodes"]
 pub struct Nodes {
     pub id: i32,

@@ -1,19 +1,15 @@
 use serde::{Serialize, Deserialize};
 use diesel::prelude::*;
-use diesel::QueryDsl;
+use diesel::{QueryDsl, BelongingToDsl};
 use bigdecimal::BigDecimal;
 
 use crate::error_handler::CustomError;
 use crate::database;
 
-use super::person::Person;
-use super::node::Node;
+use crate::models::{People, Nodes};
+use crate::schema::{lenses, people, nodes};
 
-use crate::schema::{lenses};
-
-#[derive(Debug, Serialize, Deserialize, AsChangeset, Insertable, Associations)]
-#[belongs_to(Person)]
-#[belongs_to(Node)]
+#[derive(Debug, Serialize, Deserialize, AsChangeset, Insertable)]
 #[table_name = "lenses"]
 /// Represents an intersectional lens of lived human experience.
 /// Each lens will have many lenses, each of which represents one part of their
@@ -52,9 +48,9 @@ impl Lens {
     }
 }
 
-#[derive(Serialize, Deserialize, Queryable, Insertable, Associations)]
-#[belongs_to(Person)]
-#[belongs_to(Node)]
+#[derive(Serialize, Deserialize, Queryable, AsChangeset, Insertable, Associations, Identifiable, Debug)]
+#[belongs_to(People, foreign_key = "person_id")]
+#[belongs_to(Nodes, foreign_key = "node_id")]
 #[table_name = "lenses"]
 pub struct Lenses {
     pub id: i32,
@@ -81,6 +77,26 @@ impl Lenses {
         let conn = database::connection()?;
         let lenses = lenses::table.load::<Lenses>(&conn)?;
         Ok(lenses)
+    }
+
+    pub fn load_all_data() -> Result<Vec<(People, Vec<Lenses>)>, CustomError> {
+        let conn = database::connection()?;
+        let people = People::find_all()?;
+
+        let nodes = Nodes::find_all()?;
+
+        let lenses = Lenses::belonging_to(&people)
+            .load::<Lenses>(&conn)
+            .expect("Error leading people");
+
+        let grouped_lenses = lenses.grouped_by(&people);
+
+        let result: Vec<(People, Vec<Lenses>)> = people
+            .into_iter()
+            .zip(grouped_lenses)
+            .collect();
+
+        Ok(result)
     }
 
     pub fn find(id: i32) -> Result<Self, CustomError> {

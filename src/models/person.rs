@@ -9,12 +9,13 @@ use crate::schema::{people};
 use crate::error_handler::CustomError;
 use crate::database;
 
-#[derive(Debug, Serialize, Deserialize, AsChangeset, Insertable)]
+#[derive(Debug, Serialize, Deserialize, AsChangeset, Insertable, Clone)]
 #[table_name = "people"]
 pub struct Person {
     pub code: String,
     pub hash_code: String,
     pub date_created: chrono::NaiveDateTime,
+    pub related_codes: Vec<String>
 }
 
 impl Person {
@@ -23,6 +24,7 @@ impl Person {
             code: generate_unique_code(),
             hash_code: String::from("Barking Willow Tree"),
             date_created: chrono::NaiveDate::from_ymd(2020, 6, 6).and_hms(3, 3, 3),
+            related_codes: Vec::new(),
         }
     }
 
@@ -34,17 +36,19 @@ impl Person {
             code: person.code.to_owned(),
             hash_code: person.hash_code.to_owned(),
             date_created: now,
+            related_codes: Vec::new(),
         }
     }
 }
 
-#[derive(Serialize, Deserialize, Queryable, Insertable, Debug)]
+#[derive(Serialize, Deserialize, Queryable, Insertable, Debug, Associations, Identifiable)]
 #[table_name = "people"]
 pub struct People {
     pub id: i32,
     pub code: String,
     pub hash_code: String,
     pub date_created: NaiveDateTime,
+    pub related_codes: Vec<String>
 }
 
 impl People {

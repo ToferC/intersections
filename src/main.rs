@@ -43,8 +43,10 @@ async fn main() -> std::io::Result<()> {
 
     HttpServer::new(move || {
 
-        let tera = Tera::new(
+        let mut tera = Tera::new(
             "templates/**/*").unwrap();
+
+        tera.full_reload().expect("Error running auto reload with Tera");
 
         App::new()
             .configure(handlers::init_routes)
