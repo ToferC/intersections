@@ -79,28 +79,26 @@ impl Lenses {
         Ok(lenses)
     }
 
-    pub fn load_graph_data() -> Result<(Vec<(People, Vec<Lenses>)>, Vec<Nodes>), CustomError> {
+    pub fn load_graph_data() -> Result<Vec<(People, Vec<(Lenses, Nodes)>)>, CustomError> {
         let conn = database::connection()?;
         let people = People::find_all()?;
 
-        let nodes = Nodes::find_all()?;
-
-        let node_lenses = Lenses::belonging_to(&nodes)
-            .load::<Lenses>(&conn)
-            .expect("Error loading nodes");
-
-        let lenses = Lenses::belonging_to(&people)
-            .load::<Lenses>(&conn)
+        // join lenses and nodes
+        let node_lenses = Lenses::belonging_to(&people)
+            .inner_join(nodes::table)
+            .load::<(Lenses, Nodes)>(&conn)
             .expect("Error leading people");
 
-        let grouped_lenses = lenses.grouped_by(&people);
+        // group node_lenses by people
+        let grouped_lenses = node_lenses.grouped_by(&people);
 
-        let result: Vec<(People, Vec<Lenses>)> = people
+        // structure result
+        let result: Vec<(People, Vec<(Lenses, Nodes)>)> = people
             .into_iter()
             .zip(grouped_lenses)
             .collect();
 
-        Ok((result, nodes))
+        Ok(result)
     }
 
     pub fn find(id: i32) -> Result<Self, CustomError> {

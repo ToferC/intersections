@@ -2,8 +2,11 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Intersections</title>
+    {% block title %}
+        <title>Intersections</title>
+    {% endblock title %}
 
+    {% block style %}
     <style>
         pre code {
             background-color: rgb(5, 0, 0);
@@ -18,11 +21,16 @@
             margin: auto;
         }
     </style>
+    {% endblock style %}
+
+    {% block preload %}{% endblock preload %}
+
 </head>
 
 <body>
     {% block content %}
     {% endblock content %}
+    {% block scripts %}{% endblock scripts %}
 </body>
 
 </html>

@@ -5,7 +5,8 @@ use chrono::prelude::*;
 use diesel::prelude::*;
 use diesel::RunQueryDsl;
 
-use crate::schema::{people};
+use crate::schema::{people, lenses, nodes};
+use crate::models::{Lenses, Nodes};
 use crate::error_handler::CustomError;
 use crate::database;
 
@@ -38,7 +39,7 @@ impl NewPerson {
     }
 }
 
-#[derive(Serialize, Deserialize, Queryable, Insertable, Debug, Associations, Identifiable)]
+#[derive(Serialize, Deserialize, Queryable, Insertable, Debug, Associations, Identifiable, Clone)]
 #[table_name = "people"]
 pub struct People {
     pub id: i32,

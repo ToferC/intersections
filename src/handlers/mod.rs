@@ -3,7 +3,7 @@ mod form_handlers;
 mod routes;
 
 pub use self::handlers::{api_base, index, find_person, find_person_from_code,
-    find_lens};
+    find_lens, person_network_graph};
     
 pub use self::form_handlers::{
     lens_form_handler, 
