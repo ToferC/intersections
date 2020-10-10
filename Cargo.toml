@@ -36,3 +36,4 @@ calamine = "0.16.1"
 rand = "0.7.3"
 lazy_static = "1.4"
 uuid = "0.8.1"
+petgraph = { version = "0.5.1", features = ["serde"] }

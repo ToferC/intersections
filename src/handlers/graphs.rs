@@ -10,28 +10,45 @@ use bigdecimal::BigDecimal;
 
 use crate::models::{NewPerson, Lens, Lenses, Node, Nodes, People};
 use crate::database;
+use crate::error_handler::CustomError;
 
 use crate::schema::{people, lenses, nodes};
 
+#[get("/full_network_graph")]
+pub async fn full_network_graph(
+    data: web::Data<AppData>
+) -> impl Responder {
+    
+    let conn = database::connection().expect("Unable to connect to db");
+    
+    let people_vec = People::find_all().expect("Unable to load people");
+    
+    // join lenses and nodes
+    let node_lenses: Vec<(Lenses, Nodes)> = Lenses::belonging_to(&people_vec)
+        .inner_join(nodes::table)
+        .load::<(Lenses, Nodes)>(&conn)
+        .expect("Error leading people");
+    
+    // group node_lenses by people
+    let grouped = node_lenses.grouped_by(&people_vec);
+    
+    // structure result
+    let result: Vec<(People, Vec<(Lenses, Nodes)>)> = people_vec
+        .into_iter()
+        .zip(grouped)
+        .collect();
 
-#[get("/")]
-pub async fn index(data: web::Data<AppData>, _req:HttpRequest) -> impl Responder {
-    println!("Access index");
-    let ctx = Context::new(); 
-    let rendered = data.tmpl.render("index.html", &ctx).unwrap();
+    let j = serde_json::to_string(&result).unwrap();
+    
+    let mut ctx = Context::new();
+    ctx.insert("graph_data", &j);
+    
+    let rendered = data.tmpl.render("full_graph.html", &ctx).unwrap();
     HttpResponse::Ok().body(rendered)
 }
 
-#[get("/api")]
-pub async fn api_base() -> impl Responder {
-
-    let data = Lenses::load_api_data().unwrap();
-
-    HttpResponse::Ok().json(data)
-}
-
-#[get("/person_api/{code}")]
-pub async fn person_api(
+#[get("/person_network_graph/{code}")]
+pub async fn person_network_graph(
     web::Path(code): web::Path<String>,
     data: web::Data<AppData>
 ) -> impl Responder {
@@ -80,57 +97,41 @@ pub async fn person_api(
     HttpResponse::Ok().body(rendered)
 }
 
-#[get("/api/person/{code}")]
-pub async fn find_person_from_code(web::Path(code): web::Path<String>) -> impl Responder {
+#[get("/node_network_graph/{id}")]
+pub async fn node_network_graph(
+    web::Path(id): web::Path<i32>,
+    data: web::Data<AppData>
+) -> impl Responder {
     
     let conn = database::connection().expect("Unable to connect to db");
-
-    let target_person: People =  People::find_from_code(&code).expect("Couldn't load target person");
-
-    let mut people_vec: Vec<People> = Vec::new();
-
-    let zero_len: usize = 0;
-
-    if &target_person.related_codes.len() > &zero_len {
-        people_vec.push(target_person.clone());
-
-        for c in &target_person.related_codes {
-            people_vec.push(People::find_from_code(c).unwrap());
-        }
-    } else {
-        people_vec.push(target_person);
-    };
-
+    
+    let node: Nodes = nodes::table.filter(nodes::id.eq(id))
+        .first(&conn)
+        .expect("Unable to load person");
+    
+    let mut node_vec: Vec<Nodes> = vec![node];
+        
     // join lenses and nodes
-    let node_lenses: Vec<(Lenses, Nodes)> = Lenses::belonging_to(&people_vec)
-    .inner_join(nodes::table)
-    .load::<(Lenses, Nodes)>(&conn)
-    .expect("Error leading people");
-
+    let people_lenses: Vec<(Lenses, People)> = Lenses::belonging_to(&node_vec)
+        .inner_join(people::table)
+        .load::<(Lenses, People)>(&conn)
+        .expect("Error leading people");
+    
     // group node_lenses by people
-    let grouped = node_lenses.grouped_by(&people_vec);
-
+    let grouped = people_lenses.grouped_by(&node_vec);
+    
     // structure result
-    let result: Vec<(People, Vec<(Lenses, Nodes)>)> = people_vec
+    let result: Vec<(Node, Vec<(Lenses, People)>)> = node_vec
         .into_iter()
         .zip(grouped)
         .collect();
+
+    let j = serde_json::to_string(&result).unwrap();
     
-    HttpResponse::Ok().json(result)
-}
-
-#[get("/person/{id}")]
-pub async fn find_person() -> impl Responder {
-    HttpResponse::Ok().json(NewPerson::new())
-}
-
-#[get("/lens/{id}")]
-pub async fn find_lens(web::Path(id): web::Path<i32>) -> impl Responder {
+    let mut ctx = Context::new();
+    ctx.insert("graph_data", &j);
     
-    HttpResponse::Ok().json(Lenses::find(id).unwrap())
+    let rendered = data.tmpl.render("full_graph.html", &ctx).unwrap();
+    HttpResponse::Ok().body(rendered)
 }
-
-
-
-
 
