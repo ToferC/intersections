@@ -103,9 +103,9 @@ pub async fn find_person_from_code(web::Path(code): web::Path<String>) -> impl R
 
     // join lenses and nodes
     let node_lenses: Vec<(Lenses, Nodes)> = Lenses::belonging_to(&people_vec)
-    .inner_join(nodes::table)
-    .load::<(Lenses, Nodes)>(&conn)
-    .expect("Error leading people");
+        .inner_join(nodes::table)
+        .load::<(Lenses, Nodes)>(&conn)
+        .expect("Error leading people");
 
     // group node_lenses by people
     let grouped = node_lenses.grouped_by(&people_vec);

@@ -4,6 +4,7 @@ use serde::{Serialize, Deserialize};
 use chrono::prelude::*;
 use diesel::prelude::*;
 use diesel::RunQueryDsl;
+use diesel::{QueryDsl, BelongingToDsl};
 
 use crate::schema::{people, lenses, nodes};
 use crate::models::{Lenses, Nodes};
@@ -83,6 +84,43 @@ impl People {
             .set(person)
             .get_result(&conn)?;
         Ok(person)
+    }
+
+    pub fn get_lenses(&self) -> Result<Vec<(People, Vec<Lenses>)>, CustomError> {
+
+        let conn = database::connection()?;
+
+        let mut people_vec: Vec<People> = Vec::new();
+
+        let target_person = People::find(self.id).expect("Unable to load person");
+
+        let zero_len: usize = 0;
+
+        if &target_person.related_codes.len() > &zero_len {
+            people_vec.push(target_person.clone());
+
+            for c in &target_person.related_codes {
+                people_vec.push(People::find_from_code(c).unwrap());
+            }
+        } else {
+            people_vec.push(target_person);
+        };
+
+        // join lenses and nodes
+        let lenses = Lenses::belonging_to(&people_vec)
+            .load::<Lenses>(&conn).expect("Unable to load lenses");
+
+        // group node_lenses by people
+        let grouped = lenses.grouped_by(&people_vec);
+
+        // structure result
+        let result: Vec<(People, Vec<Lenses>)> = people_vec
+            .into_iter()
+            .zip(grouped)
+            .collect();
+
+        Ok(result)
+
     }
 
     pub fn delete(id: i32) -> Result<usize, CustomError> {

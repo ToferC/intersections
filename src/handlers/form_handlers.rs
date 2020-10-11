@@ -2,10 +2,11 @@ use actix_web::{web, HttpRequest, HttpResponse, Responder, post, get};
 use bigdecimal::BigDecimal;
 use num_bigint::{ToBigInt};
 use tera::Context;
-use serde::Deserialize;
+use serde::{Deserialize, Serialize};
 
 use crate::AppData;
 use crate::models::{Lens, Lenses, NewPerson, People, Node, Nodes};
+use crate::error_handler::CustomError;
 
 #[derive(Deserialize, Debug)]
 pub struct FirstLensForm {
@@ -26,6 +27,41 @@ pub struct AddLensForm {
     response_2: String,
     response_3: String,
     inclusivity: BigDecimal,
+}
+
+#[derive(Deserialize, Serialize, Debug)]
+pub struct RenderPerson {
+    person: People,
+    lenses: Vec<Lenses>,
+    total_inclusivity: BigDecimal,
+}
+
+impl RenderPerson {
+    fn from(person: People) -> Result<Vec<Self>, CustomError> {
+
+        let result = People::get_lenses(&person)?;
+
+        let mut result_vec: Vec<RenderPerson> = Vec::new();
+
+        for r in result {
+
+            let mut total_inclusivity: BigDecimal::new(0.to_bigint(), 0);
+
+            for l in &r.1 {
+                total_inclusivity = total_inclusivity + l.inclusivity;
+            };
+        
+            let p = RenderPerson {
+                person: r.0,
+                lenses: r.1,
+                total_inclusivity: total_inclusivity,
+            };
+
+            result_vec.push(p);
+        }
+
+        Ok(result_vec)
+    }
 }
 
 #[get("/first_lens_form")]
@@ -95,6 +131,7 @@ pub async fn handle_lens_form_input(
     
     // Insert lens to db
     let l = Lens::new(
+        node.node_name.clone(),
         new_person.id,
         node_id,
         lived_statements,
@@ -103,7 +140,7 @@ pub async fn handle_lens_form_input(
 
     let new_lens = Lenses::create(&l).expect("Unable to create lens.");
     
-    println!("{:?} -- {:?} -- {:?}", new_lens, &new_person, node);
+    println!("{:?} -- {:?} -- {:?}", new_lens, &new_person, &node);
 
     HttpResponse::Found().header("Location", format!("/add_lens_form/{}", new_person.code)).finish()
 }
@@ -119,6 +156,11 @@ pub async fn add_lens_form_handler(
     let p = People::find_from_code(&code).unwrap();
 
     ctx.insert("user_code", &p.code);
+
+    // add pull for lens data
+    let people_with_lenses = RenderPerson::from(p).expect("Unable to load lenses");
+
+    ctx.insert("people_lenses", &people_with_lenses);
 
     let rendered = data.tmpl.render("add_lens_form.html", &ctx).unwrap();
     HttpResponse::Ok().body(rendered)
@@ -177,8 +219,8 @@ pub async fn add_handle_lens_form_input(
     };
     
     println!("Add lens");
-    // Insert lens to db
     let l = Lens::new(
+        node.node_name.clone(),
         p.id,
         node_id,
         lived_statements,

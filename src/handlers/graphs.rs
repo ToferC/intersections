@@ -4,15 +4,32 @@ use tera::{Context};
 use diesel::prelude::*;
 use diesel::{QueryDsl, BelongingToDsl};
 use serde_json::json;
+use serde::{Serialize, Deserialize};
+use petgraph::prelude::*;
+use petgraph::dot::{Dot, Config};
+use std::fmt;
+use std::hash::Hash;
 
 use num_bigint::{ToBigInt};
 use bigdecimal::BigDecimal;
 
 use crate::models::{NewPerson, Lens, Lenses, Node, Nodes, People};
 use crate::database;
-use crate::error_handler::CustomError;
 
 use crate::schema::{people, lenses, nodes};
+
+#[derive(Debug, Serialize, Deserialize, Eq, PartialEq, PartialOrd, Hash, Clone)]
+pub struct GNode {
+    pub node_type: String,
+    pub label: String,
+}
+
+impl fmt::Display for GNode {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "{} - {}", self.label, self.node_type)
+    }
+}
+
 
 #[get("/full_network_graph")]
 pub async fn full_network_graph(
@@ -23,22 +40,55 @@ pub async fn full_network_graph(
     
     let people_vec = People::find_all().expect("Unable to load people");
     
-    // join lenses and nodes
-    let node_lenses: Vec<(Lenses, Nodes)> = Lenses::belonging_to(&people_vec)
-        .inner_join(nodes::table)
-        .load::<(Lenses, Nodes)>(&conn)
-        .expect("Error leading people");
-    
-    // group node_lenses by people
-    let grouped = node_lenses.grouped_by(&people_vec);
-    
-    // structure result
-    let result: Vec<(People, Vec<(Lenses, Nodes)>)> = people_vec
-        .into_iter()
-        .zip(grouped)
-        .collect();
+    let lens_vec = Lenses::find_all().expect("Unable to load lenses");
 
-    let j = serde_json::to_string(&result).unwrap();
+    let node_vec = Nodes::find_all().expect("Unable to load nodes");
+
+    let mut graph: Graph::<GNode, BigDecimal> = Graph::new();
+
+    let mut people_index: Vec<NodeIndex> = Vec::new();
+    let mut node_index: Vec<NodeIndex> = Vec::new();
+
+    for p in people_vec {
+
+        let ni = graph.add_node(GNode {
+            node_type: String::from("Person"),
+            label: format!("P-{}", p.id),
+        });
+
+        println!("{:?}", &ni);
+
+        people_index.push(ni);
+    };
+
+    for n in node_vec {
+
+        let ni = graph.add_node(GNode {
+            node_type: String::from("Node"),
+            label: format!("N-{}", &n.node_name),
+        });
+
+        println!("{:?}", &ni);
+
+        node_index.push(ni);
+    };
+
+    for l in lens_vec {
+        let ni = graph.add_node(GNode {
+            node_type: String::from("Lens"),
+            label: format!("L-{}", &l.id),
+        });
+
+        println!("{:?}", &ni);
+
+        let person_edge = graph.add_edge(ni, people_index[l.person_id as usize], l.inclusivity.clone());
+        let node_edge = graph.add_edge(ni, node_index[l.node_id as usize], l.inclusivity.clone());
+
+        node_index.push(ni);
+    };
+
+
+    let j = serde_json::to_string_pretty(&graph).unwrap();
     
     let mut ctx = Context::new();
     ctx.insert("graph_data", &j);
@@ -109,7 +159,7 @@ pub async fn node_network_graph(
         .first(&conn)
         .expect("Unable to load person");
     
-    let mut node_vec: Vec<Nodes> = vec![node];
+    let node_vec: Vec<Nodes> = vec![node];
         
     // join lenses and nodes
     let people_lenses: Vec<(Lenses, People)> = Lenses::belonging_to(&node_vec)
@@ -121,7 +171,7 @@ pub async fn node_network_graph(
     let grouped = people_lenses.grouped_by(&node_vec);
     
     // structure result
-    let result: Vec<(Node, Vec<(Lenses, People)>)> = node_vec
+    let result: Vec<(Nodes, Vec<(Lenses, People)>)> = node_vec
         .into_iter()
         .zip(grouped)
         .collect();

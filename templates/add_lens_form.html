@@ -7,7 +7,18 @@
     <div class="column">
         <h1>Welcome to Intersections</h1>
         <h2>User {{ user_code }}</h2>
-            <p>First, we will enter a Lens. This is a representation of your subjective lived experience. There are no wrong answers.</p>
+
+        <h3>Your experiences so far:</h3>
+        {% for person in people_lenses %}
+            {% for lens in person.lenses %}
+                <H4>{{ lens.node_name }} (Total Inclusivity: {{ person.total_inclusivity }}):</H4>
+                {% for statement in lens.statements %}
+                    <li>{{ statement }}</li>
+                {% endfor %}
+            {% endfor %}
+        {% endfor %}
+        <hr>
+            <p>Now, you can add another Lens. This is a representation of your subjective lived experience. There are no wrong answers.</p>
 
                 <h3>Adding your experience</h3>
                 <form action="/add_lens_form/{{ user_code }}" method=POST>

@@ -3,10 +3,11 @@ table! {
 
     lenses (id) {
         id -> Int4,
+        node_name -> Varchar,
         person_id -> Int4,
         node_id -> Int4,
         date_created -> Timestamp,
-        statements -> Nullable<Array<Text>>,
+        statements -> Array<Text>,
         inclusivity -> Numeric,
     }
 }

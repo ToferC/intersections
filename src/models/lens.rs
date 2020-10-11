@@ -17,28 +17,31 @@ use crate::schema::{lenses, people, nodes};
 /// Based off the Lens-Role-System framework found here: 
 /// https://www.aecf.org/m/blogdoc/LensRoleSystemFramework-2013.pdf
 pub struct Lens {
+    pub node_name: String,
     pub person_id: i32,
     pub node_id: i32,
     pub date_created: chrono::NaiveDateTime,
     // A lived statement of experience based on the lens.
     // Expressed as "In the workplace, this lens makes me feel {adjective}."
-    pub statements: Option<Vec<String>>,
+    pub statements: Vec<String>,
     pub inclusivity: BigDecimal,
 }
 
 impl Lens {
-    pub fn new(person_id: i32, node_id: i32, statements: Vec<String>, inclusivity: BigDecimal) -> Self {
+    pub fn new(node_name: String, person_id: i32, node_id: i32, statements: Vec<String>, inclusivity: BigDecimal) -> Self {
         Lens {
+            node_name: node_name,
             person_id: person_id,
             node_id: node_id, 
             date_created: chrono::Utc::now().naive_utc(),
-            statements: Some(statements),
+            statements: statements,
             inclusivity: inclusivity,
         }
     }
 
     pub fn from(lens: &Lens) -> Lens {
         Lens {
+            node_name: lens.node_name.clone(),
             person_id: lens.person_id,
             node_id: lens.node_id, 
             date_created: lens.date_created,
@@ -54,12 +57,13 @@ impl Lens {
 #[table_name = "lenses"]
 pub struct Lenses {
     pub id: i32,
+    pub node_name: String,
     pub person_id: i32,
     pub node_id: i32,
     pub date_created: chrono::NaiveDateTime,
     // A lived statement of experience based on the lens.
     // Expressed as "In the workplace, this lens makes me feel {adjective}."
-    pub statements: Option<Vec<String>>,
+    pub statements: Vec<String>,
     pub inclusivity: BigDecimal,
 }
 
