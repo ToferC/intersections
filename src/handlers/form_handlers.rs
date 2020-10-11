@@ -45,10 +45,10 @@ impl RenderPerson {
 
         for r in result {
 
-            let mut total_inclusivity: BigDecimal::new(0.to_bigint(), 0);
+            let mut total_inclusivity: BigDecimal = BigDecimal::new(0.to_bigint().unwrap(), 0);
 
             for l in &r.1 {
-                total_inclusivity = total_inclusivity + l.inclusivity;
+                total_inclusivity = total_inclusivity + &l.inclusivity;
             };
         
             let p = RenderPerson {
