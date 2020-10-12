@@ -14,6 +14,7 @@ CREATE TABLE nodes (
 CREATE TABLE lenses (
     id SERIAL PRIMARY KEY,
     node_name VARCHAR(10) NOT NULL,
+    node_domain VARCHAR(10) NOT NULL,
     person_id INT NOT NULL,
     FOREIGN KEY(person_id)
         REFERENCES people(id) ON DELETE CASCADE,

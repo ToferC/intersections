@@ -4,6 +4,7 @@ table! {
     lenses (id) {
         id -> Int4,
         node_name -> Varchar,
+        node_domain -> Varchar,
         person_id -> Int4,
         node_id -> Int4,
         date_created -> Timestamp,

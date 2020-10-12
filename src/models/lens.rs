@@ -18,6 +18,7 @@ use crate::schema::{lenses, people, nodes};
 /// https://www.aecf.org/m/blogdoc/LensRoleSystemFramework-2013.pdf
 pub struct Lens {
     pub node_name: String,
+    pub node_domain: String,
     pub person_id: i32,
     pub node_id: i32,
     pub date_created: chrono::NaiveDateTime,
@@ -28,9 +29,10 @@ pub struct Lens {
 }
 
 impl Lens {
-    pub fn new(node_name: String, person_id: i32, node_id: i32, statements: Vec<String>, inclusivity: BigDecimal) -> Self {
+    pub fn new(node_name: String, node_domain: String, person_id: i32, node_id: i32, statements: Vec<String>, inclusivity: BigDecimal) -> Self {
         Lens {
             node_name: node_name,
+            node_domain: node_domain,
             person_id: person_id,
             node_id: node_id, 
             date_created: chrono::Utc::now().naive_utc(),
@@ -42,6 +44,7 @@ impl Lens {
     pub fn from(lens: &Lens) -> Lens {
         Lens {
             node_name: lens.node_name.clone(),
+            node_domain: lens.node_domain.clone(),
             person_id: lens.person_id,
             node_id: lens.node_id, 
             date_created: lens.date_created,
@@ -58,6 +61,7 @@ impl Lens {
 pub struct Lenses {
     pub id: i32,
     pub node_name: String,
+    pub node_domain: String,
     pub person_id: i32,
     pub node_id: i32,
     pub date_created: chrono::NaiveDateTime,

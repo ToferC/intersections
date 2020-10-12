@@ -1,5 +1,5 @@
 use actix_web::{web, HttpRequest, HttpResponse, Responder, post, get};
-use bigdecimal::BigDecimal;
+use bigdecimal::{BigDecimal, ToPrimitive};
 use num_bigint::{ToBigInt};
 use tera::Context;
 use serde::{Deserialize, Serialize};
@@ -33,7 +33,7 @@ pub struct AddLensForm {
 pub struct RenderPerson {
     person: People,
     lenses: Vec<Lenses>,
-    total_inclusivity: BigDecimal,
+    total_inclusivity: f32,
 }
 
 impl RenderPerson {
@@ -50,6 +50,10 @@ impl RenderPerson {
             for l in &r.1 {
                 total_inclusivity = total_inclusivity + &l.inclusivity;
             };
+
+            let total_inclusivity = total_inclusivity.to_f32().unwrap();
+
+            let total_inclusivity = (total_inclusivity * 100.0).round() / 100.0;
         
             let p = RenderPerson {
                 person: r.0,
@@ -132,6 +136,7 @@ pub async fn handle_lens_form_input(
     // Insert lens to db
     let l = Lens::new(
         node.node_name.clone(),
+        node.domain_token.clone(),
         new_person.id,
         node_id,
         lived_statements,
@@ -221,6 +226,7 @@ pub async fn add_handle_lens_form_input(
     println!("Add lens");
     let l = Lens::new(
         node.node_name.clone(),
+        node.domain_token.clone(),
         p.id,
         node_id,
         lived_statements,

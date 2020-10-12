@@ -20,6 +20,20 @@
             max-width: 800px;
             margin: auto;
         }
+
+        .column {
+            float: left;
+            padding-left: 2%;
+            width: 46.0%;
+            }
+
+            /* Clear floats after the columns */
+            .row:after {
+            content: "";
+            display: table;
+            clear: both;
+            }
+
     </style>
     {% endblock style %}
 
