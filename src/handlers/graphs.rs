@@ -65,6 +65,8 @@ pub async fn full_network_graph(
             label: format!("N-{}", &n.node_name),
             statements: Vec::new(),
         });
+
+        node_index.push(ni);
     };
 
     for l in lens_vec {
