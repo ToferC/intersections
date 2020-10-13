@@ -35,9 +35,7 @@ impl fmt::Display for GNode {
 pub async fn full_network_graph(
     data: web::Data<AppData>
 ) -> impl Responder {
-    
-    let conn = database::connection().expect("Unable to connect to db");
-    
+        
     let people_vec = People::find_all().expect("Unable to load people");
     
     let lens_vec = Lenses::find_all().expect("Unable to load lenses");
@@ -81,8 +79,8 @@ pub async fn full_network_graph(
 
         println!("{:?}", &ni);
 
-        let person_edge = graph.add_edge(ni, people_index[l.person_id as usize], l.inclusivity.clone());
-        let node_edge = graph.add_edge(ni, node_index[l.node_id as usize], l.inclusivity.clone());
+        let person_edge = graph.add_edge(ni, people_index[l.person_id as usize - 1], l.inclusivity.clone());
+        let node_edge = graph.add_edge(ni, node_index[l.node_id as usize - 1], l.inclusivity.clone());
 
         node_index.push(ni);
     };

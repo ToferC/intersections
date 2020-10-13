@@ -8,13 +8,13 @@ CREATE TABLE people (
 CREATE TABLE nodes (
     id SERIAL PRIMARY KEY,
     node_name VARCHAR(32) UNIQUE NOT NULL,
-    domain_token VARCHAR(10) NOT NULL
+    domain_token VARCHAR(10) NOT NULL CHECK (domain_token IN ('Person', 'Role', 'System'))
 );
 
 CREATE TABLE lenses (
     id SERIAL PRIMARY KEY,
-    node_name VARCHAR(10) NOT NULL,
-    node_domain VARCHAR(10) NOT NULL,
+    node_name VARCHAR(32) NOT NULL,
+    node_domain VARCHAR(10) NOT NULL CHECK (node_domain IN ('Person', 'Role', 'System')),
     person_id INT NOT NULL,
     FOREIGN KEY(person_id)
         REFERENCES people(id) ON DELETE CASCADE,
