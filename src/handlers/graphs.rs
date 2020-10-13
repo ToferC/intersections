@@ -22,6 +22,7 @@ use crate::schema::{people, lenses, nodes};
 pub struct GNode {
     pub node_type: String,
     pub label: String,
+    pub statements: Vec<String>,
 }
 
 impl fmt::Display for GNode {
@@ -52,6 +53,7 @@ pub async fn full_network_graph(
         let ni = graph.add_node(GNode {
             node_type: String::from("Person"),
             label: format!("P-{}", p.id),
+            statements: Vec::new(),
         });
 
         println!("{:?}", &ni);
@@ -64,23 +66,21 @@ pub async fn full_network_graph(
         let ni = graph.add_node(GNode {
             node_type: String::from("Node"),
             label: format!("N-{}", &n.node_name),
+            statements: Vec::new(),
         });
 
         println!("{:?}", &ni);
-
-        node_index.push(ni);
     };
 
     for l in lens_vec {
         let ni = graph.add_node(GNode {
             node_type: String::from("Lens"),
             label: format!("L-{}", &l.id),
+            statements: l.statements,
         });
 
-        println!("{:?}", &ni);
-
-        let person_edge = graph.add_edge(ni, people_index[l.person_id as usize - 1], l.inclusivity.clone());
-        let node_edge = graph.add_edge(ni, node_index[l.node_id as usize - 1], l.inclusivity.clone());
+        let _person_edge = graph.add_edge(ni, people_index[l.person_id as usize - 1], l.inclusivity.clone());
+        let _node_edge = graph.add_edge(ni, node_index[l.node_id as usize - 1], l.inclusivity.clone());
 
         node_index.push(ni);
     };
