@@ -12,70 +12,87 @@
             <h2>Add another lens</h2>
                 <p>Now, you can add another Lens. This is a representation of your subjective lived experience. There are no wrong answers.</p>
     
-                    <h3>Adding your experience</h3>
-                    <form action="/add_lens_form/{{ user_code }}" method=POST>
+                <form action="/add_lens_form/{{ user_code }}" method=POST>
     
+                <h3>Add a new experience</h3>
+                <p>How would you describe this lens of your lived experience in your own words? You are more than just your job. Examples are: Mother, Father, Manager, Artist, Millenial, Black, Indigenous, White, Executive, New Employee.
+                    Anything that describes an element of who you are and that impacts your experience in the workplace.</p>
+
+                    <label>
+                        Experience Name:
+                        <input name="name">
+                    </label>
+
+                    <hr>
+
+                        <h3>Which domain does this experience fall into?</h3>
+                        <p>A domain is reflects where a lens comes from. Is it a part of your identity, experience or culture? Is it a role that you have been given as part of your work? Is it a function you play within a network or system?</p>
+                        <p>In shorthand, you can break it down like this:</p>
+                        <li>Person = part of your individual experience that exists outside of the workplace.</li>
+                        <li>Role = a formal function or work role within the workplace.</li>
+                        <li>System = which systems or informal communities do you relate to and influence?</li>
+                        
+                        <p>
+                            <strong>
+                                Choose your domain for this experience.
+                            </strong>
+                        </p>
+                        <div>
+                            <input type="radio" id="person" name="domain" value="Person" checked>
+                            <label for="person">Person</label>
+                        </div>
+
+                        <div>
+                            <input type="radio" id="role" name="domain" value="Role">
+                            <label for="role">Role</label>
+                        </div>
+
+                        <div>
+                            <input type="radio" id="system" name="domain" value="System">
+                            <label for="system">System</label>
+                        </div>
+
+                    <hr>
+                    <h3>Describe your experience</h3>
+                    <p>Each of us experiences things in different ways. Two managers or two parents may have extremely different perspectives of their lived experience.</p>
+                    <p>To clarify your experience, complete the phrases below in your own words. Use as many or as few as you like.</p>
+
+                    <p><strong>Though this lens, in the workplace...</strong></p>
+                    <div>
                         <label>
-                            Name:
-                            <input name="name">
+                            I feel <input name="response_1">.
                         </label>
-    
-                        <hr>
-    
-                            <p>Choose a Domain for this lens:</p>
-                            <div>
-                                <input type="radio" id="person" name="domain" value="Person" checked>
-                                <label for="person">Person</label>
-                            </div>
-    
-                            <div>
-                                <input type="radio" id="role" name="domain" value="Role">
-                                <label for="role">Role</label>
-                            </div>
-    
-                            <div>
-                                <input type="radio" id="system" name="domain" value="System">
-                                <label for="system">System</label>
-                            </div>
-    
-                        <hr>
-    
-                        <p>For each of the statements below, please complete the phrase. Use as many as you like.</p>
-    
-                        <div>
-                            <label>
-                                Though this lens, in the workplace, I feel <input name="response_1">.
-                            </label>
-                        </div>
-    
-                        <br>
-    
-                        <div>
-                            <label>
-                                Though this lens, in the workplace, I feel <input name="response_2">.
-                            </label>
-                        </div>
-    
-                        <br>
-    
-                        <div>
-                            <label>
-                                Though this lens, in the workplace, I feel <input name="response_3">.
-                            </label>
-                        </div>
-    
-                        <hr>
-    
-                        <p>How do you feel this lens either makes you feel included or excluded in the workplace?</p>
-    
-                        <label for="volume">Excluded</label>
-                        <input type="range" id="inclusivity" name="inclusivity"
-                                min="-100" max="100">
-                        <label for="volume">Included</label>
-    
-                        <br><br>
-                        <button type=submit>Submit form</button>
-                    </form>
+                    </div>
+
+                    <br>
+
+                    <div>
+                        <label>
+                            I feel <input name="response_2">.
+                        </label>
+                    </div>
+
+                    <br>
+
+                    <div>
+                        <label>
+                            I feel <input name="response_3">.
+                        </label>
+                    </div>
+
+                    <hr>
+                    <h3>Identify how this experience impacts your work experience.</h3>
+                    <p>How does this experience make you feel included or excluded in the workplace?</p>
+                    <p>Place the slider below where you think this experience falls on the range of being more or less included in your workplace.</p>
+
+                    <label for="volume" style="text-align:left"><strong>Excluded</strong></label>
+                    <label for="volume" style="float:right"><strong>Included</strong></label>
+                    <input type="range" id="inclusivity" name="inclusivity"
+                            min="-100" max="100" class="slider">
+
+                    <br><br>
+                    <button type=submit>Save Experience</button>
+                </form>
                 
         </div>
         <div class="column">
@@ -84,7 +101,7 @@
                 <h3>Date: {{ person.person.date_created | date }}: {{ person.total_inclusivity | round(method="ceil", precision=3) }}</h3>
                 <hr>
                     {% for lens in person.lenses %}
-                        <p><strong>{{ lens.node_name }} ({{ lens.node_domain }}): {{ lens.inclusivity }}
+                        <p><strong>{{ lens.node_name | title }} ({{ lens.node_domain | title }}): {{ lens.inclusivity }}
                             {% if lens.inclusivity | float > 0.2 %}
                                 <span style="color: green; font-size: 2em;">＋</span>
                             {% elif lens.inclusivity | float < -0.2 %}

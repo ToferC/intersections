@@ -8,13 +8,13 @@ CREATE TABLE people (
 CREATE TABLE nodes (
     id SERIAL PRIMARY KEY,
     node_name VARCHAR(32) UNIQUE NOT NULL,
-    domain_token VARCHAR(10) NOT NULL CHECK (domain_token IN ('Person', 'Role', 'System'))
+    domain_token VARCHAR(10) NOT NULL CHECK (domain_token IN ('person', 'role', 'system'))
 );
 
 CREATE TABLE lenses (
     id SERIAL PRIMARY KEY,
     node_name VARCHAR(32) NOT NULL,
-    node_domain VARCHAR(10) NOT NULL CHECK (node_domain IN ('Person', 'Role', 'System')),
+    node_domain VARCHAR(10) NOT NULL CHECK (node_domain IN ('person', 'role', 'system')),
     person_id INT NOT NULL,
     FOREIGN KEY(person_id)
         REFERENCES people(id) ON DELETE CASCADE,
@@ -26,32 +26,32 @@ CREATE TABLE lenses (
     inclusivity NUMERIC NOT NULL
 );
 
-INSERT INTO people (id, code, related_codes)
+INSERT INTO people (code, related_codes)
 VALUES
-    (1, 'aifoahs89', array[]::text[]),
-    (2, 'syufioash', array[]::text[]),
-    (3, 'yueia8971', array[]::text[]),
-    (4, 'najksndfq', '{"aifoahs89"}');
+    ('aifoahs89', array[]::text[]),
+    ('syufioash', array[]::text[]),
+    ('yueia8971', array[]::text[]),
+    ('najksndfq', '{"aifoahs89"}');
 
-INSERT INTO nodes (id, node_name, domain_token)
+INSERT INTO nodes (node_name, domain_token)
 VALUES
-    (1, 'Father', 'Person'),
-    (2, 'Manager', 'Role'),
-    (3, 'Gen X', 'Person'),
-    (4, 'Mother', 'Person'),
-    (5, 'White', 'Role'),
-    (6, 'Black', 'Role'),
-    (7, 'Executive', 'Role'),
-    (8, 'Innovator', 'System');
+    ('father', 'person'),
+    ('manager', 'role'),
+    ('gen x', 'person'),
+    ('mother', 'person'),
+    ('white', 'role'),
+    ('black', 'role'),
+    ('executive', 'role'),
+    ('innovator', 'system');
 
-INSERT INTO lenses (id, node_name, node_domain, person_id, node_id, statements, inclusivity)
+INSERT INTO lenses (node_name, node_domain, person_id, node_id, statements, inclusivity)
 VALUES
-    (1, 'Father', 'Person', 1, 1, '{"Tired", "Not doing enough", "Joyful"}', -0.18),
-    (2, 'Manager', 'Role', 1, 2, '{"Pulled many directions", "Influential", "Stressed"}', -0.38),
-    (3, 'Gen X', 'Person', 1, 3, '{"Experienced", "Overlooked", "Depended upon"}', 0.28),
-    (4, 'Mother', 'Person', 2, 4, '{"Tired", "Guilty", "Excluded"}', -0.33),
-    (5, 'White', 'Person', 2, 5, '{"Normal"}', 0.28),
-    (6, 'Black', 'Person', 3, 6, '{"Ignored", "Suffer microagressions", "Proud"}', -0.25),
-    (7, 'Executive', 'Role',3, 7, '{"Powerful", "Overwhelmed", "Stifled"}', -0.10),
-    (8, 'Innovator', 'System', 3, 8, '{"Respected", "Sidelined", "Not recognized by system"}', 0.28),
-    (9, 'White', 'Person', 4, 5, '{"Listened to", "Persecuted by diversity iniatives", "Comfortable"}', 0.18);
+    ('father', 'person', 1, 1, '{"tired", "not doing enough", "joyful"}', -0.18),
+    ('manager', 'role', 1, 2, '{"pulled many directions", "nfluential", "stressed"}', -0.38),
+    ('gen x', 'person', 1, 3, '{"experienced", "overlooked", "depended upon"}', 0.28),
+    ('mother', 'person', 2, 4, '{"tired", "guilty", "excluded"}', -0.33),
+    ('white', 'person', 2, 5, '{"normal"}', 0.28),
+    ('black', 'person', 3, 6, '{"ignored", "suffer microagressions", "proud"}', -0.25),
+    ('executive', 'role',3, 7, '{"powerful", "overwhelmed", "stifled"}', -0.10),
+    ('innovator', 'system', 3, 8, '{"respected", "sidelined", "not recognized by system"}', 0.28),
+    ('white', 'person', 4, 5, '{"listened to", "persecuted by diversity iniatives", "comfortable"}', 0.18);

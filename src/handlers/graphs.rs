@@ -55,9 +55,6 @@ pub async fn full_network_graph(
             label: format!("P-{}", p.id),
             statements: Vec::new(),
         });
-
-        println!("{:?}", &ni);
-
         people_index.push(ni);
     };
 
@@ -68,8 +65,6 @@ pub async fn full_network_graph(
             label: format!("N-{}", &n.node_name),
             statements: Vec::new(),
         });
-
-        println!("{:?}", &ni);
     };
 
     for l in lens_vec {

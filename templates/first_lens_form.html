@@ -7,25 +7,36 @@
     <div class="column">
         <h1>Welcome to Intersections</h1>
             <p>First, we will enter a Lens. This is a representation of your subjective lived experience. There are no wrong answers.</p>
-
-                <h3>Adding your experience</h3>
-                <form action=/first_lens_form method=POST>
+            <hr>
+            <form action=/first_lens_form method=POST>
+            <label>
+                If you have a code from a previous entry, you can enter it here to connect the results:
+                <input name="related_code">
+            </label>
+            <hr>
+                <h3>Name your experience</h3>
+                <p>How would you describe this lens of your lived experience in your own words? You are more than just your job. Examples are: Mother, Father, Manager, Artist, Millenial, Black, Indigenous, White, Executive, New Employee.
+                    Anything that describes an element of who you are and that impacts your experience in the workplace.</p>
 
                     <label>
-                        Name:
+                        Experience Name:
                         <input name="name">
                     </label>
 
                     <hr>
 
-                    <label>
-                        If you have a code from a previous entry, you can enter it here to connect the results:
-                        <input name="related_code">
-                    </label>
-
-                    <hr>
-
-                        <p>Choose a Domain for this lens:</p>
+                        <h3>Which domain does this experience fall into?</h3>
+                        <p>A domain is reflects where a lens comes from. Is it a part of your identity, experience or culture? Is it a role that you have been given as part of your work? Is it a function you play within a network or system?</p>
+                        <p>In shorthand, you can break it down like this:</p>
+                        <li>Person = part of your individual experience that exists outside of the workplace.</li>
+                        <li>Role = a formal function or work role within the workplace.</li>
+                        <li>System = which systems or informal communities do you relate to and influence?</li>
+                        
+                        <p>
+                            <strong>
+                                Choose your domain for this experience.
+                            </strong>
+                        </p>
                         <div>
                             <input type="radio" id="person" name="domain" value="Person" checked>
                             <label for="person">Person</label>
@@ -42,12 +53,14 @@
                         </div>
 
                     <hr>
+                    <h3>Describe your experience</h3>
+                    <p>Each of us experiences things in different ways. Two managers or two parents may have extremely different perspectives of their lived experience.</p>
+                    <p>To clarify your experience, complete the phrases below in your own words. Use as many or as few as you like.</p>
 
-                    <p>For each of the statements below, please complete the phrase. Use as many as you like.</p>
-
+                    <p><strong>Though this lens, in the workplace...</strong></p>
                     <div>
                         <label>
-                            Though this lens, in the workplace, I feel <input name="response_1">.
+                            I feel <input name="response_1">.
                         </label>
                     </div>
 
@@ -55,7 +68,7 @@
 
                     <div>
                         <label>
-                            Though this lens, in the workplace, I feel <input name="response_2">.
+                            I feel <input name="response_2">.
                         </label>
                     </div>
 
@@ -63,24 +76,24 @@
 
                     <div>
                         <label>
-                            Though this lens, in the workplace, I feel <input name="response_3">.
+                            I feel <input name="response_3">.
                         </label>
                     </div>
 
-                    <br>
+                    <hr>
+                    <h3>Identify how this experience impacts your work experience.</h3>
+                    <p>How does this experience make you feel included or excluded in the workplace?</p>
+                    <p>Place the slider below where you think this experience falls on the range of being more or less included in your workplace.</p>
 
-                    <p>How do you feel this lens either makes you feel included or excluded in the workplace?</p>
-
+                    <label for="volume" style="text-align:left"><strong>Excluded</strong></label>
+                    <label for="volume" style="float:right"><strong>Included</strong></label>
                     <input type="range" id="inclusivity" name="inclusivity"
-                            min="-100" max="100">
-                    <label for="volume">Included</label>
+                            min="-100" max="100" class="slider">
 
-
-                    <button type=submit>Submit form</button>
+                    <br><br>
+                    <button type=submit>Save Experience</button>
                 </form>
             
-            <hr>
-            <p>The resulting document will break up pay by agreement in force at the time and have the following new columns:</p>
             <hr>
         
             <p>Please note that this work is a learning project and experiment in collecting and and gaining insight from sensitive or personal information while protecting the privacy of participants.</p>
