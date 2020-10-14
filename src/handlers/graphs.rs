@@ -42,6 +42,9 @@ pub struct GNode {
     pub id: String,
     pub node_type: String,
     pub statements: Vec<String>,
+    pub shape: String,
+    pub size: i32,
+    pub color: String,
 }
 
 impl fmt::Display for GNode {
@@ -71,6 +74,9 @@ pub async fn full_network_graph(
             id: format!("P-{}", p.id),
             node_type: String::from("Person"),
             statements: Vec::new(),
+            shape: String::from("ellipse"),
+            size: 25,
+            color: String::from("orange"),
         };
 
         cyto_node_array.push(CytoNode {
@@ -84,6 +90,9 @@ pub async fn full_network_graph(
             id: format!("{}", &n.node_name),
             node_type: String::from("Node"),
             statements: Vec::new(),
+            shape: String::from("triangle"),
+            size: 25,
+            color: String::from("blue"),
         };
 
         cyto_node_array.push(CytoNode {
@@ -96,6 +105,9 @@ pub async fn full_network_graph(
             id: format!("L-{}", &l.id),
             node_type: String::from("Lens"),
             statements: l.statements,
+            shape: String::from("square"),
+            size: 25,
+            color: String::from("green"),
         };
 
         let person_edge = GEdge {
