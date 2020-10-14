@@ -5,29 +5,48 @@ use diesel::prelude::*;
 use diesel::{QueryDsl, BelongingToDsl};
 use serde_json::json;
 use serde::{Serialize, Deserialize};
-use petgraph::prelude::*;
-use petgraph::dot::{Dot, Config};
 use std::fmt;
 use std::hash::Hash;
 
 use num_bigint::{ToBigInt};
-use bigdecimal::BigDecimal;
+use bigdecimal::{BigDecimal, ToPrimitive};
 
-use crate::models::{NewPerson, Lens, Lenses, Node, Nodes, People};
+use crate::models::{Lenses, Node, Nodes, People};
 use crate::database;
 
-use crate::schema::{people, lenses, nodes};
+use crate::schema::{people, nodes};
+
+#[derive(Serialize, Deserialize, Debug)]
+pub struct CytoGraph {
+    nodes: Vec<CytoNode>,
+    edges: Vec<CytoEdge>,
+}
+#[derive(Serialize, Deserialize, Debug)]
+pub struct CytoNode {
+    data: GNode,
+}
+#[derive(Serialize, Deserialize, Debug)]
+pub struct CytoEdge {
+    data: GEdge,
+}
+#[derive(Serialize, Deserialize, Debug)]
+pub struct GEdge {
+    id: String,
+    source: String,
+    target: String,
+    weight: f32,
+}
 
 #[derive(Debug, Serialize, Deserialize, Eq, PartialEq, PartialOrd, Hash, Clone)]
 pub struct GNode {
+    pub id: String,
     pub node_type: String,
-    pub label: String,
     pub statements: Vec<String>,
 }
 
 impl fmt::Display for GNode {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "{} - {}", self.label, self.node_type)
+        write!(f, "{} - {}", self.id, self.node_type)
     }
 }
 
@@ -43,52 +62,80 @@ pub async fn full_network_graph(
 
     let node_vec = Nodes::find_all().expect("Unable to load nodes");
 
-    let mut graph: Graph::<GNode, BigDecimal> = Graph::new();
-
-    let mut people_index: Vec<NodeIndex> = Vec::new();
-    let mut node_index: Vec<NodeIndex> = Vec::new();
+    let mut cyto_node_array: Vec<CytoNode> = Vec::new();
+    let mut cyto_edge_array: Vec<CytoEdge> = Vec::new();
 
     for p in people_vec {
 
-        let ni = graph.add_node(GNode {
+        let ni = GNode {
+            id: format!("P-{}", p.id),
             node_type: String::from("Person"),
-            label: format!("P-{}", p.id),
             statements: Vec::new(),
+        };
+
+        cyto_node_array.push(CytoNode {
+            data: ni,
         });
-        people_index.push(ni);
     };
 
     for n in node_vec {
 
-        let ni = graph.add_node(GNode {
+        let ni = GNode {
+            id: format!("{}", &n.node_name),
             node_type: String::from("Node"),
-            label: format!("N-{}", &n.node_name),
             statements: Vec::new(),
-        });
+        };
 
-        node_index.push(ni);
+        cyto_node_array.push(CytoNode {
+            data: ni,
+        });
     };
 
     for l in lens_vec {
-        let ni = graph.add_node(GNode {
+        let ni = GNode {
+            id: format!("L-{}", &l.id),
             node_type: String::from("Lens"),
-            label: format!("L-{}", &l.id),
             statements: l.statements,
+        };
+
+        let person_edge = GEdge {
+            id: format!("L{}-P{}", &l.id, &l.person_id),
+            source: format!("L-{}", &l.id),
+            target: format!("P-{}", &l.person_id),
+            weight: l.inclusivity.to_f32().unwrap(),
+        };
+
+        let node_edge = GEdge {
+            id: format!("L{}-{}", &l.id, &l.node_name),
+            source: format!("L-{}", &l.id),
+            target: format!("{}", &l.node_name),
+            weight: l.inclusivity.to_f32().unwrap(),
+        };
+
+        cyto_node_array.push(CytoNode {
+            data: ni,
         });
 
-        let _person_edge = graph.add_edge(ni, people_index[l.person_id as usize - 1], l.inclusivity.clone());
-        let _node_edge = graph.add_edge(ni, node_index[l.node_id as usize - 1], l.inclusivity.clone());
+        cyto_edge_array.push(CytoEdge {
+            data: person_edge,
+        });
 
-        node_index.push(ni);
+        cyto_edge_array.push(CytoEdge {
+            data: node_edge,
+        });
     };
 
+    let graph: CytoGraph = CytoGraph {
+        nodes: cyto_node_array,
+        edges: cyto_edge_array,
+    };
 
     let j = serde_json::to_string_pretty(&graph).unwrap();
     
     let mut ctx = Context::new();
     ctx.insert("graph_data", &j);
     
-    let rendered = data.tmpl.render("full_graph.html", &ctx).unwrap();
+    let rendered = data.tmpl.render("network_graph.html", &ctx).unwrap();
     HttpResponse::Ok().body(rendered)
 }
 
@@ -138,7 +185,7 @@ pub async fn person_network_graph(
     let mut ctx = Context::new();
     ctx.insert("graph_data", &j);
     
-    let rendered = data.tmpl.render("full_graph.html", &ctx).unwrap();
+    let rendered = data.tmpl.render("network_graph.html", &ctx).unwrap();
     HttpResponse::Ok().body(rendered)
 }
 

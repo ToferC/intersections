@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+
+{% block style %}
+<style>
+    pre code {
+        background-color: rgb(5, 0, 0);
+        border: 1px solid rgb(0, 0, 0);
+        color: rgb(30, 255, 0);
+        display: block;
+        padding: 20px;
+    }
+
+    main {
+        max-width: 800px;
+        margin: auto;
+    }
+
+    #cy {
+      width: 80%;
+      height: 700px;
+      display: block;
+    }
+</style>
+{% endblock style %}
+
+{% block preload %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.16.2/cytoscape.min.js"></script>
+{% endblock preload %}
+
+{% block content %}
+<h1>Node types demo</h1>
+<div id="cy"></div>
+<!-- Load application code at the end to ensure DOM is loaded -->
+{% endblock content %}
+{% block scripts %}
+    <script>
+    
+    var cy = cytoscape({
+
+        container: document.getElementById('cy'), // container to render in
+
+        elements: JSON.parse({{ graph_data | json_encode | safe }}),
+
+        style: [ // the stylesheet for the graph
+          {
+            selector: 'node',
+            style: {
+              'background-color': '#666',
+              'label': 'data(id)'
+            }
+          },
+
+          {
+            selector: 'edge',
+            style: {
+              'width': 3,
+              'line-color': '#ccc',
+              'target-arrow-color': '#ccc',
+              'target-arrow-shape': 'triangle',
+              'curve-style': 'bezier'
+            }
+          }
+        ],
+
+        layout: {
+          name: 'cose',
+          rows: 8
+        }
+
+        });
+
+    </script>
+{% endblock scripts %}
+
