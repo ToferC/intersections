@@ -41,7 +41,7 @@ pub struct GEdge {
 pub struct GNode {
     pub id: String,
     pub node_type: String,
-    pub statements: Vec<String>,
+    pub text: Vec<String>,
     pub shape: String,
     pub size: i32,
     pub color: String,
@@ -73,7 +73,7 @@ pub async fn full_network_graph(
         let ni = GNode {
             id: format!("P-{}", p.id),
             node_type: String::from("Person"),
-            statements: Vec::new(),
+            text: vec![format!("{}", p.date_created)],
             shape: String::from("ellipse"),
             size: 25,
             color: String::from("orange"),
@@ -89,7 +89,7 @@ pub async fn full_network_graph(
         let ni = GNode {
             id: format!("{}", &n.node_name),
             node_type: String::from("Node"),
-            statements: Vec::new(),
+            text: vec![n.domain_token],
             shape: String::from("triangle"),
             size: 25,
             color: String::from("blue"),
@@ -104,7 +104,7 @@ pub async fn full_network_graph(
         let ni = GNode {
             id: format!("L-{}", &l.id),
             node_type: String::from("Lens"),
-            statements: l.statements,
+            text: l.statements,
             shape: String::from("square"),
             size: 25,
             color: String::from("green"),

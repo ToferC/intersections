@@ -51,7 +51,7 @@
               selector: 'node',
               style: {
                 'background-color': '#666',
-                'label': 'data(id)',
+                'label': 'data(text)',
                 'background-color': 'data(color)',
                 'border-color': 'black',
                 'width': 'data(size)',
@@ -64,7 +64,7 @@
             {
               selector: '[node_type = "Lens"]',
               style: {
-                'content': 'data(statements)'
+                'content': 'data(text)'
               }
             },
 
@@ -76,13 +76,14 @@
                 'target-arrow-color': '#ccc',
                 'target-arrow-shape': 'triangle',
                 'curve-style': 'bezier',
-                'content': 'data(weight)'
+                'content': 'data(id)',
+                'label': 'data(weight)'
               }
             }
           ],
   
           layout: {
-            name: 'cose',
+            name: 'circle',
             rows: 8
           }
   
