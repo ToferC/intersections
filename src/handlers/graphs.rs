@@ -111,9 +111,9 @@ pub async fn full_network_graph(
         };
 
         let person_edge = GEdge {
-            id: format!("L{}-P{}", &l.id, &l.person_id),
-            source: format!("L-{}", &l.id),
-            target: format!("P-{}", &l.person_id),
+            id: format!("P{}-L{}", &l.person_id, &l.id),
+            source: format!("P-{}", &l.person_id),
+            target: format!("L-{}", &l.id),
             weight: l.inclusivity.to_f32().unwrap(),
         };
 
