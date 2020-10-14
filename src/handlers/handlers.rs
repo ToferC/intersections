@@ -30,7 +30,7 @@ pub async fn api_base() -> impl Responder {
     HttpResponse::Ok().json(data)
 }
 
-#[get("/person_api/{code}")]
+#[get("/person_graph/{code}")]
 pub async fn person_api(
     web::Path(code): web::Path<String>,
     data: web::Data<AppData>
@@ -76,7 +76,7 @@ pub async fn person_api(
     let mut ctx = Context::new();
     ctx.insert("graph_data", &j);
     
-    let rendered = data.tmpl.render("full_graph.html", &ctx).unwrap();
+    let rendered = data.tmpl.render("network_graph.html", &ctx).unwrap();
     HttpResponse::Ok().body(rendered)
 }
 

@@ -15,44 +15,7 @@ use crate::models::{Lenses, Node, Nodes, People};
 use crate::database;
 
 use crate::schema::{people, nodes};
-
-#[derive(Serialize, Deserialize, Debug)]
-pub struct CytoGraph {
-    nodes: Vec<CytoNode>,
-    edges: Vec<CytoEdge>,
-}
-#[derive(Serialize, Deserialize, Debug)]
-pub struct CytoNode {
-    data: GNode,
-}
-#[derive(Serialize, Deserialize, Debug)]
-pub struct CytoEdge {
-    data: GEdge,
-}
-#[derive(Serialize, Deserialize, Debug)]
-pub struct GEdge {
-    id: String,
-    source: String,
-    target: String,
-    weight: f32,
-}
-
-#[derive(Debug, Serialize, Deserialize, Eq, PartialEq, PartialOrd, Hash, Clone)]
-pub struct GNode {
-    pub id: String,
-    pub node_type: String,
-    pub text: Vec<String>,
-    pub shape: String,
-    pub size: i32,
-    pub color: String,
-}
-
-impl fmt::Display for GNode {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "{} - {}", self.id, self.node_type)
-    }
-}
-
+use crate::handlers::{CytoGraph, CytoEdge, CytoNode, GNode, GEdge, generate_cyto_graph};
 
 #[get("/full_network_graph")]
 pub async fn full_network_graph(
@@ -65,82 +28,7 @@ pub async fn full_network_graph(
 
     let node_vec = Nodes::find_all().expect("Unable to load nodes");
 
-    let mut cyto_node_array: Vec<CytoNode> = Vec::new();
-    let mut cyto_edge_array: Vec<CytoEdge> = Vec::new();
-
-    for p in people_vec {
-
-        let ni = GNode {
-            id: format!("P-{}", p.id),
-            node_type: String::from("Person"),
-            text: vec![format!("{}", p.date_created)],
-            shape: String::from("ellipse"),
-            size: 25,
-            color: String::from("orange"),
-        };
-
-        cyto_node_array.push(CytoNode {
-            data: ni,
-        });
-    };
-
-    for n in node_vec {
-
-        let ni = GNode {
-            id: format!("{}", &n.node_name),
-            node_type: String::from("Node"),
-            text: vec![n.domain_token],
-            shape: String::from("triangle"),
-            size: 25,
-            color: String::from("blue"),
-        };
-
-        cyto_node_array.push(CytoNode {
-            data: ni,
-        });
-    };
-
-    for l in lens_vec {
-        let ni = GNode {
-            id: format!("L-{}", &l.id),
-            node_type: String::from("Lens"),
-            text: l.statements,
-            shape: String::from("square"),
-            size: 25,
-            color: String::from("green"),
-        };
-
-        let person_edge = GEdge {
-            id: format!("P{}-L{}", &l.person_id, &l.id),
-            source: format!("P-{}", &l.person_id),
-            target: format!("L-{}", &l.id),
-            weight: l.inclusivity.to_f32().unwrap(),
-        };
-
-        let node_edge = GEdge {
-            id: format!("L{}-{}", &l.id, &l.node_name),
-            source: format!("L-{}", &l.id),
-            target: format!("{}", &l.node_name),
-            weight: l.inclusivity.to_f32().unwrap(),
-        };
-
-        cyto_node_array.push(CytoNode {
-            data: ni,
-        });
-
-        cyto_edge_array.push(CytoEdge {
-            data: person_edge,
-        });
-
-        cyto_edge_array.push(CytoEdge {
-            data: node_edge,
-        });
-    };
-
-    let graph: CytoGraph = CytoGraph {
-        nodes: cyto_node_array,
-        edges: cyto_edge_array,
-    };
+    let graph = generate_cyto_graph(people_vec, node_vec, lens_vec);
 
     let j = serde_json::to_string_pretty(&graph).unwrap();
     
@@ -151,7 +39,7 @@ pub async fn full_network_graph(
     HttpResponse::Ok().body(rendered)
 }
 
-#[get("/person_network_graph/{code}")]
+#[get("/person_graph/{code}")]
 pub async fn person_network_graph(
     web::Path(code): web::Path<String>,
     data: web::Data<AppData>
