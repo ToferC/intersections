@@ -60,7 +60,7 @@
                 'width': 'data(size)',
                 'height': 'data(size)',
                 'shape': 'data(shape)',
-                'content': 'data(inclusivity)'
+                'content': 'data(id)'
               }
             },
 
@@ -71,12 +71,6 @@
               }
             },
 
-            {
-              selector: '[node_type = "Node"]',
-              style: {
-                'content': 'data(id)'
-              }
-            },
 
             {
               selector: 'edge',
@@ -94,7 +88,9 @@
   
           layout: {
             name: 'fcose',
-            rows: 8
+            nodeSeparation: 125,
+            nodeRepulsion: 4500,
+            idealEdgeLength: 75
           }
   
           });
@@ -119,15 +115,16 @@
             makePopper(ele);
           });
 
-          // Calculate betweenness
-          var bc = cy.elements().closenessCentralityNormalized({
+          // Calculate degree
+          
+          var bc = cy.elements().degreeCentralityNormalized({
             weight: function(edges) {
               return edges.data('weight');
           }});
           
           cy.nodes().forEach( n => {
             
-            let bn = bc.closeness( n ).toFixed(2);
+            let bn = bc.degree( n ).toFixed(2);
 
             // use this to set inclusivity
             n.data({
