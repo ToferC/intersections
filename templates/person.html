@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block title %}
+{{ title }}
+{% endblock title %}
+
+{% block content %}
+<main>
+    <div class="column" style="width:50px"></div>
+
+    <div class="column" style="width: 48%">
+        <h1>{{ title }}</h1>
+            {% for person in people_lenses %}
+            <h3>Date: {{ person.person.date_created | date }}: {{ person.total_inclusivity | round(method="ceil", precision=3) }}
+                {% if person.total_inclusivity | float > 0.2 %}
+                    <span style="color: green; font-size: 2.5em;">＋</span>
+                {% elif person.total_inclusivity | float < -0.2 %}
+                    <span style="color: red; font-size: 2.5em;">－</span>
+                {% else %}
+                    <span style="color: blue; font-size: 2em;"><></span>
+                {% endif %}</strong></p>
+            </h3>
+            <hr>
+                {% for lens in person.lenses %}
+                    <p><strong>{{ lens.node_name | title }} ({{ lens.node_domain | title }}): {{ lens.inclusivity }}
+                        {% if lens.inclusivity | float > 0.2 %}
+                            <span style="color: green; font-size: 2em;">＋</span>
+                        {% elif lens.inclusivity | float < -0.2 %}
+                            <span style="color: red; font-size: 2em;">－</span>
+                        {% else %}
+                            <span style="color: blue; font-size: 1.5em;"><></span>
+                        {% endif %}</strong></p>
+                    {% for statement in lens.statements %}
+                        <li>{{ statement }}</li>
+                    {% endfor %}
+                {% endfor %}
+                <hr>
+            {% endfor %}
+    </div>
+</div>
+    <div class="column" style="width:50px"></div>
+</main>
+{% endblock content %}
