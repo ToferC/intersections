@@ -5,9 +5,9 @@ use crate::handlers::{
     lens_form_handler, 
     handle_lens_form_input,
     add_handle_lens_form_input,
-    // index
+    // pages
     index,
-    find_person,
+    person_page,
     find_lens,
     // API
     api_base,
@@ -20,15 +20,19 @@ use crate::handlers::{
     };
 
 pub fn init_routes(config: &mut web::ServiceConfig) {
+    // pages
     config.service(index);
-    config.service(find_person);
+    config.service(person_page);
     config.service(find_lens);
+    // api
     config.service(api_base);
+    config.service(person_api);
+    // forms
     config.service(lens_form_handler);
     config.service(handle_lens_form_input);
     config.service(add_lens_form_handler);
     config.service(add_handle_lens_form_input);
-    config.service(person_api);
+    // graphs
     config.service(full_network_graph);
     config.service(person_graph);
     config.service(node_network_graph);

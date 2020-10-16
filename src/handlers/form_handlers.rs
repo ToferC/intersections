@@ -37,7 +37,7 @@ pub struct RenderPerson {
 }
 
 impl RenderPerson {
-    fn from(person: People) -> Result<Vec<Self>, CustomError> {
+    pub fn from(person: People) -> Result<Vec<Self>, CustomError> {
 
         let result = People::get_lenses(&person)?;
 

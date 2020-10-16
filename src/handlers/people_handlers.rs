@@ -10,9 +10,33 @@ use bigdecimal::BigDecimal;
 
 use crate::models::{NewPerson, Lens, Lenses, Node, Nodes, People};
 use crate::database;
-use crate::handlers::generate_cyto_graph;
+use crate::handlers::{generate_cyto_graph, RenderPerson};
 
 use crate::schema::{people, lenses, nodes};
+
+#[get("/person/{id}")]
+pub async fn person_page(
+    web::Path(id): web::Path<i32>, 
+    data: web::Data<AppData>, 
+    _req:HttpRequest
+) -> impl Responder {
+    let mut ctx = Context::new(); 
+
+    let p = People::find(id).unwrap();
+
+    ctx.insert("user_code", &p.code);
+
+    let title = format!("Person: {}", &p.code);
+    ctx.insert("title", &title);
+    
+    // add pull for lens data
+    let people_with_lenses = RenderPerson::from(p).expect("Unable to load lenses");
+
+    ctx.insert("people_lenses", &people_with_lenses);
+
+    let rendered = data.tmpl.render("person.html", &ctx).unwrap();
+    HttpResponse::Ok().body(rendered)
+}
 
 #[get("/person_network_graph/{id}")]
 pub async fn person_graph(

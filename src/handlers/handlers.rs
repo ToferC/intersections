@@ -12,6 +12,7 @@ use crate::models::{NewPerson, Lens, Lenses, Node, Nodes, People};
 use crate::database;
 
 use crate::schema::{people, lenses, nodes};
+use crate::handlers::{RenderPerson};
 
 
 #[get("/")]
@@ -73,11 +74,6 @@ pub async fn person_api(web::Path(code): web::Path<String>) -> impl Responder {
         .collect();
     
     HttpResponse::Ok().json(result)
-}
-
-#[get("/person/{id}")]
-pub async fn find_person() -> impl Responder {
-    HttpResponse::Ok().json(NewPerson::new())
 }
 
 #[get("/lens/{id}")]
