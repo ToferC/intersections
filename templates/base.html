@@ -24,7 +24,7 @@
         .column {
             float: left;
             padding-left: 2%;
-            width: 46.0%;
+            width: 100.0%;
             }
 
             /* Clear floats after the columns */
@@ -73,8 +73,28 @@
 </head>
 
 <body>
-    {% block content %}
-    {% endblock content %}
+    <main>
+        {% block content %}
+        {% endblock content %}
+    </main>
+
+    {% block footer %}
+    <footer>
+        <row>
+        <div class="column" style="width:50px"></div>
+
+        <div class="column">
+
+        <p>Please note that this work is a learning project and experiment in collecting and and gaining insight from sensitive or personal information while protecting the privacy of participants.</p>
+            <p>The Intersections project is available on GitHub under an MIT licence here: <a href="https://github.com/ToferC/intersections">https://github.com/ToferC/intersections</a></p>
+            <p>The original work on intersectional data models was done: <a href="https://github.com/ToferC/learner_models">https://github.com/ToferC/learner_models/a></p>
+        
+            <p>Developed by ToferC 2020</p>
+        </div>
+        <div class="column" style="width:50px"></div>
+        </row>
+    </footer>
+    {% endblock footer %}
     {% block scripts %}{% endblock scripts %}
 
 </body>

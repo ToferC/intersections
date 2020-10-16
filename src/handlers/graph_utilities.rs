@@ -41,6 +41,7 @@ pub struct GNode {
     pub size: i32,
     pub color: String,
     pub inclusivity: f32,
+    pub href: String,
 }
 
 impl fmt::Display for GNode {
@@ -70,6 +71,7 @@ pub fn generate_cyto_graph(
             size: 25,
             color: String::from("orange"),
             inclusivity: 0.0,
+            href: format!("/person_network_graph/{}", p.id),
         };
 
         cyto_node_array.push(CytoNode {
@@ -87,6 +89,7 @@ pub fn generate_cyto_graph(
             size: 25,
             color: String::from("blue"),
             inclusivity: 0.0,
+            href: format!("/node_network_graph/{}", n.node_name),
         };
 
         cyto_node_array.push(CytoNode {
@@ -103,6 +106,7 @@ pub fn generate_cyto_graph(
             size: 25,
             color: String::from("green"),
             inclusivity: 0.0,
+            href: String::from("/"),
         };
 
         let person_edge = GEdge {
@@ -158,6 +162,7 @@ pub fn generate_node_cyto_graph(
             size: 25,
             color: String::from("blue"),
             inclusivity: 0.0,
+            href: format!("/node_network_graph/{}", n.node_name),
         };
 
         cyto_node_array.push(CytoNode {
@@ -174,6 +179,7 @@ pub fn generate_node_cyto_graph(
             size: 25,
             color: String::from("green"),
             inclusivity: 0.0,
+            href: String::from("/"),
         };
 
         let node_edge = GEdge {

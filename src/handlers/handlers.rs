@@ -17,7 +17,13 @@ use crate::schema::{people, lenses, nodes};
 #[get("/")]
 pub async fn index(data: web::Data<AppData>, _req:HttpRequest) -> impl Responder {
     println!("Access index");
-    let ctx = Context::new(); 
+
+    let node_vec = Nodes::find_all().expect("Unable to load nodes");
+
+    let mut ctx = Context::new();
+
+    ctx.insert("nodes", &node_vec);
+
     let rendered = data.tmpl.render("index.html", &ctx).unwrap();
     HttpResponse::Ok().body(rendered)
 }

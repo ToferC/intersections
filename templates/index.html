@@ -4,12 +4,19 @@
 <main>
     <div class="column" style="width:50px"></div>
 
-    <div class="column">
+    <div class="column" style="width:100%">
         <h1>Welcome to Intersections</h1>
             <p>This application is a learning project and experiment in collecting and and gaining insight from sensitive or personal information while protecting the privacy of participants.</p>
 
+            <h3>Want to contribute?</h3>
             <p><a href="/first_lens_form">Go to the survey.</a></p>
-            <p><a href="/full_network_graph">Go to the network graph.</a></p>
+            <hr>
+            <h3>Want to explore?</h3>
+            <p><a href="/full_network_graph">Explore the full network graph.</a></p>
+            <h4>You can also</h4>
+            {% for n in nodes %}
+                <p><a href="/node_network_graph/{{ n.node_name }}">See the lens for {{ n.node_name | title }}.</a></p>
+            {% endfor %}
             <hr>
         
             <p>Developed by ToferC 2020</p>

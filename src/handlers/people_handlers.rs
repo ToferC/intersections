@@ -14,15 +14,15 @@ use crate::handlers::generate_cyto_graph;
 
 use crate::schema::{people, lenses, nodes};
 
-#[get("/person_graph/{code}")]
+#[get("/person_network_graph/{id}")]
 pub async fn person_graph(
-    web::Path(code): web::Path<String>,
+    web::Path(id): web::Path<i32>,
     data: web::Data<AppData>
 ) -> impl Responder {
     
     let conn = database::connection().expect("Unable to connect to db");
     
-    let person: People = people::table.filter(people::code.eq(code))
+    let person: People = people::table.filter(people::id.eq(id))
         .first(&conn)
         .expect("Unable to load person");
     
@@ -59,8 +59,6 @@ pub async fn person_graph(
 
     node_vec.dedup();
     lens_vec.dedup();
-
-    println!("graphs: {:?} - {:?}", &node_vec, &lens_vec);
     
     let graph = generate_cyto_graph(people_vec, node_vec, lens_vec);
 

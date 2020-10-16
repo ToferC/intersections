@@ -39,6 +39,7 @@
 
 {% block content %}
 <h1>{{ title }}</h1>
+<p><a href="/full_network_graph">Return to Full Graph</a> | <a href="/">Return to Index</a></p>
 <div id="cy"></div>
 <!-- Load application code at the end to ensure DOM is loaded -->
 {% endblock content %}
@@ -64,6 +65,7 @@
                 'width': 'data(size)',
                 'height': 'data(size)',
                 'shape': 'data(shape)',
+                'href': 'data(link)',
                 'content': 'data(id)'
               }
             },
@@ -74,7 +76,6 @@
                 'content': 'data(text)'
               }
             },
-
 
             {
               selector: 'edge',
@@ -143,6 +144,15 @@
             });
           } );
         });
+
+        // Allow link open page on click
+        cy.on('tap', 'node', function(){
+          try { // your browser may block popups
+            window.open( this.data('href') );
+          } catch(e){ // fall back on url change
+            window.location.href = this.data('href');
+          }
+        });    
 
         cy.elements().unbind('mouseover');
         cy.elements().bind('mouseover', (event) => event.target.tippy.show());

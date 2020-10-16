@@ -8,7 +8,7 @@
         <h1>Welcome to Intersections</h1>
         <h2>User {{ user_code }}</h2>
         <hr>
-        <div class="column">
+        <div class="column" style="width: 48%">
             <h2>Add another lens</h2>
                 <p>Now, you can add another Lens. This is a representation of your subjective lived experience. There are no wrong answers.</p>
     
@@ -95,7 +95,7 @@
                 </form>
                 
         </div>
-        <div class="column">
+        <div class="column" style="width: 48%">
             <h2>Your experiences so far:</h2>
                 {% for person in people_lenses %}
                 <h3>Date: {{ person.person.date_created | date }}: {{ person.total_inclusivity | round(method="ceil", precision=3) }}</h3>
