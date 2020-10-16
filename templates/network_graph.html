@@ -1,5 +1,9 @@
 {% extends "base.html" %}
 
+{% block title %}
+  <title>{{ title }}</title>
+{% endblock title %}}
+
 {% block style %}
 <style>
     pre code {
@@ -34,7 +38,7 @@
 {% endblock preload %}
 
 {% block content %}
-<h1>Node types demo</h1>
+<h1>{{ title }}</h1>
 <div id="cy"></div>
 <!-- Load application code at the end to ensure DOM is loaded -->
 {% endblock content %}

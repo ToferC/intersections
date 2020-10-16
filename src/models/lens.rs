@@ -54,7 +54,7 @@ impl Lens {
     }
 }
 
-#[derive(Serialize, Deserialize, Queryable, AsChangeset, Insertable, Associations, Identifiable, Debug)]
+#[derive(Serialize, Deserialize, PartialEq, PartialOrd, Eq, Ord, Queryable, AsChangeset, Insertable, Associations, Identifiable, Debug)]
 #[belongs_to(People, foreign_key = "person_id")]
 #[belongs_to(Nodes, foreign_key = "node_id")]
 #[table_name = "lenses"]

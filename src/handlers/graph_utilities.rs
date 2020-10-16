@@ -109,14 +109,14 @@ pub fn generate_cyto_graph(
             id: format!("P{}-L{}", &l.person_id, &l.id),
             source: format!("P-{}", &l.person_id),
             target: format!("L-{}", &l.id),
-            weight: l.inclusivity.to_f32().unwrap(),
+            weight: l.inclusivity.to_f32().expect("unable to convert decimal"),
         };
 
         let node_edge = GEdge {
             id: format!("L{}-{}", &l.id, &l.node_name),
             source: format!("L-{}", &l.id),
             target: format!("{}", &l.node_name),
-            weight: l.inclusivity.to_f32().unwrap(),
+            weight: l.inclusivity.to_f32().expect("unable to convert decimal"),
         };
 
         cyto_node_array.push(CytoNode {
@@ -125,6 +125,66 @@ pub fn generate_cyto_graph(
 
         cyto_edge_array.push(CytoEdge {
             data: person_edge,
+        });
+
+        cyto_edge_array.push(CytoEdge {
+            data: node_edge,
+        });
+    };
+
+    let graph: CytoGraph = CytoGraph {
+        nodes: cyto_node_array,
+        edges: cyto_edge_array,
+    };
+
+    graph
+}
+
+pub fn generate_node_cyto_graph(
+    node_vec: Vec<Nodes>,
+    lens_vec: Vec<Lenses>
+) -> CytoGraph {
+
+    let mut cyto_node_array: Vec<CytoNode> = Vec::new();
+    let mut cyto_edge_array: Vec<CytoEdge> = Vec::new();
+
+    for n in node_vec {
+
+        let ni = GNode {
+            id: format!("{}", &n.node_name),
+            node_type: String::from("Node"),
+            text: vec![n.domain_token],
+            shape: String::from("triangle"),
+            size: 25,
+            color: String::from("blue"),
+            inclusivity: 0.0,
+        };
+
+        cyto_node_array.push(CytoNode {
+            data: ni,
+        });
+    };
+
+    for l in lens_vec {
+        let ni = GNode {
+            id: format!("L-{}", &l.id),
+            node_type: String::from("Lens"),
+            text: l.statements,
+            shape: String::from("square"),
+            size: 25,
+            color: String::from("green"),
+            inclusivity: 0.0,
+        };
+
+        let node_edge = GEdge {
+            id: format!("L{}-{}", &l.id, &l.node_name),
+            source: format!("L-{}", &l.id),
+            target: format!("{}", &l.node_name),
+            weight: l.inclusivity.to_f32().expect("unable to convert decimal"),
+        };
+
+        cyto_node_array.push(CytoNode {
+            data: ni,
         });
 
         cyto_edge_array.push(CytoEdge {
