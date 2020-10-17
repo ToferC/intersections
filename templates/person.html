@@ -11,15 +11,16 @@
     <div class="column" style="width: 48%">
         <h1>{{ title }}</h1>
             {% for person in people_lenses %}
-            <h3>Date: {{ person.person.date_created | date }}: {{ person.total_inclusivity | round(method="ceil", precision=3) }}
+            <li><strong>Date Created: {{ person.person.date_created | date }}</strong></li>
+            <li><strong>Total Inclusion: {{ person.total_inclusivity | round(method="ceil", precision=3) }}
                 {% if person.total_inclusivity | float > 0.2 %}
                     <span style="color: green; font-size: 2.5em;">＋</span>
                 {% elif person.total_inclusivity | float < -0.2 %}
                     <span style="color: red; font-size: 2.5em;">－</span>
                 {% else %}
                     <span style="color: blue; font-size: 2em;"><></span>
-                {% endif %}</strong></p>
-            </h3>
+                {% endif %}
+            </strong></li>
             <hr>
                 {% for lens in person.lenses %}
                     <p><strong>{{ lens.node_name | title }} ({{ lens.node_domain | title }}): {{ lens.inclusivity }}
@@ -37,6 +38,53 @@
                 <hr>
             {% endfor %}
     </div>
+
+    <div class="column" style="width: 48%">
+        <h1>Global Lenses</h1>
+        <p>These are the aggregate lenses from everyone who completed the survey and identified these lenses as part of their identity. They are presented here so that you can compare the person selected with the global ratings.</p>
+        <hr>
+                {% for lens in other_lenses %}
+                    <table>
+                        <tr>
+                            <th style="text-align: center;">Lens</th>
+                            <th style="text-align: center;">Domain</th>
+                            <th style="text-align: center;">Instances</th>
+                            <th style="text-align: center;">Mean Inclusivity</th>
+                        </tr>
+                        <tr>
+                            <td style="text-align: center;">{{ lens.name | title }}</td>
+                            <td style="text-align: center;">{{ lens.domain | title }}</td>
+                            <td style="text-align: center;">{{ lens.count }}</td>
+                            <td style="text-align: center;">
+                                {{ lens.mean_inclusivity | round(method="ceil", precision=3) }}
+                                {% if lens.mean_inclusivity | float > 0.2 %}
+                                    <span style="color: green; font-size: 2em;">＋</span>
+                                {% elif lens.mean_inclusivity | float < -0.2 %}
+                                    <span style="color: red; font-size: 2em;">－</span>
+                                {% else %}
+                                    <span style="color: blue; font-size: 1.5em;"><></span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    </table>
+                    <br>
+                    <table>
+                        <tr>
+                            <th style="text-align: center;">Statement</th>
+                            <th style="text-align: center;">Count</th>
+                        </tr>
+                        {% for statement, count in lens.frequency_distribution %}
+                            <tr>
+                                <td>{{ statement }}</td>
+                                <td style="text-align: center;">{{ count }}</td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                    <hr>
+                {% endfor %}
+                <hr>
+    </div>
+
 </div>
     <div class="column" style="width:50px"></div>
 </main>

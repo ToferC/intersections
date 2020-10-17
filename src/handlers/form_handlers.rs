@@ -31,9 +31,9 @@ pub struct AddLensForm {
 
 #[derive(Deserialize, Serialize, Debug)]
 pub struct RenderPerson {
-    person: People,
-    lenses: Vec<Lenses>,
-    total_inclusivity: f32,
+    pub person: People,
+    pub lenses: Vec<Lenses>,
+    pub total_inclusivity: f32,
 }
 
 impl RenderPerson {

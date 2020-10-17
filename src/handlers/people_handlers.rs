@@ -3,16 +3,53 @@ use crate::AppData;
 use tera::{Context};
 use diesel::prelude::*;
 use diesel::{QueryDsl, BelongingToDsl};
-use serde_json::json;
+use serde::Serialize;
 
-use num_bigint::{ToBigInt};
-use bigdecimal::BigDecimal;
+use bigdecimal::{ToPrimitive};
+use std::collections::BTreeMap;
 
-use crate::models::{NewPerson, Lens, Lenses, Node, Nodes, People};
+use crate::models::{Lenses, Nodes, People};
 use crate::database;
 use crate::handlers::{generate_cyto_graph, RenderPerson};
 
-use crate::schema::{people, lenses, nodes};
+use crate::schema::{people, nodes};
+
+#[derive(Serialize, Debug)]
+pub struct AggregateLenses {
+    pub name: String,
+    pub domain: String,
+    pub count: u32,
+    pub mean_inclusivity: f32,
+    pub frequency_distribution: BTreeMap<String, u32>,
+}
+
+impl AggregateLenses {
+    pub fn from(lenses: Vec<Lenses>) -> AggregateLenses {
+        let name = &lenses[0].node_name;
+        let domain = &lenses[0].node_domain;
+
+        let mut inclusivity: f32 = 0.0;
+        let mut counts = BTreeMap::new();
+
+        for l in &lenses {
+            inclusivity += l.inclusivity.to_f32().expect("Unable to convert bigdecimal");
+
+            for s in &l.statements {
+                *counts.entry(s.to_owned()).or_insert(0) += 1;
+            };
+        };
+
+        let count = lenses.len() as u32;
+
+        AggregateLenses {
+            name: name.to_owned(),
+            domain: domain.to_owned(),
+            count: count,
+            mean_inclusivity: inclusivity / count as f32,
+            frequency_distribution: counts,
+        }
+    }
+}
 
 #[get("/person/{id}")]
 pub async fn person_page(
@@ -26,13 +63,26 @@ pub async fn person_page(
 
     ctx.insert("user_code", &p.code);
 
-    let title = format!("Person: {}", &p.code);
+    let title = format!("Person: P-{}", &p.id);
     ctx.insert("title", &title);
     
     // add pull for lens data
     let people_with_lenses = RenderPerson::from(p).expect("Unable to load lenses");
 
     ctx.insert("people_lenses", &people_with_lenses);
+
+    let mut aggregate_lenses: Vec<AggregateLenses> = Vec::new();
+
+    for p in people_with_lenses.into_iter() {
+        for l in p.lenses {
+            let node = Nodes::find(l.node_id).expect("Unable to load lenses");
+            let lenses = Lenses::find_from_node_id(node.id).expect("Unable to load lenses");
+            let agg_lenses = AggregateLenses::from(lenses);
+            aggregate_lenses.push(agg_lenses);
+        }
+    };
+
+    ctx.insert("other_lenses", &aggregate_lenses);
 
     let rendered = data.tmpl.render("person.html", &ctx).unwrap();
     HttpResponse::Ok().body(rendered)
