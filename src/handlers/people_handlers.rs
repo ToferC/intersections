@@ -61,7 +61,7 @@ pub async fn person_page(
 
     let p = People::find(id).unwrap();
 
-    ctx.insert("user_code", &p.code);
+    ctx.insert("person_id", &p.id);
 
     let title = format!("Person: P-{}", &p.id);
     ctx.insert("title", &title);
