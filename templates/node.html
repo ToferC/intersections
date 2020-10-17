@@ -10,7 +10,7 @@
 
     <div class="column" style="width: 48%">
         <h1>{{ title }}</h1>
-        <p><a href="/full_network_graph">Return to Full Graph</a> | <a href="/person_network_graph/{{ person_id }}">View Person Graph</a> | <a href="/">Return to Index</a></p>
+        <p><a href="/_network_graph">Return to Full Graph</a> | <a href="/person_network_graph/{{ person_id }}">View Person Graph</a> | <a href="/">Return to Index</a></p>
             {% for person in people_lenses %}
             <li><strong>Date Created: {{ person.person.date_created | date }}</strong></li>
             <li><strong>Total Inclusion: {{ person.total_inclusivity | round(method="ceil", precision=3) }}
@@ -32,7 +32,7 @@
                         {% else %}
                             <span style="color: blue; font-size: 1.5em;"><></span>
                         {% endif %}</strong></p>
-                    {% for statement in lens.statements | slice(end=9) %}
+                    {% for statement in lens.statements %}
                         <li>{{ statement }}</li>
                     {% endfor %}
                 {% endfor %}
