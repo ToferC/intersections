@@ -89,7 +89,7 @@ pub fn generate_cyto_graph(
             size: 25,
             color: String::from("blue"),
             inclusivity: 0.0,
-            href: format!("/node_network_graph/{}", n.node_name),
+            href: format!("/node/{}", n.node_name),
         };
 
         cyto_node_array.push(CytoNode {

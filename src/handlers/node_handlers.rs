@@ -83,15 +83,12 @@ pub async fn node_page(
     people_id_vec.sort();
     people_id_vec.dedup();
 
-    println!("nodes: {:?}, people: {:?}", &node_id_vec, &people_id_vec);
 
     // add lenses for the people connected by node
-    let connected_lenses = lenses::table.filter(lenses::person_id.eq_any(people_id_vec))
+    let connected_lenses = lenses::table.filter(lenses::person_id.eq_any(&people_id_vec))
         .load::<Lenses>(&conn)
         .expect("Unable to load lenses");
-
     
-    // Something wrong with node id's here
     for l in &connected_lenses {
         node_id_vec.push(l.node_id);
     };
@@ -99,14 +96,16 @@ pub async fn node_page(
     node_id_vec.sort();
     node_id_vec.dedup();
     
+    println!("nodes: {:?}, people: {:?}", &node_id_vec, &people_id_vec);
+    
     let mut aggregate_lenses: Vec<AggLens> = Vec::new();
 
     for i in node_id_vec {
         let mut temp_lens_vec: Vec<Lenses> = Vec::new();
 
         for l in &connected_lenses {
-            // some kind of issue here
-            if i == l.node_id {
+
+            if i == l.node_id && i != node.id {
                 temp_lens_vec.push( Lenses {
                     id: l.id,
                     node_name: l.node_name.to_owned(),
@@ -122,8 +121,10 @@ pub async fn node_page(
             // show connections across the nodes and lenses
         };
 
-        let agg_lenses = AggLens::from(temp_lens_vec);
-        aggregate_lenses.push(agg_lenses);
+        if temp_lens_vec.len() > 0 {
+            let agg_lenses = AggLens::from(temp_lens_vec);
+            aggregate_lenses.push(agg_lenses);
+        }
     };
 
     // Aggregate info from lenses related to the prime node

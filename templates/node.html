@@ -9,8 +9,10 @@
     <div class="column" style="width:50px"></div>
 
     <div class="column" style="width: 48%">
-        <h1>{{ node.node_name }} - {{ node.domain_token }}</h1>
-        <p><a href="/full_network_graph">Return to Full Graph</a> | <a href="/node_network_graph/{{ node.node_name }}">View Person Graph</a> | <a href="/">Return to Index</a></p>
+        <h1>{{ node.node_name | title }} - {{ node.domain_token | title }}</h1>
+        <p><a href="/full_network_graph">Return to Full Graph</a> | <a href="/node_network_graph/{{ node.node_name }}">View Node Graph</a> | <a href="/">Return to Index</a></p>
+        <hr>
+        <p>The table below shows the data from this specific node.</p>
         
         <table>
             <tr>
@@ -52,8 +54,9 @@
     </div>
 
     <div class="column" style="width: 48%">
-        <h1>Global Lenses</h1>
-        <p>These are the aggregate lenses from everyone who completed the survey and identified these lenses as part of their identity. They are presented here so that you can compare the person selected with the global ratings.</p>
+        <h1>Associated Lenses</h1>
+        <p>These are lenses from other nodes that have been linked to the {{ node.domain_token }} of {{ node.node_name }}. They are presented here to show how the nodes relate and how by looking at more than one facet of a person's experience, we can better understand our people's needs.</p>
+        <p>[[ ADD STATISTICS HERE ]]</p>
         <hr>
                 {% for lens in other_lenses %}
                     <table>
@@ -64,7 +67,7 @@
                             <th style="text-align: center;">Mean Inclusivity</th>
                         </tr>
                         <tr>
-                            <td style="text-align: center;">{{ lens.name | title }}</td>
+                            <td style="text-align: center;"><a href="/node/{{ lens.name }}">{{ lens.name | title }}</a></td>
                             <td style="text-align: center;">{{ lens.domain | title }}</td>
                             <td style="text-align: center;">{{ lens.count }}</td>
                             <td style="text-align: center;">
@@ -93,6 +96,7 @@
                         {% endfor %}
                     </table>
                     <hr>
+                    <br>
                 {% endfor %}
                 <hr>
     </div>
