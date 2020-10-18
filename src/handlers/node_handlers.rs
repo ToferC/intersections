@@ -10,12 +10,13 @@ use std::collections::BTreeMap;
 
 use crate::models::{Lenses, Nodes, People};
 use crate::database;
-use crate::handlers::{generate_cyto_graph, RenderPerson};
+use crate::handlers::{generate_cyto_graph, generate_node_cyto_graph, RenderPerson,
+    AggLens};
 
-use crate::schema::{people, nodes};
+use crate::schema::{people, nodes, lenses};
 
 #[derive(Serialize, Debug)]
-pub struct AggregateLenses {
+pub struct AggregateNodes {
     pub name: String,
     pub domain: String,
     pub count: u32,
@@ -23,8 +24,8 @@ pub struct AggregateLenses {
     pub frequency_distribution: BTreeMap<String, u32>,
 }
 
-impl AggregateLenses {
-    pub fn from(lenses: Vec<Lenses>) -> AggregateLenses {
+impl AggregateNodes {
+    pub fn from(lenses: Vec<Lenses>) -> AggregateNodes {
         let name = &lenses[0].node_name;
         let domain = &lenses[0].node_domain;
 
@@ -41,7 +42,7 @@ impl AggregateLenses {
 
         let count = lenses.len() as u32;
 
-        AggregateLenses {
+        AggregateNodes {
             name: name.to_owned(),
             domain: domain.to_owned(),
             count: count,
@@ -51,100 +52,122 @@ impl AggregateLenses {
     }
 }
 
-#[get("/person/{id}")]
-pub async fn person_page(
-    web::Path(id): web::Path<i32>, 
+#[get("/node/{label}")]
+pub async fn node_page(
+    web::Path(label): web::Path<String>, 
     data: web::Data<AppData>, 
     _req:HttpRequest
 ) -> impl Responder {
     let mut ctx = Context::new(); 
 
-    let p = People::find(id).unwrap();
-
-    ctx.insert("person_id", &p.id);
-
-    let title = format!("Person: P-{}", &p.id);
-    ctx.insert("title", &title);
+    let conn = database::connection().expect("Unable to connect to db");
     
-    // add pull for lens data
-    let people_with_lenses = RenderPerson::from(p).expect("Unable to load lenses");
+    let node: Nodes = nodes::table.filter(nodes::node_name.eq(label))
+        .first(&conn)
+        .expect("Unable to load node");
+    
+    // get connected nodes via people with lense connections to our prime node
 
-    ctx.insert("people_lenses", &people_with_lenses);
+    let lens_vec: Vec<Lenses> = Lenses::belonging_to(&node)
+        .load::<Lenses>(&conn)
+        .expect("Error leading connected lenses");
 
-    let mut aggregate_lenses: Vec<AggregateLenses> = Vec::new();
+    let mut people_id_vec: Vec<i32> = Vec::new();
+    let mut node_id_vec: Vec<i32> = Vec::new();
 
-    for p in people_with_lenses.into_iter() {
-        for l in p.lenses {
-            let node = Nodes::find(l.node_id).expect("Unable to load lenses");
-            let lenses = Lenses::find_from_node_id(node.id).expect("Unable to load lenses");
-            let agg_lenses = AggregateLenses::from(lenses);
-            aggregate_lenses.push(agg_lenses);
-        }
+    for l in &lens_vec {
+        people_id_vec.push(l.person_id);
+        node_id_vec.push(l.node_id);
     };
+
+    people_id_vec.sort();
+    people_id_vec.dedup();
+
+    println!("nodes: {:?}, people: {:?}", &node_id_vec, &people_id_vec);
+
+    // add lenses for the people connected by node
+    let connected_lenses = lenses::table.filter(lenses::person_id.eq_any(people_id_vec))
+        .load::<Lenses>(&conn)
+        .expect("Unable to load lenses");
+
+    
+    // Something wrong with node id's here
+    for l in &connected_lenses {
+        node_id_vec.push(l.node_id);
+    };
+
+    node_id_vec.sort();
+    node_id_vec.dedup();
+    
+    let mut aggregate_lenses: Vec<AggLens> = Vec::new();
+
+    for i in node_id_vec {
+        let mut temp_lens_vec: Vec<Lenses> = Vec::new();
+
+        for l in &connected_lenses {
+            // some kind of issue here
+            if i == l.node_id {
+                temp_lens_vec.push( Lenses {
+                    id: l.id,
+                    node_name: l.node_name.to_owned(),
+                    node_domain: l.node_domain.to_owned(),
+                    person_id: l.person_id,
+                    node_id: l.node_id,
+                    date_created: l.date_created,
+                    statements: l.statements.to_owned(),
+                    inclusivity: l.inclusivity.clone(),
+                });
+            }
+            // count people associated to multiple similar nodes
+            // show connections across the nodes and lenses
+        };
+
+        let agg_lenses = AggLens::from(temp_lens_vec);
+        aggregate_lenses.push(agg_lenses);
+    };
+
+    // Aggregate info from lenses related to the prime node
+    let node_lens = AggLens::from(lens_vec);
+
+    ctx.insert("node", &node);
+    
+    ctx.insert("node_lens", &node_lens);
 
     ctx.insert("other_lenses", &aggregate_lenses);
 
-    let rendered = data.tmpl.render("person.html", &ctx).unwrap();
+    let rendered = data.tmpl.render("node.html", &ctx).unwrap();
     HttpResponse::Ok().body(rendered)
 }
 
-#[get("/person_network_graph/{id}")]
-pub async fn person_graph(
-    web::Path(id): web::Path<i32>,
+#[get("/node_network_graph/{label}")]
+pub async fn node_network_graph(
+    web::Path(label): web::Path<String>,
     data: web::Data<AppData>
 ) -> impl Responder {
     
     let conn = database::connection().expect("Unable to connect to db");
     
-    let person: People = people::table.filter(people::id.eq(id))
+    let node: Nodes = nodes::table.filter(nodes::node_name.eq(label))
         .first(&conn)
         .expect("Unable to load person");
     
-    let mut people_vec: Vec<People> = Vec::new();
-    
-    let zero_len: usize = 0;
-    
-    if &person.related_codes.len() > &zero_len {
-        people_vec.push(person.clone());
+    let node_vec: Vec<Nodes> = vec![node];
         
-        for c in &person.related_codes {
-            people_vec.push(People::find_from_code(c).unwrap());
-        }
-    } else {
-        people_vec.push(person);
-    };
-    
     // join lenses and nodes
-    let node_lenses: Vec<(Lenses, Nodes)> = Lenses::belonging_to(&people_vec)
-        .inner_join(nodes::table)
-        .load::<(Lenses, Nodes)>(&conn)
+    let lens_vec: Vec<Lenses> = Lenses::belonging_to(&node_vec)
+        .load::<Lenses>(&conn)
         .expect("Error leading people");
-
-    let mut node_vec = Vec::new();
-    let mut lens_vec =  Vec::new();
-
-    for (l, n) in node_lenses.into_iter() {
-        lens_vec.push(l);
-        node_vec.push(n);
-    };
-
-    node_vec.sort();
-    lens_vec.sort();
-
-    node_vec.dedup();
-    lens_vec.dedup();
     
-    let graph = generate_cyto_graph(people_vec, node_vec, lens_vec);
+    let graph = generate_node_cyto_graph(node_vec, lens_vec);
 
     let j = serde_json::to_string_pretty(&graph).unwrap();
     
     let mut ctx = Context::new();
     ctx.insert("graph_data", &j);
 
-    let title = "Person Network Graph";
+    let title = "Node Network Graph";
     ctx.insert("title", title);
     
     let rendered = data.tmpl.render("network_graph.html", &ctx).unwrap();
     HttpResponse::Ok().body(rendered)
 }
-

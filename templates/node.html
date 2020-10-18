@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block title %}
-{{ title }}
+{{ node.node_name }} - {{ node.domain_token }}
 {% endblock title %}
 
 {% block content %}
@@ -9,35 +9,46 @@
     <div class="column" style="width:50px"></div>
 
     <div class="column" style="width: 48%">
-        <h1>{{ title }}</h1>
-        <p><a href="/_network_graph">Return to Full Graph</a> | <a href="/person_network_graph/{{ person_id }}">View Person Graph</a> | <a href="/">Return to Index</a></p>
-            {% for person in people_lenses %}
-            <li><strong>Date Created: {{ person.person.date_created | date }}</strong></li>
-            <li><strong>Total Inclusion: {{ person.total_inclusivity | round(method="ceil", precision=3) }}
-                {% if person.total_inclusivity | float > 0.2 %}
-                    <span style="color: green; font-size: 2.5em;">＋</span>
-                {% elif person.total_inclusivity | float < -0.2 %}
-                    <span style="color: red; font-size: 2.5em;">－</span>
-                {% else %}
-                    <span style="color: blue; font-size: 2em;"><></span>
-                {% endif %}
-            </strong></li>
-            <hr>
-                {% for lens in person.lenses %}
-                    <p><strong>{{ lens.node_name | title }} ({{ lens.node_domain | title }}): {{ lens.inclusivity }}
-                        {% if lens.inclusivity | float > 0.2 %}
-                            <span style="color: green; font-size: 2em;">＋</span>
-                        {% elif lens.inclusivity | float < -0.2 %}
-                            <span style="color: red; font-size: 2em;">－</span>
-                        {% else %}
-                            <span style="color: blue; font-size: 1.5em;"><></span>
-                        {% endif %}</strong></p>
-                    {% for statement in lens.statements %}
-                        <li>{{ statement }}</li>
-                    {% endfor %}
-                {% endfor %}
-                <hr>
+        <h1>{{ node.node_name }} - {{ node.domain_token }}</h1>
+        <p><a href="/full_network_graph">Return to Full Graph</a> | <a href="/node_network_graph/{{ node.node_name }}">View Person Graph</a> | <a href="/">Return to Index</a></p>
+        
+        <table>
+            <tr>
+                <th style="text-align: center;">Lens</th>
+                <th style="text-align: center;">Domain</th>
+                <th style="text-align: center;">Instances</th>
+                <th style="text-align: center;">Mean Inclusivity</th>
+            </tr>
+            <tr>
+                <td style="text-align: center;">{{ node_lens.name | title }}</td>
+                <td style="text-align: center;">{{ node_lens.domain | title }}</td>
+                <td style="text-align: center;">{{ node_lens.count }}</td>
+                <td style="text-align: center;">
+                    {{ node_lens.mean_inclusivity | round(method="ceil", precision=3) }}
+                    {% if node_lens.mean_inclusivity | float > 0.2 %}
+                        <span style="color: green; font-size: 2em;">＋</span>
+                    {% elif node_lens.mean_inclusivity | float < -0.2 %}
+                        <span style="color: red; font-size: 2em;">－</span>
+                    {% else %}
+                        <span style="color: blue; font-size: 1.5em;"><></span>
+                    {% endif %}
+                </td>
+            </tr>
+        </table>
+        <br>
+        <table>
+            <tr>
+                <th style="text-align: center;">Statement</th>
+                <th style="text-align: center;">Count</th>
+            </tr>
+            {% for statement, count in node_lens.frequency_distribution %}
+                <tr>
+                    <td>{{ statement }}</td>
+                    <td style="text-align: center;">{{ count }}</td>
+                </tr>
             {% endfor %}
+        </table>
+
     </div>
 
     <div class="column" style="width: 48%">

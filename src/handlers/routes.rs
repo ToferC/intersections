@@ -8,6 +8,7 @@ use crate::handlers::{
     // pages
     index,
     person_page,
+    node_page,
     find_lens,
     // API
     api_base,
@@ -23,6 +24,7 @@ pub fn init_routes(config: &mut web::ServiceConfig) {
     // pages
     config.service(index);
     config.service(person_page);
+    config.service(node_page);
     config.service(find_lens);
     // api
     config.service(api_base);

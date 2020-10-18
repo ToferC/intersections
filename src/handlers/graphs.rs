@@ -43,36 +43,3 @@ pub async fn full_network_graph(
     HttpResponse::Ok().body(rendered)
 }
 
-#[get("/node_network_graph/{label}")]
-pub async fn node_network_graph(
-    web::Path(label): web::Path<String>,
-    data: web::Data<AppData>
-) -> impl Responder {
-    
-    let conn = database::connection().expect("Unable to connect to db");
-    
-    let node: Nodes = nodes::table.filter(nodes::node_name.eq(label))
-        .first(&conn)
-        .expect("Unable to load person");
-    
-    let node_vec: Vec<Nodes> = vec![node];
-        
-    // join lenses and nodes
-    let lens_vec: Vec<Lenses> = Lenses::belonging_to(&node_vec)
-        .load::<Lenses>(&conn)
-        .expect("Error leading people");
-    
-    let graph = generate_node_cyto_graph(node_vec, lens_vec);
-
-    let j = serde_json::to_string_pretty(&graph).unwrap();
-    
-    let mut ctx = Context::new();
-    ctx.insert("graph_data", &j);
-
-    let title = "Node Network Graph";
-    ctx.insert("title", title);
-    
-    let rendered = data.tmpl.render("network_graph.html", &ctx).unwrap();
-    HttpResponse::Ok().body(rendered)
-}
-

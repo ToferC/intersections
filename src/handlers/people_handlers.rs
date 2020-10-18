@@ -15,7 +15,7 @@ use crate::handlers::{generate_cyto_graph, RenderPerson};
 use crate::schema::{people, nodes};
 
 #[derive(Serialize, Debug)]
-pub struct AggregateLenses {
+pub struct AggLens {
     pub name: String,
     pub domain: String,
     pub count: u32,
@@ -23,8 +23,8 @@ pub struct AggregateLenses {
     pub frequency_distribution: BTreeMap<String, u32>,
 }
 
-impl AggregateLenses {
-    pub fn from(lenses: Vec<Lenses>) -> AggregateLenses {
+impl AggLens {
+    pub fn from(lenses: Vec<Lenses>) -> AggLens {
         let name = &lenses[0].node_name;
         let domain = &lenses[0].node_domain;
 
@@ -41,7 +41,7 @@ impl AggregateLenses {
 
         let count = lenses.len() as u32;
 
-        AggregateLenses {
+        AggLens {
             name: name.to_owned(),
             domain: domain.to_owned(),
             count: count,
@@ -71,13 +71,13 @@ pub async fn person_page(
 
     ctx.insert("people_lenses", &people_with_lenses);
 
-    let mut aggregate_lenses: Vec<AggregateLenses> = Vec::new();
+    let mut aggregate_lenses: Vec<AggLens> = Vec::new();
 
     for p in people_with_lenses.into_iter() {
         for l in p.lenses {
             let node = Nodes::find(l.node_id).expect("Unable to load lenses");
             let lenses = Lenses::find_from_node_id(node.id).expect("Unable to load lenses");
-            let agg_lenses = AggregateLenses::from(lenses);
+            let agg_lenses = AggLens::from(lenses);
             aggregate_lenses.push(agg_lenses);
         }
     };
