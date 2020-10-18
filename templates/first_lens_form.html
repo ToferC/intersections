@@ -19,7 +19,7 @@
 
                     <label>
                         Experience Name:
-                        <input name="name">
+                        <input id="node_selector" name="name">
                     </label>
 
                     <hr>
@@ -100,3 +100,15 @@
         </div>
     <div class="column" style="width:50px"></div>
 {% endblock content %}
+
+{% block script %}
+<script>
+
+$( "#node_selector" ).autocomplete({
+  minLength: 0,
+  source: {{ node_names }},
+});
+
+
+</script>
+{% endblock script %}

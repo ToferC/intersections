@@ -1,6 +1,7 @@
 use serde::{Serialize, Deserialize};
 use diesel::prelude::*;
 
+use diesel::select;
 use crate::error_handler::CustomError;
 use crate::database;
 
@@ -51,6 +52,13 @@ impl Nodes {
         let conn = database::connection()?;
         let nodes = nodes::table.load::<Nodes>(&conn)?;
         Ok(nodes)
+    }
+
+    pub fn find_all_names() -> Result<Vec<String>, CustomError> {
+        let conn = database::connection()?;
+        let names = nodes::table.select(nodes::node_name).load::<String>(&conn)?;
+
+        Ok(names)
     }
 
     pub fn find(id: i32) -> Result<Self, CustomError> {

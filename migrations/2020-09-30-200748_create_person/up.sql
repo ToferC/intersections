@@ -47,7 +47,7 @@ VALUES
 INSERT INTO lenses (node_name, node_domain, person_id, node_id, statements, inclusivity)
 VALUES
     ('father', 'person', 1, 1, '{"tired", "not doing enough", "joyful"}', -0.18),
-    ('manager', 'role', 1, 2, '{"pulled many directions", "nfluential", "stressed"}', -0.25),
+    ('manager', 'role', 1, 2, '{"pulled many directions", "influential", "stressed"}', -0.25),
     ('gen x', 'person', 1, 3, '{"experienced", "overlooked", "depended upon"}', 0.23),
     ('mother', 'person', 2, 4, '{"tired", "guilty", "excluded"}', -0.45),
     ('white', 'person', 2, 5, '{"normal"}', 0.30),

@@ -70,7 +70,11 @@ impl RenderPerson {
 
 #[get("/first_lens_form")]
 pub async fn lens_form_handler(data: web::Data<AppData>, _req:HttpRequest) -> impl Responder {
-    let ctx = Context::new(); 
+    let mut ctx = Context::new();
+
+    let node_names = Nodes::find_all_names().expect("Unable to load names");
+    ctx.insert("node_names", &node_names);
+
     let rendered = data.tmpl.render("first_lens_form.html", &ctx).unwrap();
     HttpResponse::Ok().body(rendered)
 }
@@ -161,6 +165,7 @@ pub async fn add_lens_form_handler(
     let p = People::find_from_code(&code).unwrap();
 
     ctx.insert("user_code", &p.code);
+    ctx.insert("user_id", &p.id);
 
     // add pull for lens data
     let people_with_lenses = RenderPerson::from(p).expect("Unable to load lenses");
