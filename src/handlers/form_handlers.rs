@@ -89,6 +89,11 @@ pub async fn handle_lens_form_input(
 
     println!("{:?}", form);
 
+    // validate form has data or re-load form
+    if form.name.is_empty() || form.response_1.is_empty() {
+        return HttpResponse::Found().header("Location", String::from("/first_lens_form")).finish()
+    };
+
     let mut person = NewPerson::new();
 
     // Get related persons
@@ -183,6 +188,11 @@ pub async fn add_handle_lens_form_input(
     _req: HttpRequest, 
     form: web::Form<AddLensForm>
 ) -> impl Responder {
+
+    // validate form has data or re-load form
+    if form.name.is_empty() || form.response_1.is_empty() {
+        return HttpResponse::Found().header("Location", format!("/add_lens_form/{}", &code)).finish()
+    };
 
     println!("Find person");
     let p = People::find_from_code(&code).unwrap();

@@ -1,5 +1,9 @@
 {% extends "base.html" %}
 
+{% block title %}
+First Lens Form 
+{% endblock title %}
+
 {% block content %}
     <div class="column" style="width:50px"></div>
 
@@ -7,7 +11,7 @@
         <h1>Welcome to Intersections</h1>
             <p>First, we will enter a Lens. This is a representation of your subjective lived experience. There are no wrong answers.</p>
             <hr>
-            <form action=/first_lens_form method=POST>
+            <form name="LensForm" action=/first_lens_form method=POST>
             <label>
                 If you have a code from a previous entry, you can enter it here to connect the results:
                 <input name="related_code">
@@ -19,7 +23,7 @@
 
                     <label>
                         Experience Name:
-                        <input id="node_selector" name="name">
+                        <input id="node_name_autocomplete" name="name">
                     </label>
 
                     <hr>
@@ -104,11 +108,10 @@
 {% block script %}
 <script>
 
-$( "#node_selector" ).autocomplete({
-  minLength: 0,
-  source: {{ node_names }},
-});
-
+    $("[id=node_name_autocomplete]").autocomplete({
+    minLength: 0,
+    source: ["executive", "manager", "father", "mother", "baby boomer"]
+    });
 
 </script>
 {% endblock script %}

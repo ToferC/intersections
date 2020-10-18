@@ -14,7 +14,8 @@
     
                 <br>
                 <a href="/person/{{ user_id }}">I'm done. Take me to my completed profile.</a>
-                <form action="/add_lens_form/{{ user_code }}" method=POST>
+                <form action="/add_lens_form/{{ user_code }}" method=POST name="lensForm"
+                    onsubmit="return validateForm()">
                 
                 <h3>Add a new experience</h3>
                 <p>How would you describe this lens of your lived experience in your own words? You are more than just your job. Examples are: Mother, Father, Manager, Artist, Millenial, Black, Indigenous, White, Executive, New Employee.
@@ -22,7 +23,7 @@
 
                     <label>
                         Experience Name:
-                        <input name="name">
+                        <input id="node_name_autocomplete" name="name">
                     </label>
 
                     <hr>
@@ -134,3 +135,22 @@
 
     </main>
 {% endblock content %}
+
+{% block scripts %}
+<script>
+    $( "[id=node_name_autocomplete]" ).autocomplete({
+    minLength: 0,
+    source: ["executive", "manager", "mother", "father"]
+    });
+
+    function validateForm() {
+    var x = document.forms["lensForm"]["name"].value;
+    var y = document.forms["lensForm"]["response_1"].value;
+
+    if (x == "" || y == "") {
+        alert("Lens name and at least one response must be filled out");
+        return false;
+        }
+    };
+</script>
+{% endblock scripts %}
