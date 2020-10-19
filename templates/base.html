@@ -126,17 +126,14 @@
       </nav>
 
     <div class="container">
+
     <div class="row">
-        <div class="col-lg-2 col-md-1"></div>
             {% block content %}
             {% endblock content %}
-        <div class="col-lg-2 col-md-1"></div>
     </div>
         
         {% block footer %}
-        <div class="footer">
             <div class="row">
-                <div class="col-lg-2 col-md-1"></div>
                 
                 <div class="col px-2 mx-2">
                     
@@ -146,14 +143,13 @@
                         
                         <p>Developed by ToferC 2020</p>
                 </div>
-                
-                <div class="col-lg-2 col-md-1"></div>
 
             </div>
-        </div>
-            {% endblock footer %}
-        </div>
-    {% block scripts %}{% endblock scripts %}
+        {% endblock footer %}
+    </div>
+
+    {% block scripts %}
+    {% endblock scripts %}
 
 </body>
 
