@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block title %}
-{{ node.node_name }} - {{ node.domain_token }}
+<title>{{ node.node_name | title }} - {{ node.domain_token | title }}</title>
 {% endblock title %}
 
 {% block content %}
@@ -37,7 +37,9 @@
                 </td>
             </tr>
         </table>
+
         <br>
+
         <table>
             <tr>
                 <th style="text-align: center;">Statement</th>
@@ -54,9 +56,10 @@
     </div>
 
     <div class="col p-2 m-2">
-        <br>
         <h1>Associated Lenses</h1>
-        <p>These are lenses from other nodes that have been linked to the {{ node.domain_token }} trait of {{ node.node_name }}. They are presented here to show how the nodes relate and how by looking at more than one facet of a person's experience, we can better understand our people's needs.</p>
+        <p>These are lenses from other nodes that have been linked to the {{ node.domain_token }} trait of {{ node.node_name }}. 
+            They are presented here to show how the nodes relate and how by looking at more than one facet of a person's experience, 
+            we can better understand our people's needs.</p>
         <hr>
                 {% for lens in other_lenses %}
                     <table>
@@ -82,7 +85,9 @@
                             </td>
                         </tr>
                     </table>
+
                     <br>
+
                     <table>
                         <tr>
                             <th style="text-align: center;">Statement</th>
@@ -95,6 +100,7 @@
                             </tr>
                         {% endfor %}
                     </table>
+                    
                     <hr>
                     <br>
                 {% endfor %}
