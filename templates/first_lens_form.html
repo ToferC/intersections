@@ -5,15 +5,16 @@
 {% endblock title %}
 
 {% block content %}
-    <div class="col m-sm-2 m-1">
+    <div class="col m-md-2 m-1">
         <br>
         <h1>Welcome to the intersectional data survey</h1>
         <p><a href="/">Return to Index</a></p>
             <p>We will start by adding your first Lens. This is a representation of your subjective lived experience. There are no wrong answers.</p>
             <hr>
             <form name="LensForm" action=/first_lens_form method=POST>
+            <p>If you have a code from a previous entry, you can enter it here to connect the results:</p>
             <label>
-                If you have a code from a previous entry, you can enter it here to connect the results:
+                <strong>Code:</strong>
                 <input class="form-control form-control-lg" name="related_code">
             </label>
             <hr>
@@ -68,19 +69,22 @@
                     <p><strong>Though this lens, in the workplace...</strong></p>
                     <div>
                         <label>
-                            I feel <input class="form-control form-control-lg" name="response_1">.
+                            <strong>I feel</strong>
+                            <input class="form-control form-control-lg" name="response_1">
                         </label>
                     </div>
 
                     <div>
                         <label>
-                            I feel <input class="form-control form-control-lg" name="response_2">.
+                            <strong>I feel</strong>
+                            <input class="form-control form-control-lg" name="response_2">
                         </label>
                     </div>
 
                     <div>
                         <label>
-                            I feel <input class="form-control form-control-lg" name="response_3">.
+                            <strong>I feel</strong>
+                            <input class="form-control form-control-lg" name="response_3">
                         </label>
                     </div>
 

@@ -6,7 +6,7 @@
 
 {% block content %}
 
-    <div class="col m-sm-2 m-1">
+    <div class="col m-md-2 m-1">
         <br>
         <h1>{{ title }}</h1>
         <p><a href="/full_network_graph">Return to Full Graph</a> | <a href="/person_network_graph/{{ person_id }}">View Person Graph</a> | <a href="/">Return to Index</a></p>
@@ -23,24 +23,47 @@
             </strong></li>
             <hr>
                 {% for lens in person.lenses %}
-                    <p><strong>{{ lens.node_name | title }} ({{ lens.node_domain | title }}): {{ lens.inclusivity }}
-                        {% if lens.inclusivity | float > 0.2 %}
-                            <span style="color: green; font-size: 2em;">＋</span>
-                        {% elif lens.inclusivity | float < -0.2 %}
-                            <span style="color: red; font-size: 2em;">－</span>
-                        {% else %}
-                            <span style="color: blue; font-size: 1.5em;"><></span>
-                        {% endif %}
-                    </strong></p>
-                    {% for statement in lens.statements | slice(end=9) %}
-                        <li>{{ statement }}</li>
-                    {% endfor %}
+                    <table>
+                        <tr>
+                            <th style="text-align: center;">Lens</th>
+                            <th style="text-align: center;">Domain</th>
+                            <th style="text-align: center;">Inclusivity</th>
+                        </tr>
+                        <tr>
+                            <td style="text-align: center;"><a href="/node/{{ lens.node_name }}">{{ lens.node_name | title }}</a></td>
+                            <td style="text-align: center;">{{ lens.node_domain | title }}</td>
+                            <td style="text-align: center;">
+                                {{ lens.inclusivity | float }}
+                                {% if lens.inclusivity | float > 0.2 %}
+                                    <span style="color: green; font-size: 2em;">＋</span>
+                                {% elif lens.inclusivity | float < -0.2 %}
+                                    <span style="color: red; font-size: 2em;">－</span>
+                                {% else %}
+                                    <span style="color: blue; font-size: 1.5em;"><></span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    </table>
+                    <br>
+                    <table>
+                        <tr>
+                            <th style="text-align: center;">Statements</th>
+                        </tr>
+                        {% for statement in lens.statements %}
+                            <tr>
+                                <td>{{ statement }}</td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                    <hr>
+                    <br>
                 {% endfor %}
                 <hr>
             {% endfor %}
     </div>
 
-    <div class="col m-sm-2 m-1">
+    <div class="col m-md-2 m-1">
+        <br>
         <h1>Global Lenses</h1>
         <br>
         <p>These are the aggregate lenses from everyone who completed the survey and identified these lenses as part of their identity. They are presented here so that you can compare the person selected with the global ratings.</p>
