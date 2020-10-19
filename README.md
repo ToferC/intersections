@@ -11,3 +11,4 @@ This Web app is an MVP for a new way to look at demographic data through the len
 - [ ] Graphql API
 - [ ] Word2Vec modelling for lenses
 - [x] Data visualization of ecosystem
+- [ ] Search
