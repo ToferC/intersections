@@ -10,6 +10,11 @@
         <br>
         <h1>{{ title }}</h1>
         <p><a href="/full_network_graph">Return to Full Graph</a> | <a href="/person_network_graph/{{ person_id }}">View Person Graph</a> | <a href="/">Return to Index</a></p>
+        <hr>
+        <h2>Your code is {{ person_code }}</h2>
+        <p>Please make a copy of your code if you haven't already. It is the only way that you can return to, or build on your profile.</p>
+        <p>The application does not keep any identifying information and the administrators will not be able to provide you with this code once you've finished your survey and closed the window.</p>
+        <hr>
             {% for person in people_lenses %}
             <li><strong>Date Created: {{ person.person.date_created | date }}</strong></li>
             <li><strong>Total Inclusion: {{ person.total_inclusivity | round(method="ceil", precision=3) }}
