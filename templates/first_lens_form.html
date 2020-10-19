@@ -1,29 +1,29 @@
 {% extends "base.html" %}
 
 {% block title %}
-First Lens Form 
+    <title>First Lens Form</title>
 {% endblock title %}
 
 {% block content %}
-    <div class="column" style="width:50px"></div>
-
-    <div class="column">
-        <h1>Welcome to Intersections</h1>
-            <p>First, we will enter a Lens. This is a representation of your subjective lived experience. There are no wrong answers.</p>
+    <div class="col-md-8">
+        <br>
+        <h1>Welcome to the intersectional data survey</h1>
+            <p>We will start by adding your first Lens. This is a representation of your subjective lived experience. There are no wrong answers.</p>
             <hr>
             <form name="LensForm" action=/first_lens_form method=POST>
             <label>
                 If you have a code from a previous entry, you can enter it here to connect the results:
-                <input name="related_code">
+                <input class="form-control form-control-lg" name="related_code">
             </label>
             <hr>
                 <h3>Name your experience</h3>
-                <p>How would you describe this lens of your lived experience in your own words? You are more than just your job. Examples are: Mother, Father, Manager, Artist, Millenial, Black, Indigenous, White, Executive, New Employee.
+                <p>How would you describe this lens of your lived experience in your own words?</p>
+                <p>You are more than just your job. Examples are: Mother, Father, Manager, Artist, Millenial, Black, Indigenous, White, Executive, New Employee.
                     Anything that describes an element of who you are and that impacts your experience in the workplace.</p>
 
                     <label>
-                        Experience Name:
-                        <input id="node_name_autocomplete" name="name">
+                        <strong>Experience Name:</strong>
+                        <input class="form-control form-control-lg" id="node_name_autocomplete" name="name">
                     </label>
 
                     <hr>
@@ -31,8 +31,10 @@ First Lens Form
                         <h3>Which domain does this experience fall into?</h3>
                         <p>A domain is reflects where a lens comes from. Is it a part of your identity, experience or culture? Is it a role that you have been given as part of your work? Is it a function you play within a network or system?</p>
                         <p>In shorthand, you can break it down like this:</p>
-                        <li>Person = part of your individual experience that exists outside of the workplace.</li>
-                        <li>Role = a formal function or work role within the workplace.</li>
+                        <ul>
+                            <li>Person = part of your individual experience that exists outside of the workplace.</li>
+                            <li>Role = a formal function or work role within the workplace.</li>
+                        </ul>
                         <!--
                         <li>System = which systems or informal communities do you relate to and influence?</li>
                         -->
@@ -65,23 +67,19 @@ First Lens Form
                     <p><strong>Though this lens, in the workplace...</strong></p>
                     <div>
                         <label>
-                            I feel <input name="response_1">.
+                            I feel <input class="form-control form-control-lg" name="response_1">.
                         </label>
                     </div>
 
-                    <br>
-
                     <div>
                         <label>
-                            I feel <input name="response_2">.
+                            I feel <input class="form-control form-control-lg" name="response_2">.
                         </label>
                     </div>
 
-                    <br>
-
                     <div>
                         <label>
-                            I feel <input name="response_3">.
+                            I feel <input class="form-control form-control-lg" name="response_3">.
                         </label>
                     </div>
 
@@ -101,8 +99,7 @@ First Lens Form
             
             <hr>
         
-        </div>
-    <div class="column" style="width:50px"></div>
+    </div>
 {% endblock content %}
 
 {% block script %}

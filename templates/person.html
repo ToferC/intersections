@@ -5,10 +5,9 @@
 {% endblock title %}
 
 {% block content %}
-<main>
-    <div class="column" style="width:50px"></div>
 
-    <div class="column" style="width: 48%">
+    <div class="col-md-4">
+        <br>
         <h1>{{ title }}</h1>
         <p><a href="/full_network_graph">Return to Full Graph</a> | <a href="/person_network_graph/{{ person_id }}">View Person Graph</a> | <a href="/">Return to Index</a></p>
             {% for person in people_lenses %}
@@ -40,8 +39,9 @@
             {% endfor %}
     </div>
 
-    <div class="column" style="width: 48%">
+    <div class="col-md-4">
         <h1>Global Lenses</h1>
+        <br>
         <p>These are the aggregate lenses from everyone who completed the survey and identified these lenses as part of their identity. They are presented here so that you can compare the person selected with the global ratings.</p>
         <hr>
                 {% for lens in other_lenses %}
@@ -87,7 +87,4 @@
                 <hr>
     </div>
 
-</div>
-    <div class="column" style="width:50px"></div>
-</main>
 {% endblock content %}
