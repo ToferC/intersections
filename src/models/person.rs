@@ -6,8 +6,8 @@ use diesel::prelude::*;
 use diesel::RunQueryDsl;
 use diesel::{QueryDsl, BelongingToDsl};
 
-use crate::schema::{people, lenses, nodes};
-use crate::models::{Lenses, Nodes};
+use crate::schema::{people};
+use crate::models::{Lenses};
 use crate::error_handler::CustomError;
 use crate::database;
 

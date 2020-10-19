@@ -3,16 +3,11 @@ use crate::AppData;
 use tera::{Context};
 use diesel::prelude::*;
 use diesel::{QueryDsl, BelongingToDsl};
-use serde_json::json;
 
-use num_bigint::{ToBigInt};
-use bigdecimal::BigDecimal;
-
-use crate::models::{NewPerson, Lens, Lenses, Node, Nodes, People};
+use crate::models::{Lenses, Nodes, People};
 use crate::database;
 
-use crate::schema::{people, lenses, nodes};
-use crate::handlers::{RenderPerson};
+use crate::schema::{nodes};
 
 
 #[get("/")]

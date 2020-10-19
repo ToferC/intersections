@@ -7,7 +7,7 @@ use crate::error_handler::CustomError;
 use crate::database;
 
 use crate::models::{People, Nodes};
-use crate::schema::{lenses, people, nodes};
+use crate::schema::{lenses, nodes};
 
 #[derive(Debug, Serialize, Deserialize, AsChangeset, Insertable)]
 #[table_name = "lenses"]

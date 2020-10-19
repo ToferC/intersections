@@ -1,22 +1,10 @@
-use actix_web::{web, get, HttpResponse, HttpRequest, Responder};
+use actix_web::{web, get, HttpResponse, Responder};
 use crate::AppData;
 use tera::{Context};
-use diesel::prelude::*;
-use diesel::{QueryDsl, BelongingToDsl};
-use serde_json::json;
-use serde::{Serialize, Deserialize};
-use std::fmt;
-use std::hash::Hash;
 
-use num_bigint::{ToBigInt};
-use bigdecimal::{BigDecimal, ToPrimitive};
+use crate::models::{Lenses, Nodes, People};
 
-use crate::models::{Lenses, Node, Nodes, People};
-use crate::database;
-
-use crate::schema::{people, nodes};
-use crate::handlers::{CytoGraph, CytoEdge, CytoNode, GNode, GEdge, generate_cyto_graph,
-    generate_node_cyto_graph};
+use crate::handlers::{generate_cyto_graph};
 
 #[get("/full_network_graph")]
 pub async fn full_network_graph(

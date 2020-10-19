@@ -1,7 +1,6 @@
 use serde::{Serialize, Deserialize};
 use diesel::prelude::*;
 
-use diesel::select;
 use crate::error_handler::CustomError;
 use crate::database;
 

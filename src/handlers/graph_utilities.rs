@@ -1,15 +1,9 @@
-use diesel::prelude::*;
-use diesel::{QueryDsl, BelongingToDsl};
-use serde_json::json;
 use serde::{Serialize, Deserialize};
 use std::fmt;
 
-use bigdecimal::{BigDecimal, ToPrimitive};
+use bigdecimal::{ToPrimitive};
 
 use crate::models::{Lenses, Nodes, People};
-use crate::database;
-
-use crate::schema::{people, lenses, nodes};
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct CytoGraph {

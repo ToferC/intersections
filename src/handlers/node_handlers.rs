@@ -3,54 +3,12 @@ use crate::AppData;
 use tera::{Context};
 use diesel::prelude::*;
 use diesel::{QueryDsl, BelongingToDsl};
-use serde::Serialize;
 
-use bigdecimal::{ToPrimitive};
-use std::collections::BTreeMap;
-
-use crate::models::{Lenses, Nodes, People};
+use crate::models::{Lenses, Nodes};
 use crate::database;
-use crate::handlers::{generate_cyto_graph, generate_node_cyto_graph, RenderPerson,
-    AggLens};
+use crate::handlers::{generate_node_cyto_graph, AggLens};
 
-use crate::schema::{people, nodes, lenses};
-
-#[derive(Serialize, Debug)]
-pub struct AggregateNodes {
-    pub name: String,
-    pub domain: String,
-    pub count: u32,
-    pub mean_inclusivity: f32,
-    pub frequency_distribution: BTreeMap<String, u32>,
-}
-
-impl AggregateNodes {
-    pub fn from(lenses: Vec<Lenses>) -> AggregateNodes {
-        let name = &lenses[0].node_name;
-        let domain = &lenses[0].node_domain;
-
-        let mut inclusivity: f32 = 0.0;
-        let mut counts = BTreeMap::new();
-
-        for l in &lenses {
-            inclusivity += l.inclusivity.to_f32().expect("Unable to convert bigdecimal");
-
-            for s in &l.statements {
-                *counts.entry(s.to_owned()).or_insert(0) += 1;
-            };
-        };
-
-        let count = lenses.len() as u32;
-
-        AggregateNodes {
-            name: name.to_owned(),
-            domain: domain.to_owned(),
-            count: count,
-            mean_inclusivity: inclusivity / count as f32,
-            frequency_distribution: counts,
-        }
-    }
-}
+use crate::schema::{nodes, lenses};
 
 #[get("/node/{label}")]
 pub async fn node_page(
