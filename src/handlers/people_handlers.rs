@@ -51,19 +51,21 @@ impl AggLens {
     }
 }
 
-#[get("/person/{id}")]
+#[get("/person/{code}")]
 pub async fn person_page(
-    web::Path(id): web::Path<i32>, 
+    web::Path(code): web::Path<String>, 
     data: web::Data<AppData>, 
     _req:HttpRequest
 ) -> impl Responder {
     let mut ctx = Context::new(); 
 
-    let p = People::find(id).unwrap();
+    let p = People::find_from_code(&code).unwrap();
+
+    ctx.insert("person_code", &code);
 
     ctx.insert("person_id", &p.id);
 
-    let title = format!("Person: P-{}", &p.id);
+    let title = format!("Person: {}", &p.code);
     ctx.insert("title", &title);
     
     // add pull for lens data

@@ -2,18 +2,50 @@
 
 {% block content %}
         <div class="col m-md-2 m-1">
-            <h1>Welcome to Intersections</h1>
+            <h1>Welcome to the Intersectional Data Survey and Analysis MVP</h1>
                 <p>This application is a learning project and experiment in collecting and and gaining insight from sensitive or personal information while protecting the privacy of participants.</p>
     
-                <h3>Want to contribute?</h3>
-                <p><a href="/first_lens_form">Go to the survey.</a></p>
-                <hr>
-                <h3>Want to explore?</h3>
-                <p><a href="/full_network_graph">Explore the full network graph.</a></p>
-                <h4>You can also</h4>
-                {% for n in node_names %}
-                    <p><a href="/node_network_graph/{{ n }}">See the lens for {{ n | title }}.</a></p>
-                {% endfor %}
-                <hr>
+            <h2>Why are you doing this?</h2>
+            <p>Current surveys artificially divide people into (often binary) categories:</p>
+            <ul>
+                <li>Visible Minority (or not)</li>
+                <li>Person with a disability (or not)</li>
+            </ul>
+            <p>This practice:</p>
+            <ul>
+                <li>Doesn’t represent the complexity that each person brings to the table</li>
+                <li>Does not explain how different people’s experiences of this part of their lives may differ</li>
+                <li>Does not track or infer the impact of what is assumed to be the “norm” - white, cis, abled, male</li>
+            </ul>
+            <hr>
+
+            <h2>How will this make things better?</h2>
+            <p>This MVP is designed to give participants the control to define their lived experience as they perceive it. A single experience is a lens.</p>
+            <p>By combining, or layering lenses, we can provide a more holistic understanding of a person’s lived experience in their own words.</p>
+            <p>By combining lived experiences into a graph that links common concepts like “manager”, “woman”, “black”, “mother”, “father” or “millennial”, we can see how the lenses and experiences interact with each other and develop a better understanding of how our workplaces impact our people.</p>
+            <p>By calling out and making explicit the “normal”, we can identify systemic privilege and bias in our organizations.</p>
+            <hr>
+
+            <h2>What is this work based on?</h2>
+            <p>The structure of the survey is based on the <a href="https://www.aecf.org/m/blogdoc/PersonRoleSystemFramework-2013.pdf">Person-Role-System</a>, a framework for understanding dynamic relationships between people in the roles and systems in which they function.</p>
+            <p>You can learn about this framework here:</p>
+
+            <iframe width="560" height="315" src="https://www.youtube.com/embed/Q1dUTmdhgss" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            <hr>
+
+            <h2>Is it done?</h2>
+            <p>No.</p>
+            <p>This work is an MVP (minimal viable product) to test the survey, data and design methodology.</p>
+            <p>There is a great deal of testing and questions to ask before I would put this in front of our employees.</p>
+            <p>But it is a start and I’d love your feedback.</p>
+            <hr>
+
+            <h2>The survey asks personal questions. How will you protect my information?</h2>
+            <p>Intersections has been designed to ensure your privacy.</p>
+            <p>Only the person who completes the survey has the code that will allow them to identify themselves or to link data.</p>
+            <p>The application does not save any information that could be traced back to you as an individual.</p>
+            <p>Even if we end up using this tool through the workplace, it would be *your* choice to share your code and allow yourself to be identified.</p>
+            <hr>
+
         </div>
 {% endblock content %}

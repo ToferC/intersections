@@ -65,7 +65,7 @@ pub fn generate_cyto_graph(
             size: 25,
             color: String::from("orange"),
             inclusivity: 0.0,
-            href: format!("/person/{}", p.id),
+            href: format!("/person_network_graph/{}", p.id),
         };
 
         cyto_node_array.push(CytoNode {
