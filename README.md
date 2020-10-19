@@ -4,10 +4,10 @@ This Web app is an MVP for a new way to look at demographic data through the len
 ## Overview of work
 - [x] Working Web app
 - [x] Model of lenses and lived experience
-- [ ] Forms
+- [x] Forms
 - [ ] Encryption at rest / in transit
-- [ ] Database and persistence
+- [x] Database and persistence
 - [ ] Privacy respecting tokens for users to track their experience against others
 - [ ] Graphql API
 - [ ] Word2Vec modelling for lenses
-- [ ] Data visualization of ecosystem
+- [x] Data visualization of ecosystem

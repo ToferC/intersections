@@ -5,7 +5,7 @@
 {% endblock title %}
 
 {% block content %}
-        <div class="col m-md-2 m-1">
+        <div class="col-md m-md-2 m-1">
             <br>
             <h1>Let's add another experience</h1>
             <p><a href="/">Return to Index</a> | <a href="/person/{{ user_id }}">I'm done. Take me to my completed profile.</a>
@@ -13,20 +13,43 @@
             <hr>
             <h2>User {{ user_code }}</h2>
             <hr>
-                <p>Now, you can add another Lens. This is a representation of your subjective lived experience. There are no wrong answers.</p>
+                <p>Now, you can add another Lens. By adding layers of your subjective lived experience, you'll get a better idea of how they might impact your experience at work. You will also learn how your experience relates to those of others.</p>
     
                 <br>
                 <form action="/add_lens_form/{{ user_code }}" method=POST name="lensForm"
                     onsubmit="return validateForm()">
                 
-                <h3>Add a new experience</h3>
-                <p>How would you describe this lens of your lived experience in your own words? You are more than just your job. Examples are: Mother, Father, Manager, Artist, Millenial, Black, Indigenous, White, Executive, New Employee.
-                    Anything that describes an element of who you are and that impacts your experience in the workplace.</p>
-
-                    <label>
-                        <strong>Experience Name:</strong>
-                        <input class="form-control form-control-lg" id="node_name_autocomplete" name="name">
-                    </label>
+                    <h3>Add a new experience</h3>
+                    <p>How would you describe this lens of your lived experience in your own words?</p>
+                    <p>You are more than just your job. Examples are: Mother, Father, Manager, Artist, Millenial, Black, Indigenous, White, Executive, New Employee.
+                        Anything that describes an element of who you are and that impacts your experience in the workplace.</p>
+                        <p>A useful framework for this exercise was developed by Ritu in <a href="https://rituhasin.com">Build Your Cultural Lens</a>.</p>
+                        <h5>Some Layers of Cultural Identity</h5>
+                        <div class="row">
+                            <div class="col m-1">
+                                <ul>
+                                    <li>Nationality</li>
+                                    <li>Race/Ethnoculture</li>
+                                    <li>Religion</li>
+                                    <li>Gender Identity</li>
+                                    <li>Sexual Orientation</li>
+                                </ul>
+                            </div>
+                            <div class="col m-1">
+                                <ul>
+                                    <li>Dis(Ability)</li>
+                                    <li>Age</li>
+                                    <li>Education</li>
+                                    <li>Socioeconimic Status/Class</li>
+                                    <li>Profession/Career</li>
+                                </ul>
+                            </div>
+                        </div>
+    
+                        <label>
+                            <strong>Name your Experience:</strong>
+                            <input class="form-control form-control-lg" id="node_name_autocomplete" name="name">
+                        </label>
 
                     <hr>
 
@@ -35,7 +58,7 @@
                         <p>In shorthand, you can break it down like this:</p>
                         <ul>
                             <li>Person = part of your individual experience that exists outside of the workplace.</li>
-                            <li>Role = a formal function or work role within the workplace.</li>
+                            <li>Role = a formal or informal function or work role within the workplace.</li>
                         </ul>
                         <!--
                         <li>System = which systems or informal communities do you relate to and influence?</li>
@@ -70,21 +93,21 @@
                     <div>
                         <label>
                             <strong>I feel</strong>
-                            <input class="form-control form-control-lg" name="response_1">.
+                            <input class="form-control form-control-lg" name="response_1">
                         </label>
                     </div>
 
                     <div>
                         <label>
                             <strong>I feel</strong>
-                            <input class="form-control form-control-lg" name="response_2">.
+                            <input class="form-control form-control-lg" name="response_2">
                         </label>
                     </div>
 
                     <div>
                         <label>
                             <strong>I feel</strong>
-                            <input class="form-control form-control-lg" name="response_3">.
+                            <input class="form-control form-control-lg" name="response_3">
                         </label>
                     </div>
 
@@ -103,7 +126,7 @@
                 </form>
                 
         </div>
-        <div class="col m-md-2 m-1">
+        <div class="col-md m-md-2 m-1">
             <br>
             <h2>Your experiences so far:</h2>
                 {% for person in people_lenses %}
