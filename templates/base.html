@@ -66,7 +66,7 @@
 
             #cy {
             width: 100%;
-            height: 800px;
+            height: 60vh;
             display: block;
             }
 
@@ -89,8 +89,8 @@
 
 <body>
 
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand" href="#">Intersections Data MVP</a>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <a class="navbar-brand" href="/">Intersections Data MVP</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
@@ -125,30 +125,34 @@
         </div>
       </nav>
 
+    <div class="container">
     <div class="row">
-        <div class="col-sm-2 col-xs-1"></div>
-        {% block content %}
-        {% endblock content %}
-        <div class="col-sm-2 col-xs-1"></div>
-    </div>
-
-    {% block footer %}
-    <footer>
-        <div class="row">
-        <div class="col-md-2"></div>
-
-        <div class="col-8">
-
-            <p>Please note that this work is a learning project and experiment in collecting and and gaining insight from sensitive or personal information while protecting the privacy of participants.</p>
-            <p>The Intersections project is available on GitHub under an MIT licence here: <a href="https://github.com/ToferC/intersections">https://github.com/ToferC/intersections</a></p>
-            <p>The original work on intersectional data models was done: <a href="https://github.com/ToferC/learner_models">https://github.com/ToferC/learner_models/a></p>
-        
-            <p>Developed by ToferC 2020</p>
+        <div class="col-lg-2 col-md-1"></div>
+            {% block content %}
+            {% endblock content %}
+        <div class="col-lg-2 col-md-1"></div>
         </div>
-        <div class="col-md-2"></div>
-    </div>
-    </footer>
-    {% endblock footer %}
+        
+        {% block footer %}
+        <div class="footer">
+            <div class="row">
+                <div class="col-lg-2 col-md-1"></div>
+                
+                <div class="col px-2 mx-2">
+                    
+                    <p>Please note that this work is a learning project and experiment in collecting and and gaining insight from sensitive or personal information while protecting the privacy of participants.</p>
+                    <p>The Intersections project is available on GitHub under an MIT licence here: <a href="https://github.com/ToferC/intersections">https://github.com/ToferC/intersections</a></p>
+                    <p>The original work on intersectional data models was done: <a href="https://github.com/ToferC/learner_models">https://github.com/ToferC/learner_models/a></p>
+                        
+                        <p>Developed by ToferC 2020</p>
+                </div>
+                
+                <div class="col-lg-2 col-md-1"></div>
+
+            </div>
+        </div>
+            {% endblock footer %}
+        </div>
     {% block scripts %}{% endblock scripts %}
 
 </body>

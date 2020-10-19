@@ -6,7 +6,7 @@
 
 {% block content %}
 
-    <div class="col-md-4">
+    <div class="col p-2 m-2">
         <br>
         <h1>{{ node.node_name | title }} - {{ node.domain_token | title }}</h1>
         <p><a href="/full_network_graph">Return to Full Graph</a> | <a href="/node_network_graph/{{ node.node_name }}">View Node Graph</a> | <a href="/">Return to Index</a></p>
@@ -53,7 +53,7 @@
 
     </div>
 
-    <div class="col-md-4">
+    <div class="col p-2 m-2">
         <br>
         <h1>Associated Lenses</h1>
         <p>These are lenses from other nodes that have been linked to the {{ node.domain_token }} trait of {{ node.node_name }}. They are presented here to show how the nodes relate and how by looking at more than one facet of a person's experience, we can better understand our people's needs.</p>
@@ -98,7 +98,6 @@
                     <hr>
                     <br>
                 {% endfor %}
-                <hr>
     </div>
 
 {% endblock content %}

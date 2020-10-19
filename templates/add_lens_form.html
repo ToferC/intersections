@@ -5,15 +5,14 @@
 {% endblock title %}
 
 {% block content %}
-        <div class="col-md-4">
+        <div class="col p-2 m-2">
             <br>
-            <h1>Let's add aother experience</h1>
+            <h1>Let's add another experience</h1>
             <p><a href="/">Return to Index</a> | <a href="/person/{{ user_id }}">I'm done. Take me to my completed profile.</a>
             </p>
             <hr>
             <h2>User {{ user_code }}</h2>
             <hr>
-            <h2>Add another lens</h2>
                 <p>Now, you can add another Lens. This is a representation of your subjective lived experience. There are no wrong answers.</p>
     
                 <br>
@@ -101,7 +100,7 @@
                 </form>
                 
         </div>
-        <div class="col-md-4">
+        <div class="col p-2 m-2">
             <br>
             <h2>Your experiences so far:</h2>
                 {% for person in people_lenses %}
