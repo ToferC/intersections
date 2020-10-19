@@ -94,6 +94,9 @@ pub async fn node_page(
 
     ctx.insert("other_lenses", &aggregate_lenses);
 
+    let node_names = Nodes::find_all_names().expect("Unable to load names");
+    ctx.insert("node_names", &node_names);
+
     let rendered = data.tmpl.render("node.html", &ctx).unwrap();
     HttpResponse::Ok().body(rendered)
 }
@@ -126,6 +129,9 @@ pub async fn node_network_graph(
 
     let title = "Node Network Graph";
     ctx.insert("title", title);
+
+    let node_names = Nodes::find_all_names().expect("Unable to load names");
+    ctx.insert("node_names", &node_names);
     
     let rendered = data.tmpl.render("network_graph.html", &ctx).unwrap();
     HttpResponse::Ok().body(rendered)

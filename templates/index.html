@@ -11,8 +11,8 @@
                 <h3>Want to explore?</h3>
                 <p><a href="/full_network_graph">Explore the full network graph.</a></p>
                 <h4>You can also</h4>
-                {% for n in nodes %}
-                    <p><a href="/node_network_graph/{{ n.node_name }}">See the lens for {{ n.node_name | title }}.</a></p>
+                {% for n in node_names %}
+                    <p><a href="/node_network_graph/{{ n }}">See the lens for {{ n.node_name | title }}.</a></p>
                 {% endfor %}
                 <hr>
         </div>

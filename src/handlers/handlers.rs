@@ -14,7 +14,7 @@ use crate::schema::{nodes};
 pub async fn index(data: web::Data<AppData>, _req:HttpRequest) -> impl Responder {
     println!("Access index");
 
-    let node_vec = Nodes::find_all().expect("Unable to load nodes");
+    let node_vec = Nodes::find_all_names().expect("Unable to load nodes");
 
     let mut ctx = Context::new();
 
