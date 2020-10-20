@@ -15,6 +15,31 @@
         <p>Please make a copy of your code if you haven't already. It is the only way that you can return to, or build on your profile.</p>
         <p>The application does not keep any identifying information and the administrators will not be able to provide you with this code once you've finished your survey and closed the window.</p>
         <hr>
+        <button class="btn btn-info" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+            Explanation of results
+        </button>
+        <div class="collapse" id="collapseExample">
+            <div class="card card-body">
+            <p>The lenses of your lived experience that you entered as part of the survey have been combined into a graph - a networked representation of your data, combined with the data of other people.</p>
+            <p>Below, you will find your own data - a summary of what you entered in the survey. The only thing new to you here might be the <strong>total inclusivity</strong> measure. This takes the individual ratings that you entered through the slider and returns the sum.</p>
+            <p>Further below, or in the next column depending on your device, you will see the results from the full data graph. This includes your results, but also those of every other person who described a similar lived experience. This lets you see how other people might interpret experiences similar to your own.
+                As more peole complete the survey, this insight will deepen.</p>
+            <p>Here are what the results mean:</p>
+            <ul>
+                <li><strong>Lens</strong> - the name of the lived experience</li>
+                <li><strong>Domain</strong> - whether the experience is a part of the person or a part of the system of work</li>
+                <li><strong>Instances</strong> - how many times this experience has been entered in the survey. If the result is "1", then you are the first person to do so</li>
+                <li><strong>Mean Inclusivity</strong> - the average inclusivity rating for the experience from -1.00 to +1.00.</li>
+            </ul>
+            <p>The next chart is a frequency distribution of the responses to the statement: "Though this lens, in the workplace, I feel..."</p>
+            <ul>
+                <li><strong>Statement</strong> - the explanation of how the experience effected the person</li>
+                <li><strong>Count</strong> - the number of times people recorded this explanation</li>
+            </ul>
+        </div>
+        </div>
+        <hr>
+        <h2>Your Profile</h2>
             {% for person in people_lenses %}
             <li><strong>Date Created: {{ person.person.date_created | date }}</strong></li>
             <li><strong>Total Inclusion: {{ person.total_inclusivity | round(method="ceil", precision=3) }}

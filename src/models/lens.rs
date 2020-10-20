@@ -89,7 +89,12 @@ impl Lenses {
 
     pub fn load_api_data() -> Result<Vec<(People, Vec<(Lenses, Nodes)>)>, CustomError> {
         let conn = database::connection()?;
-        let people = People::find_all()?;
+        let mut people = People::find_all()?;
+
+        for mut person in people.iter_mut() {
+            person.code = String::from("protected");
+            person.related_codes = Vec::new();
+        };
 
         // join lenses and nodes
         let node_lenses = Lenses::belonging_to(&people)
