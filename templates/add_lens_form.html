@@ -30,8 +30,7 @@
 
             <hr>
                 <br>
-                <form action="/add_lens_form/{{ user_code }}" method=POST id="lensForm" name="lensForm"
-                    onsubmit="return validateForm()">
+                <form action="/add_lens_form/{{ user_code }}" method=POST id="lensForm" name="lensForm">
                 
                     <h2>1. Name your experience</h2>
     
@@ -115,8 +114,10 @@
 
 {% block scripts %}
 <script>
+    window.onSubmit = onSubmit;
+
     function onSubmit(token) {
-      document.getElementById("demo-form").submit();
-    }
-  </script>
+    document.getElementById("lensForm").submit();
+    };
+</script>
 {% endblock scripts %}

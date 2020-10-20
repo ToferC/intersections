@@ -5,7 +5,7 @@
 {% endblock title %}
 
 {% block add_preload %}
-    <script src="https://www.google.com/recaptcha/api.js"></script>
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 {% endblock add_preload %}
 
 {% block content %}
@@ -107,17 +107,14 @@
 
 {% block footer %}<br><br><br>{% endblock footer %}
 
-{% block script %}
+{% block scripts %}
 <script>
 
-    $("[id=node_name_autocomplete]").autocomplete({
-    minLength: 0,
-    source: ["executive", "manager", "father", "mother", "baby boomer"]
-    });
+    window.onSubmit = onSubmit;
 
     function onSubmit(token) {
      document.getElementById("lensForm").submit();
-   }
+   };
 
 </script>
-{% endblock script %}
+{% endblock scripts %}
