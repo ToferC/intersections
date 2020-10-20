@@ -23,6 +23,19 @@ pub async fn index(data: web::Data<AppData>, _req:HttpRequest) -> impl Responder
     HttpResponse::Ok().body(rendered)
 }
 
+#[get("/survey_intro")]
+pub async fn survey_intro(data: web::Data<AppData>, _req:HttpRequest) -> impl Responder {
+    println!("Access index");
+
+    let mut ctx = Context::new();
+
+    let node_vec = Nodes::find_all_names().expect("Unable to load nodes");
+    ctx.insert("node_names", &node_vec);
+
+    let rendered = data.tmpl.render("survey_intro.html", &ctx).unwrap();
+    HttpResponse::Ok().body(rendered)
+}
+
 #[get("/api")]
 pub async fn api_base() -> impl Responder {
 

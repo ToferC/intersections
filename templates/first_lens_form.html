@@ -4,138 +4,108 @@
     <title>First Lens Form</title>
 {% endblock title %}
 
+{% block add_preload %}
+    <script src="https://www.google.com/recaptcha/api.js"></script>
+{% endblock add_preload %}
+
 {% block content %}
     <div class="col m-md-2 m-1">
         <br>
-        <h1>Welcome to the intersectional data survey</h1>
-        <p><a href="/">Return to Index</a></p>
-            <p>We will start by adding your first Lens. This is a representation of your subjective lived experience. There are no wrong answers.</p>
-            <hr>
-            <form name="LensForm" action=/first_lens_form method=POST>
-            <p>If you have a code from a previous entry, you can enter it here to connect the results:</p>
+        <h1>Add a lens</h1>
+        <hr>
+
+        <form name="LensForm" id="lensForm" action=/first_lens_form method=POST>
+        <label>
+            <strong>If you already have a code, you can enter it here to connect your profiles:</strong>
+            <input class="form-control form-control-lg" name="related_code" placeholder="Your previous profile code">
+            <small id="code_help" class="form-text text-muted">You only need to do this if you already have a previous profile and you'd like to connect it to a new profile.</small>
+        </label>
+        <hr>
+
+        <strong>Progress (0/6)</strong>
+        <div class="progress">
+            <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+        </div>
+        <hr>
+
+
+            <h2>Name your experience</h2>
+            
+
             <label>
-                <strong>Code:</strong>
-                <input class="form-control form-control-lg" name="related_code" placeholder="Your previous profile code">
-                <small id="code_help" class="form-text text-muted">You only need to do this if you already have a previous profile and you'd like to connect it to a new profile.</small>
+                <input class="form-control form-control-lg" id="node_name_autocomplete" name="name" placeholder="Experience name..." required
+                maxlength="32">
+                <small id="experience_help" class="form-text text-muted">Enter a few words to name your experience here.</small>
             </label>
+
             <hr>
-                <h2>Name your experience</h2>
-                <p>How would you describe this lens of your lived experience in your own words?</p>
-                <p>You are more than just your job. Examples are: Mother, Father, Manager, Artist, Millenial, Black, Indigenous, White, Executive, New Employee.
-                    Anything that describes an element of who you are and that impacts your experience in the workplace.</p>
-                    <p>A useful framework for this exercise was developed by Ritu in <a href="https://rituhasin.com">Build Your Cultural Lens</a>.</p>
-                    <h5>Some Layers of Cultural Identity</h5>
-                    <div class="row">
-                        <div class="col m-1">
-                            <ul>
-                                <li>Nationality</li>
-                                <li>Race/Ethnoculture</li>
-                                <li>Religion</li>
-                                <li>Gender Identity</li>
-                                <li>Sexual Orientation</li>
-                            </ul>
-                        </div>
-                        <div class="col m-1">
-                            <ul>
-                                <li>Dis(Ability)</li>
-                                <li>Age</li>
-                                <li>Education</li>
-                                <li>Socioeconimic Status/Class</li>
-                                <li>Profession/Career</li>
-                            </ul>
-                        </div>
-                    </div>
 
-                    <label>
-                        <strong>Name your Experience:</strong>
-                        <input class="form-control form-control-lg" id="node_name_autocomplete" name="name" placeholder="Your experience name..." required
-                        maxlength="32">
-                        <small id="experience_help" class="form-text text-muted">Enter a few words to name your experience here.</small>
-                    </label>
+            <h2>Which domain does this experience fall into?</h2>
+                        
+            <div>
+                <input type="radio" id="person" name="domain" value="Person" checked>
+                <label for="person">Person</label>
+            </div>
 
-                    <hr>
+            <div>
+                <input type="radio" id="role" name="domain" value="Role">
+                <label for="role">Role</label>
+            </div>
 
-                        <h2>Which domain does this experience fall into?</h2>
-                        <p>A domain reflects where a lens comes from. Is it a part of your identity, experience or culture? Is it a role that you have been given as part of your work? Is it a function you play within a network or system?</p>
-                        <p>In shorthand, you can break it down like this:</p>
-                        <ul>
-                            <li>Person = part of your individual experience that exists outside of the workplace.</li>
-                            <li>Role = a formal or informal function or work role within the workplace.</li>
-                        </ul>
-                        <!--
-                        <li>System = which systems or informal communities do you relate to and influence?</li>
-                        -->
-                        <p>
-                            <strong>
-                                Choose your domain for this experience.
-                            </strong>
-                        </p>
-                        <div>
-                            <input type="radio" id="person" name="domain" value="Person" checked>
-                            <label for="person">Person</label>
-                        </div>
+            <hr>
+            
+            <h2>Describe your experience</h2>
+                    
+            <p><strong>Though this lens, in the workplace...</strong></p>
+            <div>
+                <label>
+                    <strong>I feel</strong>
+                    <input class="form-control form-control-lg" name="response_1" required>
+                    <small id="response_1_help" class="form-text text-muted">Enter a few words about how this lens interacts with your work experience.</small>
+                </label>
+            </div>
 
-                        <div>
-                            <input type="radio" id="role" name="domain" value="Role">
-                            <label for="role">Role</label>
-                        </div>
-                        <!--
-                            <div>
-                                <input type="radio" id="system" name="domain" value="System">
-                                <label for="system">System</label>
-                            </div>
-                        -->
+            <div>
+                <label>
+                    <strong>I feel</strong>
+                    <input class="form-control form-control-lg" name="response_2">
+                    <small id="response_2_help" class="form-text text-muted">Enter a few words about how this lens interacts with your work experience.</small>
 
-                    <hr>
-                    <h2>Describe your experience</h2>
-                    <p>Each of us experiences things in different ways. Two managers or two parents may have extremely different perspectives of their lived experience.</p>
-                    <p>To clarify your experience, complete the phrases below in your own words. Use as many or as few as you like.</p>
+                </label>
+            </div>
 
-                    <p><strong>Though this lens, in the workplace...</strong></p>
-                    <div>
-                        <label>
-                            <strong>I feel</strong>
-                            <input class="form-control form-control-lg" name="response_1" required>
-                            <small id="response_1_help" class="form-text text-muted">Enter a few words about how this lens interacts with your work experience.</small>
-                        </label>
-                    </div>
+            <div>
+                <label>
+                    <strong>I feel</strong>
+                    <input class="form-control form-control-lg" name="response_3">
+                    <small id="response_2_help" class="form-text text-muted">Enter a few words about how this lens interacts with your work experience.</small>
 
-                    <div>
-                        <label>
-                            <strong>I feel</strong>
-                            <input class="form-control form-control-lg" name="response_2">
-                            <small id="response_2_help" class="form-text text-muted">Enter a few words about how this lens interacts with your work experience.</small>
+                </label>
+            </div>
 
-                        </label>
-                    </div>
+            <hr>
+            <h2>Identify how this experience impacts your work experience.</h2>
 
-                    <div>
-                        <label>
-                            <strong>I feel</strong>
-                            <input class="form-control form-control-lg" name="response_3">
-                            <small id="response_2_help" class="form-text text-muted">Enter a few words about how this lens interacts with your work experience.</small>
+                <p>Place the slider below where you think this experience falls on the range of being more or less included in your workplace.</p>
 
-                        </label>
-                    </div>
+                <label for="volume" style="text-align:left"><strong>Excluded</strong></label>
+                <label for="volume" style="float:right"><strong>Included</strong></label>
+                <input type="range" id="inclusivity" name="inclusivity"
+                        min="-100" max="100" class="slider">
 
-                    <hr>
-                    <h2>Identify how this experience impacts your work experience.</h2>
-                    <p>How does this experience make you feel included or excluded in the workplace?</p>
-                    <p>Place the slider below where you think this experience falls on the range of being more or less included in your workplace.</p>
-
-                    <label for="volume" style="text-align:left"><strong>Excluded</strong></label>
-                    <label for="volume" style="float:right"><strong>Included</strong></label>
-                    <input type="range" id="inclusivity" name="inclusivity"
-                            min="-100" max="100" class="slider">
-
-                    <br><br>
-                    <button type=submit>Save Experience</button>
-                </form>
+                <br><br>
+                <button class="g-recaptcha" 
+                data-sitekey="6LfAltkZAAAAAN7rJGBvRUPm36M1aiL7q2a8SznA" 
+                data-callback='onSubmit' 
+                data-action='submit' type=submit>Save Experience</button>
+            </form>
             
             <hr>
         
     </div>
 {% endblock content %}
+
+{% block footer %}<br><br><br>{% endblock footer %}
 
 {% block script %}
 <script>
@@ -144,6 +114,10 @@
     minLength: 0,
     source: ["executive", "manager", "father", "mother", "baby boomer"]
     });
+
+    function onSubmit(token) {
+     document.getElementById("lensForm").submit();
+   }
 
 </script>
 {% endblock script %}

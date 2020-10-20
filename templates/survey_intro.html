@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+
+{% block title %}
+    <title>First Lens Form</title>
+{% endblock title %}
+
+{% block content %}
+    <div class="col m-md-2 m-1">
+        <br>
+        <h1>Survey Overview</h1>
+        <p>The Intersectional Data MVP will ask you to answer the same set of questions several times. Each time you will add a lens on your lived experience.</p>
+        <p>Together, these lenses form a representation of your experience at work.</p>
+        <p>A completed profile should have five or six lenses.</p>
+            
+        <hr>
+        <h2>The Questions</h2>
+        <p>This section explains the questions that you will answer and provides some context.</p>
+        <p>If you don't need this context, please scroll down and push the <strong>Start the Survey</strong> button.</p>
+        <hr>
+        <h3>Name your experience</h3>
+        <p>How would you describe this lens of your lived experience in your own words?</p>
+        <p>You are more than just your job. Examples are: Mother, Father, Manager, Artist, Millenial, Black, Indigenous, White, Executive, New Employee.
+            Anything that describes an element of who you are and that impacts your experience in the workplace.</p>
+            <p>A useful framework for this exercise was developed by Ritu in <a href="https://rituhasin.com">Build Your Cultural Lens</a>.</p>
+            <h5>Some Layers of Cultural Identity</h5>
+            <div class="row">
+                <div class="col m-1">
+                    <ul>
+                        <li>Nationality</li>
+                        <li>Race/Ethnoculture</li>
+                        <li>Religion</li>
+                        <li>Gender Identity</li>
+                        <li>Sexual Orientation</li>
+                    </ul>
+                </div>
+                <div class="col m-1">
+                    <ul>
+                        <li>Dis(Ability)</li>
+                        <li>Age</li>
+                        <li>Education</li>
+                        <li>Socioeconimic Status/Class</li>
+                        <li>Profession/Career</li>
+                    </ul>
+                </div>
+            </div>
+
+            <hr>
+
+            <h3>Which domain does this experience fall into?</h3>
+            <p>A domain reflects where a lens comes from. Is it a part of your identity, experience or culture? Is it a role that you have been given as part of your work? Is it a function you play within a network or system?</p>
+            <p>In shorthand, you can break it down like this:</p>
+            <ul>
+                <li>Person = part of your individual experience that exists outside of the workplace.</li>
+                <li>Role = a formal or informal function or work role within the workplace.</li>
+            </ul>
+
+            <hr>
+            <h3>Describe your experience</h3>
+            <p>Each of us experiences things in different ways. Two managers or two parents may have extremely different perspectives of their lived experience.</p>
+            <p>To clarify your experience, complete the phrases below in your own words. You will be asked to provide three responses, but you may use as many or as few as you like.</p>
+
+            <p><strong>Though this lens, in the workplace I feel... </strong></p>
+            
+            <hr>
+            <h3>Identify how this experience impacts your work experience.</h3>
+            <p>How does this experience make you feel included or excluded in the workplace?</p>
+            <p>For this question, you will move the slider below where you think this experience falls on the range of being more or less included in your workplace.</p>
+            <p>It generates a score between -1.0 and +1.0 (with zero being in the middle).</p>
+    
+    <hr>
+
+    <a class="btn btn-primary" href="/first_lens_form">Start the Survey</a>
+
+    <hr>
+        
+    </div>
+{% endblock content %}

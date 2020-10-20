@@ -6,7 +6,7 @@ mod graph_utilities;
 mod people_handlers;
 mod node_handlers;
 
-pub use self::handlers::{api_base, index,
+pub use self::handlers::{api_base, index, survey_intro,
     find_lens, person_api};
     
 pub use self::form_handlers::{

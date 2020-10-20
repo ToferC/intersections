@@ -155,8 +155,6 @@ pub async fn handle_lens_form_input(
 
     let new_lens = Lenses::create(&l).expect("Unable to create lens.");
     
-    println!("{:?} -- {:?} -- {:?}", new_lens, &new_person, &node);
-
     HttpResponse::Found().header("Location", format!("/add_lens_form/{}", new_person.code)).finish()
 }
 
@@ -198,16 +196,13 @@ pub async fn add_handle_lens_form_input(
         return HttpResponse::Found().header("Location", format!("/add_lens_form/{}", &code)).finish()
     };
 
-    println!("Find person");
     let p = People::find_from_code(&code).unwrap();
 
-    println!("Create Node");
     let node = Node::new(
         form.name.to_lowercase().to_owned(),
         form.domain.to_lowercase().to_owned(),
     );
 
-    println!("Get statements");
     let mut lived_statements = vec!();
 
     if &form.response_1 != "" {
@@ -227,7 +222,6 @@ pub async fn add_handle_lens_form_input(
     let inclusivity = BigDecimal::new(inclusivity.to_bigint().unwrap(), 2);
     
     // Check if node exists, if not create it
-    println!("Get Nodes");
     let nodes = Nodes::find_all().unwrap();
 
     let tn = nodes.iter().find(|n| n.node_name == node.node_name);
@@ -242,7 +236,6 @@ pub async fn add_handle_lens_form_input(
         }
     };
     
-    println!("Add lens");
     let l = Lens::new(
         node.node_name.clone(),
         node.domain_token.clone(),
@@ -254,8 +247,5 @@ pub async fn add_handle_lens_form_input(
 
     let new_lens = Lenses::create(&l).expect("Unable to create lens.");
     
-    println!("{:?} -- {:?} -- {:?}", new_lens, &p, node);
-
-    println!("Forward");
     HttpResponse::Found().header("Location", format!("/add_lens_form/{}", code)).finish()
 }

@@ -7,6 +7,7 @@ use crate::handlers::{
     add_handle_lens_form_input,
     // pages
     index,
+    survey_intro,
     person_page,
     node_page,
     find_lens,
@@ -23,6 +24,7 @@ use crate::handlers::{
 pub fn init_routes(config: &mut web::ServiceConfig) {
     // pages
     config.service(index);
+    config.service(survey_intro);
     config.service(person_page);
     config.service(node_page);
     config.service(find_lens);

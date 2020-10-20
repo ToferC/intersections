@@ -4,52 +4,39 @@
     <title>Add a Lens</title>
 {% endblock title %}
 
+{% block add_preload %}
+    <script src="https://www.google.com/recaptcha/api.js"></script>
+{% endblock add_preload %}
+
 {% block content %}
         <div class="col-md m-md-2 m-1">
             <br>
-            <h1>Let's add another experience</h1>
-            <p><a href="/">Return to Index</a> | <a href="/person/{{ user_code }}">I'm done. Take me to my completed profile.</a>
-            </p>
+            <h1>Add another lens</h1>
+            <p><strong>OR</strong> <a class="btn btn-info" href="/person/{{ user_code }}">I'm done. Take me to my completed profile.</a></p>
             <hr>
             <h2>Your unique code is: {{ user_code }}</h2>
-            <p>Please make a copy of this code. It is the only way that you can return to, or build on your profile.</p>
-            <p>The application does not keep any identifying information and the administrators will not be able to provide you with this code once you've finished your survey and closed the window.</p>
+            <p>Please make a copy of this code. It is the only way that you can return to your profile.</p>
             <hr>
-                <p>Now, you can add another Lens. By adding layers of your subjective lived experience, you'll get a better idea of how they might impact your experience at work. You will also learn how your experience relates to those of others.</p>
-    
+
+            {% set lens_len = people_lenses | last %}
+            {% set prog_bar = lens_len.lenses | length %}
+            {% set progbar_width = prog_bar / 6 * 100 %}
+
+            <strong>Progress ({{ prog_bar }}/6)</strong>
+
+            <div class="progress">
+                <div class="progress-bar bg-success" style="width: {{progbar_width}}%" role="progressbar" aria-valuenow="prog_bar" aria-valuemin="0" aria-valuemax="100"></div>
+            </div>
+
+            <hr>
                 <br>
-                <form action="/add_lens_form/{{ user_code }}" method=POST name="lensForm"
+                <form action="/add_lens_form/{{ user_code }}" method=POST id="lensForm" name="lensForm"
                     onsubmit="return validateForm()">
                 
-                    <h2>Add a new experience</h2>
-                    <p>How would you describe this lens of your lived experience in your own words?</p>
-                    <p>You are more than just your job. Examples are: Mother, Father, Manager, Artist, Millenial, Black, Indigenous, White, Executive, New Employee.
-                        Anything that describes an element of who you are and that impacts your experience in the workplace.</p>
-                        <p>A useful framework for this exercise was developed by Ritu in <a href="https://rituhasin.com">Build Your Cultural Lens</a>.</p>
-                        <h5>Some Layers of Cultural Identity</h5>
-                        <div class="row">
-                            <div class="col m-1">
-                                <ul>
-                                    <li>Nationality</li>
-                                    <li>Race/Ethnoculture</li>
-                                    <li>Religion</li>
-                                    <li>Gender Identity</li>
-                                    <li>Sexual Orientation</li>
-                                </ul>
-                            </div>
-                            <div class="col m-1">
-                                <ul>
-                                    <li>Dis(Ability)</li>
-                                    <li>Age</li>
-                                    <li>Education</li>
-                                    <li>Socioeconimic Status/Class</li>
-                                    <li>Profession/Career</li>
-                                </ul>
-                            </div>
-                        </div>
+                    <h2>Name your experience</h2>
     
                         <label>
-                            <strong>Name your Experience:</strong>
+
                             <input class="form-control form-control-lg" id="node_name_autocomplete" name="name" placeholder="Your experience name..." required
                                 maxlength="32">
                             <small id="experience_help" class="form-text text-muted">Enter a few words to name your experience here.</small>
@@ -58,15 +45,7 @@
                     <hr>
 
                         <h2>Which domain does this experience fall into?</h2>
-                        <p>A domain is reflects where a lens comes from. Is it a part of your identity, experience or culture? Is it a role that you have been given as part of your work? Is it a function you play within a network or system?</p>
-                        <p>In shorthand, you can break it down like this:</p>
-                        <ul>
-                            <li>Person = part of your individual experience that exists outside of the workplace.</li>
-                            <li>Role = a formal or informal function or work role within the workplace.</li>
-                        </ul>
-                        <!--
-                        <li>System = which systems or informal communities do you relate to and influence?</li>
-                        -->
+                    
                         <p>
                             <strong>
                                 Choose your domain for this experience.
@@ -81,18 +60,10 @@
                             <input type="radio" id="role" name="domain" value="Role">
                             <label for="role">Role</label>
                         </div>
-                        <!--
-                            <div>
-                                <input type="radio" id="system" name="domain" value="System">
-                                <label for="system">System</label>
-                            </div>
-                        -->
 
                     <hr>
                     <h2>Describe your experience</h2>
-                    <p>Each of us experiences things in different ways. Two managers or two parents may have extremely different perspectives of their lived experience.</p>
-                    <p>To clarify your experience, complete the phrases below in your own words. Use as many or as few as you like.</p>
-
+                    
                     <p><strong>Though this lens, in the workplace...</strong></p>
                     <div>
                         <label>
@@ -123,7 +94,6 @@
 
                     <hr>
                     <h2>Identify how this experience impacts your work experience.</h2>
-                    <p>How does this experience make you feel included or excluded in the workplace?</p>
                     <p>Place the slider below where you think this experience falls on the range of being more or less included in your workplace.</p>
 
                     <label for="volume" style="text-align:left"><strong>Excluded</strong></label>
@@ -132,49 +102,21 @@
                             min="-100" max="100" class="slider">
 
                     <br><br>
-                    <button type=submit>Save Experience</button>
-                </form>
+                    <button class="g-recaptcha" 
+                data-sitekey="6LfAltkZAAAAAN7rJGBvRUPm36M1aiL7q2a8SznA" 
+                data-callback='onSubmit' 
+                data-action='submit' type=submit>Save Experience</button>
+            </form>
                 
-        </div>
-        <div class="col-md m-md-2 m-1">
-            <br>
-            <h2>Your experiences so far:</h2>
-                {% for person in people_lenses %}
-                <h3>Date: {{ person.person.date_created | date }}: {{ person.total_inclusivity | round(method="ceil", precision=3) }}</h3>
-                <hr>
-                    {% for lens in person.lenses %}
-                        <p><strong>{{ lens.node_name | title }} ({{ lens.node_domain | title }}): {{ lens.inclusivity }}
-                            {% if lens.inclusivity | float > 0.2 %}
-                                <span style="color: green; font-size: 2em;">＋</span>
-                            {% elif lens.inclusivity | float < -0.2 %}
-                                <span style="color: red; font-size: 2em;">－</span>
-                            {% else %}
-                                <span style="color: blue; font-size: 1.5em;"><></span>
-                            {% endif %}</strong></p>
-                        {% for statement in lens.statements %}
-                            <li>{{ statement }}</li>
-                        {% endfor %}
-                    {% endfor %}
-                    <hr>
-                {% endfor %}
         </div>
 {% endblock content %}
 
+{% block footer %}<br><br><br>{% endblock footer %}
+
 {% block scripts %}
 <script>
-    $( "[id=node_name_autocomplete]" ).autocomplete({
-    minLength: 0,
-    source: ["executive", "manager", "mother", "father"]
-    });
-
-    function validateForm() {
-    var x = document.forms["lensForm"]["name"].value;
-    var y = document.forms["lensForm"]["response_1"].value;
-
-    if (x == "" || y == "") {
-        alert("Lens name and at least one response must be filled out");
-        return false;
-        }
-    };
-</script>
+    function onSubmit(token) {
+      document.getElementById("demo-form").submit();
+    }
+  </script>
 {% endblock scripts %}
