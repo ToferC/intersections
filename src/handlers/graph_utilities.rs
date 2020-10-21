@@ -76,13 +76,19 @@ pub fn generate_cyto_graph(
 
     for n in node_vec {
 
+        let (colour, shape): (String, String) = if n.domain_token == "person" {
+            (String::from("green"), String::from("rectangle"))
+        } else {
+            (String::from("blue"), String::from("triangle"))
+        };
+
         let ni = GNode {
             id: format!("{}", &n.node_name),
             node_type: String::from("Node"),
             text: vec![n.domain_token],
-            shape: String::from("triangle"),
+            shape: shape,
             size: 25,
-            color: String::from("blue"),
+            color: colour,
             inclusivity: 0.0,
             href: format!("/node/{}", n.node_name),
         };
