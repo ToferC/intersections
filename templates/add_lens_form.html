@@ -36,8 +36,8 @@
     
                         <label>
 
-                            <input class="form-control form-control-lg" id="node_name_autocomplete" name="name" placeholder="Your experience name..." required
-                                maxlength="32">
+                            <input class="form-control form-control-lg mdb-autocomplete" id="node_name_autocomplete" name="name" placeholder="Your experience name..." required
+                                maxlength="32" autocomplete=="off">
                             <small id="experience_help" class="form-text text-muted">Enter a few words to name your experience here.</small>
                         </label>
 
@@ -119,5 +119,12 @@
     function onSubmit(token) {
     document.getElementById("lensForm").submit();
     };
+
+    var node_names = {{ node_names }};
+
+   $('#node_name_autocomplete').mdbAutocomplete({
+    data: node_names
+    });
+
 </script>
 {% endblock scripts %}
