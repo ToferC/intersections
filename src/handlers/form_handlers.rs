@@ -153,7 +153,7 @@ pub async fn handle_lens_form_input(
         inclusivity,
     );
 
-    let new_lens = Lenses::create(&l).expect("Unable to create lens.");
+    let _new_lens = Lenses::create(&l).expect("Unable to create lens.");
     
     HttpResponse::Found().header("Location", format!("/add_lens_form/{}", new_person.code)).finish()
 }
@@ -196,13 +196,16 @@ pub async fn add_handle_lens_form_input(
         return HttpResponse::Found().header("Location", format!("/add_lens_form/{}", &code)).finish()
     };
 
+    println!("Find person");
     let p = People::find_from_code(&code).unwrap();
 
+    println!("Create Node");
     let node = Node::new(
         form.name.to_lowercase().to_owned(),
         form.domain.to_lowercase().to_owned(),
     );
 
+    println!("Get statements");
     let mut lived_statements = vec!();
 
     if &form.response_1 != "" {
@@ -245,7 +248,8 @@ pub async fn add_handle_lens_form_input(
         inclusivity,
     );
 
-    let new_lens = Lenses::create(&l).expect("Unable to create lens.");
+    let _new_lens = Lenses::create(&l).expect("Unable to create lens.");
     
+    println!("Forward");
     HttpResponse::Found().header("Location", format!("/add_lens_form/{}", code)).finish()
 }
