@@ -23,6 +23,7 @@ pub struct GEdge {
     pub id: String,
     pub source: String,
     pub target: String,
+    pub text: Vec<String>,
     pub weight: f32,
 }
 
@@ -92,41 +93,17 @@ pub fn generate_cyto_graph(
     };
 
     for l in lens_vec {
-        let ni = GNode {
-            id: format!("L-{}", &l.id),
-            node_type: String::from("Lens"),
-            text: l.statements,
-            shape: String::from("square"),
-            size: 25,
-            color: String::from("green"),
-            inclusivity: 0.0,
-            href: String::from("#"),
-        };
 
-        let person_edge = GEdge {
-            id: format!("P{}-L{}", &l.person_id, &l.id),
+        let edge = GEdge {
+            id: format!("P{}-{}", &l.person_id, &l.node_name),
             source: format!("P-{}", &l.person_id),
-            target: format!("L-{}", &l.id),
-            weight: l.inclusivity.to_f32().expect("unable to convert decimal"),
-        };
-
-        let node_edge = GEdge {
-            id: format!("L{}-{}", &l.id, &l.node_name),
-            source: format!("L-{}", &l.id),
             target: format!("{}", &l.node_name),
+            text: l.statements,
             weight: l.inclusivity.to_f32().expect("unable to convert decimal"),
         };
 
-        cyto_node_array.push(CytoNode {
-            data: ni,
-        });
-
         cyto_edge_array.push(CytoEdge {
-            data: person_edge,
-        });
-
-        cyto_edge_array.push(CytoEdge {
-            data: node_edge,
+            data: edge,
         });
     };
 
@@ -142,6 +119,7 @@ pub fn generate_node_cyto_graph(
     node_vec: Vec<Nodes>,
     lens_vec: Vec<Lenses>
 ) -> CytoGraph {
+    // reconfigure this to connect nodes to each other
 
     let mut cyto_node_array: Vec<CytoNode> = Vec::new();
     let mut cyto_edge_array: Vec<CytoEdge> = Vec::new();
@@ -168,7 +146,7 @@ pub fn generate_node_cyto_graph(
         let ni = GNode {
             id: format!("L-{}", &l.id),
             node_type: String::from("Lens"),
-            text: l.statements,
+            text: l.statements.to_owned(),
             shape: String::from("square"),
             size: 25,
             color: String::from("green"),
@@ -176,10 +154,11 @@ pub fn generate_node_cyto_graph(
             href: String::from("#"),
         };
 
-        let node_edge = GEdge {
+        let edge = GEdge {
             id: format!("L{}-{}", &l.id, &l.node_name),
             source: format!("L-{}", &l.id),
             target: format!("{}", &l.node_name),
+            text: l.statements.to_owned(),
             weight: l.inclusivity.to_f32().expect("unable to convert decimal"),
         };
 
@@ -188,7 +167,7 @@ pub fn generate_node_cyto_graph(
         });
 
         cyto_edge_array.push(CytoEdge {
-            data: node_edge,
+            data: edge,
         });
     };
 

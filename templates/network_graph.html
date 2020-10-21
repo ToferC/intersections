@@ -40,21 +40,13 @@
               selector: 'node',
               style: {
                 'background-color': '#666',
-                'label': 'data(id)',
+                'label': 'data(inclusivity)',
                 'background-color': 'data(color)',
                 'border-color': 'black',
                 'width': 'data(size)',
                 'height': 'data(size)',
                 'shape': 'data(shape)',
-                'href': 'data(link)',
                 'content': 'data(id)'
-              }
-            },
-
-            {
-              selector: '[node_type = "Lens"]',
-              style: {
-                'content': 'data(text)'
               }
             },
 
@@ -88,7 +80,13 @@
             content: () => {
               let content = document.createElement('div');
 
-              content.innerHTML = ele.id(content);
+              if (ele.data("node_type") == "Node") {
+                content.innerHTML = ele.data("text");
+              } else if (ele.data("node_type") == "Person") {
+                content.innerHTML = ele.data("text");
+              } else {
+                content.innerHTML = ele.data("text");
+              };
 
               return content;
             },
