@@ -20,6 +20,8 @@ table! {
         id -> Int4,
         node_name -> Varchar,
         domain_token -> Varchar,
+        translation -> Varchar,
+        synonyms -> Array<Text>,
     }
 }
 

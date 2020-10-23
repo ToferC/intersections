@@ -5,8 +5,7 @@
 {% endblock title %}
 
 {% block content %}
-
-    <div class="col m-md-2 m-1">
+    <div class="col-md m-md-2 m-1">
         <br>
         <h1>{{ node.node_name | title }} - {{ node.domain_token | title }}</h1>
         <p><a href="/full_network_graph">Return to Full Graph</a> | <a href="/">Return to Index</a></p>
@@ -78,7 +77,7 @@
 
     </div>
 
-    <div class="col m-md-2 m-1">
+    <div class="col-md m-md-2 m-1">
         <br>
         <h1>Associated Lenses</h1>
         <p>These are lenses from other nodes that have been linked to the {{ node.domain_token }} trait of {{ node.node_name }}. 
@@ -129,5 +128,4 @@
                     <br>
                 {% endfor %}
     </div>
-
 {% endblock content %}

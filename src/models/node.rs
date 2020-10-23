@@ -35,6 +35,8 @@ pub struct Nodes {
     pub id: i32,
     pub node_name: String,
     pub domain_token: String,
+    pub translation: String,
+    pub synonyms: Vec<String>
 }
 
 impl Nodes {
