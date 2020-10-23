@@ -2,24 +2,18 @@ use actix_web::{web, get, HttpResponse, Responder};
 use crate::AppData;
 use tera::{Context};
 
-use crate::models::{Lenses, Nodes, People};
-
-use crate::handlers::{generate_cyto_graph};
+use crate::models::{Nodes};
 
 #[get("/full_network_graph")]
 pub async fn full_network_graph(
     data: web::Data<AppData>
 ) -> impl Responder {
+
+    let graph = &data.graph.lock().unwrap().clone();
         
-    let people_vec = People::find_all().expect("Unable to load people");
-    
-    let lens_vec = Lenses::find_all().expect("Unable to load lenses");
-
-    let node_vec = Nodes::find_all().expect("Unable to load nodes");
-
-    let graph = generate_cyto_graph(people_vec, node_vec, lens_vec);
-
     let j = serde_json::to_string_pretty(&graph).unwrap();
+
+    drop(graph);
     
     let mut ctx = Context::new();
     ctx.insert("graph_data", &j);

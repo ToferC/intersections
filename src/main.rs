@@ -5,7 +5,8 @@ extern crate diesel;
 extern crate diesel_migrations;
 
 use std::env;
-use actix_web::{App, HttpServer};
+use std::sync::{Mutex};
+use actix_web::{App, HttpServer, middleware};
 use tera::Tera;
 
 mod models;
@@ -15,7 +16,8 @@ mod database;
 mod error_handler;
 
 pub struct AppData {
-    tmpl: Tera
+    pub tmpl: Tera,
+    pub graph: Mutex<handlers::CytoGraph>,
 }
 
 
@@ -41,6 +43,17 @@ async fn main() -> std::io::Result<()> {
 
     database::init();
 
+    println!("Loading data for graph");
+    let people_vec = models::People::find_all().expect("Unable to load people");
+    let node_vec = models::Nodes::find_all().expect("Unable to load nodes");
+    let lens_vec = models::Lenses::find_all().expect("Unable to load lenses");
+
+    // load master graph into app data
+    println!("Generate graph representation");
+    let graph: handlers::CytoGraph = handlers::generate_cyto_graph(people_vec, node_vec, lens_vec);
+
+    println!("Serving on: {}:{}", &host, &port);
+
     HttpServer::new(move || {
 
         let mut tera = Tera::new(
@@ -49,8 +62,11 @@ async fn main() -> std::io::Result<()> {
         tera.full_reload().expect("Error running auto reload with Tera");
 
         App::new()
+            .wrap(middleware::Logger::default())
             .configure(handlers::init_routes)
-            .data(AppData {tmpl: tera} )
+            .data(AppData {
+                tmpl: tera,
+                graph: Mutex::new(graph.clone())} )
     })
     .bind(format!("{}:{}", host, port))?
     .run()

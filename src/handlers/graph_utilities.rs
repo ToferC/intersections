@@ -5,20 +5,70 @@ use bigdecimal::{ToPrimitive};
 
 use crate::models::{Lenses, Nodes, People};
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct CytoGraph {
     pub nodes: Vec<CytoNode>,
     pub edges: Vec<CytoEdge>,
 }
-#[derive(Serialize, Deserialize, Debug)]
+
+impl CytoGraph {
+    pub fn add_person_node(p: &People) -> GNode {
+        let person_node = GNode {
+            id: format!("P-{}", p.id),
+            node_type: String::from("Person"),
+            text: vec![format!("{}", p.date_created)],
+            shape: String::from("ellipse"),
+            size: 25,
+            color: String::from("orange"),
+            inclusivity: 0.0,
+            href: format!("/person_network_graph/{}", p.id),
+        };
+
+        person_node
+    }
+
+    pub fn add_node(n : &Nodes) -> GNode {
+        let (colour, shape): (String, String) = if n.domain_token == "person" {
+            (String::from("green"), String::from("rectangle"))
+        } else {
+            (String::from("blue"), String::from("triangle"))
+        };
+
+        let node = GNode {
+            id: format!("{}", &n.node_name),
+            node_type: String::from("Node"),
+            text: vec![n.domain_token.to_owned()],
+            shape: shape,
+            size: 25,
+            color: colour,
+            inclusivity: 0.0,
+            href: format!("/node/{}", n.node_name),
+        };
+
+        node
+    }
+
+    pub fn add_lens_edge(l: &Lenses) -> GEdge {
+        let edge = GEdge {
+            id: format!("P{}-{}", &l.person_id, &l.node_name),
+            source: format!("P-{}", &l.person_id),
+            target: format!("{}", &l.node_name),
+            text: l.statements.to_owned(),
+            weight: l.inclusivity.to_f32().expect("unable to convert decimal"),
+        };
+
+        edge
+    }
+}
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct CytoNode {
     pub data: GNode,
 }
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct CytoEdge {
     pub data: GEdge,
 }
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct GEdge {
     pub id: String,
     pub source: String,
