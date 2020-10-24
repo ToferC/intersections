@@ -8,7 +8,7 @@ use serde::{Deserialize, Serialize};
 
 use crate::AppData;
 use crate::models::{Lens, Lenses, NewPerson, People, Node, Nodes};
-use crate::handlers::{CytoGraph, CytoNode, CytoEdge, GEdge, GNode};
+use crate::handlers::{CytoGraph, CytoNode, CytoEdge};
 use crate::error_handler::CustomError;
 
 #[derive(Deserialize, Debug)]
@@ -85,7 +85,7 @@ pub async fn lens_form_handler(data: web::Data<AppData>, _req:HttpRequest) -> im
 
 #[post("/first_lens_form")]
 pub async fn handle_lens_form_input(
-    data: web::Data<AppData>,
+    _data: web::Data<AppData>,
     graph: web::Data<Mutex<CytoGraph>>,
     req: HttpRequest, 
     form: web::Form<FirstLensForm>
@@ -223,7 +223,7 @@ pub async fn add_lens_form_handler(
 #[post("/add_lens_form/{code}")]
 pub async fn add_handle_lens_form_input(
     web::Path(code): web::Path<String>,
-    data: web::Data<AppData>,
+    _data: web::Data<AppData>,
     graph: web::Data<Mutex<CytoGraph>>,
     _req: HttpRequest, 
     form: web::Form<AddLensForm>
