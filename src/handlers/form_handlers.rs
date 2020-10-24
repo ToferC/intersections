@@ -1,3 +1,5 @@
+use std::sync::Mutex;
+
 use actix_web::{web, HttpRequest, HttpResponse, Responder, post, get};
 use bigdecimal::{BigDecimal, ToPrimitive};
 use num_bigint::{ToBigInt};
@@ -6,7 +8,7 @@ use serde::{Deserialize, Serialize};
 
 use crate::AppData;
 use crate::models::{Lens, Lenses, NewPerson, People, Node, Nodes};
-use crate::handlers;
+use crate::handlers::{CytoGraph, CytoNode, CytoEdge, GEdge, GNode};
 use crate::error_handler::CustomError;
 
 #[derive(Deserialize, Debug)]
@@ -83,7 +85,8 @@ pub async fn lens_form_handler(data: web::Data<AppData>, _req:HttpRequest) -> im
 
 #[post("/first_lens_form")]
 pub async fn handle_lens_form_input(
-    data: web::Data<AppData>, 
+    data: web::Data<AppData>,
+    graph: web::Data<Mutex<CytoGraph>>,
     req: HttpRequest, 
     form: web::Form<FirstLensForm>
 ) -> impl Responder {
@@ -128,15 +131,15 @@ pub async fn handle_lens_form_input(
     let new_person = People::create(&person.clone()).expect("Unable to add person to DB");
 
     // add person to graph representation
-    let person_node = handlers::CytoGraph::add_person_node(&new_person);
+    let person_node = CytoGraph::add_person_node(&new_person);
     
-    let mut graph = data.graph.lock().expect("Unable to unlock graph");
+    let mut g = graph.lock().expect("Unable to unlock graph");
     
-    graph.nodes.push(handlers::CytoNode {
+    g.nodes.push(CytoNode {
             data: person_node,
         });
 
-    drop(graph);
+    drop(g);
     
     // Check if node exists, if not create it
     let nodes = Nodes::find_all().unwrap();
@@ -152,11 +155,11 @@ pub async fn handle_lens_form_input(
             // no target
             let new_node = Nodes::create(&node).expect("Unable to create node.");
 
-            let node_rep = handlers::CytoGraph::add_node(&new_node);
+            let node_rep = CytoGraph::add_node(&new_node);
 
-            let mut graph = data.graph.lock().expect("Unable to unlock graph");
+            let mut g = graph.lock().expect("Unable to unlock graph");
 
-            graph.nodes.push(handlers::CytoNode {
+            g.nodes.push(CytoNode {
                 data: node_rep,
             });
 
@@ -175,19 +178,19 @@ pub async fn handle_lens_form_input(
     );
 
     let new_lens = Lenses::create(&l).expect("Unable to create lens.");
-    let lens_rep = handlers::CytoGraph::add_lens_edge(&new_lens);
+    let lens_rep = CytoGraph::add_lens_edge(&new_lens);
     
-    let mut graph = data.graph.lock().expect("Unable to unlock graph");
+    let mut g = graph.lock().expect("Unable to unlock graph");
 
-    println!("Pre-lens length: {}", &graph.edges.len());
+    println!("Pre-lens length: {}", &g.edges.len());
 
-    graph.edges.push(handlers::CytoEdge {
+    g.edges.push(CytoEdge {
         data: lens_rep,
     });
 
-    println!("Post-lens length: {}", &graph.edges.len());
+    println!("Post-lens length: {}", &g.edges.len());
 
-    drop(graph);
+    drop(g);
 
     HttpResponse::Found().header("Location", format!("/add_lens_form/{}", new_person.code)).finish()
 }
@@ -220,7 +223,8 @@ pub async fn add_lens_form_handler(
 #[post("/add_lens_form/{code}")]
 pub async fn add_handle_lens_form_input(
     web::Path(code): web::Path<String>,
-    data: web::Data<AppData>, 
+    data: web::Data<AppData>,
+    graph: web::Data<Mutex<CytoGraph>>,
     _req: HttpRequest, 
     form: web::Form<AddLensForm>
 ) -> impl Responder {
@@ -271,11 +275,11 @@ pub async fn add_handle_lens_form_input(
             // no target
             let new_node = Nodes::create(&node).expect("Unable to create node.");
 
-            let node_rep = handlers::CytoGraph::add_node(&new_node);
+            let node_rep = CytoGraph::add_node(&new_node);
 
-            let mut graph = data.graph.lock().expect("Unable to unlock graph");
+            let mut g = graph.lock().expect("Unable to unlock graph");
 
-            graph.nodes.push(handlers::CytoNode {
+            g.nodes.push(CytoNode {
                 data: node_rep,
             });
 
@@ -293,19 +297,19 @@ pub async fn add_handle_lens_form_input(
     );
 
     let new_lens = Lenses::create(&l).expect("Unable to create lens.");
-    let lens_rep = handlers::CytoGraph::add_lens_edge(&new_lens);
+    let lens_rep = CytoGraph::add_lens_edge(&new_lens);
     
-    let mut graph = data.graph.lock().expect("Unable to unlock graph");
+    let mut g = graph.lock().expect("Unable to unlock graph");
 
-    println!("Pre-lens length: {}", &graph.edges.len());
+    println!("Pre-lens length: {}", &g.edges.len());
 
-    graph.edges.push(handlers::CytoEdge {
+    g.edges.push(CytoEdge {
         data: lens_rep,
     });
 
-    println!("Post-lens length: {}", &graph.edges.len());
+    println!("Post-lens length: {}", &g.edges.len());
 
-    drop(graph);
+    drop(g);
 
     HttpResponse::Found().header("Location", format!("/add_lens_form/{}", code)).finish()
 }

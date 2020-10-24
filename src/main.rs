@@ -5,8 +5,8 @@ extern crate diesel;
 extern crate diesel_migrations;
 
 use std::env;
-use std::sync::{Mutex};
-use actix_web::{App, HttpServer, middleware};
+use std::sync::{Mutex, Arc};
+use actix_web::{App, HttpServer, middleware, web};
 use tera::Tera;
 
 mod models;
@@ -17,7 +17,6 @@ mod error_handler;
 
 pub struct AppData {
     pub tmpl: Tera,
-    pub graph: Mutex<handlers::CytoGraph>,
 }
 
 
@@ -52,6 +51,8 @@ async fn main() -> std::io::Result<()> {
     println!("Generate graph representation");
     let graph: handlers::CytoGraph = handlers::generate_cyto_graph(people_vec, node_vec, lens_vec);
 
+    let x = Arc::new(Mutex::new(graph));
+
     println!("Serving on: {}:{}", &host, &port);
 
     HttpServer::new(move || {
@@ -61,12 +62,14 @@ async fn main() -> std::io::Result<()> {
 
         tera.full_reload().expect("Error running auto reload with Tera");
 
+        let x = Arc::clone(&x);
+
         App::new()
             .wrap(middleware::Logger::default())
             .configure(handlers::init_routes)
             .data(AppData {
-                tmpl: tera,
-                graph: Mutex::new(graph.clone())} )
+                tmpl: tera,})
+            .app_data(web::Data::from(x))
     })
     .bind(format!("{}:{}", host, port))?
     .run()

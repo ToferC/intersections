@@ -12,11 +12,10 @@ use crate::schema::{nodes};
 
 #[get("/")]
 pub async fn index(data: web::Data<AppData>, _req:HttpRequest) -> impl Responder {
-    println!("Access index");
 
     let mut ctx = Context::new();
 
-    let node_vec = Nodes::find_all_names().expect("Unable to load nodes");
+    let node_vec = Nodes::find_all_linked_names().expect("Unable to load nodes");
     ctx.insert("node_names", &node_vec);
 
     let rendered = data.tmpl.render("index.html", &ctx).unwrap();

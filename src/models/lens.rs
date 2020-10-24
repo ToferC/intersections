@@ -87,6 +87,14 @@ impl Lenses {
         Ok(lenses)
     }
 
+    pub fn find_all_node_ids() -> Result<Vec<i32>, CustomError> {
+        let conn = database::connection()?;
+
+        let ids = lenses::table.select(lenses::node_id).load::<i32>(&conn)?;
+
+        Ok(ids)
+    }
+
     pub fn load_api_data() -> Result<Vec<(People, Vec<(Lenses, Nodes)>)>, CustomError> {
         let conn = database::connection()?;
         let mut people = People::find_all()?;

@@ -128,10 +128,10 @@
                             <th style="text-align: center;">Statement</th>
                             <th style="text-align: center;">Count</th>
                         </tr>
-                        {% for statement, count in lens.frequency_distribution %}
+                        {% for tuple in lens.frequency_distribution %}
                             <tr>
-                                <td>{{ statement }}</td>
-                                <td style="text-align: center;">{{ count }}</td>
+                                <td>{{ tuple.0 }}</td>
+                                <td style="text-align: center;">{{ tuple.1 }}</td>
                             </tr>
                         {% endfor %}
                     </table>

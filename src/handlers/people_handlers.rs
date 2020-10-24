@@ -7,6 +7,7 @@ use serde::Serialize;
 
 use bigdecimal::{ToPrimitive};
 use std::collections::BTreeMap;
+use std::iter::FromIterator;
 
 use crate::models::{Lenses, Nodes, People};
 use crate::database;
@@ -14,13 +15,13 @@ use crate::handlers::{generate_cyto_graph, RenderPerson};
 
 use crate::schema::{people, nodes};
 
-#[derive(Serialize, Debug)]
+#[derive(Serialize, Debug, PartialEq, PartialOrd)]
 pub struct AggLens {
     pub name: String,
     pub domain: String,
     pub count: u32,
     pub mean_inclusivity: f32,
-    pub frequency_distribution: BTreeMap<String, u32>,
+    pub frequency_distribution: Vec<(String, u32)>,
 }
 
 impl AggLens {
@@ -39,6 +40,9 @@ impl AggLens {
             };
         };
 
+        let mut v = Vec::from_iter(counts);
+        v.sort_by(|&(_, a), &(_, b)|b.cmp(&a));
+
         let count = lenses.len() as u32;
 
         AggLens {
@@ -46,7 +50,7 @@ impl AggLens {
             domain: domain.to_owned(),
             count: count,
             mean_inclusivity: inclusivity / count as f32,
-            frequency_distribution: counts,
+            frequency_distribution: v,
         }
     }
 }
@@ -83,6 +87,9 @@ pub async fn person_page(
             aggregate_lenses.push(agg_lenses);
         }
     };
+
+    aggregate_lenses.sort_by(|a, b|b.count.partial_cmp(&a.count).unwrap());
+    aggregate_lenses.dedup();
 
     ctx.insert("other_lenses", &aggregate_lenses);
 

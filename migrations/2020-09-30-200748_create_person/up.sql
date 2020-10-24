@@ -39,10 +39,10 @@ VALUES
     ('manager', 'role'),
     ('gen x', 'person'),
     ('mother', 'person'),
-    ('white', 'role'),
-    ('black', 'role'),
+    ('white', 'person'),
+    ('black', 'person'),
     ('executive', 'role'),
-    ('innovator', 'system');
+    ('innovator', 'role');
 
 INSERT INTO lenses (node_name, node_domain, person_id, node_id, statements, inclusivity)
 VALUES

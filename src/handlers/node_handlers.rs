@@ -85,6 +85,9 @@ pub async fn node_page(
         }
     };
 
+    aggregate_lenses.sort_by(|a, b|b.count.partial_cmp(&a.count).unwrap());
+    aggregate_lenses.dedup();
+
     // Aggregate info from lenses related to the prime node
     let node_lens = AggLens::from(lens_vec);
 

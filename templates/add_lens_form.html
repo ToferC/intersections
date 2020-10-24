@@ -12,7 +12,7 @@
         <div class="col-md m-md-2 m-1">
             <br>
             <h1>Add another lens</h1>
-            <p><strong>OR</strong> <a class="btn btn-info" href="/person/{{ user_code }}">I'm done. Take me to my completed profile.</a></p>
+            <p><strong>OR</strong> <a class="btn btn-info" href="/person/{{ user_code }}">Take me to my completed profile.</a></p>
             <hr>
             <h2>Your unique code is: {{ user_code }}</h2>
             <p>Please make a copy of this code. It is the only way that you can return to your profile.</p>
@@ -27,6 +27,9 @@
             <div class="progress">
                 <div class="progress-bar bg-success" style="width: {{progbar_width}}%" role="progressbar" aria-valuenow="prog_bar" aria-valuemin="0" aria-valuemax="100"></div>
             </div>
+            {% if prog_bar > 5 %}
+            <p>*You can add more if you like, though.</p>
+            {% endif %}
 
             <hr>
                 <br>

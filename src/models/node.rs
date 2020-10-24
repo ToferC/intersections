@@ -3,6 +3,7 @@ use diesel::prelude::*;
 
 use crate::error_handler::CustomError;
 use crate::database;
+use crate::models::Lenses;
 
 use crate::schema::nodes;
 
@@ -60,6 +61,19 @@ impl Nodes {
         let names = nodes::table.select(nodes::node_name).load::<String>(&conn)?;
 
         Ok(names)
+    }
+
+    pub fn find_all_linked_names() -> Result<Vec<String>, CustomError> {
+        let conn = database::connection()?;
+
+        let node_ids = Lenses::find_all_node_ids().expect("Unable to load lenses");
+
+        let node_names = nodes::table
+            .select(nodes::node_name)
+            .filter(nodes::id.eq_any(node_ids))
+            .load::<String>(&conn)?;
+
+        Ok(node_names)
     }
 
     pub fn find(id: i32) -> Result<Self, CustomError> {
