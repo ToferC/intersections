@@ -98,19 +98,20 @@
 
                     <hr>
                     <h2>4. Identify how this lens impacts your work experience.</h2>
-                    <p>Place the slider below where you think this lens falls on the range of being more or less included in your workplace.</p>
 
-                    <label for="inclusivity" style="text-align:left"><strong>Excluded</strong></label>
-                    <label for="inclusivity" style="float:right"><strong>Included</strong></label>
+                    <label>Place the slider below where you think this lens falls on the range of being more or less included in your workplace.</label>
+    
                     <input type="range" id="inclusivity" name="inclusivity"
-                            min="-100" max="100" class="slider">
-
-                    <br><br>
-                    <button class="btn g-recaptcha btn-success"
-                data-sitekey="6LfAltkZAAAAAN7rJGBvRUPm36M1aiL7q2a8SznA" 
-                data-callback='onSubmit' 
-                data-action='submit' type=submit>Save Experience</button>
-            </form>
+                    min="-100" max="100" class="slider">
+                    <label for="inclusivity_l" style="text-align:left"><strong>More Excluded</strong></label>
+                    <label for="inclusivity_r" style="float:right"><strong>More Included</strong></label>
+    
+                    <hr>
+                    <button class="btn g-recaptcha btn-primary" 
+                    data-sitekey="6LfAltkZAAAAAN7rJGBvRUPm36M1aiL7q2a8SznA" 
+                    data-callback='onSubmit' 
+                    data-action='submit' type=submit>Save Experience</button>
+                </form>
                 
         </div>
 {% endblock content %}
