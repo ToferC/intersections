@@ -131,7 +131,7 @@ pub async fn handle_lens_form_input(
     let new_person = People::create(&person.clone()).expect("Unable to add person to DB");
 
     // add person to graph representation
-    let person_node = CytoGraph::add_person_node(&new_person);
+    let person_node = CytoGraph::add_person(&new_person);
     
     let mut g = graph.lock().expect("Unable to unlock graph");
     

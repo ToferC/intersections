@@ -6,7 +6,7 @@ use diesel::{QueryDsl, BelongingToDsl};
 
 use crate::models::{Lenses, Nodes};
 use crate::database;
-use crate::handlers::{generate_node_cyto_graph, AggLens};
+use crate::handlers::{AggLens};
 
 use crate::schema::{nodes, lenses};
 
@@ -106,6 +106,7 @@ pub async fn node_page(
 
 #[get("/node_network_graph/{label}")]
 pub async fn node_network_graph(
+    // Rework this as a connected node graph
     web::Path(label): web::Path<String>,
     data: web::Data<AppData>
 ) -> impl Responder {
@@ -123,7 +124,7 @@ pub async fn node_network_graph(
         .load::<Lenses>(&conn)
         .expect("Error leading people");
     
-    let graph = generate_node_cyto_graph(node_vec, lens_vec);
+    let graph = ""; // this is where the graph rework needs to happen
 
     let j = serde_json::to_string_pretty(&graph).unwrap();
     

@@ -29,7 +29,7 @@
         <hr>
 
 
-            <h2>1. Name your experience</h2>
+            <h2>1. Name your lens</h2>
             
 
             <label>
@@ -40,21 +40,28 @@
 
             <hr>
 
-            <h2>2. Which domain does this experience fall into?</h2>
-                        
-            <div>
-                <input type="radio" id="person" name="domain" value="Person" checked>
-                <label for="person">Person</label>
-            </div>
+            <h2>2. Which domain does this lens fall into?</h2>
+            
+            <fieldset>
+                <p>
+                    <strong>
+                        This lens is...
+                    </strong>
+                </p>
+                <div>
+                    <input type="radio" id="person" name="domain" value="Person" checked>
+                    <label for="person">Part of me as a Person</label>
+                </div>
 
-            <div>
-                <input type="radio" id="role" name="domain" value="Role">
-                <label for="role">Role</label>
-            </div>
+                <div>
+                    <input type="radio" id="role" name="domain" value="Role">
+                    <label for="role">A formal or informal Role in my workplace</label>
+                </div>
+            </fieldset>
 
             <hr>
             
-            <h2>3. Describe your experience</h2>
+            <h2>3. Describe your lens</h2>
                     
             <p><strong>Though this lens, in the workplace...</strong></p>
             <div>
@@ -84,17 +91,17 @@
             </div>
 
             <hr>
-            <h2>4. Identify how this experience impacts your work experience.</h2>
+            <h2>4. Identify how this lens impacts your work experience.</h2>
 
-                <p>Place the slider below where you think this experience falls on the range of being more or less included in your workplace.</p>
+                <p>Place the slider below where you think this lens falls on the range of being more or less included in your workplace.</p>
 
-                <label for="volume" style="text-align:left"><strong>Excluded</strong></label>
-                <label for="volume" style="float:right"><strong>Included</strong></label>
+                <label for="inclusivity" style="text-align:left"><strong>Excluded</strong></label>
+                <label for="inclusivity" style="float:right"><strong>Included</strong></label>
                 <input type="range" id="inclusivity" name="inclusivity"
                         min="-100" max="100" class="slider">
 
                 <br><br>
-                <button class="g-recaptcha" 
+                <button class="btn g-recaptcha btn-success" 
                 data-sitekey="6LfAltkZAAAAAN7rJGBvRUPm36M1aiL7q2a8SznA" 
                 data-callback='onSubmit' 
                 data-action='submit' type=submit>Save Experience</button>
