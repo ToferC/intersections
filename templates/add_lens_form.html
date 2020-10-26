@@ -122,12 +122,12 @@
     document.getElementById("lensForm").submit();
     };
 
-    var node_names = {{ node_names | json_encode | safe }};
+    var node_names = {{ all_node_names | json_encode | safe }};
 
     jQuery(function(){
         jQuery("[id=node_name_autocomplete]").autocomplete({
             minLength: 2,
-            source: node_names
+            source: all_node_names
             });
     });
 

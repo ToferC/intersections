@@ -28,7 +28,7 @@ pub async fn survey_intro(data: web::Data<AppData>, _req:HttpRequest) -> impl Re
 
     let mut ctx = Context::new();
 
-    let node_vec = Nodes::find_all_names().expect("Unable to load nodes");
+    let node_vec = Nodes::find_all_linked_names().expect("Unable to load nodes");
     ctx.insert("node_names", &node_vec);
 
     let rendered = data.tmpl.render("survey_intro.html", &ctx).unwrap();

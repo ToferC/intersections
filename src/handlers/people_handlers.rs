@@ -93,7 +93,7 @@ pub async fn person_page(
 
     ctx.insert("other_lenses", &aggregate_lenses);
 
-    let node_names = Nodes::find_all_names().expect("Unable to load names");
+    let node_names = Nodes::find_all_linked_names().expect("Unable to load names");
     ctx.insert("node_names", &node_names);
 
     let rendered = data.tmpl.render("person.html", &ctx).unwrap();
@@ -156,7 +156,7 @@ pub async fn person_graph(
     let title = "Person Network Graph";
     ctx.insert("title", title);
 
-    let node_names = Nodes::find_all_names().expect("Unable to load names");
+    let node_names = Nodes::find_all_linked_names().expect("Unable to load names");
     ctx.insert("node_names", &node_names);
     
     let rendered = data.tmpl.render("network_graph.html", &ctx).unwrap();
