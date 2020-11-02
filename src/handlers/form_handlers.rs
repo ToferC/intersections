@@ -105,26 +105,26 @@ pub async fn handle_lens_form_input(
 
     // Get related persons
     if &form.related_code != "" {
-        person.related_codes.push(form.related_code.to_owned());
+        person.related_codes.push(form.related_code.trim().to_owned());
     };
 
     let node = Node::new(
-        form.name.to_lowercase().to_owned(),
-        form.domain.to_lowercase().to_owned(),
+        form.name.to_lowercase().trim().to_owned(),
+        form.domain.to_lowercase().trim().to_owned(),
     );
 
     let mut lived_statements = vec!();
 
     if &form.response_1 != "" {
-        lived_statements.push(form.response_1.to_lowercase().to_owned());
+        lived_statements.push(form.response_1.to_lowercase().trim().to_owned());
     };
 
     if &form.response_2 != "" {
-        lived_statements.push(form.response_2.to_lowercase().to_owned());
+        lived_statements.push(form.response_2.to_lowercase().trim().to_owned());
     };
 
     if &form.response_3 != "" {
-        lived_statements.push(form.response_3.to_lowercase().to_owned());
+        lived_statements.push(form.response_3.to_lowercase().trim().to_owned());
     };
 
     let inclusivity = &form.inclusivity;
@@ -247,23 +247,23 @@ pub async fn add_handle_lens_form_input(
 
     println!("Create Node");
     let node = Node::new(
-        form.name.to_lowercase().to_owned(),
-        form.domain.to_lowercase().to_owned(),
+        form.name.to_lowercase().trim().to_owned(),
+        form.domain.to_lowercase().trim().to_owned(),
     );
 
     println!("Get statements");
     let mut lived_statements = vec!();
 
     if &form.response_1 != "" {
-        lived_statements.push(form.response_1.to_lowercase().to_owned());
+        lived_statements.push(form.response_1.to_lowercase().trim().to_owned());
     };
 
     if &form.response_2 != "" {
-        lived_statements.push(form.response_2.to_lowercase().to_owned());
+        lived_statements.push(form.response_2.to_lowercase().trim().to_owned());
     };
 
     if &form.response_3 != "" {
-        lived_statements.push(form.response_3.to_lowercase().to_owned());
+        lived_statements.push(form.response_3.to_lowercase().trim().to_owned());
     };
 
     let inclusivity = &form.inclusivity;
