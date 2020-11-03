@@ -7,6 +7,8 @@ extern crate diesel_migrations;
 use std::env;
 use std::sync::{Mutex, Arc};
 use actix_web::{App, HttpServer, middleware, web};
+use actix_web_static_files;
+use std::collections::HashMap;
 use tera::Tera;
 
 mod models;
@@ -19,6 +21,7 @@ pub struct AppData {
     pub tmpl: Tera,
 }
 
+include!(concat!(env!("OUT_DIR"), "/generated.rs"));
 
 #[actix_rt::main]
 async fn main() -> std::io::Result<()> {
@@ -64,9 +67,14 @@ async fn main() -> std::io::Result<()> {
 
         let x = Arc::clone(&x);
 
+        let generated = generate();
+
         App::new()
             .wrap(middleware::Logger::default())
             .configure(handlers::init_routes)
+            .service(actix_web_static_files::ResourceFiles::new(
+                "/static", generated,
+            ))
             .data(AppData {
                 tmpl: tera,})
             .app_data(web::Data::from(x))

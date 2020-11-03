@@ -471,6 +471,20 @@ dependencies = [
 ]
 
 [[package]]
+name = "actix-web-static-files"
+version = "3.0.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "18d24e801d36626b99c537bb5b5daa816030c6a88c3ea6d10dd3f0949cb476a4"
+dependencies = [
+ "actix-service",
+ "actix-web 3.1.0",
+ "failure",
+ "futures",
+ "mime_guess",
+ "path-slash",
+]
+
+[[package]]
 name = "addr2line"
 version = "0.13.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1501,6 +1515,7 @@ dependencies = [
  "actix-rt",
  "actix-web 3.1.0",
  "actix-web-httpauth",
+ "actix-web-static-files",
  "alcoholic_jwt",
  "bdays",
  "bigdecimal",
@@ -1989,6 +2004,12 @@ checksum = "c705f256449c60da65e11ff6626e0c16a0a0b96aaa348de61376b249bc340f41"
 dependencies = [
  "regex",
 ]
+
+[[package]]
+name = "path-slash"
+version = "0.1.3"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "ff65715a17cba8979903db6294baef56c5d39e05c8b054cffa31e69e61f24c68"
 
 [[package]]
 name = "percent-encoding"
