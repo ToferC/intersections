@@ -4,8 +4,10 @@ use actix_web::{web, get, HttpResponse, Responder};
 use crate::AppData;
 use tera::{Context};
 
-use crate::models::{Nodes};
-use crate::handlers::CytoGraph;
+use std::collections::HashMap;
+
+use crate::models::{Nodes, Lenses};
+use crate::handlers::{CytoGraph, generate_node_cyto_graph};
 
 #[get("/full_network_graph")]
 pub async fn full_network_graph(
@@ -32,37 +34,35 @@ pub async fn full_network_graph(
     HttpResponse::Ok().body(rendered)
 }
 
-#[get("/node_network_graph")]
-pub async fn node_network_graph(
-    data: web::Data<AppData>,
-    graph: web::Data<Mutex<CytoGraph>>,
+#[get("/full_node_graph")]
+pub async fn full_node_graph(
+    data: web::Data<AppData>
 ) -> impl Responder {
+        
+    let lens_vec = Lenses::find_all().expect("Unable to load lenses");
 
-    let g = graph.lock().unwrap().clone();
+    // create vec of bridge connections from people
+    let mut people_connections: HashMap<i32, Vec<String>> = HashMap::new();
 
-    let mut new_g = CytoGraph{
-        nodes: Vec::new(),
-        edges: Vec::new(),
+    for l in &lens_vec {
+        people_connections.entry(l.person_id).or_insert(Vec::new()).push(l.node_name.to_owned()); 
     };
 
-    // for each person find all other nodes connected to by lens
+    // now instead of building AggLens, we build the graph
+    let graph = generate_node_cyto_graph(lens_vec, people_connections);
 
-    // connect each node directly to each other and add 1 to count weight
-        
-    let j = serde_json::to_string_pretty(&g).unwrap();
-
-    drop(graph);
+    let j = serde_json::to_string_pretty(&graph).unwrap();
     
     let mut ctx = Context::new();
     ctx.insert("graph_data", &j);
 
-    let title = "Full Network Graph";
+    let title = "Node Network Graph";
     ctx.insert("title", title);
 
     let node_names = Nodes::find_all_linked_names().expect("Unable to load names");
     ctx.insert("node_names", &node_names);
     
-    let rendered = data.tmpl.render("network_graph.html", &ctx).unwrap();
+    let rendered = data.tmpl.render("node_network_graph.html", &ctx).unwrap();
     HttpResponse::Ok().body(rendered)
 }
 

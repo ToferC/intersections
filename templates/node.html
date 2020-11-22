@@ -8,7 +8,8 @@
     <div class="col-md m-md-2 m-1">
         <br>
         <h1>{{ node.node_name | title }} - {{ node.domain_token | title }}</h1>
-        <p><a href="/full_network_graph">Return to Full Graph</a> | <a href="/">Return to Index</a></p>
+        <p><a href="/full_network_graph">View full graph</a> | <a href="/full_node_graph">View node graph</a> | <a href="/">Return to Index</a></p>
+        <p><a href="/node_network_graph/{{ node.node_name }}"">View graph for {{ node.node_name }}</a></p>
         <hr>
         <p>The table below shows the data from this specific node.</p>
         <button class="btn btn-info" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">

@@ -4,9 +4,11 @@ use tera::{Context};
 use diesel::prelude::*;
 use diesel::{QueryDsl, BelongingToDsl};
 
+use std::collections::HashMap;
+
 use crate::models::{Lenses, Nodes};
 use crate::database;
-use crate::handlers::{AggLens};
+use crate::handlers::{AggLens, generate_node_cyto_graph};
 
 use crate::schema::{nodes, lenses};
 
@@ -115,16 +117,48 @@ pub async fn node_network_graph(
     
     let node: Nodes = nodes::table.filter(nodes::node_name.eq(label))
         .first(&conn)
-        .expect("Unable to load person");
+        .expect("Unable to load node");
     
-    let node_vec: Vec<Nodes> = vec![node];
-        
-    // join lenses and nodes
-    let lens_vec: Vec<Lenses> = Lenses::belonging_to(&node_vec)
+    // get connected nodes via people with lense connections to our prime node
+
+    let mut lens_vec: Vec<Lenses> = Lenses::belonging_to(&node)
         .load::<Lenses>(&conn)
-        .expect("Error leading people");
+        .expect("Error leading connected lenses");
+
+    let mut people_id_vec: Vec<i32> = Vec::new();
+    let mut node_id_vec: Vec<i32> = Vec::new();
+
+    // create vec of bridge connections from people
+    let mut people_connections: HashMap<i32, Vec<String>> = HashMap::new();
+
+    for l in &lens_vec {
+        people_id_vec.push(l.person_id);
+        node_id_vec.push(l.node_id);
+    };
+
+
+    people_id_vec.sort();
+    people_id_vec.dedup();
+
+    // add lenses for the people connected by node
+    let mut connected_lenses = lenses::table.filter(lenses::person_id.eq_any(&people_id_vec))
+        .load::<Lenses>(&conn)
+        .expect("Unable to load lenses");
     
-    let graph = ""; // this is where the graph rework needs to happen
+    lens_vec.append(&mut connected_lenses);
+
+    for l in &lens_vec {
+        people_connections.entry(l.person_id).or_insert(Vec::new()).push(l.node_name.to_owned()); 
+    };
+
+    println!("{:?}", &people_connections);
+
+    for l in &connected_lenses {
+        node_id_vec.push(l.node_id);
+    };
+
+    // now instead of building AggLens, we build the graph
+    let graph = generate_node_cyto_graph(lens_vec, people_connections);
 
     let j = serde_json::to_string_pretty(&graph).unwrap();
     
@@ -137,6 +171,6 @@ pub async fn node_network_graph(
     let node_names = Nodes::find_all_linked_names().expect("Unable to load names");
     ctx.insert("node_names", &node_names);
     
-    let rendered = data.tmpl.render("network_graph.html", &ctx).unwrap();
+    let rendered = data.tmpl.render("node_network_graph.html", &ctx).unwrap();
     HttpResponse::Ok().body(rendered)
 }

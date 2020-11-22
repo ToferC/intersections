@@ -17,6 +17,7 @@ use crate::handlers::{
     person_api,
     // graphs
     full_network_graph,
+    full_node_graph,
     node_network_graph,
     person_graph,
     };
@@ -38,6 +39,7 @@ pub fn init_routes(config: &mut web::ServiceConfig) {
     config.service(add_handle_lens_form_input);
     // graphs
     config.service(full_network_graph);
+    config.service(full_node_graph);
     config.service(person_graph);
     config.service(node_network_graph);
 }

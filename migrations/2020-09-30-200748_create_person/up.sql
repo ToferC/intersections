@@ -54,5 +54,5 @@ VALUES
     ('black', 'person', 3, 6, '{"ignored", "suffer microagressions", "proud"}', -0.30),
     ('mother', 'person', 3, 4, '{"balanced", "responsible", "capable"}', 0.29),
     ('executive', 'role',3, 7, '{"powerful", "overwhelmed", "stifled"}', -0.10),
-    ('innovator', 'system', 3, 8, '{"respected", "sidelined", "not recognized by system"}', 0.20),
+    ('innovator', 'role', 3, 8, '{"respected", "sidelined", "not recognized by system"}', 0.20),
     ('white', 'person', 4, 5, '{"listened to", "persecuted by diversity iniatives", "comfortable"}', 0.09);

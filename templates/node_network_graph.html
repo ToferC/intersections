@@ -53,14 +53,14 @@
             {
               selector: 'edge',
               style: {
-                'width': 3,
+                'width': 'data(weight)' * 0.5,
                 'line-color': '#ccc',
                 'source-arrow-shape': 'triangle',
                 'target-arrow-color': '#ccc',
                 'target-arrow-shape': 'triangle',
                 'curve-style': 'bezier',
                 'content': 'data(id)',
-                'label': 'data(weight)'
+                'label': ''
               }
             }
           ],
@@ -82,11 +82,9 @@
               let content = document.createElement('div');
 
               if (ele.data("node_type") == "Node") {
-                content.innerHTML = ele.data("text");
-              } else if (ele.data("node_type") == "Person") {
-                content.innerHTML = ele.data("text");
+                content.innerHTML = ele.data("inclusivity");
               } else {
-                content.innerHTML = ele.data("text");
+                content.innerHTML = ele.data("weight");
               };
 
               return content;

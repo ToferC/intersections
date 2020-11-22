@@ -8,7 +8,7 @@ use serde::{Deserialize, Serialize};
 
 use crate::AppData;
 use crate::models::{Lens, Lenses, NewPerson, People, Node, Nodes};
-use crate::handlers::{CytoGraph, CytoNode, CytoEdge};
+use crate::handlers::{CytoGraph, CytoNode, CytoEdge, GNode, GEdge};
 use crate::error_handler::CustomError;
 
 #[derive(Deserialize, Debug)]
@@ -135,7 +135,7 @@ pub async fn handle_lens_form_input(
     let new_person = People::create(&person.clone()).expect("Unable to add person to DB");
 
     // add person to graph representation
-    let person_node = CytoGraph::add_person(&new_person);
+    let person_node = GNode::from_person(&new_person);
     
     let mut g = graph.lock().expect("Unable to unlock graph");
     
@@ -159,7 +159,7 @@ pub async fn handle_lens_form_input(
             // no target
             let new_node = Nodes::create(&node).expect("Unable to create node.");
 
-            let node_rep = CytoGraph::add_node(&new_node);
+            let node_rep = GNode::from_node(&new_node);
 
             let mut g = graph.lock().expect("Unable to unlock graph");
 
@@ -182,7 +182,7 @@ pub async fn handle_lens_form_input(
     );
 
     let new_lens = Lenses::create(&l).expect("Unable to create lens.");
-    let lens_rep = CytoGraph::add_lens_edge(&new_lens);
+    let lens_rep = GEdge::from_lens(&new_lens);
     
     let mut g = graph.lock().expect("Unable to unlock graph");
 
@@ -283,7 +283,7 @@ pub async fn add_handle_lens_form_input(
             // no target
             let new_node = Nodes::create(&node).expect("Unable to create node.");
 
-            let node_rep = CytoGraph::add_node(&new_node);
+            let node_rep = GNode::from_node(&new_node);
 
             let mut g = graph.lock().expect("Unable to unlock graph");
 
@@ -305,7 +305,7 @@ pub async fn add_handle_lens_form_input(
     );
 
     let new_lens = Lenses::create(&l).expect("Unable to create lens.");
-    let lens_rep = CytoGraph::add_lens_edge(&new_lens);
+    let lens_rep = GEdge::from_lens(&new_lens);
     
     let mut g = graph.lock().expect("Unable to unlock graph");
 
