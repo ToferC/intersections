@@ -32,9 +32,9 @@ pub struct GEdge {
 impl GEdge {
     pub fn from_lens(l: &Lenses) -> GEdge {
         let edge = GEdge {
-            id: format!("P{}-{}", &l.person_id, &l.node_name),
+            id: format!("P{}-{}", &l.person_id, &l.node_name.trim()),
             source: format!("P-{}", &l.person_id),
-            target: format!("{}", &l.node_name),
+            target: format!("{}", &l.node_name.trim()),
             text: l.statements.to_owned(),
             weight: l.inclusivity.to_f32().expect("unable to convert decimal"),
         };
@@ -85,7 +85,7 @@ impl GNode {
         };
 
         let node = GNode {
-            id: format!("{}", &n.node_name),
+            id: format!("{}", &n.node_name.trim()),
             node_type: String::from("Node"),
             text: vec![n.domain_token.to_owned()],
             shape: shape,
@@ -106,7 +106,7 @@ impl GNode {
         };
 
         let node = GNode {
-            id: format!("{}", &l.node_name),
+            id: format!("{}", &l.node_name.trim()),
             node_type: String::from("Node"),
             text: vec![l.node_domain.to_owned()],
             shape: shape,
@@ -192,7 +192,11 @@ pub fn generate_node_cyto_graph(
         let copy_vec = v.clone();
 
         for n in v.into_iter() {
+            let n = n.trim();
+
             for copy_n in &copy_vec {
+                let copy_n = copy_n.trim();
+
                 if n != copy_n {
 
                     let id = format!("{}-{}", n, copy_n);
