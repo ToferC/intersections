@@ -11,7 +11,7 @@
 {% block content %}
     <div class="col m-md-2 m-1">
         <br>
-        <h1>Add a lens</h1>
+        <h1>Add an experience</h1>
         <hr>
 
         <form name="LensForm" id="lensForm" action=/first_lens_form method=POST>
@@ -29,7 +29,7 @@
         <hr>
 
 
-            <h2>1. Name your lens</h2>
+            <h2>1. Name your experience</h2>
             
 
             <label>
@@ -40,10 +40,10 @@
 
             <hr>
 
-            <h2>2. Which domain does this lens fall into?</h2>
+            <h2>2. Is this experience part of you as a person or is it a role related to your work?</h2>
             
             <fieldset>
-                <legend>This lens is...</legend>
+                <legend>This experience is...</legend>
                 <div>
                     <input type="radio" id="person" name="domain" value="Person" checked>
                     <label for="person">Part of me as a Person</label>
@@ -57,14 +57,14 @@
 
             <hr>
             
-            <h2>3. Describe your lens</h2>
+            <h2>3. Describe your experience</h2>
                     
-            <p><strong>Though this lens, in the workplace...</strong></p>
+            <p><strong>Though this experience, in the workplace...</strong></p>
             <div>
                 <label>
                     <strong>I feel</strong>
                     <input class="form-control form-control-lg" name="response_1" required>
-                    <small id="response_1_help" class="form-text text-muted">Enter a few words about how this lens interacts with your work experience.</small>
+                    <small id="response_1_help" class="form-text text-muted">Enter a few words about how this experience interacts with your work life.</small>
                 </label>
             </div>
 
@@ -72,7 +72,7 @@
                 <label>
                     <strong>I feel</strong>
                     <input class="form-control form-control-lg" name="response_2">
-                    <small id="response_2_help" class="form-text text-muted">Enter a few words about how this lens interacts with your work experience.</small>
+                    <small id="response_2_help" class="form-text text-muted">Enter a few words about how this experience interacts with your work life.</small>
 
                 </label>
             </div>
@@ -81,15 +81,15 @@
                 <label>
                     <strong>I feel</strong>
                     <input class="form-control form-control-lg" name="response_3">
-                    <small id="response_2_help" class="form-text text-muted">Enter a few words about how this lens interacts with your work experience.</small>
+                    <small id="response_2_help" class="form-text text-muted">Enter a few words about how this experience interacts with your work life.</small>
 
                 </label>
             </div>
 
             <hr>
-            <h2>4. Identify how this lens impacts your work experience.</h2>
+            <h2>4. Identify how this experience impacts your inclusion in the workplace.</h2>
 
-                <label for="inclusivity">Place the slider below where you think this lens falls on the range of being more or less included in your workplace.</label>
+                <label for="inclusivity">Place the slider below where you think this experience falls on the range of being more or less included in your workplace.</label>
 
                 <input type="range" id="inclusivity" name="inclusivity"
                 min="-100" max="100" class="slider">
