@@ -16,7 +16,8 @@ use crate::database;
 pub struct NewPerson {
     pub code: String,
     pub date_created: chrono::NaiveDateTime,
-    pub related_codes: Vec<String>
+    pub related_codes: Vec<String>,
+    pub community_id: i32,
 }
 
 impl NewPerson {
@@ -25,6 +26,7 @@ impl NewPerson {
             code: generate_unique_code(),
             date_created: chrono::NaiveDate::from_ymd(2020, 6, 6).and_hms(3, 3, 3),
             related_codes: Vec::new(),
+            community_id: 0,
         }
     }
 
@@ -36,6 +38,7 @@ impl NewPerson {
             code: person.code.to_owned(),
             date_created: now,
             related_codes: person.related_codes.to_owned(),
+            community_id: person.community_id,
         }
     }
 }
@@ -46,7 +49,8 @@ pub struct People {
     pub id: i32,
     pub code: String,
     pub date_created: NaiveDateTime,
-    pub related_codes: Vec<String>
+    pub related_codes: Vec<String>,
+    pub community_id: i32,
 }
 
 impl People {

@@ -37,7 +37,7 @@ impl NewCommunity {
     }
 }
 
-#[derive(Serialize, Deserialize, Queryable, Insertable, Debug, Assocations, Identifiable, Clone)]
+#[derive(Serialize, Deserialize, Queryable, Insertable, Debug, Identifiable, Clone)]
 #[table_name = "communities"]
 pub struct Communities {
     pub id: i32,
@@ -68,15 +68,15 @@ impl Communities {
         Ok(community)
     }
 
-    pub fn find_from_code(code: i32) -> Result<Self, CustomError> {
+    pub fn find_from_code(code: &String) -> Result<Self, CustomError> {
         let conn = database::connection()?;
         let community = communities::table.filter(communities::code.eq(code)).first(&conn)?;
         Ok(community)
     }
 
-    pub fn delete(id: i32) -> Result<Self, CustomError> {
+    pub fn delete(id: i32) -> Result<usize, CustomError> {
         let conn = database::connection()?;
-        let res = deisel::delete(communities::table.filter(id.eq(id))).execute(&conn)?;
+        let res = diesel::delete(communities::table.filter(communities::id.eq(id))).execute(&conn)?;
         Ok(res)
     }
 }
