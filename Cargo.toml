@@ -39,6 +39,7 @@ rand = "0.7.3"
 lazy_static = "1.4"
 uuid = "0.8.1"
 petgraph = { version = "0.5.1", features = ["serde-1"] }
+argon2rs = "1.0.0"
 
 [build-dependencies]
 actix-web-static-files = "3.0.1"
