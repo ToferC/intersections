@@ -6,8 +6,9 @@ CREATE TABLE users (
     hash BYTEA NOT NULL,
     salt VARCHAR(255) NOT NULL,
     email VARCHAR(120) NOT NULL UNIQUE,
-    role VARCHAR(32) NOT NULL DEFAULT 'user',
     user_name VARCHAR NOT NULL,
+    role VARCHAR(32) NOT NULL DEFAULT 'user',
+    managed_communities INT[] NOT NULL,
     created_at TIMESTAMP NOT NULL DEFAULT NOW()
 );
 

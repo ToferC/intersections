@@ -57,8 +57,9 @@ table! {
         hash -> Bytea,
         salt -> Varchar,
         email -> Varchar,
-        role -> Varchar,
         user_name -> Varchar,
+        role -> Varchar,
+        managed_communities -> Array<Int4>,
         created_at -> Timestamp,
     }
 }

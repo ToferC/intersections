@@ -27,6 +27,7 @@ pub struct User {
     pub user_name: String,
     pub created_at: NaiveDateTime,
     pub role: String,
+    pub managed_communities: Vec<i32>,
 }
 
 #[derive(Debug, Insertable)]
@@ -39,6 +40,7 @@ pub struct InsertableUser {
     pub email: String,
     pub user_name: String,
     pub role: String,
+    pub managed_communities: Vec<i32>,
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
@@ -46,6 +48,7 @@ pub struct SlimUser {
     pub user_uuid: Uuid,
     pub email: String,
     pub role: String,
+    pub managed_communities: Vec<i32>,
 }
 
 #[derive(Debug, Deserialize)]
@@ -53,6 +56,7 @@ pub struct UserData {
     pub user_name: String,
     pub email: String,
     pub password: String,
+    pub managed_communities: Vec<i32>,
 }
 
 #[derive(Shrinkwrap, Clone, Default)]
@@ -70,6 +74,7 @@ impl From<UserData> for InsertableUser {
             user_name,
             email,
             password,
+            managed_communities,
             ..
         } = user_data;
 
@@ -84,6 +89,7 @@ impl From<UserData> for InsertableUser {
             created_at: chrono::Local::now().naive_local(),
             salt,
             role: "user".to_owned(),
+            managed_communities,
         }
     }
 }
@@ -94,6 +100,7 @@ impl From<User> for SlimUser {
             user_uuid,
             email,
             role,
+            managed_communities,
             ..
         } = user;
 
@@ -101,6 +108,7 @@ impl From<User> for SlimUser {
             user_uuid,
             email,
             role,
+            managed_communities,
         }
     }
 }
