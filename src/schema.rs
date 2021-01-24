@@ -48,6 +48,21 @@ table! {
     }
 }
 
+table! {
+    use diesel::sql_types::*;
+
+    users (user_id) {
+        user_id -> Int4,
+        user_uuid -> Uuid,
+        hash -> Bytea,
+        salt -> Varchar,
+        email -> Varchar,
+        role -> Varchar,
+        user_name -> Varchar,
+        created_at -> Timestamp,
+    }
+}
+
 joinable!(lenses -> nodes (node_id));
 joinable!(lenses -> people (person_id));
 joinable!(people -> communities (community_id));
@@ -57,4 +72,5 @@ allow_tables_to_appear_in_same_query!(
     lenses,
     nodes,
     people,
+    users,
 );

@@ -1,9 +1,21 @@
 // Modeling from: https://github.com/clifinger/canduma/blob/master/src/user/handler.rs
 
-use chrono::*;
+use std::io::prelude;
+
+use argon2::Config;
 use uuid::Uuid;
 use crate::error_handler::CustomError;
+use chrono::prelude::*;
+use serde::{Serialize, Deserialize};
 
+use crate::schema::users;
+
+use actix_identity::{Identity, RequestIdentity};
+
+use shrinkwraprs::Shrinkwrap;
+use diesel::prelude::*;
+use diesel::RunQueryDsl;
+use diesel::{QueryDsl, BelongingToDsl};
 
 #[derive(Debug, Serialize, Deserialize, Queryable)]
 pub struct User {
@@ -12,11 +24,12 @@ pub struct User {
     pub hash: Vec<u8>,
     pub salt: String,
     pub email: String,
+    pub user_name: String,
     pub created_at: NaiveDateTime,
     pub role: String,
 }
 
-#[derive(Debug. Insertable)]
+#[derive(Debug, Insertable)]
 #[table_name = "users"]
 pub struct InsertableUser {
     pub user_uuid: Uuid,
@@ -24,6 +37,7 @@ pub struct InsertableUser {
     pub salt: String,
     pub created_at: NaiveDateTime,
     pub email: String,
+    pub user_name: String,
     pub role: String,
 }
 
@@ -32,6 +46,13 @@ pub struct SlimUser {
     pub user_uuid: Uuid,
     pub email: String,
     pub role: String,
+}
+
+#[derive(Debug, Deserialize)]
+pub struct UserData {
+    pub user_name: String,
+    pub email: String,
+    pub password: String,
 }
 
 #[derive(Shrinkwrap, Clone, Default)]
@@ -46,16 +67,18 @@ impl From<SlimUser> for LoggedUser {
 impl From<UserData> for InsertableUser {
     fn from(user_data: UserData) -> Self {
         let UserData {
-            name,
+            user_name,
             email,
             password,
             ..
         } = user_data;
 
         let salt = make_salt();
-        let hash = make_hash(&password, &salt).to_vec();
+        let hash = make_hash(&password, &salt).as_bytes();
+        let hash = hash.to_vec();
         
         Self {
+            user_name,
             user_uuid: Uuid::new_v4(),
             email,
             hash,
@@ -101,19 +124,20 @@ fn make_salt() -> String {
     password
 }
 
-fn make_hash(password: &str, salt: &str) -> [u8; argon2rs::defaults::LENGTH] {
-    argon2i_simple(password, salt)
+fn make_hash(password: &str, salt: &str) -> String {
+    let config = argon2::Config::default();
+    argon2::hash_encoded(password.as_bytes(), salt.as_bytes(), &config).unwrap()
 }
 
 fn verify(user: &User, password: &str) -> bool {
     let User {hash, salt, ..} = user;
 
-    make_hash(password, salt) == hash.as_ref()
+    make_hash(password, salt).as_bytes().to_vec() == *hash
 }
 
 fn has_role(user: &LoggedUser, role: &str) -> Result<bool, CustomError> {
     match user.0 {
         Some(ref user) if user.role == role => Ok(true),
-        _ => CustomError::new(002, "Role not present".to_string()),
+        _ => Err(CustomError::new(002, "Role not present".to_string())),
     }
 }
