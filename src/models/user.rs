@@ -74,8 +74,7 @@ impl From<UserData> for InsertableUser {
         } = user_data;
 
         let salt = make_salt();
-        let hash = make_hash(&password, &salt).as_bytes();
-        let hash = hash.to_vec();
+        let hash = make_hash(&password, &salt).as_bytes().to_vec();
         
         Self {
             user_name,
