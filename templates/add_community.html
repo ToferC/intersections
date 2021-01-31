@@ -8,7 +8,11 @@
     <div class="col m-md-2 m-1">
         <br>
         <h1>Register your organization</h1>
-        <p>You only need to sign up for an account to register your community or organization for use with intersections. You can create and view data without needing to register.</p>
+        <p>You only need to sign up for an account to register your community or organization for use with intersections. Doing so will provide you with a secret key that you
+            can share with your members that will link their data to your community. You will also receive a community access key. This key is needed to 
+            view and analyze your community data. You should not share this key with anyone you do not wish to have access to this data.</p>
+        <p>Note that individual data is still anonymized. The organization view only provides a view of the segment of the global dataset that has identified themselves 
+            as part of your organization.</p>
 
 
         <form name="RegisterForm" id="registerForm" action=/register method=POST>
@@ -37,6 +41,17 @@
             >
             <small id="code_help" class="form-text text-muted">A password of your choice at least 12 characters long.</small>
         </label>
+
+        <hr>
+
+        <label>
+            <strong>Community name</strong>
+            <input class="form-control form-control-lg" type="text" name="community_name" placeholder="Your community name..." required>
+            <small id="code_help" class="form-text text-muted">A unique name or identifier for your community or organization. You will be able to add 
+                additional communities after you register.
+            </small>
+        </label>
+        <hr>
 
         <button 
             class="btn g-recaptcha btn-dark" 

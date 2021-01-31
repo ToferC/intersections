@@ -9,6 +9,7 @@ use chrono::prelude::*;
 use serde::{Serialize, Deserialize};
 
 use crate::schema::users;
+use crate::database;
 
 use actix_identity::{Identity, RequestIdentity};
 
@@ -17,9 +18,10 @@ use diesel::prelude::*;
 use diesel::RunQueryDsl;
 use diesel::{QueryDsl, BelongingToDsl};
 
-#[derive(Debug, Serialize, Deserialize, Queryable)]
+#[derive(Serialize, Deserialize, Queryable, Insertable, Debug, Associations, Identifiable, Clone)]
+#[table_name = "users"]
 pub struct User {
-    user_id: i32,
+    pub id: i32,
     pub user_uuid: Uuid,
     pub hash: Vec<u8>,
     pub salt: String,
@@ -36,9 +38,9 @@ pub struct InsertableUser {
     pub user_uuid: Uuid,
     pub hash: Vec<u8>,
     pub salt: String,
-    pub created_at: NaiveDateTime,
     pub email: String,
     pub user_name: String,
+    pub created_at: NaiveDateTime,
     pub role: String,
     pub managed_communities: Vec<i32>,
 }
@@ -56,7 +58,6 @@ pub struct UserData {
     pub user_name: String,
     pub email: String,
     pub password: String,
-    pub managed_communities: Vec<i32>,
 }
 
 #[derive(Shrinkwrap, Clone, Default)]
@@ -74,7 +75,6 @@ impl From<UserData> for InsertableUser {
             user_name,
             email,
             password,
-            managed_communities,
             ..
         } = user_data;
 
@@ -89,8 +89,43 @@ impl From<UserData> for InsertableUser {
             created_at: chrono::Local::now().naive_local(),
             salt,
             role: "user".to_owned(),
-            managed_communities,
+            managed_communities: Vec::new(),
         }
+    }
+}
+
+impl User {
+    pub fn create(user_data: UserData) -> Result<Self, CustomError> {
+        let conn = database::connection()?;
+        let insertable_user = InsertableUser::from(user_data);
+        let user = diesel::insert_into(users::table)
+            .values(insertable_user)
+            .get_result(&conn)?;
+        Ok(user)
+    }
+
+    pub fn find_all() -> Result<Vec<Self>, CustomError> {
+        let conn = database::connection()?;
+        let users = users::table.load::<User>(&conn)?;
+        Ok(users)
+    }
+
+    pub fn find(id: i32) -> Result<Self, CustomError> {
+        let conn = database::connection()?;
+        let user = users::table.filter(users::id.eq(id)).first(&conn)?;
+        Ok(user)
+    }
+
+    pub fn find_from_email(email: &String) -> Result<Self, CustomError> {
+        let conn = database::connection()?;
+        let user = users::table.filter(users::email.eq(email)).first(&conn)?;
+        Ok(user)
+    }
+
+    pub fn delete(id: i32) -> Result<usize, CustomError> {
+        let conn = database::connection()?;
+        let res = diesel::delete(users::table.filter(users::id.eq(id))).execute(&conn)?;
+        Ok(res)
     }
 }
 

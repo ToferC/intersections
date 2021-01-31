@@ -46,6 +46,7 @@ pub struct Communities {
     pub code: String,
 }
 
+// Database operations
 impl Communities {
     pub fn create(community: &NewCommunity) -> Result<Self, CustomError> {
         let conn = database::connection()?;

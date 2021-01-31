@@ -51,16 +51,16 @@ table! {
 table! {
     use diesel::sql_types::*;
 
-    users (user_id) {
-        user_id -> Int4,
+    users (id) {
+        id -> Int4,
         user_uuid -> Uuid,
         hash -> Bytea,
         salt -> Varchar,
         email -> Varchar,
         user_name -> Varchar,
+        created_at -> Timestamp,
         role -> Varchar,
         managed_communities -> Array<Int4>,
-        created_at -> Timestamp,
     }
 }
 

@@ -18,7 +18,6 @@ pub struct LoginForm {
 pub struct RegisterForm {
     user_name: String,
     email: String,
-    community_name: String,
     password: String,
 }
 
@@ -54,8 +53,6 @@ pub async fn register_handler(data: web::Data<AppData>, _req:HttpRequest) -> imp
     let node_vec = Nodes::find_all_linked_names().expect("Unable to load nodes");
     ctx.insert("node_names", &node_vec);
 
-    let user = User
-
     let rendered = data.tmpl.render("register.html", &ctx).unwrap();
     HttpResponse::Ok().body(rendered)
 }
@@ -69,11 +66,21 @@ pub async fn register_form_input(
     println!("Handling Post Request: {:?}", req);
 
     // validate form has data or re-load form
-    if form.email.is_empty() || form.password.is_empty() || form.community_name.is_empty() {
+    if form.email.is_empty() || form.password.is_empty() || form.user_name.is_empty() {
         return HttpResponse::Found().header("Location", String::from("/register")).finish()
     };
 
-    HttpResponse::Found().header("Location", "/").finish()
+    // create user
+
+    let user_data = UserData {
+        email: form.email.to_owned(),
+        user_name: form.user_name.to_owned(),
+        password: form.password.to_owned(),
+    };
+
+    let user = User::create(user_data).expect("Unable to load user.");
+
+    HttpResponse::Found().header("Location", format!("/user/{}", user.user_name)).finish()
 }
 
 #[post("/log_out")]
