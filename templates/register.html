@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+
+{% block title %}
+    <title>First Lens Form</title>
+{% endblock title %}
+
+{% block content %}
+    <div class="col m-md-2 m-1">
+        <br>
+        <h1>Register your organization</h1>
+        <p>You only need to sign up for an account to register your community or organization for use with intersections. Doing so will provide you with a secret key that you
+            can share with your members that will link their data to your community. You will also receive a community access key. This key is needed to 
+            view and analyze your community data. You should not share this key with anyone you do not wish to have access to this data.</p>
+        <p>Note that individual data is still anonymized. The organization view only provides a view of the segment of the global dataset that has identified themselves 
+            as part of your organization.</p>
+
+
+        <form name="RegisterForm" id="registerForm" action=/register method=POST>
+        
+        <label>
+            <strong>Email address</strong>
+            <input class="form-control form-control-lg" type="email" name="email" placeholder="yourname@domain.com" required>
+            <small id="code_help" class="form-text text-muted">You will use this to log in.</small>
+        </label>
+
+        <label>
+            <strong>User name</strong>
+            <input class="form-control form-control-lg" type="text" name="user_name" placeholder="Firstname Lastname..." required>
+            <small id="code_help" class="form-text text-muted">The name you'd like to be called when using intersections.</small>
+        </label>
+
+        <label>
+            <strong>Password</strong>
+            <input 
+                class="form-control form-control-lg" 
+                type="password" 
+                name="password" 
+                placeholder="Your password..."
+                minlength=12
+                required
+            >
+            <small id="code_help" class="form-text text-muted">A password of your choice at least 12 characters long.</small>
+        </label>
+
+        <hr>
+
+        <label>
+            <strong>Community name</strong>
+            <input class="form-control form-control-lg" type="text" name="community_name" placeholder="Your community name..." required>
+            <small id="code_help" class="form-text text-muted">A unique name or identifier for your community or organization. You will be able to add 
+                additional communities after you register.
+            </small>
+        </label>
+        <hr>
+
+        <button 
+            class="btn g-recaptcha btn-dark" 
+            data-sitekey="6LfAltkZAAAAAN7rJGBvRUPm36M1aiL7q2a8SznA" 
+            data-callback='onSubmit' 
+            data-action='submit'
+            type=submit
+            >Register</button>
+        <hr>
+    </form>
+                
+    </div>
+{% endblock content %}
+
+{% block scripts %}
+<script>
+
+    window.onSubmit = onSubmit;
+
+    function onSubmit(token) {
+     document.getElementById("registerForm").submit();
+   };
+
+</script>
+{% endblock scripts %}

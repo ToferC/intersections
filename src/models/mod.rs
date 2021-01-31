@@ -7,4 +7,4 @@ pub mod user;
 pub use lens::{Lens, Lenses};
 pub use person::{NewPerson, People, generate_unique_code};
 pub use node::{Node, Nodes};
-pub use user::{User, InsertableUser, SlimUser, LoggedUser};
+pub use user::{User, InsertableUser, SlimUser, LoggedUser, UserData};
