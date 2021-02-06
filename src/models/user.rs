@@ -122,6 +122,12 @@ impl User {
         Ok(user)
     }
 
+    pub fn find_from_user_name(user_name: &String) -> Result<Self, CustomError> {
+        let conn = database::connection()?;
+        let user = users::table.filter(users::user_name.eq(user_name)).first(&conn)?;
+        Ok(user)
+    }
+
     pub fn delete(id: i32) -> Result<usize, CustomError> {
         let conn = database::connection()?;
         let res = diesel::delete(users::table.filter(users::id.eq(id))).execute(&conn)?;

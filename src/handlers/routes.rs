@@ -21,6 +21,8 @@ use crate::handlers::{
     node_network_graph,
     person_graph,
     register_handler,
+    // users
+    user_page_handler,
     };
 
 pub fn init_routes(config: &mut web::ServiceConfig) {
@@ -45,4 +47,5 @@ pub fn init_routes(config: &mut web::ServiceConfig) {
     config.service(node_network_graph);
     // users 
     config.service(register_handler);
+    config.service(user_page_handler);
 }

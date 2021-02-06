@@ -21,6 +21,22 @@ pub struct RegisterForm {
     password: String,
 }
 
+
+#[get("/user/{user_name}")]
+pub async fn user_page_handler(
+    web::Path(user_name): web::Path<String>,
+    data: web::Data<AppData>,
+    _req:HttpRequest) -> impl Responder {
+    let mut ctx = Context::new();
+
+    let user = User::find_from_user_name(&user_name).expect("Could not load user");
+
+    ctx.insert("user", &user);
+
+    let rendered = data.tmpl.render("log_in.html", &ctx).unwrap();
+    HttpResponse::Ok().body(rendered)
+}
+
 #[get("/log_in")]
 pub async fn login_handler(data: web::Data<AppData>, _req:HttpRequest) -> impl Responder {
     let mut ctx = Context::new();
