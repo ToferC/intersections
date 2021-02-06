@@ -1,25 +1,26 @@
 {% extends "base.html" %}
 
 {% block title %}
-    <title>User: {% user.user_name %}</title>
+    <title>User: {{ user.user_name }}</title>
 {% endblock title %}
 
 {% block content %}
     <div class="col m-md-2 m-1">
         <br>
-        <h1>User page for {% user.user_name %}</h1>
+        <h1>User page for {{ user.user_name }}</h1>
         <p>User details and account management.</p>
 
-            <p>{% user.user_name %}</p>
+            <p>{{ user.user_name }}</p>
 
-            <p>{% user.email %}</p>
+            <p>{{ user.email }}</p>
 
             <ul>
                 {% for community in user.communities %}
-                    <li>{% community.tag %}</li>
+                    <li>{{ community.tag }}</li>
                 {% endfor %}
             </ul>
 
+    </div>
 {% endblock content %}
 
 {% block scripts %}

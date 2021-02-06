@@ -21,6 +21,31 @@ pub struct RegisterForm {
     password: String,
 }
 
+#[get("/user_index")]
+pub async fn user_index(
+    data: web::Data<AppData>,
+    _req:HttpRequest) -> impl Responder {
+    let mut ctx = Context::new();
+
+    let node_vec = Nodes::find_all_linked_names().expect("Unable to load nodes");
+    ctx.insert("node_names", &node_vec);
+
+    let user_data = User::find_all();
+
+    let users = match user_data {
+        Ok(u) => u,
+        Err(e) => {
+            println!("{:?}", e);
+            Vec::new()
+        }
+    };
+
+    ctx.insert("users", &users);
+
+    let rendered = data.tmpl.render("user_index.html", &ctx).unwrap();
+    HttpResponse::Ok().body(rendered)
+}
+
 
 #[get("/user/{user_name}")]
 pub async fn user_page_handler(
@@ -29,17 +54,24 @@ pub async fn user_page_handler(
     _req:HttpRequest) -> impl Responder {
     let mut ctx = Context::new();
 
+    let node_vec = Nodes::find_all_linked_names().expect("Unable to load nodes");
+    ctx.insert("node_names", &node_vec);
+
+
     let user = User::find_from_user_name(&user_name).expect("Could not load user");
 
     ctx.insert("user", &user);
 
-    let rendered = data.tmpl.render("log_in.html", &ctx).unwrap();
+    let rendered = data.tmpl.render("user_page.html", &ctx).unwrap();
     HttpResponse::Ok().body(rendered)
 }
 
 #[get("/log_in")]
 pub async fn login_handler(data: web::Data<AppData>, _req:HttpRequest) -> impl Responder {
     let mut ctx = Context::new();
+
+    let node_vec = Nodes::find_all_linked_names().expect("Unable to load nodes");
+    ctx.insert("node_names", &node_vec);
 
     let rendered = data.tmpl.render("log_in.html", &ctx).unwrap();
     HttpResponse::Ok().body(rendered)

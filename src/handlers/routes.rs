@@ -22,6 +22,7 @@ use crate::handlers::{
     person_graph,
     register_handler,
     // users
+    user_index,
     user_page_handler,
     };
 
@@ -48,4 +49,5 @@ pub fn init_routes(config: &mut web::ServiceConfig) {
     // users 
     config.service(register_handler);
     config.service(user_page_handler);
+    config.service(user_index);
 }
