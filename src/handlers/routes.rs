@@ -1,4 +1,4 @@
-use actix_web::{web};
+use actix_web::{test::config, web};
 
 use crate::handlers::{
     // forms
@@ -20,10 +20,13 @@ use crate::handlers::{
     full_node_graph,
     node_network_graph,
     person_graph,
+    // registration and login
     register_handler,
+    register_form_input,
     // users
     user_index,
     user_page_handler,
+    
     };
 
 pub fn init_routes(config: &mut web::ServiceConfig) {
@@ -48,6 +51,7 @@ pub fn init_routes(config: &mut web::ServiceConfig) {
     config.service(node_network_graph);
     // users 
     config.service(register_handler);
+    config.service(register_form_input);
     config.service(user_page_handler);
     config.service(user_index);
 }
