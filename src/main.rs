@@ -7,6 +7,7 @@ extern crate diesel_migrations;
 use std::env;
 use std::sync::{Mutex, Arc};
 use actix_web::{App, HttpServer, middleware, web};
+use actix_identity::{CookieIdentityPolicy, Identity, IdentityService};
 use actix_web_static_files;
 use std::collections::HashMap;
 use tera::Tera;
@@ -71,6 +72,11 @@ async fn main() -> std::io::Result<()> {
 
         App::new()
             .wrap(middleware::Logger::default())
+            .wrap(IdentityService::new(
+        CookieIdentityPolicy::new(&[0; 32])
+                .name("auth-cookie")
+                .max_age(36000)
+                .secure(true)))
             .configure(handlers::init_routes)
             .service(actix_web_static_files::ResourceFiles::new(
                 "/static", generated,
