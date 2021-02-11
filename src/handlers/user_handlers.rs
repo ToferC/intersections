@@ -1,6 +1,7 @@
-use std::sync::Mutex;
+// example auth: https://github.com/actix/actix-extras/blob/master/actix-identity/src/lib.rs
 
 use actix_web::{web, HttpRequest, HttpResponse, Responder, post, get};
+use actix_identity::{Identity, CookieIdentityPolicy, IdentityService};
 use tera::Context;
 use serde::{Deserialize, Serialize};
 
@@ -109,7 +110,8 @@ pub async fn register_handler(data: web::Data<AppData>, _req:HttpRequest) -> imp
 pub async fn register_form_input(
     _data: web::Data<AppData>,
     req: HttpRequest, 
-    form: web::Form<RegisterForm>
+    form: web::Form<RegisterForm>,
+    id: Identity,
 ) -> impl Responder {
     println!("Handling Post Request: {:?}", req);
 
@@ -128,15 +130,20 @@ pub async fn register_form_input(
 
     let user = User::create(user_data).expect("Unable to load user.");
 
+    id.remember(user.user_name.to_owned());
+
     HttpResponse::Found().header("Location", format!("/user/{}", user.user_name)).finish()
 }
 
 #[post("/log_out")]
 pub async fn logout(
     _data: web::Data<AppData>,
-    req: HttpRequest, 
+    req: HttpRequest,
+    id: Identity,
 ) -> impl Responder {
     println!("Handling Post Request: {:?}", req);
+
+    id.forget();
 
     HttpResponse::Found().header("Location", "/").finish()
 }

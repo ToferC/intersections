@@ -2,7 +2,7 @@
 
 use std::io::prelude;
 
-use argon2::Config;
+use actix_web::{HttpRequest, web, Error, FromRequest, HttpResponse};
 use uuid::Uuid;
 use crate::error_handler::CustomError;
 use chrono::prelude::*;
