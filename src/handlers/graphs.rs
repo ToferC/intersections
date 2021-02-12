@@ -1,6 +1,7 @@
 use std::sync::Mutex;
 
 use actix_web::{web, get, HttpResponse, Responder};
+use actix_identity::{Identity};
 use crate::AppData;
 use tera::{Context};
 
@@ -13,6 +14,7 @@ use crate::handlers::{CytoGraph, generate_node_cyto_graph};
 pub async fn full_network_graph(
     data: web::Data<AppData>,
     graph: web::Data<Mutex<CytoGraph>>,
+    id: Identity,
 ) -> impl Responder {
 
     let g = graph.lock().unwrap().clone();
@@ -36,7 +38,8 @@ pub async fn full_network_graph(
 
 #[get("/full_node_graph")]
 pub async fn full_node_graph(
-    data: web::Data<AppData>
+    data: web::Data<AppData>,
+    id: Identity,
 ) -> impl Responder {
         
     let lens_vec = Lenses::find_all().expect("Unable to load lenses");

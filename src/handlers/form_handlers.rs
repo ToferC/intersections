@@ -1,5 +1,5 @@
 use std::sync::Mutex;
-
+use actix_identity::{Identity};
 use actix_web::{web, HttpRequest, HttpResponse, Responder, post, get};
 use bigdecimal::{BigDecimal, ToPrimitive};
 use num_bigint::{ToBigInt};
@@ -72,7 +72,11 @@ impl RenderPerson {
 }
 
 #[get("/first_lens_form")]
-pub async fn lens_form_handler(data: web::Data<AppData>, _req:HttpRequest) -> impl Responder {
+pub async fn lens_form_handler(
+    data: web::Data<AppData>, 
+    _req:HttpRequest,
+    id: Identity,
+) -> impl Responder {
     let mut ctx = Context::new();
 
     let node_names = Nodes::find_all_linked_names().expect("Unable to load names");
@@ -92,7 +96,8 @@ pub async fn handle_lens_form_input(
     _data: web::Data<AppData>,
     graph: web::Data<Mutex<CytoGraph>>,
     req: HttpRequest, 
-    form: web::Form<FirstLensForm>
+    form: web::Form<FirstLensForm>,
+    id: Identity,
 ) -> impl Responder {
     println!("Handling Post Request: {:?}", req);
 
@@ -203,7 +208,8 @@ pub async fn handle_lens_form_input(
 pub async fn add_lens_form_handler(
     web::Path(code): web::Path<String>, 
     data: web::Data<AppData>, 
-    _req:HttpRequest
+    _req:HttpRequest,
+    id: Identity,
 ) -> impl Responder {
     let mut ctx = Context::new(); 
 
@@ -234,7 +240,8 @@ pub async fn add_handle_lens_form_input(
     _data: web::Data<AppData>,
     graph: web::Data<Mutex<CytoGraph>>,
     _req: HttpRequest, 
-    form: web::Form<AddLensForm>
+    form: web::Form<AddLensForm>,
+    id: Identity,
 ) -> impl Responder {
 
     // validate form has data or re-load form

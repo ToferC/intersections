@@ -1,4 +1,5 @@
 use actix_web::{web, get, HttpResponse, HttpRequest, Responder};
+use actix_identity::{Identity};
 use crate::AppData;
 use tera::{Context};
 use diesel::prelude::*;
@@ -59,7 +60,8 @@ impl AggLens {
 pub async fn person_page(
     web::Path(code): web::Path<String>, 
     data: web::Data<AppData>, 
-    _req:HttpRequest
+    _req:HttpRequest,
+    id: Identity,
 ) -> impl Responder {
     let mut ctx = Context::new(); 
 
@@ -100,15 +102,16 @@ pub async fn person_page(
     HttpResponse::Ok().body(rendered)
 }
 
-#[get("/person_network_graph/{id}")]
+#[get("/person_network_graph/{person_id}")]
 pub async fn person_graph(
-    web::Path(id): web::Path<i32>,
-    data: web::Data<AppData>
+    web::Path(person_id): web::Path<i32>,
+    data: web::Data<AppData>,
+    id: Identity,
 ) -> impl Responder {
     
     let conn = database::connection().expect("Unable to connect to db");
     
-    let person: People = people::table.filter(people::id.eq(id))
+    let person: People = people::table.filter(people::id.eq(person_id))
         .first(&conn)
         .expect("Unable to load person");
     
