@@ -177,7 +177,7 @@ fn make_hash(password: &str, salt: &str) -> String {
     argon2::hash_encoded(password.as_bytes(), salt.as_bytes(), &config).unwrap()
 }
 
-fn verify(user: &User, password: &str) -> bool {
+pub fn verify(user: &User, password: &str) -> bool {
     let User {hash, salt, ..} = user;
 
     make_hash(password, salt).as_bytes().to_vec() == *hash

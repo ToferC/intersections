@@ -71,12 +71,12 @@ async fn main() -> std::io::Result<()> {
         let generated = generate();
 
         App::new()
-            .wrap(middleware::Logger::default())
             .wrap(IdentityService::new(
         CookieIdentityPolicy::new(&[0; 32])
                 .name("auth-cookie")
                 .max_age(36000)
-                .secure(true)))
+                .secure(false)))
+            .wrap(middleware::Logger::default())
             .configure(handlers::init_routes)
             .service(actix_web_static_files::ResourceFiles::new(
                 "/static", generated,

@@ -1,12 +1,12 @@
 // example auth: https://github.com/actix/actix-extras/blob/master/actix-identity/src/lib.rs
 
-use actix_web::{web, HttpRequest, HttpResponse, Responder, post, get};
-use actix_identity::{Identity, CookieIdentityPolicy, IdentityService};
+use actix_web::{HttpRequest, HttpResponse, Responder, dev::HttpResponseBuilder, get, post, web};
+use actix_identity::{Identity};
 use tera::Context;
 use serde::{Deserialize, Serialize};
 
 use crate::AppData;
-use crate::models::{User, SlimUser, LoggedUser, InsertableUser, UserData, Nodes};
+use crate::models::{User, SlimUser, LoggedUser, verify, UserData, Nodes};
 use crate::error_handler::CustomError;
 
 #[derive(Deserialize, Debug)]
@@ -25,8 +25,11 @@ pub struct RegisterForm {
 #[get("/user_index")]
 pub async fn user_index(
     data: web::Data<AppData>,
+    id: Identity,
     _req:HttpRequest) -> impl Responder {
     let mut ctx = Context::new();
+
+    // validate if user is admin else redirect
 
     let node_vec = Nodes::find_all_linked_names().expect("Unable to load nodes");
     ctx.insert("node_names", &node_vec);
@@ -52,19 +55,29 @@ pub async fn user_index(
 pub async fn user_page_handler(
     web::Path(user_name): web::Path<String>,
     data: web::Data<AppData>,
+    id: Identity,
     _req:HttpRequest) -> impl Responder {
     let mut ctx = Context::new();
 
-    let node_vec = Nodes::find_all_linked_names().expect("Unable to load nodes");
-    ctx.insert("node_names", &node_vec);
+    // validate if user == user_name else redirect
 
+    println!("User Page \n{:?}", id.identity());
+    println!("{}", user_name);
 
-    let user = User::find_from_user_name(&user_name).expect("Could not load user");
-
-    ctx.insert("user", &user);
-
-    let rendered = data.tmpl.render("user_page.html", &ctx).unwrap();
-    HttpResponse::Ok().body(rendered)
+    if id.identity() != Some(user_name.clone()) {
+        HttpResponse::Found().header("Location", "/log_in").finish()
+    } else {
+        let node_vec = Nodes::find_all_linked_names().expect("Unable to load nodes");
+        ctx.insert("node_names", &node_vec);
+    
+    
+        let user = User::find_from_user_name(&user_name).expect("Could not load user");
+    
+        ctx.insert("user", &user);
+    
+        let rendered = data.tmpl.render("user_page.html", &ctx).unwrap();
+        HttpResponse::Ok().body(rendered)
+    }
 }
 
 #[get("/log_in")]
@@ -82,16 +95,31 @@ pub async fn login_handler(data: web::Data<AppData>, _req:HttpRequest) -> impl R
 pub async fn login_form_input(
     _data: web::Data<AppData>,
     req: HttpRequest, 
-    form: web::Form<LoginForm>
+    form: web::Form<LoginForm>,
+    id: Identity,
 ) -> impl Responder {
     println!("Handling Post Request: {:?}", req);
 
     // validate form has data or re-load form
     if form.email.is_empty() || form.password.is_empty() {
+        println!("Form is empty");
         return HttpResponse::Found().header("Location", String::from("/log_in")).finish()
     };
+        
+    let user = User::find_from_email(&form.email).expect("Unable to find user from email.");
 
-    HttpResponse::Found().header("Location", "/").finish()
+    println!("{:?}", &form);
+
+    if verify(&user, &form.password) {
+        println!("Verified");
+        id.remember(user.user_name.to_owned());
+        println!("{:?}", id.identity());
+        return HttpResponse::Found().header("Location", format!("/user/{}", user.user_name)).finish()
+    } else {
+        // Invalid login
+        println!("User not verified");
+        return HttpResponse::Found().header("Location", String::from("/log_in")).finish()
+    }
 }
 
 #[get("/register")]

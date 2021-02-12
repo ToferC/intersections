@@ -15,9 +15,11 @@
             <p>{{ user.email }}</p>
 
             <ul>
+                {% if user.communities %}
                 {% for community in user.communities %}
                     <li>{{ community.tag }}</li>
                 {% endfor %}
+                {% endif %}
             </ul>
 
     </div>
