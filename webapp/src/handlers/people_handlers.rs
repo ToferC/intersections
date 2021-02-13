@@ -11,7 +11,7 @@ use std::collections::BTreeMap;
 use std::iter::FromIterator;
 
 use crate::models::{Lenses, Nodes, People};
-use crate::database;
+use database;
 use crate::handlers::{generate_cyto_graph, RenderPerson};
 
 use crate::schema::{people, nodes};

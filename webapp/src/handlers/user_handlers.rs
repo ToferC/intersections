@@ -7,7 +7,7 @@ use serde::{Deserialize, Serialize};
 
 use crate::AppData;
 use crate::models::{User, SlimUser, LoggedUser, verify, UserData, Nodes};
-use crate::error_handler::CustomError;
+use error_handler::error_handler::CustomError;
 
 #[derive(Deserialize, Debug)]
 pub struct LoginForm {

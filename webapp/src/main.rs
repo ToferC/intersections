@@ -12,11 +12,12 @@ use actix_web_static_files;
 use std::collections::HashMap;
 use tera::Tera;
 
+use error_handler::error_handler;
+use database;
+
 mod models;
 mod handlers;
 mod schema;
-mod database;
-mod error_handler;
 
 pub struct AppData {
     pub tmpl: Tera,

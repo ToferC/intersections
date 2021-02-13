@@ -9,7 +9,7 @@ use serde::{Deserialize, Serialize};
 use crate::AppData;
 use crate::models::{Lens, Lenses, NewPerson, People, Node, Nodes};
 use crate::handlers::{CytoGraph, CytoNode, CytoEdge, GNode, GEdge};
-use crate::error_handler::CustomError;
+use error_handler::error_handler::CustomError;
 
 #[derive(Deserialize, Debug)]
 pub struct FirstLensForm {
