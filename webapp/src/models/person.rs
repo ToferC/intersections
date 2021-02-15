@@ -8,8 +8,8 @@ use diesel::{QueryDsl, BelongingToDsl};
 
 use crate::schema::{people};
 use crate::models::{Lenses};
-use crate::error_handler::CustomError;
-use crate::database;
+use error_handler::error_handler::CustomError;
+use database;
 
 #[derive(Debug, Serialize, Deserialize, AsChangeset, Insertable, Clone)]
 #[table_name = "people"]

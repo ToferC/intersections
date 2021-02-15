@@ -4,12 +4,12 @@ use std::io::prelude;
 
 use actix_web::{HttpRequest, web, Error, FromRequest, HttpResponse};
 use uuid::Uuid;
-use crate::error_handler::CustomError;
+use error_handler::error_handler::CustomError;
 use chrono::prelude::*;
 use serde::{Serialize, Deserialize};
 
 use crate::schema::users;
-use crate::database;
+use database;
 
 use actix_identity::{Identity, RequestIdentity};
 

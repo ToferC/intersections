@@ -1,9 +1,3 @@
-#[macro_use]
-extern crate diesel;
-
-#[macro_use]
-extern crate diesel_migrations;
-
 use std::env;
 use std::sync::{Mutex, Arc};
 use actix_web::{App, HttpServer, middleware, web};
@@ -11,8 +5,11 @@ use actix_identity::{CookieIdentityPolicy, Identity, IdentityService};
 use actix_web_static_files;
 use tera::Tera;
 
-use error_handler::error_handler;
 use database;
+use webapp::handlers;
+use webapp::models;
+
+use webapp::AppData;
 
 include!(concat!(env!("OUT_DIR"), "/generated.rs"));
 

@@ -8,7 +8,7 @@ use diesel::{QueryDsl, BelongingToDsl};
 use std::collections::HashMap;
 
 use crate::models::{Lenses, Nodes};
-use crate::database;
+use database;
 use crate::handlers::{AggLens, generate_node_cyto_graph};
 
 use crate::schema::{nodes, lenses};

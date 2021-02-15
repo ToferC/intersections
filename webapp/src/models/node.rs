@@ -1,8 +1,8 @@
 use serde::{Serialize, Deserialize};
 use diesel::prelude::*;
 
-use crate::error_handler::CustomError;
-use crate::database;
+use error_handler::error_handler::CustomError;
+use database;
 use crate::models::Lenses;
 
 use crate::schema::nodes;

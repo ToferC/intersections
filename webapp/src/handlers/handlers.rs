@@ -6,7 +6,7 @@ use diesel::prelude::*;
 use diesel::{QueryDsl, BelongingToDsl};
 
 use crate::models::{Lenses, Nodes, People};
-use crate::database;
+use database;
 
 use crate::schema::{nodes};
 

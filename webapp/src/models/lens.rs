@@ -3,8 +3,8 @@ use diesel::prelude::*;
 use diesel::{QueryDsl, BelongingToDsl};
 use bigdecimal::BigDecimal;
 
-use crate::error_handler::CustomError;
-use crate::database;
+use error_handler::error_handler::CustomError;
+use database;
 
 use crate::models::{People, Nodes};
 use crate::schema::{lenses, nodes};

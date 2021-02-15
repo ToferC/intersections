@@ -6,8 +6,8 @@ use diesel::{QueryDsl, BelongingToDsl};
 
 use crate::schema::{communities};
 use crate::models::{People, generate_unique_code};
-use crate::error_handler::CustomError;
-use crate::database;
+use error_handler::error_handler::CustomError;
+use database;
 
 #[derive(Debug, Serialize, Deserialize, AsChangeset, Insertable, Clone)]
 #[table_name = "communities"]
