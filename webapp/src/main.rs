@@ -9,19 +9,10 @@ use std::sync::{Mutex, Arc};
 use actix_web::{App, HttpServer, middleware, web};
 use actix_identity::{CookieIdentityPolicy, Identity, IdentityService};
 use actix_web_static_files;
-use std::collections::HashMap;
 use tera::Tera;
 
 use error_handler::error_handler;
 use database;
-
-mod models;
-mod handlers;
-mod schema;
-
-pub struct AppData {
-    pub tmpl: Tera,
-}
 
 include!(concat!(env!("OUT_DIR"), "/generated.rs"));
 

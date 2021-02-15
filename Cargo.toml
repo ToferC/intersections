@@ -2,5 +2,11 @@
 default-run = "webapp"
 
 [workspace]
-members = ["webapp", "database", "databaseutils", "error_handler"]
+members = [
+    "webapp",
+    "database", 
+    "databaseutils", 
+    "error_handler",
+]
+
 default-members = ["webapp"]
