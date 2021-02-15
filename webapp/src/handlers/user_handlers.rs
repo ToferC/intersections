@@ -154,6 +154,7 @@ pub async fn register_form_input(
         email: form.email.to_owned(),
         user_name: form.user_name.to_owned(),
         password: form.password.to_owned(),
+        role: "user".to_owned(),
     };
 
     let user = User::create(user_data).expect("Unable to load user.");

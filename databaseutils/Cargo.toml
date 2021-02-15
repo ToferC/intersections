@@ -9,3 +9,4 @@ edition = "2018"
 [dependencies]
 webapp = { path = "../webapp" }
 database = { path = "../database"}
+dotenv = "0.15.0"

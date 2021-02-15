@@ -14,6 +14,7 @@
             <tr>
                 <th style="text-align: center;">User</th>
                 <th style="text-align: center;">Email</th>
+                <th style="text-align: center;">Role</th>
                 <th style="text-align: center;">Link</th>
             </tr>
             {% if users %}
@@ -22,6 +23,7 @@
                 <tr>
                     <td>{{ user.user_name }}</td>
                     <td>{{ user.email }}</td>
+                    <td>{{ user.role }}</td>
                     <td><a href="/user/{{ user.user_name }}">Link</a></td>
                 </tr>
                         

@@ -8,7 +8,6 @@ use tera::Tera;
 use database;
 use webapp::handlers;
 use webapp::models;
-
 use webapp::AppData;
 
 include!(concat!(env!("OUT_DIR"), "/generated.rs"));

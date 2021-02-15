@@ -1093,6 +1093,7 @@ name = "databaseutils"
 version = "0.1.0"
 dependencies = [
  "database",
+ "dotenv",
  "webapp",
 ]
 

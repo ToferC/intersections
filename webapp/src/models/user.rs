@@ -58,6 +58,7 @@ pub struct UserData {
     pub user_name: String,
     pub email: String,
     pub password: String,
+    pub role: String,
 }
 
 #[derive(Shrinkwrap, Clone, Default)]
@@ -75,6 +76,7 @@ impl From<UserData> for InsertableUser {
             user_name,
             email,
             password,
+            role,
             ..
         } = user_data;
 
@@ -88,7 +90,7 @@ impl From<UserData> for InsertableUser {
             hash,
             created_at: chrono::Local::now().naive_local(),
             salt,
-            role: "user".to_owned(),
+            role,
             managed_communities: Vec::new(),
         }
     }
