@@ -1,7 +1,8 @@
 use std::env;
 use std::sync::{Mutex, Arc};
 use actix_web::{App, HttpServer, middleware, web};
-use actix_identity::{CookieIdentityPolicy, Identity, IdentityService};
+use actix_identity::{CookieIdentityPolicy, IdentityService};
+use actix_session::{Session, CookieSession};
 use actix_web_static_files;
 use tera::Tera;
 
@@ -64,6 +65,11 @@ async fn main() -> std::io::Result<()> {
                 .name("auth-cookie")
                 .max_age(36000)
                 .secure(false)))
+            .wrap(CookieSession::signed(&[0;32])
+                .name("intersections-session")
+                .max_age(36000)
+                .secure(false)
+            )
             .wrap(middleware::Logger::default())
             .configure(handlers::init_routes)
             .service(actix_web_static_files::ResourceFiles::new(

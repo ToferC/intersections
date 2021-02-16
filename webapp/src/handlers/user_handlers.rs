@@ -2,6 +2,7 @@
 
 use actix_web::{HttpRequest, HttpResponse, Responder, dev::HttpResponseBuilder, get, post, web};
 use actix_identity::{Identity};
+use actix_session::{Session, UserSession};
 use tera::Context;
 use serde::{Deserialize, Serialize};
 
@@ -106,6 +107,8 @@ pub async fn login_form_input(
         return HttpResponse::Found().header("Location", String::from("/log_in")).finish()
     };
         
+    let session = req.get_session();
+    
     let user = User::find_from_email(&form.email).expect("Unable to find user from email.");
 
     println!("{:?}", &form);
@@ -113,6 +116,9 @@ pub async fn login_form_input(
     if verify(&user, &form.password) {
         println!("Verified");
         id.remember(user.user_name.to_owned());
+        session.set("role", user.role.to_owned()).expect("Unable to set role cookie");
+        session.set("user_name", user.user_name.to_owned()).expect("Unable to set user name");
+
         println!("{:?}", id.identity());
         return HttpResponse::Found().header("Location", format!("/user/{}", user.user_name)).finish()
     } else {
