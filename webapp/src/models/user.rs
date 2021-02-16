@@ -11,8 +11,6 @@ use serde::{Serialize, Deserialize};
 use crate::schema::users;
 use database;
 
-use actix_identity::{Identity, RequestIdentity};
-
 use shrinkwraprs::Shrinkwrap;
 use diesel::prelude::*;
 use diesel::RunQueryDsl;

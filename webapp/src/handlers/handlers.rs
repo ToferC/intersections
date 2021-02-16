@@ -1,5 +1,5 @@
 use actix_web::{web, get, HttpResponse, HttpRequest, Responder};
-use actix_identity::{Identity};
+use actix_session::{UserSession};
 use crate::AppData;
 use tera::{Context};
 use diesel::prelude::*;
@@ -12,7 +12,7 @@ use crate::schema::{nodes};
 
 
 #[get("/")]
-pub async fn index(data: web::Data<AppData>, _req:HttpRequest, id: Identity) -> impl Responder {
+pub async fn index(data: web::Data<AppData>, _req:HttpRequest) -> impl Responder {
 
     let mut ctx = Context::new();
 
@@ -27,7 +27,6 @@ pub async fn index(data: web::Data<AppData>, _req:HttpRequest, id: Identity) -> 
 pub async fn survey_intro(
     data: web::Data<AppData>,
     _req:HttpRequest,
-    id: Identity,
 ) -> impl Responder {
     println!("Access index");
 
@@ -51,7 +50,6 @@ pub async fn api_base() -> impl Responder {
 #[get("/api/person/{code}")]
 pub async fn person_api(
     web::Path(code): web::Path<String>,
-    id: Identity,
 ) -> impl Responder {
     
     let conn = database::connection().expect("Unable to connect to db");

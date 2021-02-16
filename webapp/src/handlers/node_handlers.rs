@@ -1,5 +1,5 @@
 use actix_web::{web, get, HttpResponse, HttpRequest, Responder};
-use actix_identity::{Identity};
+use actix_session::{UserSession};
 use crate::AppData;
 use tera::{Context};
 use diesel::prelude::*;
@@ -18,7 +18,6 @@ pub async fn node_page(
     web::Path(label): web::Path<String>, 
     data: web::Data<AppData>, 
     _req:HttpRequest,
-    id: Identity,
 ) -> impl Responder {
     let mut ctx = Context::new(); 
 
@@ -113,7 +112,6 @@ pub async fn node_network_graph(
     // Rework this as a connected node graph
     web::Path(label): web::Path<String>,
     data: web::Data<AppData>,
-    id: Identity,
 ) -> impl Responder {
     
     let conn = database::connection().expect("Unable to connect to db");

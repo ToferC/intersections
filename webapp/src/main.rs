@@ -1,19 +1,18 @@
 use std::env;
 use std::sync::{Mutex, Arc};
 use actix_web::{App, HttpServer, middleware, web};
-use actix_identity::{CookieIdentityPolicy, IdentityService};
-use actix_session::{Session, CookieSession};
+use actix_session::{CookieSession};
 use actix_web_static_files;
 use tera::Tera;
 
 use database;
-use webapp::handlers;
+use webapp::handlers; 
 use webapp::models;
 use webapp::AppData;
 
 include!(concat!(env!("OUT_DIR"), "/generated.rs"));
 
-#[actix_rt::main]
+#[actix_rt::main] 
 async fn main() -> std::io::Result<()> {
     
     dotenv::dotenv().ok();
@@ -60,11 +59,6 @@ async fn main() -> std::io::Result<()> {
         let generated = generate();
 
         App::new()
-            .wrap(IdentityService::new(
-        CookieIdentityPolicy::new(&[0; 32])
-                .name("auth-cookie")
-                .max_age(36000)
-                .secure(false)))
             .wrap(CookieSession::signed(&[0;32])
                 .name("intersections-session")
                 .max_age(36000)

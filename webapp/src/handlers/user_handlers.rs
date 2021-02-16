@@ -1,8 +1,7 @@
 // example auth: https://github.com/actix/actix-extras/blob/master/actix-identity/src/lib.rs
 
 use actix_web::{HttpRequest, HttpResponse, Responder, dev::HttpResponseBuilder, get, post, web};
-use actix_identity::{Identity};
-use actix_session::{Session, UserSession};
+use actix_session::{UserSession};
 use tera::Context;
 use serde::{Deserialize, Serialize};
 
@@ -26,29 +25,37 @@ pub struct RegisterForm {
 #[get("/user_index")]
 pub async fn user_index(
     data: web::Data<AppData>,
-    id: Identity,
-    _req:HttpRequest) -> impl Responder {
+    req:HttpRequest) -> impl Responder {
     let mut ctx = Context::new();
 
     // validate if user is admin else redirect
 
-    let node_vec = Nodes::find_all_linked_names().expect("Unable to load nodes");
-    ctx.insert("node_names", &node_vec);
+    let session = req.get_session();
+    
+    let role = session.get::<String>("role").expect("Unable to get user_name from cookie").unwrap();
 
-    let user_data = User::find_all();
+    if role != "admin".to_string() {
+        HttpResponse::Found().header("Location", "/log_in").finish()
+    } else {
 
-    let users = match user_data {
-        Ok(u) => u,
-        Err(e) => {
-            println!("{:?}", e);
-            Vec::new()
-        }
-    };
+        let node_vec = Nodes::find_all_linked_names().expect("Unable to load nodes");
+        ctx.insert("node_names", &node_vec);
 
-    ctx.insert("users", &users);
+        let user_data = User::find_all();
 
-    let rendered = data.tmpl.render("user_index.html", &ctx).unwrap();
-    HttpResponse::Ok().body(rendered)
+        let users = match user_data {
+            Ok(u) => u,
+            Err(e) => {
+                println!("{:?}", e);
+                Vec::new()
+            }
+        };
+
+        ctx.insert("users", &users);
+
+        let rendered = data.tmpl.render("user_index.html", &ctx).unwrap();
+        HttpResponse::Ok().body(rendered)
+    }
 }
 
 
@@ -56,16 +63,17 @@ pub async fn user_index(
 pub async fn user_page_handler(
     web::Path(user_name): web::Path<String>,
     data: web::Data<AppData>,
-    id: Identity,
-    _req:HttpRequest) -> impl Responder {
+    req:HttpRequest) -> impl Responder {
     let mut ctx = Context::new();
 
-    // validate if user == user_name else redirect
+    // validate if user == user_name  or admin else redirect
 
-    println!("User Page \n{:?}", id.identity());
-    println!("{}", user_name);
+    let session = req.get_session();
+    
+    let role = session.get::<String>("role").expect("Unable to get user_name from cookie").unwrap();
+    let session_user_name = session.get::<String>("user_name").expect("Unable to get user_name from cookie").unwrap();
 
-    if id.identity() != Some(user_name.clone()) {
+    if session_user_name != user_name.clone() || role != "admin".to_string() {
         HttpResponse::Found().header("Location", "/log_in").finish()
     } else {
         let node_vec = Nodes::find_all_linked_names().expect("Unable to load nodes");
@@ -97,7 +105,6 @@ pub async fn login_form_input(
     _data: web::Data<AppData>,
     req: HttpRequest, 
     form: web::Form<LoginForm>,
-    id: Identity,
 ) -> impl Responder {
     println!("Handling Post Request: {:?}", req);
 
@@ -115,11 +122,9 @@ pub async fn login_form_input(
 
     if verify(&user, &form.password) {
         println!("Verified");
-        id.remember(user.user_name.to_owned());
         session.set("role", user.role.to_owned()).expect("Unable to set role cookie");
         session.set("user_name", user.user_name.to_owned()).expect("Unable to set user name");
 
-        println!("{:?}", id.identity());
         return HttpResponse::Found().header("Location", format!("/user/{}", user.user_name)).finish()
     } else {
         // Invalid login
@@ -145,7 +150,6 @@ pub async fn register_form_input(
     _data: web::Data<AppData>,
     req: HttpRequest, 
     form: web::Form<RegisterForm>,
-    id: Identity,
 ) -> impl Responder {
     println!("Handling Post Request: {:?}", req);
 
@@ -165,8 +169,11 @@ pub async fn register_form_input(
 
     let user = User::create(user_data).expect("Unable to load user.");
 
-    id.remember(user.user_name.to_owned());
+    let session = req.get_session();
 
+    session.set("role", user.role.to_owned()).expect("Unable to set role cookie");
+    session.set("user_name", user.user_name.to_owned()).expect("Unable to set user name");
+    
     HttpResponse::Found().header("Location", format!("/user/{}", user.user_name)).finish()
 }
 
@@ -174,11 +181,12 @@ pub async fn register_form_input(
 pub async fn logout(
     _data: web::Data<AppData>,
     req: HttpRequest,
-    id: Identity,
 ) -> impl Responder {
     println!("Handling Post Request: {:?}", req);
 
-    id.forget();
+    let session = req.get_session();
+
+    session.clear();
 
     HttpResponse::Found().header("Location", "/").finish()
 }
