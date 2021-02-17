@@ -20,6 +20,7 @@ async fn main() -> std::io::Result<()> {
     env_logger::init();
 
     let environment = env::var("ENVIRONMENT");
+    let cookie_secret_key = env::var("COOKIE_SECRET").expect("Cant load cookie secret variable");
 
     let environment = match environment {
         Ok(v) => v,
@@ -59,9 +60,7 @@ async fn main() -> std::io::Result<()> {
         let generated = generate();
 
         App::new()
-            .wrap(CookieSession::signed(&[0;32])
-                .name("intersections-session")
-                .max_age(36000)
+            .wrap(CookieSession::signed(&[0; 32])
                 .secure(false)
             )
             .wrap(middleware::Logger::default())

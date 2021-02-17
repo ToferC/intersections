@@ -133,6 +133,20 @@ impl User {
         let res = diesel::delete(users::table.filter(users::id.eq(id))).execute(&conn)?;
         Ok(res)
     }
+
+    pub fn dummy() -> Self {
+        User {
+            id: 0,
+            user_uuid: Uuid::default(),
+            hash: Vec::new(),
+            salt: "".to_string(),
+            email: "".to_string(),
+            user_name: "".to_string(),
+            created_at: NaiveDateTime::from_timestamp(1_000_000_000, 0),
+            role: "".to_string(),
+            managed_communities: Vec::new(),
+        }
+    }
 }
 
 impl From<User> for SlimUser {

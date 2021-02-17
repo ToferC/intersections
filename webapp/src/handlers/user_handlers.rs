@@ -1,11 +1,11 @@
 // example auth: https://github.com/actix/actix-extras/blob/master/actix-identity/src/lib.rs
 
 use actix_web::{HttpRequest, HttpResponse, Responder, dev::HttpResponseBuilder, get, post, web};
-use actix_session::{UserSession};
+use actix_session::{Session, UserSession};
 use tera::Context;
 use serde::{Deserialize, Serialize};
 
-use crate::AppData;
+use crate::{AppData, extract_session_data};
 use crate::models::{User, SlimUser, LoggedUser, verify, UserData, Nodes};
 use error_handler::error_handler::CustomError;
 
@@ -31,12 +31,15 @@ pub async fn user_index(
     // validate if user is admin else redirect
 
     let session = req.get_session();
-    
-    let role = session.get::<String>("role").expect("Unable to get user_name from cookie").unwrap();
 
+    let (session_user, role) = extract_session_data(&session);
+    
     if role != "admin".to_string() {
         HttpResponse::Found().header("Location", "/log_in").finish()
     } else {
+
+        ctx.insert("session_user", &session_user);
+        ctx.insert("role", &role);
 
         let node_vec = Nodes::find_all_linked_names().expect("Unable to load nodes");
         ctx.insert("node_names", &node_vec);
@@ -69,13 +72,16 @@ pub async fn user_page_handler(
     // validate if user == user_name  or admin else redirect
 
     let session = req.get_session();
-    
-    let role = session.get::<String>("role").expect("Unable to get user_name from cookie").unwrap();
-    let session_user_name = session.get::<String>("user_name").expect("Unable to get user_name from cookie").unwrap();
 
-    if session_user_name != user_name.clone() || role != "admin".to_string() {
+    let (session_user, role) = extract_session_data(&session);
+    
+    if session_user != user_name.clone() || role != "admin".to_string() {
         HttpResponse::Found().header("Location", "/log_in").finish()
     } else {
+
+        ctx.insert("session_user", &session_user);
+        ctx.insert("role", &role);
+
         let node_vec = Nodes::find_all_linked_names().expect("Unable to load nodes");
         ctx.insert("node_names", &node_vec);
     
@@ -90,8 +96,14 @@ pub async fn user_page_handler(
 }
 
 #[get("/log_in")]
-pub async fn login_handler(data: web::Data<AppData>, _req:HttpRequest) -> impl Responder {
+pub async fn login_handler(data: web::Data<AppData>, req:HttpRequest) -> impl Responder {
     let mut ctx = Context::new();
+
+    // Get session data and add to context
+    let session = req.get_session();
+    let (session_user, role) = extract_session_data(&session);
+    ctx.insert("session_user", &session_user);
+    ctx.insert("role", &role);
 
     let node_vec = Nodes::find_all_linked_names().expect("Unable to load nodes");
     ctx.insert("node_names", &node_vec);
@@ -105,6 +117,7 @@ pub async fn login_form_input(
     _data: web::Data<AppData>,
     req: HttpRequest, 
     form: web::Form<LoginForm>,
+    session: Session,
 ) -> impl Responder {
     println!("Handling Post Request: {:?}", req);
 
@@ -113,30 +126,45 @@ pub async fn login_form_input(
         println!("Form is empty");
         return HttpResponse::Found().header("Location", String::from("/log_in")).finish()
     };
-        
-    let session = req.get_session();
     
-    let user = User::find_from_email(&form.email).expect("Unable to find user from email.");
+    let user = User::find_from_email(&form.email);
 
-    println!("{:?}", &form);
+    match user {
+        Ok(u) => {
+            let user = u;
+            println!("{:?}", &form);
+        
+            if verify(&user, &form.password) {
+                println!("Verified");
 
-    if verify(&user, &form.password) {
-        println!("Verified");
-        session.set("role", user.role.to_owned()).expect("Unable to set role cookie");
-        session.set("user_name", user.user_name.to_owned()).expect("Unable to set user name");
+                session.set("role", user.role.to_owned()).expect("Unable to set role cookie");
+                session.set("session_user", user.user_name.to_owned()).expect("Unable to set user name");
+        
+                return HttpResponse::Found().header("Location", format!("/user/{}", user.user_name)).finish()
+            } else {
+                // Invalid login
+                println!("User not verified");
+                return HttpResponse::Found().header("Location", String::from("/log_in")).finish()
+            }
+        },
+        _ => {
+            println!("User not verified");
+            return HttpResponse::Found().header("Location", String::from("/log_in")).finish()
+        },
+    };
 
-        return HttpResponse::Found().header("Location", format!("/user/{}", user.user_name)).finish()
-    } else {
-        // Invalid login
-        println!("User not verified");
-        return HttpResponse::Found().header("Location", String::from("/log_in")).finish()
-    }
 }
 
 #[get("/register")]
-pub async fn register_handler(data: web::Data<AppData>, _req:HttpRequest) -> impl Responder {
+pub async fn register_handler(data: web::Data<AppData>, req:HttpRequest) -> impl Responder {
     
     let mut ctx = Context::new();
+
+    // Get session data and add to context
+    let session = req.get_session();
+    let (session_user, role) = extract_session_data(&session);
+    ctx.insert("session_user", &session_user);
+    ctx.insert("role", &role);
 
     let node_vec = Nodes::find_all_linked_names().expect("Unable to load nodes");
     ctx.insert("node_names", &node_vec);
@@ -172,7 +200,7 @@ pub async fn register_form_input(
     let session = req.get_session();
 
     session.set("role", user.role.to_owned()).expect("Unable to set role cookie");
-    session.set("user_name", user.user_name.to_owned()).expect("Unable to set user name");
+    session.set("session_user", user.user_name.to_owned()).expect("Unable to set user name");
     
     HttpResponse::Found().header("Location", format!("/user/{}", user.user_name)).finish()
 }

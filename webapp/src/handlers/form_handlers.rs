@@ -6,7 +6,7 @@ use num_bigint::{ToBigInt};
 use tera::Context;
 use serde::{Deserialize, Serialize};
 
-use crate::AppData;
+use crate::{AppData, extract_session_data};
 use crate::models::{Lens, Lenses, NewPerson, People, Node, Nodes};
 use crate::handlers::{CytoGraph, CytoNode, CytoEdge, GNode, GEdge};
 use error_handler::error_handler::CustomError;
@@ -74,9 +74,15 @@ impl RenderPerson {
 #[get("/first_lens_form")]
 pub async fn lens_form_handler(
     data: web::Data<AppData>, 
-    _req:HttpRequest,
+    req:HttpRequest,
 ) -> impl Responder {
     let mut ctx = Context::new();
+
+    // Get session data and add to context
+    let session = req.get_session();
+    let (session_user, role) = extract_session_data(&session);
+    ctx.insert("session_user", &session_user);
+    ctx.insert("role", &role);
 
     let node_names = Nodes::find_all_linked_names().expect("Unable to load names");
     ctx.insert("node_names", &node_names);
@@ -206,9 +212,15 @@ pub async fn handle_lens_form_input(
 pub async fn add_lens_form_handler(
     web::Path(code): web::Path<String>, 
     data: web::Data<AppData>, 
-    _req:HttpRequest,
+    req:HttpRequest,
 ) -> impl Responder {
-    let mut ctx = Context::new(); 
+    let mut ctx = Context::new();
+
+    // Get session data and add to context
+    let session = req.get_session();
+    let (session_user, role) = extract_session_data(&session);
+    ctx.insert("session_user", &session_user);
+    ctx.insert("role", &role);
 
     let p = People::find_from_code(&code).unwrap();
 

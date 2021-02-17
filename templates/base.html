@@ -282,6 +282,26 @@
                     <div class="dropdown-divider"></div>
                   </div>
                 </li>
+
+                {% if session_user != "" %}
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle active" href="#" id="userNavbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      {{ session_user }}
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="userNavbarDropdown">
+                      <a class="dropdown-item" href="/user/{{ session_user }}">Manage User/Communities</a>
+                      <a class="dropdown-item" href="/logout">Logout</a>
+                      <div class="dropdown-divider"></div>
+                    </div>
+                </li>
+                {% else %}
+                <li class="nav-item active">
+                    <a class="nav-link" href="/log_in">Log in<span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="/register">Register<span class="sr-only">(current)</span></a>
+                </li>
+                {% endif %}
             </ul>
             <!--
                 <form class="form-inline my-2 my-lg-0">

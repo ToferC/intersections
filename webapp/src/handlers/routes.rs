@@ -26,6 +26,7 @@ use crate::handlers::{
     // login
     login_handler,
     login_form_input,
+    logout,
     // users
     user_index,
     user_page_handler,
@@ -57,6 +58,7 @@ pub fn init_routes(config: &mut web::ServiceConfig) {
     config.service(register_form_input);
     config.service(login_handler);
     config.service(login_form_input);
+    config.service(logout);
     config.service(user_page_handler);
     config.service(user_index);
 }

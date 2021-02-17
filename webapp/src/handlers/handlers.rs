@@ -1,6 +1,6 @@
 use actix_web::{web, get, HttpResponse, HttpRequest, Responder};
 use actix_session::{UserSession};
-use crate::AppData;
+use crate::{AppData, extract_session_data};
 use tera::{Context};
 use diesel::prelude::*;
 use diesel::{QueryDsl, BelongingToDsl};
@@ -12,9 +12,15 @@ use crate::schema::{nodes};
 
 
 #[get("/")]
-pub async fn index(data: web::Data<AppData>, _req:HttpRequest) -> impl Responder {
+pub async fn index(data: web::Data<AppData>, req:HttpRequest) -> impl Responder {
 
     let mut ctx = Context::new();
+
+    // Get session data and add to context
+    let session = req.get_session();
+    let (session_user, role) = extract_session_data(&session);
+    ctx.insert("session_user", &session_user);
+    ctx.insert("role", &role);
 
     let node_vec = Nodes::find_all_linked_names().expect("Unable to load nodes");
     ctx.insert("node_names", &node_vec);
@@ -26,11 +32,17 @@ pub async fn index(data: web::Data<AppData>, _req:HttpRequest) -> impl Responder
 #[get("/survey_intro")]
 pub async fn survey_intro(
     data: web::Data<AppData>,
-    _req:HttpRequest,
+    req:HttpRequest,
 ) -> impl Responder {
     println!("Access index");
 
     let mut ctx = Context::new();
+
+    // Get session data and add to context
+    let session = req.get_session();
+    let (session_user, role) = extract_session_data(&session);
+    ctx.insert("session_user", &session_user);
+    ctx.insert("role", &role);
 
     let node_vec = Nodes::find_all_linked_names().expect("Unable to load nodes");
     ctx.insert("node_names", &node_vec);

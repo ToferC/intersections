@@ -1,6 +1,6 @@
 use actix_web::{web, get, HttpResponse, HttpRequest, Responder};
 use actix_session::{UserSession};
-use crate::AppData;
+use crate::{AppData, extract_session_data};
 use tera::{Context};
 use diesel::prelude::*;
 use diesel::{QueryDsl, BelongingToDsl};
@@ -60,9 +60,15 @@ impl AggLens {
 pub async fn person_page(
     web::Path(code): web::Path<String>, 
     data: web::Data<AppData>, 
-    _req:HttpRequest,
+    req:HttpRequest,
 ) -> impl Responder {
-    let mut ctx = Context::new(); 
+    let mut ctx = Context::new();
+
+    // Get session data and add to context
+    let session = req.get_session();
+    let (session_user, role) = extract_session_data(&session);
+    ctx.insert("session_user", &session_user);
+    ctx.insert("role", &role);
 
     let p = People::find_from_code(&code).unwrap();
 
@@ -105,7 +111,16 @@ pub async fn person_page(
 pub async fn person_graph(
     web::Path(person_id): web::Path<i32>,
     data: web::Data<AppData>,
+    req: HttpRequest,
 ) -> impl Responder {
+
+    let mut ctx = Context::new();
+
+    // Get session data and add to context
+    let session = req.get_session();
+    let (session_user, role) = extract_session_data(&session);
+    ctx.insert("session_user", &session_user);
+    ctx.insert("role", &role);
     
     let conn = database::connection().expect("Unable to connect to db");
     
@@ -151,7 +166,6 @@ pub async fn person_graph(
 
     let j = serde_json::to_string_pretty(&graph).unwrap();
     
-    let mut ctx = Context::new();
     ctx.insert("graph_data", &j);
 
     let title = "Person Network Graph";

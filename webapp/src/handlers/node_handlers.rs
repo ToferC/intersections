@@ -1,6 +1,6 @@
 use actix_web::{web, get, HttpResponse, HttpRequest, Responder};
 use actix_session::{UserSession};
-use crate::AppData;
+use crate::{AppData, extract_session_data};
 use tera::{Context};
 use diesel::prelude::*;
 use diesel::{QueryDsl, BelongingToDsl};
@@ -17,9 +17,15 @@ use crate::schema::{nodes, lenses};
 pub async fn node_page(
     web::Path(label): web::Path<String>, 
     data: web::Data<AppData>, 
-    _req:HttpRequest,
+    req:HttpRequest,
 ) -> impl Responder {
-    let mut ctx = Context::new(); 
+    let mut ctx = Context::new();
+
+    // Get session data and add to context
+    let session = req.get_session();
+    let (session_user, role) = extract_session_data(&session);
+    ctx.insert("session_user", &session_user);
+    ctx.insert("role", &role);
 
     let conn = database::connection().expect("Unable to connect to db");
     
@@ -112,8 +118,17 @@ pub async fn node_network_graph(
     // Rework this as a connected node graph
     web::Path(label): web::Path<String>,
     data: web::Data<AppData>,
+    req: HttpRequest,
 ) -> impl Responder {
     
+    let mut ctx = Context::new();
+
+    // Get session data and add to context
+    let session = req.get_session();
+    let (session_user, role) = extract_session_data(&session);
+    ctx.insert("session_user", &session_user);
+    ctx.insert("role", &role);
+
     let conn = database::connection().expect("Unable to connect to db");
     
     let node: Nodes = nodes::table.filter(nodes::node_name.eq(label))
@@ -163,7 +178,6 @@ pub async fn node_network_graph(
 
     let j = serde_json::to_string_pretty(&graph).unwrap();
     
-    let mut ctx = Context::new();
     ctx.insert("graph_data", &j);
 
     let title = "Node Network Graph";
