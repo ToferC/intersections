@@ -2,7 +2,8 @@ use std::sync::Mutex;
 
 use actix_web::{web, get, HttpResponse, Responder};
 use actix_session::{UserSession};
-use crate::AppData;
+use actix_identity::Identity;
+use crate::{AppData, extract_identity_data};
 use tera::{Context};
 
 use std::collections::HashMap;
@@ -14,6 +15,7 @@ use crate::handlers::{CytoGraph, generate_node_cyto_graph};
 pub async fn full_network_graph(
     data: web::Data<AppData>,
     graph: web::Data<Mutex<CytoGraph>>,
+    id: Identity,
 ) -> impl Responder {
 
     let g = graph.lock().unwrap().clone();
@@ -23,6 +25,11 @@ pub async fn full_network_graph(
     drop(graph);
     
     let mut ctx = Context::new();
+
+    let (session_user, role) = extract_identity_data(&id);
+    ctx.insert("session_user", &session_user);
+    ctx.insert("role", &role);
+
     ctx.insert("graph_data", &j);
 
     let title = "Full Network Graph";
@@ -38,6 +45,7 @@ pub async fn full_network_graph(
 #[get("/full_node_graph")]
 pub async fn full_node_graph(
     data: web::Data<AppData>,
+    id:Identity,
 ) -> impl Responder {
         
     let lens_vec = Lenses::find_all().expect("Unable to load lenses");
@@ -55,6 +63,11 @@ pub async fn full_node_graph(
     let j = serde_json::to_string_pretty(&graph).unwrap();
     
     let mut ctx = Context::new();
+
+    let (session_user, role) = extract_identity_data(&id);
+    ctx.insert("session_user", &session_user);
+    ctx.insert("role", &role);
+
     ctx.insert("graph_data", &j);
 
     let title = "Node Network Graph";

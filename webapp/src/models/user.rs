@@ -9,7 +9,7 @@ use chrono::prelude::*;
 use serde::{Serialize, Deserialize};
 use inflector::Inflector;
 
-use crate::_schema::users;
+use crate::schema::users;
 use database;
 
 use shrinkwraprs::Shrinkwrap;
@@ -86,8 +86,8 @@ impl From<UserData> for InsertableUser {
         let hash = make_hash(&password, &salt).as_bytes().to_vec();
         
         Self {
-            user_name,
-            slug: user_name.to_snake_case(),
+            user_name: user_name.clone(),
+            slug: user_name.clone().to_snake_case(),
             user_uuid: Uuid::new_v4(),
             email,
             hash,
@@ -161,6 +161,7 @@ impl From<User> for SlimUser {
             user_uuid,
             email,
             role,
+            slug,
             managed_communities,
             ..
         } = user;
@@ -169,6 +170,7 @@ impl From<User> for SlimUser {
             user_uuid,
             email,
             role,
+            slug,
             managed_communities,
         }
     }
