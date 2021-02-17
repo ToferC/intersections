@@ -2,6 +2,7 @@ use std::env;
 use std::sync::{Mutex, Arc};
 use actix_web::{App, HttpServer, middleware, web};
 use actix_session::{CookieSession};
+use actix_identity::{CookieIdentityPolicy, IdentityService};
 use actix_web_static_files;
 use tera::Tera;
 
@@ -60,9 +61,6 @@ async fn main() -> std::io::Result<()> {
         let generated = generate();
 
         App::new()
-            .wrap(CookieSession::signed(&[0; 32])
-                .secure(false)
-            )
             .wrap(middleware::Logger::default())
             .configure(handlers::init_routes)
             .service(actix_web_static_files::ResourceFiles::new(
@@ -71,6 +69,13 @@ async fn main() -> std::io::Result<()> {
             .data(AppData {
                 tmpl: tera,})
             .app_data(web::Data::from(x))
+            .wrap(CookieSession::signed(&[0; 32])
+                .secure(false)
+            )
+            .wrap(IdentityService::new(
+                CookieIdentityPolicy::new(&cookie_secret_key.as_bytes())
+            .name("user-auth")
+            .secure(false)))
     })
     .bind(format!("{}:{}", host, port))?
     .run()

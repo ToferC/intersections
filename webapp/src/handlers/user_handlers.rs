@@ -1,13 +1,13 @@
 // example auth: https://github.com/actix/actix-extras/blob/master/actix-identity/src/lib.rs
 
-use actix_web::{HttpRequest, HttpResponse, Responder, dev::HttpResponseBuilder, get, post, web};
+use actix_web::{HttpRequest, HttpResponse, Responder, get, post, web};
 use actix_session::{Session, UserSession};
+use actix_identity::{Identity};
 use tera::Context;
 use serde::{Deserialize, Serialize};
 
-use crate::{AppData, extract_session_data};
-use crate::models::{User, SlimUser, LoggedUser, verify, UserData, Nodes};
-use error_handler::error_handler::CustomError;
+use crate::{AppData, extract_identity_data};
+use crate::models::{User, verify, UserData, Nodes};
 
 #[derive(Deserialize, Debug)]
 pub struct LoginForm {
@@ -25,6 +25,7 @@ pub struct RegisterForm {
 #[get("/user_index")]
 pub async fn user_index(
     data: web::Data<AppData>,
+    id: Identity,
     req:HttpRequest) -> impl Responder {
     let mut ctx = Context::new();
 
@@ -32,9 +33,10 @@ pub async fn user_index(
 
     let session = req.get_session();
 
-    let (session_user, role) = extract_session_data(&session);
+    let (session_user, role) = extract_identity_data(&id);
     
     if role != "admin".to_string() {
+        println!("User not admin");
         HttpResponse::Found().header("Location", "/log_in").finish()
     } else {
 
@@ -66,16 +68,18 @@ pub async fn user_index(
 pub async fn user_page_handler(
     web::Path(user_name): web::Path<String>,
     data: web::Data<AppData>,
-    req:HttpRequest) -> impl Responder {
+    req:HttpRequest,
+    id: Identity,
+) -> impl Responder {
     let mut ctx = Context::new();
 
     // validate if user == user_name  or admin else redirect
 
     let session = req.get_session();
 
-    let (session_user, role) = extract_session_data(&session);
+    let (session_user, role) = extract_identity_data(&id);
     
-    if session_user != user_name.clone() || role != "admin".to_string() {
+    if session_user.to_lowercase() != user_name.to_lowercase() && role != "admin".to_string() {
         HttpResponse::Found().header("Location", "/log_in").finish()
     } else {
 
@@ -96,12 +100,16 @@ pub async fn user_page_handler(
 }
 
 #[get("/log_in")]
-pub async fn login_handler(data: web::Data<AppData>, req:HttpRequest) -> impl Responder {
+pub async fn login_handler(
+    data: web::Data<AppData>, 
+    req:HttpRequest,
+    id: Identity,
+) -> impl Responder {
     let mut ctx = Context::new();
 
     // Get session data and add to context
     let session = req.get_session();
-    let (session_user, role) = extract_session_data(&session);
+    let (session_user, role) = extract_identity_data(&id);
     ctx.insert("session_user", &session_user);
     ctx.insert("role", &role);
 
@@ -118,6 +126,7 @@ pub async fn login_form_input(
     req: HttpRequest, 
     form: web::Form<LoginForm>,
     session: Session,
+    id: Identity,
 ) -> impl Responder {
     println!("Handling Post Request: {:?}", req);
 
@@ -127,16 +136,18 @@ pub async fn login_form_input(
         return HttpResponse::Found().header("Location", String::from("/log_in")).finish()
     };
     
-    let user = User::find_from_email(&form.email);
+    let user = User::find_from_email(&form.email.to_lowercase().trim().to_string());
 
     match user {
         Ok(u) => {
             let user = u;
             println!("{:?}", &form);
         
-            if verify(&user, &form.password) {
+            if verify(&user, &form.password.trim().to_string()) {
                 println!("Verified");
 
+                id.remember(user.user_name.to_owned());
+                
                 session.set("role", user.role.to_owned()).expect("Unable to set role cookie");
                 session.set("session_user", user.user_name.to_owned()).expect("Unable to set user name");
         
@@ -156,13 +167,17 @@ pub async fn login_form_input(
 }
 
 #[get("/register")]
-pub async fn register_handler(data: web::Data<AppData>, req:HttpRequest) -> impl Responder {
+pub async fn register_handler(
+    data: web::Data<AppData>, 
+    req:HttpRequest,
+    id: Identity,
+) -> impl Responder {
     
     let mut ctx = Context::new();
 
     // Get session data and add to context
     let session = req.get_session();
-    let (session_user, role) = extract_session_data(&session);
+    let (session_user, role) = extract_identity_data(&id);
     ctx.insert("session_user", &session_user);
     ctx.insert("role", &role);
 
@@ -178,6 +193,7 @@ pub async fn register_form_input(
     _data: web::Data<AppData>,
     req: HttpRequest, 
     form: web::Form<RegisterForm>,
+    id: Identity,
 ) -> impl Responder {
     println!("Handling Post Request: {:?}", req);
 
@@ -189,32 +205,38 @@ pub async fn register_form_input(
     // create user
 
     let user_data = UserData {
-        email: form.email.to_owned(),
-        user_name: form.user_name.to_owned(),
-        password: form.password.to_owned(),
+        email: form.email.to_lowercase().trim().to_owned(),
+        user_name: form.user_name.to_lowercase().trim().to_owned(),
+        password: form.password.trim().to_owned(),
         role: "user".to_owned(),
     };
 
     let user = User::create(user_data).expect("Unable to load user.");
+    println!("User {} created", &user.user_name);
 
     let session = req.get_session();
 
     session.set("role", user.role.to_owned()).expect("Unable to set role cookie");
     session.set("session_user", user.user_name.to_owned()).expect("Unable to set user name");
+
+    id.remember(user.user_name.to_owned());
     
     HttpResponse::Found().header("Location", format!("/user/{}", user.user_name)).finish()
 }
 
-#[post("/log_out")]
+#[get("/log_out")]
 pub async fn logout(
     _data: web::Data<AppData>,
     req: HttpRequest,
+    id: Identity,
 ) -> impl Responder {
     println!("Handling Post Request: {:?}", req);
 
     let session = req.get_session();
 
     session.clear();
+    id.forget();
 
     HttpResponse::Found().header("Location", "/").finish()
+
 }

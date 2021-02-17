@@ -1,6 +1,7 @@
 use actix_web::{web, get, HttpResponse, HttpRequest, Responder};
 use actix_session::{UserSession};
-use crate::{AppData, extract_session_data};
+use actix_identity::Identity;
+use crate::{AppData, extract_session_data, extract_identity_data};
 use tera::{Context};
 use diesel::prelude::*;
 use diesel::{QueryDsl, BelongingToDsl};
@@ -12,13 +13,17 @@ use crate::schema::{nodes};
 
 
 #[get("/")]
-pub async fn index(data: web::Data<AppData>, req:HttpRequest) -> impl Responder {
+pub async fn index(
+    data: web::Data<AppData>, 
+    req:HttpRequest,
+    id: Identity,
+) -> impl Responder {
 
     let mut ctx = Context::new();
 
     // Get session data and add to context
     let session = req.get_session();
-    let (session_user, role) = extract_session_data(&session);
+    let (session_user, role) = extract_identity_data(&id);
     ctx.insert("session_user", &session_user);
     ctx.insert("role", &role);
 
@@ -33,6 +38,7 @@ pub async fn index(data: web::Data<AppData>, req:HttpRequest) -> impl Responder 
 pub async fn survey_intro(
     data: web::Data<AppData>,
     req:HttpRequest,
+    id: Identity,
 ) -> impl Responder {
     println!("Access index");
 
@@ -40,7 +46,7 @@ pub async fn survey_intro(
 
     // Get session data and add to context
     let session = req.get_session();
-    let (session_user, role) = extract_session_data(&session);
+    let (session_user, role) = extract_identity_data(&id);
     ctx.insert("session_user", &session_user);
     ctx.insert("role", &role);
 

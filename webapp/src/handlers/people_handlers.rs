@@ -1,6 +1,7 @@
 use actix_web::{web, get, HttpResponse, HttpRequest, Responder};
 use actix_session::{UserSession};
-use crate::{AppData, extract_session_data};
+use actix_identity::Identity;
+use crate::{AppData, extract_identity_data};
 use tera::{Context};
 use diesel::prelude::*;
 use diesel::{QueryDsl, BelongingToDsl};
@@ -61,12 +62,13 @@ pub async fn person_page(
     web::Path(code): web::Path<String>, 
     data: web::Data<AppData>, 
     req:HttpRequest,
+    id: Identity,
 ) -> impl Responder {
     let mut ctx = Context::new();
 
     // Get session data and add to context
     let session = req.get_session();
-    let (session_user, role) = extract_session_data(&session);
+    let (session_user, role) = extract_identity_data(&id);
     ctx.insert("session_user", &session_user);
     ctx.insert("role", &role);
 
@@ -112,13 +114,14 @@ pub async fn person_graph(
     web::Path(person_id): web::Path<i32>,
     data: web::Data<AppData>,
     req: HttpRequest,
+    id: Identity,
 ) -> impl Responder {
 
     let mut ctx = Context::new();
 
     // Get session data and add to context
     let session = req.get_session();
-    let (session_user, role) = extract_session_data(&session);
+    let (session_user, role) = extract_identity_data(&id);
     ctx.insert("session_user", &session_user);
     ctx.insert("role", &role);
     

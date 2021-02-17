@@ -2,11 +2,12 @@ use std::sync::Mutex;
 use actix_web::{web, HttpRequest, HttpResponse, Responder, post, get};
 use bigdecimal::{BigDecimal, ToPrimitive};
 use actix_session::{UserSession};
+use actix_identity::Identity;
 use num_bigint::{ToBigInt};
 use tera::Context;
 use serde::{Deserialize, Serialize};
 
-use crate::{AppData, extract_session_data};
+use crate::{AppData, extract_session_data, extract_identity_data};
 use crate::models::{Lens, Lenses, NewPerson, People, Node, Nodes};
 use crate::handlers::{CytoGraph, CytoNode, CytoEdge, GNode, GEdge};
 use error_handler::error_handler::CustomError;
@@ -75,12 +76,13 @@ impl RenderPerson {
 pub async fn lens_form_handler(
     data: web::Data<AppData>, 
     req:HttpRequest,
+    id: Identity,
 ) -> impl Responder {
     let mut ctx = Context::new();
 
     // Get session data and add to context
     let session = req.get_session();
-    let (session_user, role) = extract_session_data(&session);
+    let (session_user, role) = extract_identity_data(&id);
     ctx.insert("session_user", &session_user);
     ctx.insert("role", &role);
 
@@ -213,12 +215,13 @@ pub async fn add_lens_form_handler(
     web::Path(code): web::Path<String>, 
     data: web::Data<AppData>, 
     req:HttpRequest,
+    id: Identity,
 ) -> impl Responder {
     let mut ctx = Context::new();
 
     // Get session data and add to context
     let session = req.get_session();
-    let (session_user, role) = extract_session_data(&session);
+    let (session_user, role) = extract_identity_data(&id);
     ctx.insert("session_user", &session_user);
     ctx.insert("role", &role);
 

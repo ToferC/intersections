@@ -290,8 +290,11 @@
                     </a>
                     <div class="dropdown-menu" aria-labelledby="userNavbarDropdown">
                       <a class="dropdown-item" href="/user/{{ session_user }}">Manage User/Communities</a>
-                      <a class="dropdown-item" href="/logout">Logout</a>
+                      <a class="dropdown-item" href="/log_out">Logout</a>
                       <div class="dropdown-divider"></div>
+                      {% if role == "admin" %}
+                      <a class="dropdown-item" href="/user_index">User Index</a>
+                      {% endif %}
                     </div>
                 </li>
                 {% else %}

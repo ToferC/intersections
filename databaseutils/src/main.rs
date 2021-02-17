@@ -23,9 +23,9 @@ fn main() {
     stdin().read_line(&mut hash).expect("Unable to read user_name");
 
     let user_data: UserData = UserData {
-        user_name,
-        email,
-        password: hash,
+        user_name: user_name.to_lowercase().trim().to_string(),
+        email: email.to_lowercase().trim().to_string(),
+        password: hash.trim().to_string(),
         role: "admin".to_owned(),
     };
 

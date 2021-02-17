@@ -6,6 +6,7 @@ extern crate diesel_migrations;
 
 use tera::Tera;
 use actix_session::Session;
+use actix_identity::Identity;
 
 pub mod models;
 pub mod handlers;
@@ -29,6 +30,27 @@ pub fn extract_session_data(session: &Session) -> (String, String) {
     let session_user = match user_data {
         Some(u) => u,
         None => "".to_string(),
+    };
+
+    println!("{}-{}", &session_user, &role);
+
+    (session_user, role)
+}
+
+pub fn extract_identity_data(id: &Identity) -> (String, String) {
+
+    let id_data = id.identity();
+
+    let session_user = match id_data {
+        Some(u) => u,
+        None => "".to_string(),
+    };
+
+    let user = models::User::find_from_user_name(&session_user);
+
+    let role = match user {
+        Ok(u) => u.role,
+        _ => "".to_string()
     };
 
     println!("{}-{}", &session_user, &role);
