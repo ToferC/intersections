@@ -7,8 +7,9 @@ use uuid::Uuid;
 use error_handler::error_handler::CustomError;
 use chrono::prelude::*;
 use serde::{Serialize, Deserialize};
+use inflector::Inflector;
 
-use crate::schema::users;
+use crate::_schema::users;
 use database;
 
 use shrinkwraprs::Shrinkwrap;
@@ -25,6 +26,7 @@ pub struct User {
     pub salt: String,
     pub email: String,
     pub user_name: String,
+    pub slug: String,
     pub created_at: NaiveDateTime,
     pub role: String,
     pub managed_communities: Vec<i32>,
@@ -38,6 +40,7 @@ pub struct InsertableUser {
     pub salt: String,
     pub email: String,
     pub user_name: String,
+    pub slug: String,
     pub created_at: NaiveDateTime,
     pub role: String,
     pub managed_communities: Vec<i32>,
@@ -47,6 +50,7 @@ pub struct InsertableUser {
 pub struct SlimUser {
     pub user_uuid: Uuid,
     pub email: String,
+    pub slug: String,
     pub role: String,
     pub managed_communities: Vec<i32>,
 }
@@ -83,6 +87,7 @@ impl From<UserData> for InsertableUser {
         
         Self {
             user_name,
+            slug: user_name.to_snake_case(),
             user_uuid: Uuid::new_v4(),
             email,
             hash,
@@ -142,6 +147,7 @@ impl User {
             salt: "".to_string(),
             email: "".to_string(),
             user_name: "".to_string(),
+            slug: "".to_string(),
             created_at: NaiveDateTime::from_timestamp(1_000_000_000, 0),
             role: "".to_string(),
             managed_communities: Vec::new(),

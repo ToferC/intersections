@@ -17,6 +17,7 @@ actix-session = "0.4.0"
 actix-identity = "0.3.0"
 
 uuid = { version = "0.8.1", features = ["serde", "v4"] }
+Inflector = "0.5.1"
 
 chrono = { version = "0.4.11", features = ["serde"] }
 
