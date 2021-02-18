@@ -135,10 +135,13 @@ impl People {
 }
 
 pub fn generate_unique_code() -> String {
-    let rand_string: String = thread_rng()
+    let mut rand_string: String = thread_rng()
         .sample_iter(&Alphanumeric)
         .take(9)
         .collect();
+
+    rand_string.insert(5, '-');
+    rand_string.insert(2, '-');
 
     rand_string
 }
