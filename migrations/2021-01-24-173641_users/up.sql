@@ -14,3 +14,7 @@ CREATE TABLE users (
 );
 
 CREATE UNIQUE INDEX users__email_idx ON users(email);
+
+-- Extend code to accomodate new format
+ALTER TABLE people
+    ALTER COLUMN code SET DATA TYPE VARCHAR(11);

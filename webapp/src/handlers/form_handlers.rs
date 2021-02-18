@@ -74,20 +74,19 @@ impl RenderPerson {
 
 #[get("/first_lens_form")]
 pub async fn lens_form_handler(
-    data: web::Data<AppData>, 
+    data: web::Data<AppData>,
+    node_names: web::Data<Mutex<Vec<String>>>,
     req:HttpRequest,
     id: Identity,
 ) -> impl Responder {
     let mut ctx = Context::new();
 
     // Get session data and add to context
-    let session = req.get_session();
     let (session_user, role) = extract_identity_data(&id);
     ctx.insert("session_user", &session_user);
     ctx.insert("role", &role);
 
-    let node_names = Nodes::find_all_linked_names().expect("Unable to load names");
-    ctx.insert("node_names", &node_names);
+    ctx.insert("node_names", &node_names.lock().expect("Unable to unlock").clone());
 
     // all names for form autocomplete
     let all_node_names = Nodes::find_all_names().expect("Unable to load node names");
@@ -100,8 +99,9 @@ pub async fn lens_form_handler(
 
 #[post("/first_lens_form")]
 pub async fn handle_lens_form_input(
-    _data: web::Data<AppData>,
+    data: web::Data<AppData>,
     graph: web::Data<Mutex<CytoGraph>>,
+    node_names: web::Data<Mutex<Vec<String>>>,
     req: HttpRequest, 
     form: web::Form<FirstLensForm>,
 ) -> impl Responder {
@@ -178,6 +178,10 @@ pub async fn handle_lens_form_input(
                 data: node_rep,
             });
 
+            let mut temp_data = node_names.lock().expect("Unable to unlock node_names");
+
+            temp_data.push(new_node.node_name);
+
             new_node.id
         }
     };
@@ -213,14 +217,14 @@ pub async fn handle_lens_form_input(
 #[get("/add_lens_form/{code}")]
 pub async fn add_lens_form_handler(
     web::Path(code): web::Path<String>, 
-    data: web::Data<AppData>, 
+    data: web::Data<AppData>,
+    node_names: web::Data<Mutex<Vec<String>>>,
     req:HttpRequest,
     id: Identity,
 ) -> impl Responder {
     let mut ctx = Context::new();
 
     // Get session data and add to context
-    let session = req.get_session();
     let (session_user, role) = extract_identity_data(&id);
     ctx.insert("session_user", &session_user);
     ctx.insert("role", &role);
@@ -230,12 +234,13 @@ pub async fn add_lens_form_handler(
     ctx.insert("user_code", &p.code);
     ctx.insert("user_id", &p.id);
 
-    let node_names = Nodes::find_all_linked_names().expect("Unable to load names");
-    ctx.insert("node_names", &node_names);
+    let local_node_names = Nodes::find_all_names().expect("Unable to load names");
+    ctx.insert("all_node_names", &local_node_names);
+
+    let nn_data = node_names.lock().expect("Unable to unlock node_names").clone();
 
     // all names for form autocomplete
-    let all_node_names = Nodes::find_all_names().expect("Unable to load node names");
-    ctx.insert("all_node_names", &all_node_names);
+    ctx.insert("node_names", &nn_data);
 
     // add pull for lens data
     let people_with_lenses = RenderPerson::from(p).expect("Unable to load lenses");

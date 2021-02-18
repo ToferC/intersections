@@ -140,8 +140,8 @@ pub fn generate_unique_code() -> String {
         .take(9)
         .collect();
 
-    rand_string.insert(5, '-');
-    rand_string.insert(2, '-');
+    rand_string.insert(6, '-');
+    rand_string.insert(3, '-');
 
     rand_string
 }
