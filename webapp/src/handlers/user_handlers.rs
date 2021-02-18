@@ -66,7 +66,7 @@ pub async fn user_index(
 
 #[get("/user/{user_name}")]
 pub async fn user_page_handler(
-    web::Path(user_name): web::Path<String>,
+    web::Path(slug): web::Path<String>,
     data: web::Data<AppData>,
     req:HttpRequest,
     id: Identity,
@@ -79,7 +79,7 @@ pub async fn user_page_handler(
 
     let (session_user, role) = extract_identity_data(&id);
     
-    if session_user.to_lowercase() != user_name.to_lowercase() && role != "admin".to_string() {
+    if session_user.to_lowercase() != slug.to_lowercase() && role != "admin".to_string() {
         HttpResponse::Found().header("Location", "/log_in").finish()
     } else {
 
@@ -90,7 +90,7 @@ pub async fn user_page_handler(
         ctx.insert("node_names", &node_vec);
     
     
-        let user = User::find_from_user_name(&user_name).expect("Could not load user");
+        let user = User::find_from_slug(&slug).expect("Could not load user");
     
         ctx.insert("user", &user);
     
@@ -146,12 +146,12 @@ pub async fn login_form_input(
             if verify(&user, &form.password.trim().to_string()) {
                 println!("Verified");
 
-                id.remember(user.user_name.to_owned());
+                id.remember(user.slug.to_owned());
                 
                 session.set("role", user.role.to_owned()).expect("Unable to set role cookie");
-                session.set("session_user", user.user_name.to_owned()).expect("Unable to set user name");
+                session.set("session_user", user.slug.to_owned()).expect("Unable to set user name");
         
-                return HttpResponse::Found().header("Location", format!("/user/{}", user.user_name)).finish()
+                return HttpResponse::Found().header("Location", format!("/user/{}", user.slug)).finish()
             } else {
                 // Invalid login
                 println!("User not verified");
@@ -206,7 +206,7 @@ pub async fn register_form_input(
 
     let user_data = UserData {
         email: form.email.to_lowercase().trim().to_owned(),
-        user_name: form.user_name.to_lowercase().trim().to_owned(),
+        user_name: form.user_name.trim().to_owned(),
         password: form.password.trim().to_owned(),
         role: "user".to_owned(),
     };
@@ -217,11 +217,11 @@ pub async fn register_form_input(
     let session = req.get_session();
 
     session.set("role", user.role.to_owned()).expect("Unable to set role cookie");
-    session.set("session_user", user.user_name.to_owned()).expect("Unable to set user name");
+    session.set("session_user", user.slug.to_owned()).expect("Unable to set user name");
 
-    id.remember(user.user_name.to_owned());
+    id.remember(user.slug.to_owned());
     
-    HttpResponse::Found().header("Location", format!("/user/{}", user.user_name)).finish()
+    HttpResponse::Found().header("Location", format!("/user/{}", user.slug)).finish()
 }
 
 #[get("/log_out")]

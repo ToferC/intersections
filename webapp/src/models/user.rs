@@ -127,6 +127,12 @@ impl User {
         Ok(user)
     }
 
+    pub fn find_from_slug(slug: &String) -> Result<Self, CustomError> {
+        let conn = database::connection()?;
+        let user = users::table.filter(users::slug.eq(slug)).first(&conn)?;
+        Ok(user)
+    }
+
     pub fn find_from_user_name(user_name: &String) -> Result<Self, CustomError> {
         let conn = database::connection()?;
         let user = users::table.filter(users::user_name.eq(user_name)).first(&conn)?;
