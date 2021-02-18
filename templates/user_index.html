@@ -16,6 +16,7 @@
                 <th style="text-align: center;">Email</th>
                 <th style="text-align: center;">Role</th>
                 <th style="text-align: center;">Link</th>
+                <th style="text-align: center;">Delete</th>
             </tr>
             {% if users %}
                 {% for user in users %} 
@@ -25,6 +26,7 @@
                     <td>{{ user.email }}</td>
                     <td>{{ user.role }}</td>
                     <td><a href="/user/{{ user.user_name }}">Link</a></td>
+                    <td><a style="color:red" href="/delete_user/{{ user.id }}">Delete</a></td>
                 </tr>
                         
                 {% endfor %}

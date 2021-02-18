@@ -1,6 +1,6 @@
 // example auth: https://github.com/actix/actix-extras/blob/master/actix-identity/src/lib.rs
 
-use actix_web::{HttpRequest, HttpResponse, Responder, get, post, web};
+use actix_web::{HttpRequest, HttpResponse, Responder, dev::HttpResponseBuilder, get, post, web};
 use actix_session::{Session, UserSession};
 use actix_identity::{Identity};
 use tera::Context;
@@ -20,6 +20,11 @@ pub struct RegisterForm {
     user_name: String,
     email: String,
     password: String,
+}
+
+#[derive(Deserialize, Debug)]
+pub struct DeleteUserForm {
+    user_verify: String,
 }
 
 #[get("/user_index")]
@@ -125,7 +130,7 @@ pub async fn login_form_input(
     _data: web::Data<AppData>,
     req: HttpRequest, 
     form: web::Form<LoginForm>,
-    session: Session,
+    _session: Session,
     id: Identity,
 ) -> impl Responder {
     println!("Handling Post Request: {:?}", req);
@@ -147,10 +152,7 @@ pub async fn login_form_input(
                 println!("Verified");
 
                 id.remember(user.slug.to_owned());
-                
-                session.set("role", user.role.to_owned()).expect("Unable to set role cookie");
-                session.set("session_user", user.slug.to_owned()).expect("Unable to set user name");
-        
+                        
                 return HttpResponse::Found().header("Location", format!("/user/{}", user.slug)).finish()
             } else {
                 // Invalid login
@@ -239,4 +241,88 @@ pub async fn logout(
 
     HttpResponse::Found().header("Location", "/").finish()
 
+}
+
+#[get("/delete_user/{target_id}")]
+pub async fn delete_user_handler(
+    web::Path(target_id): web::Path<i32>,
+    data: web::Data<AppData>,
+    _req: HttpRequest,
+    id: Identity,
+) -> impl Responder {
+
+    let (session_user, role) = extract_identity_data(&id);
+    
+    if role != "admin".to_string() {
+        println!("User not admin");
+        HttpResponse::Found().header("Location", "/").finish()
+    } else {
+
+        let user = User::find(target_id);
+        
+        match user {
+            Ok(u) => {
+                let mut ctx = Context::new();
+
+                ctx.insert("user", &u);
+            
+                ctx.insert("session_user", &session_user);
+                ctx.insert("role", &role);
+
+                let node_vec = Nodes::find_all_linked_names().expect("Unable to load nodes");
+                ctx.insert("node_names", &node_vec);
+
+                let rendered = data.tmpl.render("delete_user.html", &ctx).unwrap();
+                return HttpResponse::Ok().body(rendered)
+            },
+            Err(c) => {
+                // no user returned for ID
+                println!("{}", c);
+                return HttpResponse::Found().header("Location", "/user_index").finish()
+            },
+        }
+    }
+}
+
+#[post("/delete_user/{target_id}")]
+pub async fn delete_user(
+    web::Path(target_id): web::Path<i32>,
+    _data: web::Data<AppData>,
+    _req: HttpRequest,
+    id: Identity,
+    form: web::Form<DeleteUserForm>,
+) -> impl Responder {
+
+    let (session_user, role) = extract_identity_data(&id);
+    
+    if role != "admin".to_string() {
+        println!("User not admin");
+        HttpResponse::Found().header("Location", "/").finish()
+    } else {
+
+        let user = User::find(target_id);
+        
+        match user {
+            Ok(u) => {
+                if form.user_verify.trim().to_string() == u.user_name {
+                    println!("User matches verify string - deleting");
+                    // forget id if delete target is user
+                    if session_user == u.slug {
+                        id.forget();
+                    };
+                    // delete user
+                    User::delete(u.id).expect("Unable to delete user");
+                    return HttpResponse::Found().header("Location", "/user_index").finish()
+                } else {
+                    println!("User does not match verify string - return to delete page");
+                    return HttpResponse::Found().header("Location", format!("/delete_user/{}", u.id)).finish()
+                };
+            },
+            Err(c) => {
+                // no user returned for ID
+                println!("{}", c);
+                return HttpResponse::Found().header("Location", "/user_index").finish()
+            },
+        }
+    }
 }

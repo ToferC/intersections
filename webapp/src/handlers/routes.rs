@@ -30,7 +30,9 @@ use crate::handlers::{
     // users
     user_index,
     user_page_handler,
-    
+    // delete users
+    delete_user,
+    delete_user_handler,
     };
 
 pub fn init_routes(config: &mut web::ServiceConfig) {
@@ -61,4 +63,6 @@ pub fn init_routes(config: &mut web::ServiceConfig) {
     config.service(logout);
     config.service(user_page_handler);
     config.service(user_index);
+    config.service(delete_user);
+    config.service(delete_user_handler);
 }

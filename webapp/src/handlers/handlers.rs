@@ -46,6 +46,7 @@ pub async fn survey_intro(
 
     // Get session data and add to context
     let session = req.get_session();
+    
     let (session_user, role) = extract_identity_data(&id);
     ctx.insert("session_user", &session_user);
     ctx.insert("role", &role);

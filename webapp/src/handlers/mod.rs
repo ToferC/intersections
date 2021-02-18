@@ -24,4 +24,4 @@ pub use self::graph_utilities::{generate_cyto_graph, generate_node_cyto_graph,
 pub use self::people_handlers::{person_graph, person_page, AggLens};
 pub use self::node_handlers::{node_network_graph, node_page};
 pub use self::user_handlers::{register_handler, register_form_input, user_index, user_page_handler,
-    login_handler, login_form_input, logout};
+    login_handler, login_form_input, logout, delete_user, delete_user_handler};
