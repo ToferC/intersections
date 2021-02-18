@@ -25,7 +25,7 @@
             <form name="DeleteUserForm" id="deleteUserForm" action=/delete_user/{{ user.id }} method=POST>
 
                 <label>
-                    <strong>Delete User</strong>
+                    <strong>Delete User: {{ user.user_name }}</strong>
                     <input class="form-control form-control-lg" type="text" name="user_verify" placeholder="User to delete..." required>
                     <small id="code_help" class="form-text text-muted">Enter the user name of the user you would like to delete. This action is permanent.
                     </small>
