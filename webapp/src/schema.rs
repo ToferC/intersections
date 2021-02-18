@@ -58,6 +58,7 @@ table! {
         salt -> Varchar,
         email -> Varchar,
         user_name -> Varchar,
+        slug -> Varchar,
         created_at -> Timestamp,
         role -> Varchar,
         managed_communities -> Array<Int4>,
