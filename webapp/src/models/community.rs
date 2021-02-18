@@ -13,14 +13,16 @@ use database;
 #[table_name = "communities"]
 pub struct NewCommunity {
     pub tag: String,
+    pub description: String,
     pub date_created: chrono::NaiveDateTime,
     pub code: String,
 }
 
 impl NewCommunity {
-    pub fn new(tag: String) -> NewCommunity {
+    pub fn new(tag: String, description: String) -> NewCommunity {
         NewCommunity {
-            tag: tag,
+            tag,
+            description,
             date_created: chrono::NaiveDate::from_ymd(2020, 6, 6).and_hms(3, 3, 3),
             code: generate_unique_code(),
         }
@@ -31,6 +33,7 @@ impl NewCommunity {
 
         NewCommunity {
             tag: community.tag.to_owned(),
+            description: community.description.to_owned(),
             date_created: now,
             code: community.code.to_owned(),
         }
@@ -42,6 +45,7 @@ impl NewCommunity {
 pub struct Communities {
     pub id: i32,
     pub tag: String,
+    pub description: String,
     pub date_created: NaiveDateTime,
     pub code: String,
 }

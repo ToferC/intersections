@@ -4,6 +4,7 @@ table! {
     communities (id) {
         id -> Int4,
         tag -> Varchar,
+        description -> Varchar,
         date_created -> Timestamp,
         code -> Varchar,
     }
