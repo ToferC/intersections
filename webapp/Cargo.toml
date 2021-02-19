@@ -29,6 +29,7 @@ lazy_static = "1.4"
 
 bigdecimal = { version = "0.1.2", features = ["serde"] }
 shrinkwraprs = "0.3.0"
+qrcode-generator = "4.0.4"
 
 num-bigint = "0.2.6"
 num = "*"

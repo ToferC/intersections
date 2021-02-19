@@ -4,6 +4,8 @@ use diesel::prelude::*;
 use diesel::RunQueryDsl;
 use diesel::{QueryDsl};
 
+use inflector::Inflector;
+
 use crate::schema::{communities};
 use crate::models::{generate_unique_code};
 use error_handler::error_handler::CustomError;
@@ -15,16 +17,20 @@ pub struct NewCommunity {
     pub tag: String,
     pub description: String,
     pub date_created: chrono::NaiveDateTime,
+    pub open: bool,
     pub code: String,
+    pub slug: String,
 }
 
 impl NewCommunity {
-    pub fn new(tag: String, description: String) -> NewCommunity {
+    pub fn new(tag: String, description: String, open: bool) -> NewCommunity {
         NewCommunity {
             tag,
             description,
             date_created: chrono::NaiveDate::from_ymd(2020, 6, 6).and_hms(3, 3, 3),
+            open,
             code: generate_unique_code(),
+            slug: tag.to_snake_case(),
         }
     }
 
@@ -35,7 +41,9 @@ impl NewCommunity {
             tag: community.tag.to_owned(),
             description: community.description.to_owned(),
             date_created: now,
+            open: community.open,
             code: community.code.to_owned(),
+            slug: community.tag.to_snake_case(),
         }
     }
 }
@@ -48,6 +56,7 @@ pub struct Communities {
     pub description: String,
     pub date_created: NaiveDateTime,
     pub code: String,
+    pub slug: String,
 }
 
 // Database operations
@@ -76,6 +85,12 @@ impl Communities {
     pub fn find_from_code(code: &String) -> Result<Self, CustomError> {
         let conn = database::connection()?;
         let community = communities::table.filter(communities::code.eq(code)).first(&conn)?;
+        Ok(community)
+    }
+
+    pub fn find_from_slug(slug: &String) -> Result<Self, CustomError> {
+        let conn = database::connection()?;
+        let community = communities::table.filter(communities::slug.eq(slug)).first(&conn)?;
         Ok(community)
     }
 

@@ -6,7 +6,9 @@ table! {
         tag -> Varchar,
         description -> Varchar,
         date_created -> Timestamp,
+        open -> Bool,
         code -> Varchar,
+        slug -> Varchar,
     }
 }
 
