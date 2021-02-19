@@ -1,5 +1,6 @@
+use std::sync::Mutex;
+
 use actix_web::{web, get, HttpResponse, HttpRequest, Responder};
-use actix_session::{UserSession};
 use actix_identity::Identity;
 use crate::{AppData, extract_identity_data};
 use tera::{Context};
@@ -18,13 +19,13 @@ use crate::schema::{nodes, lenses};
 pub async fn node_page(
     web::Path(label): web::Path<String>, 
     data: web::Data<AppData>, 
-    req:HttpRequest,
+    node_names: web::Data<Mutex<Vec<String>>>,
+    _req:HttpRequest,
     id: Identity,
 ) -> impl Responder {
     let mut ctx = Context::new();
 
     // Get session data and add to context
-    let session = req.get_session();
     let (session_user, role) = extract_identity_data(&id);
     ctx.insert("session_user", &session_user);
     ctx.insert("role", &role);
@@ -108,8 +109,8 @@ pub async fn node_page(
 
     ctx.insert("other_lenses", &aggregate_lenses);
 
-    let node_names = Nodes::find_all_linked_names().expect("Unable to load names");
-    ctx.insert("node_names", &node_names);
+    // add node_names for navbar drop down
+    ctx.insert("node_names", &node_names.lock().expect("Unable to unlock").clone());
 
     let rendered = data.tmpl.render("node.html", &ctx).unwrap();
     HttpResponse::Ok().body(rendered)
@@ -120,14 +121,14 @@ pub async fn node_network_graph(
     // Rework this as a connected node graph
     web::Path(label): web::Path<String>,
     data: web::Data<AppData>,
-    req: HttpRequest,
+    node_names: web::Data<Mutex<Vec<String>>>,
+    _req: HttpRequest,
     id: Identity,
 ) -> impl Responder {
     
     let mut ctx = Context::new();
 
     // Get session data and add to context
-    let session = req.get_session();
     let (session_user, role) = extract_identity_data(&id);
     ctx.insert("session_user", &session_user);
     ctx.insert("role", &role);
@@ -186,8 +187,8 @@ pub async fn node_network_graph(
     let title = "Node Network Graph";
     ctx.insert("title", title);
 
-    let node_names = Nodes::find_all_linked_names().expect("Unable to load names");
-    ctx.insert("node_names", &node_names);
+    // add node_names for navbar drop down
+    ctx.insert("node_names", &node_names.lock().expect("Unable to unlock").clone());
     
     let rendered = data.tmpl.render("node_network_graph.html", &ctx).unwrap();
     HttpResponse::Ok().body(rendered)

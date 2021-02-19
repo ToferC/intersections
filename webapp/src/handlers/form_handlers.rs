@@ -1,13 +1,12 @@
 use std::sync::Mutex;
 use actix_web::{web, HttpRequest, HttpResponse, Responder, post, get};
 use bigdecimal::{BigDecimal, ToPrimitive};
-use actix_session::{UserSession};
 use actix_identity::Identity;
 use num_bigint::{ToBigInt};
 use tera::Context;
 use serde::{Deserialize, Serialize};
 
-use crate::{AppData, extract_session_data, extract_identity_data};
+use crate::{AppData, extract_identity_data};
 use crate::models::{Lens, Lenses, NewPerson, People, Node, Nodes};
 use crate::handlers::{CytoGraph, CytoNode, CytoEdge, GNode, GEdge};
 use error_handler::error_handler::CustomError;
@@ -76,7 +75,7 @@ impl RenderPerson {
 pub async fn lens_form_handler(
     data: web::Data<AppData>,
     node_names: web::Data<Mutex<Vec<String>>>,
-    req:HttpRequest,
+    _req:HttpRequest,
     id: Identity,
 ) -> impl Responder {
     let mut ctx = Context::new();
@@ -99,7 +98,7 @@ pub async fn lens_form_handler(
 
 #[post("/first_lens_form")]
 pub async fn handle_lens_form_input(
-    data: web::Data<AppData>,
+    _data: web::Data<AppData>,
     graph: web::Data<Mutex<CytoGraph>>,
     node_names: web::Data<Mutex<Vec<String>>>,
     req: HttpRequest, 
@@ -182,6 +181,9 @@ pub async fn handle_lens_form_input(
 
             temp_data.push(new_node.node_name);
 
+            drop(g);
+            drop(temp_data);
+
             new_node.id
         }
     };
@@ -219,7 +221,7 @@ pub async fn add_lens_form_handler(
     web::Path(code): web::Path<String>, 
     data: web::Data<AppData>,
     node_names: web::Data<Mutex<Vec<String>>>,
-    req:HttpRequest,
+    _req:HttpRequest,
     id: Identity,
 ) -> impl Responder {
     let mut ctx = Context::new();
@@ -234,13 +236,12 @@ pub async fn add_lens_form_handler(
     ctx.insert("user_code", &p.code);
     ctx.insert("user_id", &p.id);
 
-    let local_node_names = Nodes::find_all_names().expect("Unable to load names");
-    ctx.insert("all_node_names", &local_node_names);
-
-    let nn_data = node_names.lock().expect("Unable to unlock node_names").clone();
-
     // all names for form autocomplete
-    ctx.insert("node_names", &nn_data);
+    let all_node_names = Nodes::find_all_names().expect("Unable to load names");
+    ctx.insert("all_node_names", &all_node_names);
+
+    // add node_names for navbar drop down
+    ctx.insert("node_names", &node_names.lock().expect("Unable to unlock").clone());
 
     // add pull for lens data
     let people_with_lenses = RenderPerson::from(p).expect("Unable to load lenses");
@@ -256,6 +257,7 @@ pub async fn add_handle_lens_form_input(
     web::Path(code): web::Path<String>,
     _data: web::Data<AppData>,
     graph: web::Data<Mutex<CytoGraph>>,
+    node_names: web::Data<Mutex<Vec<String>>>,
     _req: HttpRequest, 
     form: web::Form<AddLensForm>,
 ) -> impl Responder {
@@ -313,6 +315,11 @@ pub async fn add_handle_lens_form_input(
             g.nodes.push(CytoNode {
                 data: node_rep,
             });
+
+            // add node_names to appData
+            let mut nn = node_names.lock().expect("Unable to unlock");
+            nn.push(new_node.node_name);
+            drop(nn);
 
             new_node.id
         }

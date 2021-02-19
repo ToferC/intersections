@@ -1,13 +1,15 @@
 // example auth: https://github.com/actix/actix-extras/blob/master/actix-identity/src/lib.rs
 
-use actix_web::{HttpRequest, HttpResponse, Responder, dev::HttpResponseBuilder, get, post, web};
+use std::sync::Mutex;
+
+use actix_web::{HttpRequest, HttpResponse, Responder, get, post, web};
 use actix_session::{Session, UserSession};
 use actix_identity::{Identity};
 use tera::Context;
-use serde::{Deserialize, Serialize};
+use serde::{Deserialize};
 
 use crate::{AppData, extract_identity_data};
-use crate::models::{User, verify, UserData, Nodes};
+use crate::models::{User, verify, UserData};
 
 #[derive(Deserialize, Debug)]
 pub struct LoginForm {
@@ -30,14 +32,12 @@ pub struct DeleteUserForm {
 #[get("/user_index")]
 pub async fn user_index(
     data: web::Data<AppData>,
+    node_names: web::Data<Mutex<Vec<String>>>,
     id: Identity,
-    req:HttpRequest) -> impl Responder {
+    _req:HttpRequest) -> impl Responder {
     let mut ctx = Context::new();
 
     // validate if user is admin else redirect
-
-    let session = req.get_session();
-
     let (session_user, role) = extract_identity_data(&id);
     
     if role != "admin".to_string() {
@@ -48,8 +48,8 @@ pub async fn user_index(
         ctx.insert("session_user", &session_user);
         ctx.insert("role", &role);
 
-        let node_vec = Nodes::find_all_linked_names().expect("Unable to load nodes");
-        ctx.insert("node_names", &node_vec);
+        // add node_names for navbar drop down
+        ctx.insert("node_names", &node_names.lock().expect("Unable to unlock").clone());
 
         let user_data = User::find_all();
 
@@ -73,15 +73,13 @@ pub async fn user_index(
 pub async fn user_page_handler(
     web::Path(slug): web::Path<String>,
     data: web::Data<AppData>,
-    req:HttpRequest,
+    node_names: web::Data<Mutex<Vec<String>>>,
+    _req:HttpRequest,
     id: Identity,
 ) -> impl Responder {
     let mut ctx = Context::new();
 
     // validate if user == user_name  or admin else redirect
-
-    let session = req.get_session();
-
     let (session_user, role) = extract_identity_data(&id);
     
     if session_user.to_lowercase() != slug.to_lowercase() && role != "admin".to_string() {
@@ -91,9 +89,8 @@ pub async fn user_page_handler(
         ctx.insert("session_user", &session_user);
         ctx.insert("role", &role);
 
-        let node_vec = Nodes::find_all_linked_names().expect("Unable to load nodes");
-        ctx.insert("node_names", &node_vec);
-    
+        // add node_names for navbar drop down
+        ctx.insert("node_names", &node_names.lock().expect("Unable to unlock").clone());
     
         let user = User::find_from_slug(&slug).expect("Could not load user");
     
@@ -106,20 +103,20 @@ pub async fn user_page_handler(
 
 #[get("/log_in")]
 pub async fn login_handler(
-    data: web::Data<AppData>, 
-    req:HttpRequest,
+    data: web::Data<AppData>,
+    node_names: web::Data<Mutex<Vec<String>>>,
+    _req:HttpRequest,
     id: Identity,
 ) -> impl Responder {
     let mut ctx = Context::new();
 
     // Get session data and add to context
-    let session = req.get_session();
     let (session_user, role) = extract_identity_data(&id);
     ctx.insert("session_user", &session_user);
     ctx.insert("role", &role);
 
-    let node_vec = Nodes::find_all_linked_names().expect("Unable to load nodes");
-    ctx.insert("node_names", &node_vec);
+    // add node_names for navbar drop down
+    ctx.insert("node_names", &node_names.lock().expect("Unable to unlock").clone());
 
     let rendered = data.tmpl.render("log_in.html", &ctx).unwrap();
     HttpResponse::Ok().body(rendered)
@@ -170,21 +167,21 @@ pub async fn login_form_input(
 
 #[get("/register")]
 pub async fn register_handler(
-    data: web::Data<AppData>, 
-    req:HttpRequest,
+    data: web::Data<AppData>,
+    node_names: web::Data<Mutex<Vec<String>>>,
+    _req:HttpRequest,
     id: Identity,
 ) -> impl Responder {
     
     let mut ctx = Context::new();
 
     // Get session data and add to context
-    let session = req.get_session();
     let (session_user, role) = extract_identity_data(&id);
     ctx.insert("session_user", &session_user);
     ctx.insert("role", &role);
 
-    let node_vec = Nodes::find_all_linked_names().expect("Unable to load nodes");
-    ctx.insert("node_names", &node_vec);
+    // add node_names for navbar drop down
+    ctx.insert("node_names", &node_names.lock().expect("Unable to unlock").clone());
 
     let rendered = data.tmpl.render("register.html", &ctx).unwrap();
     HttpResponse::Ok().body(rendered)
@@ -247,6 +244,7 @@ pub async fn logout(
 pub async fn delete_user_handler(
     web::Path(target_id): web::Path<i32>,
     data: web::Data<AppData>,
+    node_names: web::Data<Mutex<Vec<String>>>,
     _req: HttpRequest,
     id: Identity,
 ) -> impl Responder {
@@ -269,8 +267,8 @@ pub async fn delete_user_handler(
                 ctx.insert("session_user", &session_user);
                 ctx.insert("role", &role);
 
-                let node_vec = Nodes::find_all_linked_names().expect("Unable to load nodes");
-                ctx.insert("node_names", &node_vec);
+                // add node_names for navbar drop down
+                ctx.insert("node_names", &node_names.lock().expect("Unable to unlock").clone());
 
                 let rendered = data.tmpl.render("delete_user.html", &ctx).unwrap();
                 return HttpResponse::Ok().body(rendered)

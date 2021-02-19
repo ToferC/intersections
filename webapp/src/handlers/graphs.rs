@@ -1,20 +1,20 @@
-use std::sync::Mutex;
+use std::{sync::Mutex};
 
 use actix_web::{web, get, HttpResponse, Responder};
-use actix_session::{UserSession};
 use actix_identity::Identity;
 use crate::{AppData, extract_identity_data};
 use tera::{Context};
 
 use std::collections::HashMap;
 
-use crate::models::{Nodes, Lenses};
+use crate::models::{Lenses};
 use crate::handlers::{CytoGraph, generate_node_cyto_graph};
 
 #[get("/full_network_graph")]
 pub async fn full_network_graph(
     data: web::Data<AppData>,
     graph: web::Data<Mutex<CytoGraph>>,
+    node_names: web::Data<Mutex<Vec<String>>>,
     id: Identity,
 ) -> impl Responder {
 
@@ -35,8 +35,8 @@ pub async fn full_network_graph(
     let title = "Full Network Graph";
     ctx.insert("title", title);
 
-    let node_names = Nodes::find_all_linked_names().expect("Unable to load names");
-    ctx.insert("node_names", &node_names);
+    // add node_names for navbar drop down
+    ctx.insert("node_names", &node_names.lock().expect("Unable to unlock").clone());
     
     let rendered = data.tmpl.render("network_graph.html", &ctx).unwrap();
     HttpResponse::Ok().body(rendered)
@@ -45,6 +45,7 @@ pub async fn full_network_graph(
 #[get("/full_node_graph")]
 pub async fn full_node_graph(
     data: web::Data<AppData>,
+    node_names: web::Data<Mutex<Vec<String>>>,
     id:Identity,
 ) -> impl Responder {
         
@@ -73,8 +74,8 @@ pub async fn full_node_graph(
     let title = "Node Network Graph";
     ctx.insert("title", title);
 
-    let node_names = Nodes::find_all_linked_names().expect("Unable to load names");
-    ctx.insert("node_names", &node_names);
+    // add node_names for navbar drop down
+    ctx.insert("node_names", &node_names.lock().expect("Unable to unlock").clone());
     
     let rendered = data.tmpl.render("node_network_graph.html", &ctx).unwrap();
     HttpResponse::Ok().body(rendered)

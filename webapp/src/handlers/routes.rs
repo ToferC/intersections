@@ -1,4 +1,4 @@
-use actix_web::{test::config, web};
+use actix_web::{web};
 
 use crate::handlers::{
     // forms
