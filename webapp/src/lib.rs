@@ -46,7 +46,7 @@ pub fn extract_identity_data(id: &Identity) -> (String, String) {
         None => "".to_string(),
     };
 
-    let user = models::User::find_from_slug(&session_user);
+    let user = models::User::find_slim_from_slug(&session_user);
 
     let role = match user {
         Ok(u) => u.role,

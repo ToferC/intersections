@@ -1,8 +1,5 @@
 // Modeling from: https://github.com/clifinger/canduma/blob/master/src/user/handler.rs
 
-use std::io::prelude;
-
-use actix_web::{HttpRequest, web, Error, FromRequest, HttpResponse};
 use uuid::Uuid;
 use error_handler::error_handler::CustomError;
 use chrono::prelude::*;
@@ -15,7 +12,7 @@ use database;
 use shrinkwraprs::Shrinkwrap;
 use diesel::prelude::*;
 use diesel::RunQueryDsl;
-use diesel::{QueryDsl, BelongingToDsl};
+use diesel::{QueryDsl};
 
 #[derive(Serialize, Deserialize, Queryable, Insertable, Debug, Associations, Identifiable, Clone)]
 #[table_name = "users"]
@@ -49,6 +46,7 @@ pub struct InsertableUser {
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct SlimUser {
     pub user_uuid: Uuid,
+    pub user_name: String,
     pub email: String,
     pub slug: String,
     pub role: String,
@@ -123,20 +121,35 @@ impl User {
 
     pub fn find_from_email(email: &String) -> Result<Self, CustomError> {
         let conn = database::connection()?;
-        let user = users::table.filter(users::email.eq(email)).first(&conn)?;
+        let user: User = users::table.filter(users::email.eq(email)).first(&conn)?;
         Ok(user)
     }
 
-    pub fn find_from_slug(slug: &String) -> Result<Self, CustomError> {
+    pub fn find_slim_from_email(email: &String) -> Result<SlimUser, CustomError> {
         let conn = database::connection()?;
-        let user = users::table.filter(users::slug.eq(slug)).first(&conn)?;
+        let user: User = users::table.filter(users::email.eq(email)).first(&conn)?;
+
+        let sl = SlimUser::from(user);
+        Ok(sl)
+    }
+
+    pub fn find_from_slug(slug: &String) -> Result<User, CustomError> {
+        let conn = database::connection()?;
+        let user: User = users::table.filter(users::slug.eq(slug)).first(&conn)?;
         Ok(user)
     }
 
-    pub fn find_from_user_name(user_name: &String) -> Result<Self, CustomError> {
+    pub fn find_slim_from_slug(slug: &String) -> Result<SlimUser, CustomError> {
         let conn = database::connection()?;
-        let user = users::table.filter(users::user_name.eq(user_name)).first(&conn)?;
-        Ok(user)
+        let user: User = users::table.filter(users::slug.eq(slug)).first(&conn)?;
+        Ok(SlimUser::from(user))
+    }
+
+    pub fn find_from_user_name(user_name: &String) -> Result<SlimUser, CustomError> {
+        let conn = database::connection()?;
+        let user: User = users::table.filter(users::user_name.eq(user_name)).first(&conn)?;
+        let sl = SlimUser::from(user);
+        Ok(sl)
     }
 
     pub fn delete(id: i32) -> Result<usize, CustomError> {
@@ -165,6 +178,7 @@ impl From<User> for SlimUser {
     fn from(user: User) -> Self {
         let User {
             user_uuid,
+            user_name,
             email,
             role,
             slug,
@@ -174,6 +188,7 @@ impl From<User> for SlimUser {
 
         Self {
             user_uuid,
+            user_name,
             email,
             role,
             slug,

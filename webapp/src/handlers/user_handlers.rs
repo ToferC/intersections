@@ -125,12 +125,11 @@ pub async fn login_handler(
 #[post("/log_in")]
 pub async fn login_form_input(
     _data: web::Data<AppData>,
-    req: HttpRequest, 
+    _req: HttpRequest, 
     form: web::Form<LoginForm>,
     _session: Session,
     id: Identity,
 ) -> impl Responder {
-    println!("Handling Post Request: {:?}", req);
 
     // validate form has data or re-load form
     if form.email.is_empty() || form.password.is_empty() {

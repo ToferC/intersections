@@ -2,10 +2,10 @@ use serde::{Serialize, Deserialize};
 use chrono::prelude::*;
 use diesel::prelude::*;
 use diesel::RunQueryDsl;
-use diesel::{QueryDsl, BelongingToDsl};
+use diesel::{QueryDsl};
 
 use crate::schema::{communities};
-use crate::models::{People, generate_unique_code};
+use crate::models::{generate_unique_code};
 use error_handler::error_handler::CustomError;
 use database;
 
