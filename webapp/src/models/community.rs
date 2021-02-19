@@ -25,7 +25,7 @@ pub struct NewCommunity {
 impl NewCommunity {
     pub fn new(tag: String, description: String, open: bool) -> NewCommunity {
         NewCommunity {
-            tag,
+            tag: tag.clone(),
             description,
             date_created: chrono::NaiveDate::from_ymd(2020, 6, 6).and_hms(3, 3, 3),
             open,
@@ -55,6 +55,7 @@ pub struct Communities {
     pub tag: String,
     pub description: String,
     pub date_created: NaiveDateTime,
+    pub open: bool,
     pub code: String,
     pub slug: String,
 }
