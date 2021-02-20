@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block title %}
+    <title>Community: {{ community.tag }}</title>
+{% endblock title %}
+
+{% block content %}
+    <div class="col m-md-2 m-1">
+        <br>
+        <h1>View Community: {{ community.tag }}</h1>
+        <p>Community details and management.</p>
+
+            <p>{{ community.description }}</p>
+
+            <p>{{ community.code }}</p>
+
+            <image width="100" height="100" xlink:href="{{ qrcode }}">
+        
+            <h2>Community Options</h2>
+            <p><a style="color:red" href="/delete_community/{{ community.id }}">Delete Community</a></p>
+            <p><a href="#">Edit Community</a></p>
+
+    </div>
+{% endblock content %}
+
+{% block scripts %}
+<script>
+
+</script>
+{% endblock scripts %}

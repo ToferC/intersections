@@ -33,6 +33,14 @@ use crate::handlers::{
     // delete users
     delete_user,
     delete_user_handler,
+    // communities
+    view_community,
+    community_index,
+    add_community,
+    add_community_form_input,
+    delete_community,
+    delete_community_form,
+    edit_community,
     };
 
 pub fn init_routes(config: &mut web::ServiceConfig) {
@@ -65,4 +73,13 @@ pub fn init_routes(config: &mut web::ServiceConfig) {
     config.service(user_index);
     config.service(delete_user);
     config.service(delete_user_handler);
+    // communities
+    config.service(view_community);
+    config.service(community_index);
+    config.service(add_community);
+    config.service(add_community_form_input);
+    config.service(delete_community);
+    config.service(delete_community_form);
+    config.service(edit_community);
+
 }

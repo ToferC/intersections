@@ -1,9 +1,6 @@
 #[macro_use]
 extern crate diesel;
 
-#[macro_use]
-extern crate diesel_migrations;
-
 use tera::Tera;
 use actix_session::Session;
 use actix_identity::Identity;

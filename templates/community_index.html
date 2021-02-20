@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block title %}
+    <title>Community Index</title>
+{% endblock title %}
+
+{% block content %}
+    <div class="col m-md-2 m-1">
+        <br>
+        <h1>Communities</h1>
+        <p>Communities and organizations on intersections</p>
+
+        <table>
+            <tr>
+                <th style="text-align: center;">Tag</th>
+                <th style="text-align: center;">Link</th>
+                <th style="text-align: center;">Delete</th>
+            </tr>
+            {% if communities %}
+                {% for community in communities %} 
+                
+                <tr>
+                    <td>{{ community.tag }}</td>
+                    <td><a href="/community/{{ community.slug }}">Link</a></td>
+                    <td><a style="color:red" href="/delete_community/{{ community.id }}">Delete</a></td>
+                </tr>
+                        
+                {% endfor %}
+            {% else %}
+            <tr>
+                <td>N/A</td>
+                <td>N/A</td>
+                <td>N/A</td>
+            </tr>
+            {% endif %}
+        </table>
+
+        <hr>
+
+    </div>
+{% endblock content %}

@@ -14,7 +14,7 @@ use diesel::prelude::*;
 use diesel::RunQueryDsl;
 use diesel::{QueryDsl};
 
-#[derive(Serialize, Deserialize, Queryable, Insertable, Debug, Associations, Identifiable, Clone)]
+#[derive(Serialize, Deserialize, Queryable, Insertable, Debug, Associations, Identifiable, AsChangeset, Clone)]
 #[table_name = "users"]
 pub struct User {
     pub id: i32,
@@ -150,6 +150,15 @@ impl User {
         let user: User = users::table.filter(users::user_name.eq(user_name)).first(&conn)?;
         let sl = SlimUser::from(user);
         Ok(sl)
+    }
+
+    pub fn update(user: User) -> Result<Self, CustomError> {
+        let conn = database::connection()?;
+        let user = diesel::update(users::table)
+            .filter(users::id.eq(user.id))
+            .set(user)
+            .get_result(&conn)?;
+        Ok(user)
     }
 
     pub fn delete(id: i32) -> Result<usize, CustomError> {

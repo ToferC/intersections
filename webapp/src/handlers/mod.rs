@@ -6,6 +6,7 @@ mod graph_utilities;
 mod people_handlers;
 mod node_handlers;
 mod user_handlers;
+mod community_handler;
 
 pub use self::handlers::{api_base, index, survey_intro,
     find_lens, person_api};
@@ -25,3 +26,5 @@ pub use self::people_handlers::{person_graph, person_page, AggLens};
 pub use self::node_handlers::{node_network_graph, node_page};
 pub use self::user_handlers::{register_handler, register_form_input, user_index, user_page_handler,
     login_handler, login_form_input, logout, delete_user, delete_user_handler};
+pub use self::community_handler::{add_community, add_community_form_input, delete_community_form, delete_community,
+    view_community, community_index, edit_community, edit_community_form_input};
