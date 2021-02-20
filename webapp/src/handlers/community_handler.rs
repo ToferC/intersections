@@ -1,5 +1,7 @@
 // example auth: https://github.com/actix/actix-extras/blob/master/actix-identity/src/lib.rs
 
+use std::path::Path;
+
 use std::sync::Mutex;
 
 use actix_web::{HttpRequest, HttpResponse, Responder, get, post, web};
@@ -69,7 +71,7 @@ pub async fn view_community(
     web::Path(community_slug): web::Path<String>,
     data: web::Data<AppData>,
     node_names: web::Data<Mutex<Vec<String>>>,
-    _req:HttpRequest,
+    req:HttpRequest,
     id: Identity,
 ) -> impl Responder {
     let mut ctx = Context::new();
@@ -79,14 +81,19 @@ pub async fn view_community(
     ctx.insert("session_user", &session_user);
     ctx.insert("role", &role);
 
+    let host_name = req.app_config().host();
+
     // qr_code
-    let qrcode: String = qrcode_generator::to_svg_to_string("", QrCodeEcc::Low, 1024, None::<&str>).unwrap();
-    ctx.insert("qrcode", &qrcode);
+    if !Path::new(&format!("webapp/static/tmp/{}.png",community_slug)).exists() {
+        qrcode_generator::to_png_to_file(format!("https://{}/community/{}", host_name, &community_slug), QrCodeEcc::Low, 1024, format!("webapp/static/tmp/{}.png",community_slug)).unwrap();
+    };
+
+    ctx.insert("qrcode", &format!("/static/tmp/{}.png",community_slug));
 
     // add node_names for navbar drop down
     ctx.insert("node_names", &node_names.lock().expect("Unable to unlock").clone());
 
-    let community = Communities::find_from_slug(&community_slug).expect("Could not load user");
+    let community = Communities::find_from_slug(&community_slug).expect("Could not load community");
     ctx.insert("community", &community);
 
     let rendered = data.tmpl.render("view_community.html", &ctx).unwrap();

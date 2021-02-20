@@ -14,7 +14,10 @@
 
             <p>{{ community.code }}</p>
 
-            <image width="100" height="100" xlink:href="{{ qrcode }}">
+
+            <img width="300" height="300" src="{{ qrcode }}">
+
+            <canvas id="canvas1" width="400" height="400"></canvas>
         
             <h2>Community Options</h2>
             <p><a style="color:red" href="/delete_community/{{ community.id }}">Delete Community</a></p>
