@@ -83,12 +83,15 @@ pub async fn view_community(
 
     let host_name = req.app_config().host();
 
+    let community_url = format!("https://{}/community/{}", host_name, &community_slug);
+
     // qr_code
     if !Path::new(&format!("webapp/static/tmp/{}.png",community_slug)).exists() {
-        qrcode_generator::to_png_to_file(format!("https://{}/community/{}", host_name, &community_slug), QrCodeEcc::Low, 1024, format!("webapp/static/tmp/{}.png",community_slug)).unwrap();
+        qrcode_generator::to_png_to_file(&community_url, QrCodeEcc::Low, 1024, format!("webapp/static/tmp/{}.png",community_slug)).unwrap();
     };
 
     ctx.insert("qrcode", &format!("/static/tmp/{}.png",community_slug));
+    ctx.insert("community_url", &community_url);
 
     // add node_names for navbar drop down
     ctx.insert("node_names", &node_names.lock().expect("Unable to unlock").clone());
