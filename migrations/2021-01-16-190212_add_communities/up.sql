@@ -17,5 +17,5 @@ ALTER TABLE people
     ADD COLUMN community_id INT NOT NULL default 0;
 
 ALTER TABLE people
-ADD CONSTRAINT community_id FOREIGN KEY(community_id)
+    ADD CONSTRAINT community_id FOREIGN KEY(community_id)
     REFERENCES communities(id) on DELETE CASCADE;

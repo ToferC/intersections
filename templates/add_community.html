@@ -11,7 +11,7 @@
         <p>Use this form to add a community to intersections. Your community will give a unique access code that participants can use to associate their profiles with your community or organization. You will be able to </p>
 
 
-        <form name="AddCommunityForm" id="addCommunityForm" action=/add_community method=POST>
+        <form name="CommunityForm" id="communityForm" action=/add_community method=POST>
         
         <label>
             <strong>Community Name</strong>
@@ -51,7 +51,7 @@
     window.onSubmit = onSubmit;
 
     function onSubmit(token) {
-     document.getElementById("addCommunityForm").submit();
+     document.getElementById("communityForm").submit();
    };
 
 </script>

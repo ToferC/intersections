@@ -1,11 +1,12 @@
 // example auth: https://github.com/actix/actix-extras/blob/master/actix-identity/src/lib.rs
 
-use std::path::Path;
+use std::{path::Path, println};
 
 use std::sync::Mutex;
 
 use actix_web::{HttpRequest, HttpResponse, Responder, get, post, web};
 use actix_identity::{Identity};
+use inflector::Inflector;
 use tera::Context;
 use serde::{Deserialize};
 
@@ -18,7 +19,6 @@ use crate::models::{Communities, NewCommunity, User};
 pub struct CommunityForm {
     community_name: String,
     description: String,
-    open: bool,
 }
 
 #[derive(Deserialize, Debug)]
@@ -85,19 +85,23 @@ pub async fn view_community(
 
     let community_url = format!("https://{}/community/{}", host_name, &community_slug);
 
+    
     // qr_code
     if !Path::new(&format!("webapp/static/tmp/{}.png",community_slug)).exists() {
         qrcode_generator::to_png_to_file(&community_url, QrCodeEcc::Low, 1024, format!("webapp/static/tmp/{}.png",community_slug)).unwrap();
     };
-
+    
     ctx.insert("qrcode", &format!("/static/tmp/{}.png",community_slug));
     ctx.insert("community_url", &community_url);
-
+    
     // add node_names for navbar drop down
     ctx.insert("node_names", &node_names.lock().expect("Unable to unlock").clone());
-
+    
     let community = Communities::find_from_slug(&community_slug).expect("Could not load community");
     ctx.insert("community", &community);
+
+    let community_add_profile_url = format!("https://{}/add_community_profile/{}", host_name, &community.code);
+    ctx.insert("add_community_profile_url", &community_add_profile_url);
 
     let rendered = data.tmpl.render("view_community.html", &ctx).unwrap();
     HttpResponse::Ok().body(rendered)
@@ -121,7 +125,7 @@ pub async fn add_community(
     // add node_names for navbar drop down
     ctx.insert("node_names", &node_names.lock().expect("Unable to unlock").clone());
 
-    let rendered = data.tmpl.render("register.html", &ctx).unwrap();
+    let rendered = data.tmpl.render("add_community.html", &ctx).unwrap();
     HttpResponse::Ok().body(rendered)
 }
 
@@ -139,54 +143,43 @@ pub async fn add_community_form_input(
         return HttpResponse::Found().header("Location", String::from("/add_community")).finish()
     };
 
-    // create community
-
-    let community_data = NewCommunity::new(
-        form.community_name.trim().to_owned(), 
-        form.description.trim().to_owned(), 
-        form.open.to_owned()
-    );
-
-    let community = Communities::create(&community_data);
-
-    match community {
-        Ok(community) => {
-
-            println!("Community {} created", community.tag);
-
-            // add community to user
-            let user = User::find_from_slug(&id.identity().unwrap());
+    // validate user
+    let user = User::find_from_slug(&id.identity().unwrap());
         
-            match user {
-                Ok(u) => {
-                    let mut user = u;
+    match user {
+        Ok(u) => {
+            
+            // create community
+            let community_data = NewCommunity::new(
+                form.community_name.trim().to_owned(), 
+                form.description.trim().to_owned(), 
+                false,
+                u.id,
+            );
+            
+            let community = Communities::create(&community_data);
         
-                    user.managed_communities.push(community.id);
-        
-                    let result = User::update(user);
-        
-                    match result {
-                        Ok(_u) => println!("User updated"),
-                        Err(e) => println!("{}", e),
-                    };
-                                
-                        return HttpResponse::Found().header("Location", format!("/community/{}", community.slug)).finish()
+            match community {
+                Ok(community) => {
+                    println!("Community {} created", community.tag);
+                    return HttpResponse::Found().header("Location", format!("/community/{}", community.slug)).finish()
                 },
-                _ => {
-                    println!("User not verified");
-                    return HttpResponse::Found().header("Location", String::from("/log_in")).finish()
-                },
+                Err(e) => {
+                    println!("{}", e);
+                    return HttpResponse::Found().header("Location", String::from("/add_community")).finish()
+                }
             };
         },
-        Err(e) => {
-            println!("{}", e);
-            return HttpResponse::Found().header("Location", String::from("/add_community")).finish()
-        }
+        _ => {
+            println!("User not verified");
+            return HttpResponse::Found().header("Location", String::from("/log_in")).finish()
+        },
     };
 }
 
-#[get("/edit_community")]
+#[get("/edit_community/{community_slug}")]
 pub async fn edit_community(
+    web::Path(community_slug): web::Path<String>,
     data: web::Data<AppData>,
     node_names: web::Data<Mutex<Vec<String>>>,
     _req:HttpRequest,
@@ -200,15 +193,51 @@ pub async fn edit_community(
     ctx.insert("session_user", &session_user);
     ctx.insert("role", &role);
 
-    // add node_names for navbar drop down
-    ctx.insert("node_names", &node_names.lock().expect("Unable to unlock").clone());
+    // validate user
+    let user = User::find_from_slug(&id.identity().unwrap());
+    
+    match user {
+        Ok(u) => {
+            
+            // get community
+            let result = Communities::find_from_slug(&community_slug);
+            
+            match result {
+                Ok(mut community) => {
+                    // validate user owns community
+                    if community.user_id == u.id {
+                        
+                        ctx.insert("community", &community);
+                    
+                        // add node_names for navbar drop down
+                        ctx.insert("node_names", &node_names.lock().expect("Unable to unlock").clone());
+                    
+                    } else {
+                        // user does not own community - redirect
+                        return HttpResponse::Found().header("Location", format!("/user/{}", u.slug)).finish()
+                    };
+                },
+                Err(e) => {
+                    println!("Community not found. Redirecting: {}", &e);
+                    return HttpResponse::Found().header("Location", format!("/user/{}", u.slug)).finish()
+                },
+            };
+        },
 
-    let rendered = data.tmpl.render("register.html", &ctx).unwrap();
+        _ => {
+            // user not found
+            println!("User not verified");
+            return HttpResponse::Found().header("Location", String::from("/log_in")).finish()
+        },
+    };
+
+    let rendered = data.tmpl.render("edit_community.html", &ctx).unwrap();
     HttpResponse::Ok().body(rendered)
 }
 
-#[post("/edit_community")]
+#[post("/edit_community/{community_slug}")]
 pub async fn edit_community_form_input(
+    web::Path(community_slug): web::Path<String>,
     _data: web::Data<AppData>,
     req: HttpRequest, 
     form: web::Form<CommunityForm>,
@@ -221,49 +250,53 @@ pub async fn edit_community_form_input(
         return HttpResponse::Found().header("Location", String::from("/add_community")).finish()
     };
 
-    // create community
-
-    let community_data = NewCommunity::new(
-        form.community_name.trim().to_owned(), 
-        form.description.trim().to_owned(), 
-        form.open.to_owned()
-    );
-
-    let community = Communities::create(&community_data);
-
-    match community {
-        Ok(community) => {
-
-            println!("Community {} created", community.tag);
-
-            // add community to user
-            let user = User::find_from_slug(&id.identity().unwrap());
+    // validate user
+    let user = User::find_from_slug(&id.identity().unwrap());
         
-            match user {
-                Ok(u) => {
-                    let mut user = u;
-        
-                    user.managed_communities.push(community.id);
-        
-                    let result = User::update(user);
-        
-                    match result {
-                        Ok(_u) => println!("User updated"),
-                        Err(e) => println!("{}", e),
-                    };
-                                
-                        return HttpResponse::Found().header("Location", format!("/community/{}", community.slug)).finish()
+    match user {
+        Ok(u) => {
+
+            // get community
+            let result = Communities::find_from_slug(&community_slug);
+
+            match result {
+                Ok(mut community) => {
+                    // validate user owns community
+                    if community.user_id == u.id {
+
+                        // update community
+                        community.tag = form.community_name.trim().to_owned();
+                        community.slug = form.community_name.trim().to_snake_case().to_owned();
+                        community.description = form.description.trim().to_owned();
+
+                        let update = Communities::update(community);
+
+                        match update {
+                            Ok(c) => {
+                                println!("Community {} updated", c.tag);
+                                return HttpResponse::Found().header("Location", format!("/community/{}", c.slug)).finish()
+                            },
+                            Err(e) => {
+                                println!("Community update failed: {}", e);
+                                return HttpResponse::Found().header("Location", String::from("/edit_community")).finish()
+                            }
+                        };
+
+                    } else {
+                        // redirect
+                        return HttpResponse::Found().header("Location", String::from("/log_in")).finish()
+                    }
                 },
-                _ => {
-                    println!("User not verified");
-                    return HttpResponse::Found().header("Location", String::from("/log_in")).finish()
-                },
-            };
+                Err(e) => {
+                    println!("Community not found. Redirecting: {}", &e);
+                    return HttpResponse::Found().header("Location", format!("/user/{}", u.slug)).finish()
+                }
+            }
         },
-        Err(e) => {
-            println!("{}", e);
-            return HttpResponse::Found().header("Location", String::from("/add_community")).finish()
-        }
+        _ => {
+            println!("User not verified");
+            return HttpResponse::Found().header("Location", String::from("/log_in")).finish()
+        },
     };
 }
 

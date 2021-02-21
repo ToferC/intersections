@@ -26,7 +26,6 @@ pub struct User {
     pub slug: String,
     pub created_at: NaiveDateTime,
     pub role: String,
-    pub managed_communities: Vec<i32>,
 }
 
 #[derive(Debug, Insertable)]
@@ -40,7 +39,6 @@ pub struct InsertableUser {
     pub slug: String,
     pub created_at: NaiveDateTime,
     pub role: String,
-    pub managed_communities: Vec<i32>,
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
@@ -50,7 +48,6 @@ pub struct SlimUser {
     pub email: String,
     pub slug: String,
     pub role: String,
-    pub managed_communities: Vec<i32>,
 }
 
 #[derive(Debug, Deserialize)]
@@ -92,7 +89,6 @@ impl From<UserData> for InsertableUser {
             created_at: chrono::Local::now().naive_local(),
             salt,
             role,
-            managed_communities: Vec::new(),
         }
     }
 }
@@ -178,7 +174,6 @@ impl User {
             slug: "".to_string(),
             created_at: NaiveDateTime::from_timestamp(1_000_000_000, 0),
             role: "".to_string(),
-            managed_communities: Vec::new(),
         }
     }
 }
@@ -191,7 +186,6 @@ impl From<User> for SlimUser {
             email,
             role,
             slug,
-            managed_communities,
             ..
         } = user;
 
@@ -201,7 +195,6 @@ impl From<User> for SlimUser {
             email,
             role,
             slug,
-            managed_communities,
         }
     }
 }

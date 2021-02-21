@@ -20,10 +20,11 @@ pub struct NewCommunity {
     pub open: bool,
     pub code: String,
     pub slug: String,
+    pub user_id: i32,
 }
 
 impl NewCommunity {
-    pub fn new(tag: String, description: String, open: bool) -> NewCommunity {
+    pub fn new(tag: String, description: String, open: bool, user_id: i32) -> NewCommunity {
         NewCommunity {
             tag: tag.clone(),
             description,
@@ -31,6 +32,7 @@ impl NewCommunity {
             open,
             code: generate_unique_code(),
             slug: tag.to_snake_case(),
+            user_id,
         }
     }
 
@@ -44,11 +46,12 @@ impl NewCommunity {
             open: community.open,
             code: community.code.to_owned(),
             slug: community.tag.to_snake_case(),
+            user_id: community.user_id,
         }
     }
 }
 
-#[derive(Serialize, Deserialize, Queryable, Insertable, Debug, Identifiable, Clone)]
+#[derive(Serialize, Deserialize, Queryable, Insertable, Debug, Identifiable, AsChangeset, Clone)]
 #[table_name = "communities"]
 pub struct Communities {
     pub id: i32,
@@ -58,6 +61,7 @@ pub struct Communities {
     pub open: bool,
     pub code: String,
     pub slug: String,
+    pub user_id: i32,
 }
 
 // Database operations
@@ -92,6 +96,15 @@ impl Communities {
     pub fn find_from_slug(slug: &String) -> Result<Self, CustomError> {
         let conn = database::connection()?;
         let community = communities::table.filter(communities::slug.eq(slug)).first(&conn)?;
+        Ok(community)
+    }
+
+    pub fn update(community: Communities) -> Result<Self, CustomError> {
+        let conn = database::connection()?;
+        let community = diesel::update(communities::table)
+            .filter(communities::id.eq(community.id))
+            .set(community)
+            .get_result(&conn)?;
         Ok(community)
     }
 
