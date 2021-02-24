@@ -5,6 +5,8 @@ table! {
         id -> Int4,
         tag -> Varchar,
         description -> Varchar,
+        data_use_case -> Varchar,
+        contact_email -> Varchar,
         date_created -> Timestamp,
         open -> Bool,
         code -> Varchar,

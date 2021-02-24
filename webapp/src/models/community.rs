@@ -16,6 +16,8 @@ use database;
 pub struct NewCommunity {
     pub tag: String,
     pub description: String,
+    pub data_use_case: String,
+    pub contact_email: String,
     pub date_created: chrono::NaiveDateTime,
     pub open: bool,
     pub code: String,
@@ -24,10 +26,12 @@ pub struct NewCommunity {
 }
 
 impl NewCommunity {
-    pub fn new(tag: String, description: String, open: bool, user_id: i32) -> NewCommunity {
+    pub fn new(tag: String, description: String, data_use_case: String, contact_email: String, open: bool, user_id: i32) -> NewCommunity {
         NewCommunity {
             tag: tag.clone(),
             description,
+            data_use_case,
+            contact_email,
             date_created: chrono::NaiveDate::from_ymd(2020, 6, 6).and_hms(3, 3, 3),
             open,
             code: generate_unique_code(),
@@ -42,6 +46,8 @@ impl NewCommunity {
         NewCommunity {
             tag: community.tag.to_owned(),
             description: community.description.to_owned(),
+            data_use_case: community.data_use_case.to_owned(),
+            contact_email: community.contact_email.to_owned(),
             date_created: now,
             open: community.open,
             code: community.code.to_owned(),
@@ -57,6 +63,8 @@ pub struct Communities {
     pub id: i32,
     pub tag: String,
     pub description: String,
+    pub data_use_case: String,
+    pub contact_email: String,
     pub date_created: NaiveDateTime,
     pub open: bool,
     pub code: String,

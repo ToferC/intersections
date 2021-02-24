@@ -19,6 +19,8 @@ use crate::models::{Communities, NewCommunity, User};
 pub struct CommunityForm {
     community_name: String,
     description: String,
+    data_use_case: String,
+    contact_email: String,
 }
 
 #[derive(Deserialize, Debug)]
@@ -85,7 +87,6 @@ pub async fn view_community(
 
     let community_url = format!("https://{}/community/{}", host_name, &community_slug);
 
-    
     // qr_code
     if !Path::new(&format!("webapp/static/tmp/{}.png",community_slug)).exists() {
         qrcode_generator::to_png_to_file(&community_url, QrCodeEcc::Low, 1024, format!("webapp/static/tmp/{}.png",community_slug)).unwrap();
@@ -152,7 +153,9 @@ pub async fn add_community_form_input(
             // create community
             let community_data = NewCommunity::new(
                 form.community_name.trim().to_owned(), 
-                form.description.trim().to_owned(), 
+                form.description.trim().to_owned(),
+                form.data_use_case.trim().to_owned(),
+                u.email.to_owned(),
                 false,
                 u.id,
             );

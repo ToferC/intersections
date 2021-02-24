@@ -21,12 +21,12 @@ pub struct NewPerson {
 }
 
 impl NewPerson {
-    pub fn new() -> NewPerson {
+    pub fn new(community_id: i32) -> NewPerson {
         NewPerson {
             code: generate_unique_code(),
             date_created: chrono::NaiveDate::from_ymd(2020, 6, 6).and_hms(3, 3, 3),
             related_codes: Vec::new(),
-            community_id: 0,
+            community_id,
         }
     }
 
