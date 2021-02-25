@@ -101,7 +101,7 @@ pub async fn view_community(
     let community = Communities::find_from_slug(&community_slug).expect("Could not load community");
     ctx.insert("community", &community);
 
-    let community_add_profile_url = format!("https://{}/add_community_profile/{}", host_name, &community.code);
+    let community_add_profile_url = format!("https://{}/first_lens_form/{}", host_name, &community.code);
     ctx.insert("add_community_profile_url", &community_add_profile_url);
 
     let rendered = data.tmpl.render("view_community.html", &ctx).unwrap();

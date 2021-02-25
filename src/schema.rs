@@ -4,9 +4,14 @@ table! {
     communities (id) {
         id -> Int4,
         tag -> Varchar,
-        description -> Nullable<Varchar>,
+        description -> Varchar,
+        data_use_case -> Varchar,
+        contact_email -> Varchar,
         date_created -> Timestamp,
+        open -> Bool,
         code -> Varchar,
+        slug -> Varchar,
+        user_id -> Int4,
     }
 }
 
@@ -62,10 +67,10 @@ table! {
         slug -> Varchar,
         created_at -> Timestamp,
         role -> Varchar,
-        managed_communities -> Array<Int4>,
     }
 }
 
+joinable!(communities -> users (user_id));
 joinable!(lenses -> nodes (node_id));
 joinable!(lenses -> people (person_id));
 joinable!(people -> communities (community_id));

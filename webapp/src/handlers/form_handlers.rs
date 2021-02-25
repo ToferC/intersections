@@ -112,7 +112,7 @@ pub async fn lens_form_handler(
 
 }
 
-#[post("/first_lens_form")]
+#[post("/first_lens_form/{community_code}")]
 pub async fn handle_lens_form_input(
     _data: web::Data<AppData>,
     graph: web::Data<Mutex<CytoGraph>>,

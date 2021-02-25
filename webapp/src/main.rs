@@ -7,6 +7,7 @@ use actix_web_static_files;
 use tera::Tera;
 
 use database;
+use webapp::prepopulate_db;
 use webapp::handlers; 
 use webapp::models;
 use webapp::AppData;
@@ -36,8 +37,16 @@ async fn main() -> std::io::Result<()> {
 
     database::init();
 
-    if environment == "test" {
-        prepopulate_db();
+    // prepopulate database for test instance
+    match models::User::find_from_email(&String::from("admin@email.com")) {
+        Ok(_u) => println!("Database initialized"),
+        Err(_e) => {
+            println!("Database empty");
+            if environment == "test" {
+                println!("Test environment. Prepopulating DB");
+                prepopulate_db();
+            };
+        },
     };
 
     println!("Loading data for graph");
