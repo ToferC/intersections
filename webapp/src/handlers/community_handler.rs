@@ -85,7 +85,7 @@ pub async fn view_community(
 
     let host_name = req.app_config().host();
 
-    let community_url = format!("https://{}/community/{}", host_name, &community_slug);
+    let community_url = format!("/community/{}", &community_slug);
 
     // qr_code
     if !Path::new(&format!("webapp/static/tmp/{}.png",community_slug)).exists() {
@@ -101,7 +101,7 @@ pub async fn view_community(
     let community = Communities::find_from_slug(&community_slug).expect("Could not load community");
     ctx.insert("community", &community);
 
-    let community_add_profile_url = format!("https://{}/first_lens_form/{}", host_name, &community.code);
+    let community_add_profile_url = format!("/first_lens_form/{}", &community.code);
     ctx.insert("add_community_profile_url", &community_add_profile_url);
 
     let rendered = data.tmpl.render("view_community.html", &ctx).unwrap();
