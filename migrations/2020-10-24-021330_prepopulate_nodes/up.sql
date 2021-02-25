@@ -2,6 +2,14 @@
 
 INSERT INTO nodes (node_name, domain_token)
 VALUES
+    ('father', 'person'),
+    ('manager', 'role'),
+    ('gen x', 'person'),
+    ('mother', 'person'),
+    ('white', 'person'),
+    ('black', 'person'),
+    ('executive', 'role'),
+    ('innovator', 'role'),
     ('white', 'person'),
     ('caucasian', 'person'),
     ('black', 'person'),

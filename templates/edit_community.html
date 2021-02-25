@@ -26,6 +26,12 @@
         </label>
 
         <label>
+            <strong>Data Use Case</strong>
+            <input class="form-control form-control-lg" type="text" name="data_use_case" value="{{ community.data_use_case }}" required>
+            <small id="code_help" class="form-text text-muted">Explain here how the data from this community will be used. This will be shared with participants.</small>
+        </label>
+
+        <label>
             <strong>Open Community?</strong>
             <input type="checkbox" id="open" name="open" {% if community.open %}checked{% endif %}>
             <small id="code_help" class="form-text text-muted">Check this box to make this community publically viewable.</small>

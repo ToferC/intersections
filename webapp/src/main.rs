@@ -36,6 +36,10 @@ async fn main() -> std::io::Result<()> {
 
     database::init();
 
+    if environment == "test" {
+        prepopulate_db();
+    };
+
     println!("Loading data for graph");
     let people_vec = models::People::find_all().expect("Unable to load people");
     let node_vec = models::Nodes::find_all().expect("Unable to load nodes");
@@ -77,9 +81,6 @@ async fn main() -> std::io::Result<()> {
             })
             .app_data(web::Data::from(x))
             .app_data(web::Data::from(node_names))
-            .wrap(CookieSession::signed(&[0; 32])
-                .secure(false)
-            )
             .wrap(IdentityService::new(
                 CookieIdentityPolicy::new(&cookie_secret_key.as_bytes())
             .name("user-auth")

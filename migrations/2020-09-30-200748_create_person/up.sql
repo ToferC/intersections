@@ -1,14 +1,48 @@
+CREATE TABLE users (
+    id SERIAL PRIMARY KEY,
+    user_uuid UUID NOT NULL,
+    hash BYTEA NOT NULL,
+    salt VARCHAR(255) NOT NULL,
+    email VARCHAR(120) NOT NULL UNIQUE,
+    user_name VARCHAR(32) NOT NULL UNIQUE,
+    slug VARCHAR(32) NOT NULL UNIQUE,
+    created_at TIMESTAMP NOT NULL DEFAULT NOW(),
+    role VARCHAR(32) NOT NULL DEFAULT 'user'
+);
+
+CREATE UNIQUE INDEX users__email_idx ON users(email);
+
+CREATE TABLE communities (
+    id SERIAL PRIMARY KEY,
+    tag VARCHAR(32) NOT NULL,
+    description VARCHAR NOT NULL,
+    data_use_case VARCHAR NOT NULL,
+    contact_email VARCHAR(64) NOT NULL,
+    date_created TIMESTAMP NOT NULL default CURRENT_DATE,
+    open BOOL NOT NULL DEFAULT FALSE,
+    code VARCHAR(11) UNIQUE NOT NULL,
+    slug VARCHAR(50) UNIQUE NOT NULL,
+    user_id INT NOT NULL DEFAULT 0,
+    FOREIGN KEY(user_id)
+        REFERENCES users(id)
+);
+
 CREATE TABLE people (
     id SERIAL PRIMARY KEY,
-    code VARCHAR(9) NOT NULL,
+    code VARCHAR(11) NOT NULL,
     date_created TIMESTAMP NOT NULL default CURRENT_DATE,
-    related_codes TEXT[] NOT NULL
+    related_codes TEXT[] NOT NULL,
+    community_id INT NOT NULL,
+    FOREIGN KEY(community_id)
+        REFERENCES communities(id) on DELETE CASCADE
 );
 
 CREATE TABLE nodes (
     id SERIAL PRIMARY KEY,
     node_name VARCHAR(32) UNIQUE NOT NULL,
-    domain_token VARCHAR(10) NOT NULL CHECK (domain_token IN ('person', 'role', 'system'))
+    domain_token VARCHAR(10) NOT NULL CHECK (domain_token IN ('person', 'role', 'system')),
+    translation varchar(32) NOT NULL default '',
+    synonyms text[] NOT NULL default '{""}'
 );
 
 CREATE TABLE lenses (
@@ -25,34 +59,3 @@ CREATE TABLE lenses (
     statements TEXT[] NOT NULL,
     inclusivity NUMERIC NOT NULL
 );
-
-INSERT INTO people (code, related_codes)
-VALUES
-    ('aifoahs89', array[]::text[]),
-    ('syufioash', array[]::text[]),
-    ('yueia8971', array[]::text[]),
-    ('najksndfq', '{"aifoahs89"}');
-
-INSERT INTO nodes (node_name, domain_token)
-VALUES
-    ('father', 'person'),
-    ('manager', 'role'),
-    ('gen x', 'person'),
-    ('mother', 'person'),
-    ('white', 'person'),
-    ('black', 'person'),
-    ('executive', 'role'),
-    ('innovator', 'role');
-
-INSERT INTO lenses (node_name, node_domain, person_id, node_id, statements, inclusivity)
-VALUES
-    ('father', 'person', 1, 1, '{"tired", "not doing enough", "joyful"}', -0.18),
-    ('manager', 'role', 1, 2, '{"pulled many directions", "influential", "stressed"}', -0.25),
-    ('gen x', 'person', 1, 3, '{"experienced", "overlooked", "depended upon"}', 0.23),
-    ('mother', 'person', 2, 4, '{"tired", "guilty", "excluded"}', -0.45),
-    ('white', 'person', 2, 5, '{"normal"}', 0.30),
-    ('black', 'person', 3, 6, '{"ignored", "suffer microagressions", "proud"}', -0.30),
-    ('mother', 'person', 3, 4, '{"balanced", "responsible", "capable"}', 0.29),
-    ('executive', 'role',3, 7, '{"powerful", "overwhelmed", "stifled"}', -0.10),
-    ('innovator', 'role', 3, 8, '{"respected", "sidelined", "not recognized by system"}', 0.20),
-    ('white', 'person', 4, 5, '{"listened to", "persecuted by diversity iniatives", "comfortable"}', 0.09);

@@ -14,9 +14,15 @@
         <h1>Add an experience</h1>
         <hr>
 
-        <form name="LensForm" id="lensForm" action=/first_lens_form method=POST>
+        <form name="LensForm" id="lensForm" action=/first_lens_form/{{ community.code }} method=POST>
+
+            <p>You have been invited to add your experiences to the {{ community.tag }} community.</p>
+            <p>Here is an explanation of the community and it's intended use of your data.</p>
+            <p>{{ community.description }}</p>
+            <p>If this doesn't make sense, or you have any questions, you can contact the community administrator here: {{ community.contact_email }}.</p>
+
         <label>
-            <strong>If you already have a code, you can enter it here to connect your profiles:</strong>
+            <strong>If you already have a profile code, you can enter it here to connect your new profile with your existing profiles:</strong>
             <input class="form-control form-control-lg" name="related_code" placeholder="Your previous profile code">
             <small id="code_help" class="form-text text-muted">You only need to do this if you already have a previous profile and you'd like to connect it to a new profile.</small>
         </label>
