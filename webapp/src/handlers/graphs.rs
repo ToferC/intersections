@@ -120,8 +120,8 @@ pub async fn community_node_graph(
         
             ctx.insert("graph_data", &j);
         
-            let title = "Node Network Graph";
-            ctx.insert("title", title);
+            let title = format!("{} Community Node Graph", &community.tag);
+            ctx.insert("title", &title);
         
             // add node_names for navbar drop down
             ctx.insert("node_names", &node_names.lock().expect("Unable to unlock").clone());

@@ -16,11 +16,15 @@
 
             <img loading="lazy" alt="QR code" width="300" height="300" src="{{ qrcode }}">
 
-            <a href="{{ community_url }}">Link to Community</a>
+            <hr>
 
-            <a href="{{ community_url }}">Link to Community Graph</a>
+            <h2>Links</h2>
 
-            <a href="{{ add_community_profile_url }}">Link to Add Profile to Community</a>
+            <ul>
+                <li><a href="{{ community_url }}">Link to Community</a></li>
+                <li><a href="/community/node_graph/{{ community.code }}">Link to Community Graph</a></li>
+                <li><a href="{{ add_community_profile_url }}">Link to Add Profile to Community</a></li>
+            </ul>
 
             <h3>Placeholder - email to participants</h3>
             <p>Placeholder - </p>

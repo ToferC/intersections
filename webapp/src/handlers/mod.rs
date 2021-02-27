@@ -19,7 +19,7 @@ pub use self::form_handlers::{
     RenderPerson,
 };
 pub use self::routes::init_routes;
-pub use self::graphs::{full_network_graph, full_node_graph};
+pub use self::graphs::{full_network_graph, full_node_graph, community_node_graph};
 pub use self::graph_utilities::{generate_cyto_graph, generate_node_cyto_graph,
     GEdge, GNode, CytoEdge, CytoNode, CytoGraph};
 pub use self::people_handlers::{person_graph, person_page, AggLens};

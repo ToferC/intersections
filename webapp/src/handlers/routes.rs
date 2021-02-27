@@ -20,6 +20,7 @@ use crate::handlers::{
     full_node_graph,
     node_network_graph,
     person_graph,
+    community_node_graph,
     // registration
     register_form_input,
     register_handler,
@@ -63,6 +64,7 @@ pub fn init_routes(config: &mut web::ServiceConfig) {
     config.service(full_node_graph);
     config.service(person_graph);
     config.service(node_network_graph);
+    config.service(community_node_graph);
     // users 
     config.service(register_handler);
     config.service(register_form_input);
