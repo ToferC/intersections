@@ -20,7 +20,6 @@ pub struct CommunityForm {
     community_name: String,
     description: String,
     data_use_case: String,
-    contact_email: String,
 }
 
 #[derive(Deserialize, Debug)]
@@ -82,8 +81,6 @@ pub async fn view_community(
     let (session_user, role) = extract_identity_data(&id);
     ctx.insert("session_user", &session_user);
     ctx.insert("role", &role);
-
-    let host_name = req.app_config().host();
 
     let community_url = format!("/community/{}", &community_slug);
 
@@ -164,7 +161,13 @@ pub async fn add_community_form_input(
         
             match community {
                 Ok(community) => {
-                    println!("Community {} created", community.tag);
+                    println!("Community {} created", &community.tag);
+
+                    // qr_code
+                    if !Path::new(&format!("webapp/static/tmp/{}.png",&community.slug)).exists() {
+                        qrcode_generator::to_png_to_file(&community.slug, QrCodeEcc::Low, 1024, format!("webapp/static/tmp/{}.png", &community.slug)).unwrap();
+                    };
+
                     return HttpResponse::Found().header("Location", format!("/community/{}", community.slug)).finish()
                 },
                 Err(e) => {
