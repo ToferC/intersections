@@ -11,16 +11,12 @@
 {% block content %}
     <div class="col m-md-2 m-1">
         <br>
-        <h1>You're invited</h1>
+        
+        <h1>Add an experience</h1>
         <hr>
 
         <form name="LensForm" id="lensForm" action=/first_lens_form/{{ community.code }} method=POST>
-
-            <p>You have been invited to add your experiences to the {{ community.tag }} community.</p>
-            <p>Here is an explanation of the community and it's intended use of your data.</p>
-            <p>{{ community.description }}</p>
-            <p>If this doesn't make sense, or you have any questions, you can contact the community administrator here: {{ community.contact_email }}.</p>
-
+        
         <label>
             <strong>If you already have a profile code, you can enter it here to connect your new profile with your existing profiles:</strong>
             <input class="form-control form-control-lg" name="related_code" placeholder="Your previous profile code">
@@ -28,8 +24,6 @@
         </label>
         <hr>
 
-        <h1>Add an experience</h1>
-        <hr>
         <strong>Progress (0/6)</strong>
         <div class="progress">
             <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>

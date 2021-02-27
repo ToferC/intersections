@@ -24,7 +24,8 @@ CREATE TABLE communities (
     slug VARCHAR(50) UNIQUE NOT NULL,
     user_id INT NOT NULL DEFAULT 0,
     FOREIGN KEY(user_id)
-        REFERENCES users(id)
+        REFERENCES users(id),
+    data JSONB NOT NULL
 );
 
 CREATE TABLE people (

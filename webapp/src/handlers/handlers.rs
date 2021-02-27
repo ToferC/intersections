@@ -6,7 +6,7 @@ use tera::{Context};
 use diesel::prelude::*;
 use diesel::{QueryDsl, BelongingToDsl};
 
-use crate::models::{Lenses, Nodes, People};
+use crate::models::{Lenses, Nodes, People, Communities};
 use database;
 
 use crate::schema::{nodes};
@@ -34,27 +34,45 @@ pub async fn index(
     HttpResponse::Ok().body(rendered)
 }
 
-#[get("/survey_intro")]
+#[get("/survey_intro/{community_code}")]
 pub async fn survey_intro(
     data: web::Data<AppData>,
+    web::Path(community_code): web::Path<String>, 
     _req:HttpRequest,
     node_names: web::Data<Mutex<Vec<String>>>,
     id: Identity,
 ) -> impl Responder {
     println!("Access index");
 
-    let mut ctx = Context::new();
+    // Validate community
+    let community_result = Communities::find_from_code(&community_code);
+    
+    match community_result {
+        Ok(community) => {
+            let mut ctx = Context::new();
+        
+            // Get session data and add to context
+            let (session_user, role) = extract_identity_data(&id);
+            ctx.insert("session_user", &session_user);
+            ctx.insert("role", &role);
 
-    // Get session data and add to context    
-    let (session_user, role) = extract_identity_data(&id);
-    ctx.insert("session_user", &session_user);
-    ctx.insert("role", &role);
+            ctx.insert("node_names", &node_names.lock().expect("Unable to unlock").clone());
+        
+            // all names for form autocomplete
+            let all_node_names = Nodes::find_all_names().expect("Unable to load node names");
+            ctx.insert("all_node_names", &all_node_names);
 
-    // add node_names for navbar drop down
-    ctx.insert("node_names", &node_names.lock().expect("Unable to unlock").clone());
+            ctx.insert("community", &community);
+            
+            let rendered = data.tmpl.render("survey_intro.html", &ctx).unwrap();
+            HttpResponse::Ok().body(rendered)
+        },
+        Err(e) => {
+            println!("Error: {}", e);
+            return HttpResponse::Found().header("Location","/").finish()
+        }
+    }
 
-    let rendered = data.tmpl.render("survey_intro.html", &ctx).unwrap();
-    HttpResponse::Ok().body(rendered)
 }
 
 #[get("/api")]

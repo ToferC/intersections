@@ -40,8 +40,8 @@ impl NewCommunity {
             user_id,
             data: serde_json::from_str(r#"{
                 "members": 0,
-                "mean_inclusivity": 0.0,
-            }"#).unwrap()
+                "mean_inclusivity": 0.0
+            }"#).unwrap(),
         }
     }
 

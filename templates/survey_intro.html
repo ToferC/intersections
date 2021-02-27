@@ -7,12 +7,23 @@
 {% block content %}
     <div class="col m-md-2 m-1">
         <br>
+
+        <h1>You're invited</h1>
+        <hr>
+
+            <p>You have been invited to add your experiences to the {{ community.tag }} community.</p>
+            <p>Here is an explanation of the community and it's intended use of your data.</p>
+            <p>{{ community.description }}</p>
+            <p>If this doesn't make sense, or you have any questions, you can contact the community administrator here: {{ community.contact_email }}.</p>
+
+        <hr>
+
         <h1>Survey Overview</h1>
         <p>The Intersectional Data MVP will ask you to answer the same set of questions several times. Each time you will add a lens representing your lived experience.</p>
         <p>Together, these lenses form a representation of your experience at work.</p>
         <p>A completed profile should have five or six experiences.</p>
         <hr>
-        <p><a class="btn btn-dark" href="/first_lens_form">Start the Survey</a> <strong>OR</strong> learn more about how it's designed.</p>
+        <p><a class="btn btn-dark" href="/first_lens_form/{{ community.code }}">Start the Survey</a> <strong>OR</strong> learn more about how it's designed.</p>
             
         <hr>
         <h2>The Questions</h2>

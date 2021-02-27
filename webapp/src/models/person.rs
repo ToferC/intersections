@@ -81,6 +81,17 @@ impl People {
         Ok(person)
     }
 
+    pub fn find_ids_from_community(community_id: i32) -> Result<Vec<i32>, CustomError> {
+        let conn = database::connection()?;
+
+        let people_ids = people::table
+            .select(people::id)
+            .filter(people::community_id.eq(community_id))
+            .load::<i32>(&conn)?;
+
+        Ok(people_ids)
+    }
+
     pub fn update(id: i32, person: NewPerson) -> Result<Self, CustomError> {
         let conn = database::connection()?;
         let person = diesel::update(people::table)
