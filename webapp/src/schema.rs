@@ -12,6 +12,7 @@ table! {
         code -> Varchar,
         slug -> Varchar,
         user_id -> Int4,
+        data -> Jsonb,
     }
 }
 

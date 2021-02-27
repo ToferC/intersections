@@ -1,4 +1,4 @@
-use serde::{Serialize, Deserialize};
+use serde::{Deserialize, Serialize};
 use chrono::prelude::*;
 use diesel::prelude::*;
 use diesel::RunQueryDsl;
@@ -23,6 +23,7 @@ pub struct NewCommunity {
     pub code: String,
     pub slug: String,
     pub user_id: i32,
+    pub data: serde_json::Value,
 }
 
 impl NewCommunity {
@@ -37,6 +38,10 @@ impl NewCommunity {
             code: generate_unique_code(),
             slug: tag.to_snake_case(),
             user_id,
+            data: serde_json::from_str(r#"{
+                "members": 0,
+                "mean_inclusivity": 0.0,
+            }"#).unwrap()
         }
     }
 
@@ -53,6 +58,7 @@ impl NewCommunity {
             code: community.code.to_owned(),
             slug: community.tag.to_snake_case(),
             user_id: community.user_id,
+            data: community.data.to_owned(),
         }
     }
 }
@@ -70,6 +76,7 @@ pub struct Communities {
     pub code: String,
     pub slug: String,
     pub user_id: i32,
+    pub data: serde_json::Value,
 }
 
 // Database operations

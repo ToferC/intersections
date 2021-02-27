@@ -72,7 +72,7 @@ pub async fn view_community(
     web::Path(community_slug): web::Path<String>,
     data: web::Data<AppData>,
     node_names: web::Data<Mutex<Vec<String>>>,
-    req:HttpRequest,
+    _req:HttpRequest,
     id: Identity,
 ) -> impl Responder {
     let mut ctx = Context::new();
