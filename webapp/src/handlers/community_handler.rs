@@ -72,7 +72,7 @@ pub async fn view_community(
     web::Path(community_slug): web::Path<String>,
     data: web::Data<AppData>,
     node_names: web::Data<Mutex<Vec<String>>>,
-    _req:HttpRequest,
+    req:HttpRequest,
     id: Identity,
 ) -> impl Responder {
     let mut ctx = Context::new();
@@ -84,12 +84,16 @@ pub async fn view_community(
 
     let community_url = format!("/community/{}", &community_slug);
 
-    // qr_code
+    /*
     if !Path::new(&format!("webapp/static/tmp/{}.png",community_slug)).exists() {
         qrcode_generator::to_png_to_file(&community_url, QrCodeEcc::Low, 1024, format!("webapp/static/tmp/{}.png",community_slug)).unwrap();
     };
-    
+
     ctx.insert("qrcode", &format!("/static/tmp/{}.png",community_slug));
+    */
+
+    
+    // qr_code
     ctx.insert("community_url", &community_url);
     
     // add node_names for navbar drop down
@@ -97,9 +101,17 @@ pub async fn view_community(
     
     let community = Communities::find_from_slug(&community_slug).expect("Could not load community");
     ctx.insert("community", &community);
-
+    
     let community_add_profile_url = format!("/survey_intro/{}", &community.code);
     ctx.insert("add_community_profile_url", &community_add_profile_url);
+
+    // add qr code to add profile
+
+    let host = req.app_config().host();
+    println!("{}", host);
+
+    let qr = qrcode_generator::to_svg_to_string(format!("https://{}{}", host, community_add_profile_url), QrCodeEcc::Low, 245, Some("Invitation link for intersections")).unwrap();
+    ctx.insert("qrcode", &qr);
 
     let rendered = data.tmpl.render("view_community.html", &ctx).unwrap();
     HttpResponse::Ok().body(rendered)
@@ -162,12 +174,6 @@ pub async fn add_community_form_input(
             match community {
                 Ok(community) => {
                     println!("Community {} created", &community.tag);
-
-                    // qr_code
-                    if !Path::new(&format!("webapp/static/tmp/{}.png",&community.slug)).exists() {
-                        qrcode_generator::to_png_to_file(&community.slug, QrCodeEcc::Low, 1024, format!("webapp/static/tmp/{}.png", &community.slug)).unwrap();
-                    };
-
                     return HttpResponse::Found().header("Location", format!("/community/{}", community.slug)).finish()
                 },
                 Err(e) => {

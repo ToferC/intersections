@@ -7,7 +7,7 @@ use tera::{Context};
 
 use std::collections::HashMap;
 
-use crate::models::{Lenses, Communities, People};
+use crate::models::{Lenses, Communities, People, User};
 use crate::handlers::{CytoGraph, generate_node_cyto_graph};
 
 #[get("/full_network_graph")]
@@ -94,40 +94,57 @@ pub async fn community_node_graph(
 
     match community_result {
         Ok(community) => {
-            let lens_vec = Lenses::find_all().expect("Unable to load lenses");
 
-            let community_people_ids = People::find_ids_from_community(community.id).expect("Unable to find community members");
-        
-            // create vec of bridge connections from people
-            let mut people_connections: HashMap<i32, Vec<String>> = HashMap::new();
-        
-            for l in &lens_vec {
-                if community_people_ids.contains(&l.person_id) {
-                    people_connections.entry(l.person_id).or_insert(Vec::new()).push(l.node_name.to_owned()); 
-                }
-            };
-        
-            // now instead of building AggLens, we build the graph
-            let graph = generate_node_cyto_graph(lens_vec, people_connections);
-        
-            let j = serde_json::to_string_pretty(&graph).unwrap();
-            
-            let mut ctx = Context::new();
-        
+            // identify user
             let (session_user, role) = extract_identity_data(&id);
-            ctx.insert("session_user", &session_user);
-            ctx.insert("role", &role);
-        
-            ctx.insert("graph_data", &j);
-        
-            let title = format!("{} Community Node Graph", &community.tag);
-            ctx.insert("title", &title);
-        
-            // add node_names for navbar drop down
-            ctx.insert("node_names", &node_names.lock().expect("Unable to unlock").clone());
+
+            let session_user_id = match User::find_id_from_slug(&session_user) {
+                Ok(id) => id,
+                Err(_e) => 9999,
+            };
+
+            // validate if user can view community graph
+            if community.open || session_user_id == community.user_id {
+                
+                let lens_vec = Lenses::find_all().expect("Unable to load lenses");
+    
+                let community_people_ids = People::find_ids_from_community(community.id).expect("Unable to find community members");
             
-            let rendered = data.tmpl.render("node_network_graph.html", &ctx).unwrap();
-            HttpResponse::Ok().body(rendered)
+                // create vec of bridge connections from people
+                let mut people_connections: HashMap<i32, Vec<String>> = HashMap::new();
+            
+                for l in &lens_vec {
+                    if community_people_ids.contains(&l.person_id) {
+                        people_connections.entry(l.person_id).or_insert(Vec::new()).push(l.node_name.to_owned()); 
+                    }
+                };
+            
+                // now instead of building AggLens, we build the graph
+                let graph = generate_node_cyto_graph(lens_vec, people_connections);
+            
+                let j = serde_json::to_string_pretty(&graph).unwrap();
+                
+                let mut ctx = Context::new();
+            
+                ctx.insert("session_user", &session_user);
+                ctx.insert("role", &role);
+            
+                ctx.insert("graph_data", &j);
+            
+                let title = format!("{} Community Node Graph", &community.tag);
+                ctx.insert("title", &title);
+            
+                // add node_names for navbar drop down
+                ctx.insert("node_names", &node_names.lock().expect("Unable to unlock").clone());
+                
+                let rendered = data.tmpl.render("node_network_graph.html", &ctx).unwrap();
+                HttpResponse::Ok().body(rendered)
+            } else {
+                // user not validated to see community
+                println!("User not validated to see community");
+                return HttpResponse::Found().header("Location","/").finish()
+
+            }
         },
         Err(e) => {
             println!("Error: {}", e);

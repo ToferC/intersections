@@ -72,8 +72,8 @@ pub fn prepopulate_db() {
 
     let general_community = models::Communities::create(
         &models::NewCommunity::new(
-            "general".to_owned(),
-            "generic test community".to_owned(),
+            "Test Community".to_owned(),
+            "A test community populated with dummy data".to_owned(),
             "test data in app".to_owned(),
             "admin@email.com".to_owned(),
             true,

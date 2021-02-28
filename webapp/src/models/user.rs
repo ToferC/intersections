@@ -135,6 +135,12 @@ impl User {
         Ok(user)
     }
 
+    pub fn find_id_from_slug(slug: &String) -> Result<i32, CustomError> {
+        let conn = database::connection()?;
+        let id: i32 = users::table.select(users::id).filter(users::slug.eq(slug)).first(&conn)?;
+        Ok(id)
+    }
+
     pub fn find_slim_from_slug(slug: &String) -> Result<SlimUser, CustomError> {
         let conn = database::connection()?;
         let user: User = users::table.filter(users::slug.eq(slug)).first(&conn)?;
