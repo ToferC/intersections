@@ -166,7 +166,7 @@ pub async fn person_graph(
     node_vec.dedup();
     lens_vec.dedup();
     
-    let graph = generate_cyto_graph(people_vec, node_vec, lens_vec);
+    let graph = generate_cyto_graph(people_vec, node_vec, lens_vec, None);
 
     let j = serde_json::to_string_pretty(&graph).unwrap();
     

@@ -9,7 +9,7 @@ use diesel::{QueryDsl, BelongingToDsl};
 
 use std::collections::HashMap;
 
-use crate::models::{Lenses, Nodes};
+use crate::models::{Lenses, Nodes, Communities, User};
 use database;
 use crate::handlers::{AggLens, generate_node_cyto_graph};
 
@@ -119,6 +119,7 @@ pub async fn node_page(
 #[get("/node/{community_slug}/{label}")]
 pub async fn community_node_page(
     web::Path(label): web::Path<String>, 
+    web::Path(community_slug): web::Path<String>, 
     data: web::Data<AppData>, 
     node_names: web::Data<Mutex<Vec<String>>>,
     _req:HttpRequest,
@@ -126,13 +127,26 @@ pub async fn community_node_page(
 ) -> impl Responder {
     let mut ctx = Context::new();
 
-    // Need to contrast data inside community with global values here
-
+    
     // Get session data and add to context
     let (session_user, role) = extract_identity_data(&id);
     ctx.insert("session_user", &session_user);
     ctx.insert("role", &role);
 
+    // validate user has rights to view
+    let community = Communities::find_from_slug(&community_slug).expect("Could not load community");
+    
+    let user = User::find_from_slug(&id.identity().unwrap());
+    
+    // Redirect if community is closed and user isn't community owner
+    if !community.open && community.user_id != user.unwrap().id {
+        return HttpResponse::Found().header("Location", String::from("/")).finish()
+    };
+    
+    // Need to contrast data inside community with global values here
+
+
+    // connect to db
     let conn = database::connection().expect("Unable to connect to db");
     
     let node: Nodes = nodes::table.filter(nodes::node_name.eq(label))
@@ -281,7 +295,7 @@ pub async fn node_network_graph(
     };
 
     // now instead of building AggLens, we build the graph
-    let graph = generate_node_cyto_graph(lens_vec, people_connections);
+    let graph = generate_node_cyto_graph(lens_vec, people_connections, None);
 
     let j = serde_json::to_string_pretty(&graph).unwrap();
     
@@ -314,6 +328,15 @@ pub async fn community_node_network_graph(
     let (session_user, role) = extract_identity_data(&id);
     ctx.insert("session_user", &session_user);
     ctx.insert("role", &role);
+
+    let community = Communities::find_from_slug(&community_slug).expect("Could not load community");
+
+    let user = User::find_from_slug(&id.identity().unwrap());
+
+    // Redirect if community is closed and user isn't community owner
+    if !community.open && community.user_id != user.unwrap().id {
+        return HttpResponse::Found().header("Location", String::from("/")).finish()
+    };
 
     let conn = database::connection().expect("Unable to connect to db");
     
@@ -360,7 +383,7 @@ pub async fn community_node_network_graph(
     };
 
     // now instead of building AggLens, we build the graph
-    let graph = generate_node_cyto_graph(lens_vec, people_connections);
+    let graph = generate_node_cyto_graph(lens_vec, people_connections, Some(community.slug));
 
     let j = serde_json::to_string_pretty(&graph).unwrap();
     

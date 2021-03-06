@@ -39,6 +39,7 @@ use crate::handlers::{
     community_index,
     add_community,
     add_community_form_input,
+    edit_community_form_input,
     delete_community,
     delete_community_form,
     edit_community,
@@ -83,5 +84,6 @@ pub fn init_routes(config: &mut web::ServiceConfig) {
     config.service(delete_community);
     config.service(delete_community_form);
     config.service(edit_community);
+    config.service(edit_community_form_input);
 
 }

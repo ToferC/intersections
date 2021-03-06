@@ -77,11 +77,16 @@ impl GNode {
         person_node
     }
 
-    pub fn from_node(n : &Nodes) -> GNode {
+    pub fn from_node(n : &Nodes, community: &Option<String>) -> GNode {
         let (colour, shape): (String, String) = if n.domain_token == "person" {
             (String::from("green"), String::from("rectangle"))
         } else {
             (String::from("blue"), String::from("triangle"))
+        };
+
+        let href = match community {
+            Some(c) => format!("/node/{}/{}", c, n.node_name),
+            None => format!("/node/{}", n.node_name),
         };
 
         let node = GNode {
@@ -92,17 +97,23 @@ impl GNode {
             size: 25,
             color: colour,
             inclusivity: 0.0,
-            href: format!("/node/{}", n.node_name),
+            href,
         };
 
         node
     }
 
-    pub fn from_lens(l: &Lenses) -> GNode {
+    pub fn from_lens(l: &Lenses, community: &Option<String>) -> GNode {
+
         let (colour, shape): (String, String) = if l.node_domain == "person" {
             (String::from("green"), String::from("rectangle"))
         } else {
             (String::from("blue"), String::from("triangle"))
+        };
+
+        let href = match community {
+            Some(c) => format!("/node/{}/{}", c, l.node_name.trim()),
+            None => format!("/node/{}", l.node_name.trim()),
         };
 
         let node = GNode {
@@ -113,7 +124,7 @@ impl GNode {
             size: 25,
             color: colour,
             inclusivity: l.inclusivity.to_f32().expect("Unable to convert BigDecimal"),
-            href: format!("/node/{}", &l.node_name),
+            href,
         };
 
         node
@@ -125,7 +136,8 @@ impl GNode {
 pub fn generate_cyto_graph(
     people_vec: Vec<People>,
     node_vec: Vec<Nodes>,
-    lens_vec: Vec<Lenses>
+    lens_vec: Vec<Lenses>,
+    community: Option<String>,
 ) -> CytoGraph {
 
     let mut cyto_node_array: Vec<CytoNode> = Vec::new();
@@ -142,7 +154,7 @@ pub fn generate_cyto_graph(
 
     for n in node_vec {
 
-        let ni = GNode::from_node(&n);
+        let ni = GNode::from_node(&n, &community);
 
         cyto_node_array.push(CytoNode {
             data: ni,
@@ -169,6 +181,7 @@ pub fn generate_cyto_graph(
 pub fn generate_node_cyto_graph(
     lens_vec: Vec<Lenses>,
     people_connections: HashMap<i32, Vec<String>>,
+    community: Option<String>,
 ) -> CytoGraph {
     // reconfigure this to connect nodes to each other
 
@@ -180,7 +193,7 @@ pub fn generate_node_cyto_graph(
 
     for l in &lens_vec {
 
-        let n = GNode::from_lens(&l);
+        let n = GNode::from_lens(&l, &community);
 
         cyto_node_array.push(CytoNode {
             data: n,

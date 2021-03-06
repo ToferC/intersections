@@ -14,6 +14,8 @@
 
             <p>{{ community.code }}</p>
 
+            <p>This community is {% if community.open %}open{% else %}private{% endif %}</p>
+
             {{ qrcode | safe }}
 
             <hr>
@@ -21,7 +23,6 @@
             <h2>Links</h2>
 
             <ul>
-                <li><a href="{{ community_url }}">Link to Community</a></li>
                 <li><a href="/community/node_graph/{{ community.code }}">Link to Community Graph</a></li>
                 <li><a href="{{ add_community_profile_url }}">Link to Add Profile to Community</a></li>
             </ul>
@@ -50,7 +51,7 @@
         
             <h2>Community Options</h2>
             <p><a style="color:red" href="/delete_community/{{ community.id }}">Delete Community</a></p>
-            <p><a href="#">Edit Community</a></p>
+            <p><a href="/edit_community/{{ community.slug }}">Edit Community</a></p>
 
     </div>
 {% endblock content %}

@@ -59,7 +59,7 @@ pub async fn full_node_graph(
     };
 
     // now instead of building AggLens, we build the graph
-    let graph = generate_node_cyto_graph(lens_vec, people_connections);
+    let graph = generate_node_cyto_graph(lens_vec, people_connections, None);
 
     let j = serde_json::to_string_pretty(&graph).unwrap();
     
@@ -120,7 +120,7 @@ pub async fn community_node_graph(
                 };
             
                 // now instead of building AggLens, we build the graph
-                let graph = generate_node_cyto_graph(lens_vec, people_connections);
+                let graph = generate_node_cyto_graph(lens_vec, people_connections, Some(community.slug));
             
                 let j = serde_json::to_string_pretty(&graph).unwrap();
                 

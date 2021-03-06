@@ -192,7 +192,7 @@ pub async fn handle_lens_form_input(
                         // no target
                         let new_node = Nodes::create(&node).expect("Unable to create node.");
             
-                        let node_rep = GNode::from_node(&new_node);
+                        let node_rep = GNode::from_node(&new_node, &Some(community.slug));
             
                         let mut g = graph.lock().expect("Unable to unlock graph");
             
@@ -339,7 +339,7 @@ pub async fn add_handle_lens_form_input(
             // no target
             let new_node = Nodes::create(&node).expect("Unable to create node.");
 
-            let node_rep = GNode::from_node(&new_node);
+            let node_rep = GNode::from_node(&new_node, &None);
 
             let mut g = graph.lock().expect("Unable to unlock graph");
 

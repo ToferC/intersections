@@ -13,6 +13,9 @@
         <table>
             <tr>
                 <th style="text-align: center;">Tag</th>
+                <th style="text-align: center;">Created</th>
+                <th style="text-align: center;">Open</th>
+                <th style="text-align: center;">Contact</th>
                 <th style="text-align: center;">Link</th>
                 <th style="text-align: center;">Delete</th>
             </tr>
@@ -21,6 +24,9 @@
                 
                 <tr>
                     <td>{{ community.tag }}</td>
+                    <td>{{ community.date_created }}</td>
+                    <td>{{ community.open }}</td>
+                    <td>{{ community.contact_email }}</td>
                     <td><a href="/community/{{ community.slug }}">Link</a></td>
                     <td><a style="color:red" href="/delete_community/{{ community.id }}">Delete</a></td>
                 </tr>

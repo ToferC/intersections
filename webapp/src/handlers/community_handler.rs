@@ -82,32 +82,28 @@ pub async fn view_community(
     let (session_user, role) = extract_identity_data(&id);
     ctx.insert("session_user", &session_user);
     ctx.insert("role", &role);
+    
+    let community = Communities::find_from_slug(&community_slug).expect("Could not load community");
 
-    let community_url = format!("/community/{}", &community_slug);
+    let user = User::find_from_slug(&id.identity().unwrap());
 
-    /*
-    if !Path::new(&format!("webapp/static/tmp/{}.png",community_slug)).exists() {
-        qrcode_generator::to_png_to_file(&community_url, QrCodeEcc::Low, 1024, format!("webapp/static/tmp/{}.png",community_slug)).unwrap();
-    };
-
-    ctx.insert("qrcode", &format!("/static/tmp/{}.png",community_slug));
-    */
 
     
-    // qr_code
-    ctx.insert("community_url", &community_url);
+    // Redirect if community is closed and user isn't community owner
+    if !community.open && community.user_id != user.unwrap().id {
+        return HttpResponse::Found().header("Location", String::from("/")).finish()
+    };
+
+    ctx.insert("community", &community);
     
     // add node_names for navbar drop down
     ctx.insert("node_names", &node_names.lock().expect("Unable to unlock").clone());
     
-    let community = Communities::find_from_slug(&community_slug).expect("Could not load community");
-    ctx.insert("community", &community);
     
     let community_add_profile_url = format!("/survey_intro/{}", &community.code);
     ctx.insert("add_community_profile_url", &community_add_profile_url);
 
     // add qr code to add profile
-
     let host = req.app_config().host();
     println!("{}", host);
 
