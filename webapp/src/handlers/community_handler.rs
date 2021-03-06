@@ -20,6 +20,7 @@ pub struct CommunityForm {
     community_name: String,
     description: String,
     data_use_case: String,
+    open: String,
 }
 
 #[derive(Deserialize, Debug)]
@@ -158,6 +159,11 @@ pub async fn add_community_form_input(
         
     match user {
         Ok(u) => {
+
+            let open = match form.open.as_str() {
+                "open" => true,
+                _ => false,
+            };
             
             // create community
             let community_data = NewCommunity::new(
@@ -165,7 +171,7 @@ pub async fn add_community_form_input(
                 form.description.trim().to_owned(),
                 form.data_use_case.trim().to_owned(),
                 u.email.to_owned(),
-                false,
+                open,
                 u.id,
             );
             
@@ -276,10 +282,16 @@ pub async fn edit_community_form_input(
                     // validate user owns community
                     if community.user_id == u.id {
 
+                        let open = match form.open.as_str() {
+                            "open" => true,
+                            _ => false,
+                        };
+
                         // update community
                         community.tag = form.community_name.trim().to_owned();
                         community.slug = form.community_name.trim().to_snake_case().to_owned();
                         community.description = form.description.trim().to_owned();
+                        community.open = open;
 
                         let update = Communities::update(community);
 

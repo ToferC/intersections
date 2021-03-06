@@ -32,9 +32,12 @@
         </label>
 
         <label>
-            <strong>Open Community?</strong>
-            <input type="checkbox" id="open" name="open">
-            <small id="code_help" class="form-text text-muted">Check this box to make this community publically viewable.</small>
+            <strong>Community Status</strong>
+            <select name="open">
+                <option value="open" selected>Open</option>
+                <option value="private">Private</option>
+              </select>
+            <small id="code_help" class="form-text text-muted">Choose if you would like your community to be open (other people can view), or private (only you can view).</small>
         </label>
         <hr>
 
