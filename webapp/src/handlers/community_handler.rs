@@ -1,7 +1,5 @@
 // example auth: https://github.com/actix/actix-extras/blob/master/actix-identity/src/lib.rs
 
-use std::{path::Path, println};
-
 use std::sync::Mutex;
 
 use actix_web::{HttpRequest, HttpResponse, Responder, get, post, web};
@@ -67,6 +65,39 @@ pub async fn community_index(
     }
 }
 
+#[get("/open_community_index")]
+pub async fn open_community_index(
+    data: web::Data<AppData>,
+    node_names: web::Data<Mutex<Vec<String>>>,
+    id: Identity,
+    _req:HttpRequest) -> impl Responder {
+    let mut ctx = Context::new();
+
+    // validate if user is admin else redirect
+    let (session_user, role) = extract_identity_data(&id);
+    
+    ctx.insert("session_user", &session_user);
+    ctx.insert("role", &role);
+
+    // add node_names for navbar drop down
+    ctx.insert("node_names", &node_names.lock().expect("Unable to unlock").clone());
+
+    let communities_data = Communities::find_all_open();
+
+    let communities = match communities_data {
+        Ok(u) => u,
+        Err(e) => {
+            println!("{:?}", e);
+            Vec::new()
+        }
+    };
+
+    ctx.insert("communities", &communities);
+
+    let rendered = data.tmpl.render("community_index.html", &ctx).unwrap();
+    HttpResponse::Ok().body(rendered)
+}
+
 
 #[get("/community/{community_slug}")]
 pub async fn view_community(
@@ -87,8 +118,6 @@ pub async fn view_community(
 
     let user = User::find_from_slug(&id.identity().unwrap());
 
-
-    
     // Redirect if community is closed and user isn't community owner
     if !community.open && community.user_id != user.unwrap().id {
         return HttpResponse::Found().header("Location", String::from("/")).finish()
@@ -217,7 +246,7 @@ pub async fn edit_community(
             let result = Communities::find_from_slug(&community_slug);
             
             match result {
-                Ok(mut community) => {
+                Ok(community) => {
                     // validate user owns community
                     if community.user_id == u.id {
                         

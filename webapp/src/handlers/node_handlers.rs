@@ -9,7 +9,7 @@ use diesel::{QueryDsl, BelongingToDsl};
 
 use std::collections::HashMap;
 
-use crate::models::{Lenses, Nodes, Communities, User};
+use crate::models::{Lenses, Nodes, Communities, User, People};
 use database;
 use crate::handlers::{AggLens, generate_node_cyto_graph};
 
@@ -103,6 +103,10 @@ pub async fn node_page(
     // Aggregate info from lenses related to the prime node
     let node_lens = AggLens::from(lens_vec);
 
+    ctx.insert("title", &format!("{} node", &node.node_name));
+
+    ctx.insert("community_slug", "");
+
     ctx.insert("node", &node);
     
     ctx.insert("node_lens", &node_lens);
@@ -116,10 +120,9 @@ pub async fn node_page(
     HttpResponse::Ok().body(rendered)
 }
 
-#[get("/node/{community_slug}/{label}")]
+#[get("/community_node/{community_slug}/{label}")]
 pub async fn community_node_page(
-    web::Path(label): web::Path<String>, 
-    web::Path(community_slug): web::Path<String>, 
+    web::Path((community_slug, label)): web::Path<(String, String)>, 
     data: web::Data<AppData>, 
     node_names: web::Data<Mutex<Vec<String>>>,
     _req:HttpRequest,
@@ -143,28 +146,30 @@ pub async fn community_node_page(
         return HttpResponse::Found().header("Location", String::from("/")).finish()
     };
     
-    // Need to contrast data inside community with global values here
-
-
-    // connect to db
+    // connect to db --> move this into helper function
     let conn = database::connection().expect("Unable to connect to db");
+    
+    // get ids of people in the community
+    let community_people_ids = People::find_ids_from_community(community.id).expect("Unable to find community members");
     
     let node: Nodes = nodes::table.filter(nodes::node_name.eq(label))
         .first(&conn)
         .expect("Unable to load node");
     
-    // get connected nodes via people with lense connections to our prime node
-
+    // get connected nodes via people with lense connections to our prime node and community
     let lens_vec: Vec<Lenses> = Lenses::belonging_to(&node)
+        .filter(lenses::person_id.eq_any(&community_people_ids))
         .load::<Lenses>(&conn)
         .expect("Error leading connected lenses");
 
     let mut people_id_vec: Vec<i32> = Vec::new();
     let mut node_id_vec: Vec<i32> = Vec::new();
 
+    
+    // add ids to people_id_vec and node_id_vec if they are in the community
     for l in &lens_vec {
-        people_id_vec.push(l.person_id);
-        node_id_vec.push(l.node_id);
+            people_id_vec.push(l.person_id);
+            node_id_vec.push(l.node_id);
     };
 
     people_id_vec.sort();
@@ -172,7 +177,8 @@ pub async fn community_node_page(
 
 
     // add lenses for the people connected by node
-    let connected_lenses = lenses::table.filter(lenses::person_id.eq_any(&people_id_vec))
+    let connected_lenses = lenses::table
+        .filter(lenses::person_id.eq_any(&people_id_vec))
         .load::<Lenses>(&conn)
         .expect("Unable to load lenses");
     
@@ -220,21 +226,25 @@ pub async fn community_node_page(
     // Aggregate info from lenses related to the prime node
     let node_lens = AggLens::from(lens_vec);
 
+    ctx.insert("title", &format!("{} node in {} community", &node.node_name, &community.tag));
+
     ctx.insert("node", &node);
     
     ctx.insert("node_lens", &node_lens);
 
     ctx.insert("other_lenses", &aggregate_lenses);
 
+    ctx.insert("community", &community);
+
     // add node_names for navbar drop down
     ctx.insert("node_names", &node_names.lock().expect("Unable to unlock").clone());
 
-    let rendered = data.tmpl.render("node.html", &ctx).unwrap();
+    let rendered = data.tmpl.render("community_node.html", &ctx).unwrap();
     HttpResponse::Ok().body(rendered)
 }
 
-#[get("/node_network_graph/{label}")]
-pub async fn node_network_graph(
+#[get("/node_graph/{label}")]
+pub async fn node_graph(
     // Rework this as a connected node graph
     web::Path(label): web::Path<String>,
     data: web::Data<AppData>,
@@ -311,11 +321,10 @@ pub async fn node_network_graph(
     HttpResponse::Ok().body(rendered)
 }
 
-#[get("/node_network_graph/{community_slug}/{label}")]
-pub async fn community_node_network_graph(
+#[get("/community_node_graph/{community_slug}/{label}")]
+pub async fn community_node_graph(
     // Rework this as a connected node graph
-    web::Path(label): web::Path<String>,
-    web::Path(community_slug): web::Path<String>,
+    web::Path((community_slug, label)): web::Path<(String, String)>, 
     data: web::Data<AppData>,
     node_names: web::Data<Mutex<Vec<String>>>,
     _req: HttpRequest,
@@ -346,36 +355,44 @@ pub async fn community_node_network_graph(
     
     // get connected nodes via people with lense connections to our prime node
 
-    let mut lens_vec: Vec<Lenses> = Lenses::belonging_to(&node)
-        .load::<Lenses>(&conn)
-        .expect("Error leading connected lenses");
 
+    
+    let mut lens_vec: Vec<Lenses> = Lenses::belonging_to(&node)
+    .load::<Lenses>(&conn)
+    .expect("Error leading connected lenses");
+    
     let mut people_id_vec: Vec<i32> = Vec::new();
     let mut node_id_vec: Vec<i32> = Vec::new();
-
-    // create vec of bridge connections from people
-    let mut people_connections: HashMap<i32, Vec<String>> = HashMap::new();
-
+    
+    
     for l in &lens_vec {
         people_id_vec.push(l.person_id);
         node_id_vec.push(l.node_id);
     };
-
-
+    
     people_id_vec.sort();
     people_id_vec.dedup();
-
+    
     // add lenses for the people connected by node
     let mut connected_lenses = lenses::table.filter(lenses::person_id.eq_any(&people_id_vec))
-        .load::<Lenses>(&conn)
-        .expect("Unable to load lenses");
+    .load::<Lenses>(&conn)
+    .expect("Unable to load lenses");
     
     lens_vec.append(&mut connected_lenses);
-
+    
+    // create vec of bridge connections from people
+    let mut people_connections: HashMap<i32, Vec<String>> = HashMap::new();
+    
+    // get ids of people in the community
+    let community_people_ids = People::find_ids_from_community(community.id).expect("Unable to find community members");
+    
+    // add people connections from the community only
     for l in &lens_vec {
-        people_connections.entry(l.person_id).or_insert(Vec::new()).push(l.node_name.to_owned()); 
+        if community_people_ids.contains(&l.person_id) {
+            people_connections.entry(l.person_id).or_insert(Vec::new()).push(l.node_name.to_owned()); 
+        }
     };
-
+    
     println!("{:?}", &people_connections);
 
     for l in &connected_lenses {
@@ -383,14 +400,16 @@ pub async fn community_node_network_graph(
     };
 
     // now instead of building AggLens, we build the graph
-    let graph = generate_node_cyto_graph(lens_vec, people_connections, Some(community.slug));
+    let graph = generate_node_cyto_graph(lens_vec, people_connections, Some(community.slug.clone()));
 
     let j = serde_json::to_string_pretty(&graph).unwrap();
     
     ctx.insert("graph_data", &j);
 
-    let title = "Node Network Graph";
-    ctx.insert("title", title);
+    ctx.insert("community", &community);
+
+    let title = format!("Node Network Graph for {} community", &community.tag);
+    ctx.insert("title", &title);
 
     // add node_names for navbar drop down
     ctx.insert("node_names", &node_names.lock().expect("Unable to unlock").clone());

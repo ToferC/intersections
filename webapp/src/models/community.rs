@@ -96,9 +96,24 @@ impl Communities {
         Ok(communities)
     }
 
+    pub fn find_all_open() -> Result<Vec<Self>, CustomError> {
+        let conn = database::connection()?;
+        let communities = communities::table
+            .filter(communities::open.eq(true))
+            .load::<Communities>(&conn)?;
+        Ok(communities)
+    }
+
     pub fn find(id: i32) -> Result<Self, CustomError> {
         let conn = database::connection()?;
         let community = communities::table.filter(communities::id.eq(id)).first(&conn)?;
+        Ok(community)
+    }
+
+    pub fn find_by_owner_user_id(id: &i32) -> Result<Vec<Self>, CustomError> {
+        let conn = database::connection()?;
+        let community = communities::table.filter(communities::user_id.eq(id))
+            .load(&conn)?;
         Ok(community)
     }
 
@@ -112,6 +127,13 @@ impl Communities {
         let conn = database::connection()?;
         let community = communities::table.filter(communities::slug.eq(slug)).first(&conn)?;
         Ok(community)
+    }
+
+    pub fn get_tag_slugs() -> Result<Vec<(String, String)>, CustomError> {
+        let conn = database::connection()?;
+        let index = communities::table.select((communities::tag, communities::slug)).load::<(String, String)>(&conn)?;
+
+        Ok(index)
     }
 
     pub fn update(community: Communities) -> Result<Self, CustomError> {

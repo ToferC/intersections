@@ -9,7 +9,7 @@ use tera::Context;
 use serde::{Deserialize};
 
 use crate::{AppData, extract_identity_data};
-use crate::models::{User, verify, UserData};
+use crate::models::{User, verify, UserData, Communities};
 
 #[derive(Deserialize, Debug)]
 pub struct LoginForm {
@@ -95,6 +95,18 @@ pub async fn user_page_handler(
         let user = User::find_from_slug(&slug).expect("Could not load user");
     
         ctx.insert("user", &user);
+
+        let c = Communities::find_by_owner_user_id(&user.id);
+
+        let communities = match c {
+            Ok(c) => c,
+            Err(e) => {
+                println!("Error - {}", e);
+                Vec::new()
+            }
+        };
+
+        ctx.insert("communities", &communities);
     
         let rendered = data.tmpl.render("user_page.html", &ctx).unwrap();
         HttpResponse::Ok().body(rendered)

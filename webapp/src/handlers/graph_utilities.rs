@@ -85,7 +85,7 @@ impl GNode {
         };
 
         let href = match community {
-            Some(c) => format!("/node/{}/{}", c, n.node_name),
+            Some(c) => format!("/community_node/{}/{}", c, n.node_name),
             None => format!("/node/{}", n.node_name),
         };
 
@@ -112,7 +112,7 @@ impl GNode {
         };
 
         let href = match community {
-            Some(c) => format!("/node/{}/{}", c, l.node_name.trim()),
+            Some(c) => format!("/community_node/{}/{}", c, l.node_name.trim()),
             None => format!("/node/{}", l.node_name.trim()),
         };
 

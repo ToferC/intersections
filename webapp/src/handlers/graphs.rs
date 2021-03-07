@@ -10,8 +10,8 @@ use std::collections::HashMap;
 use crate::models::{Lenses, Communities, People, User};
 use crate::handlers::{CytoGraph, generate_node_cyto_graph};
 
-#[get("/full_network_graph")]
-pub async fn full_network_graph(
+#[get("/full_person_graph")]
+pub async fn full_person_graph(
     data: web::Data<AppData>,
     graph: web::Data<Mutex<CytoGraph>>,
     node_names: web::Data<Mutex<Vec<String>>>,
@@ -71,7 +71,7 @@ pub async fn full_node_graph(
 
     ctx.insert("graph_data", &j);
 
-    let title = "Node Network Graph";
+    let title = "Global Network Graph";
     ctx.insert("title", title);
 
     // add node_names for navbar drop down
@@ -81,16 +81,16 @@ pub async fn full_node_graph(
     HttpResponse::Ok().body(rendered)
 }
 
-#[get("/community/node_graph/{community_code}")]
-pub async fn community_node_graph(
+#[get("/full_community_graph/{community_slug}")]
+pub async fn full_community_node_graph(
     data: web::Data<AppData>,
-    web::Path(community_code): web::Path<String>,
+    web::Path(community_slug): web::Path<String>,
     node_names: web::Data<Mutex<Vec<String>>>,
     id:Identity,
 ) -> impl Responder {
 
     // Validate community
-    let community_result = Communities::find_from_code(&community_code);
+    let community_result = Communities::find_from_slug(&community_slug);
 
     match community_result {
         Ok(community) => {

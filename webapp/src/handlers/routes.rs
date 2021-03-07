@@ -9,18 +9,21 @@ use crate::handlers::{
     index,
     survey_intro,
     person_page,
-    node_page,
     find_lens,
+    // nodes
+    node_page,
+    community_node_page,
+    node_graph,
+    community_node_graph,
     // API
     api_base,
     add_lens_form_handler,
     person_api,
     // graphs
-    full_network_graph,
+    full_person_graph,
     full_node_graph,
-    node_network_graph,
     person_graph,
-    community_node_graph,
+    full_community_node_graph,
     // registration
     register_form_input,
     register_handler,
@@ -37,6 +40,7 @@ use crate::handlers::{
     // communities
     view_community,
     community_index,
+    open_community_index,
     add_community,
     add_community_form_input,
     edit_community_form_input,
@@ -50,8 +54,19 @@ pub fn init_routes(config: &mut web::ServiceConfig) {
     config.service(index);
     config.service(survey_intro);
     config.service(person_page);
-    config.service(node_page);
     config.service(find_lens);
+
+    // nodes
+
+    // node
+    config.service(node_page);
+    // community_node
+    config.service(community_node_page);
+    // node_graph
+    config.service(node_graph);
+    // community_node_graph
+    config.service(community_node_graph);
+
     // api
     config.service(api_base);
     config.service(person_api);
@@ -61,11 +76,10 @@ pub fn init_routes(config: &mut web::ServiceConfig) {
     config.service(add_lens_form_handler);
     config.service(add_handle_lens_form_input);
     // graphs
-    config.service(full_network_graph);
+    config.service(full_person_graph);
     config.service(full_node_graph);
     config.service(person_graph);
-    config.service(node_network_graph);
-    config.service(community_node_graph);
+    config.service(full_community_node_graph);
     // users 
     config.service(register_handler);
     config.service(register_form_input);
@@ -79,6 +93,7 @@ pub fn init_routes(config: &mut web::ServiceConfig) {
     // communities
     config.service(view_community);
     config.service(community_index);
+    config.service(open_community_index);
     config.service(add_community);
     config.service(add_community_form_input);
     config.service(delete_community);

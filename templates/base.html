@@ -263,21 +263,23 @@
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
               <ul class="navbar-nav mr-auto">
                 <li class="nav-item active">
-                    <a class="nav-link" href="/survey_intro">Take Survey</a>
+                    <a class="nav-link" href="/full_person_graph">View people graph <span class="sr-only">(current)</span></a>
+                </li>
+                
+                <li class="nav-item active">
+                    <a class="nav-link" href="/full_node_graph">View global graph <span class="sr-only">(current)</span></a>
                 </li>
                 <li class="nav-item active">
-                    <a class="nav-link" href="/full_network_graph">View full graph <span class="sr-only">(current)</span></a>
+                    <a class="nav-link" href="/open_community_index">Explore open communities <span class="sr-only">(current)</span></a>
                 </li>
-                <li class="nav-item active">
-                    <a class="nav-link" href="/full_node_graph">View node graph <span class="sr-only">(current)</span></a>
-                </li>
+
                 <li class="nav-item dropdown">
                   <a class="nav-link dropdown-toggle active" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Explore Lenses
+                    Explore Experiences
                   </a>
                   <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                     {% for n in node_names %}
-                    <a class="dropdown-item" href="/node/{{ n }}">See the lens for {{ n | title }}.</a>
+                    <a class="dropdown-item" href="/node/{{ n }}">{{ n | title }}</a>
                     {% endfor %}
                     <div class="dropdown-divider"></div>
                   </div>
@@ -289,7 +291,7 @@
                       {{ session_user }}
                     </a>
                     <div class="dropdown-menu" aria-labelledby="userNavbarDropdown">
-                      <a class="dropdown-item" href="/user/{{ session_user }}">Manage User/Communities</a>
+                      <a class="dropdown-item" href="/user/{{ session_user }}">Profile</a>
                       <a class="dropdown-item" href="/log_out">Logout</a>
                       <div class="dropdown-divider"></div>
                       {% if role == "admin" %}
@@ -328,6 +330,8 @@
             <div class="row">
                 
                 <div class="col m-md-2 m-1">
+
+                    <hr>
                     
                     <p>Please note that this work is a learning project and experiment in collecting and and gaining insight from sensitive or personal information while protecting the privacy of participants.</p>
                     <p>The Intersections project is available on GitHub under an MIT licence here: <a href="https://github.com/ToferC/intersections">Intersections</a></p>

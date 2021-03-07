@@ -11,6 +11,8 @@ use database;
 
 use crate::schema::{nodes};
 
+use super::community_handler;
+
 
 #[get("/")]
 pub async fn index(

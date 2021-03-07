@@ -8,24 +8,29 @@
     <div class="col m-md-2 m-1">
         <br>
         <h1>View Community: {{ community.tag }}</h1>
-        <p>Community details and management.</p>
 
-            <p>{{ community.description }}</p>
+        <div class="card card-body">
+            <p>Community details and management.</p>
+    
+                <p>{{ community.description }}</p>
+    
+                <p>{{ community.code }}</p>
+    
+                <p>This community is {% if community.open %}open{% else %}private{% endif %}</p>
+                <h2>Actions</h2>
 
-            <p>{{ community.code }}</p>
+                <a class="btn btn-dark" href="/full_community_graph/{{ community.slug }}">View Community Graph</a>
+                <br> 
+                <a class="btn btn-dark" href="{{ add_community_profile_url }}">Link to Add Profile to Community</a>
+        </div>
 
-            <p>This community is {% if community.open %}open{% else %}private{% endif %}</p>
+            <h2>Scan or share QR code to participants.</h2>
 
             {{ qrcode | safe }}
 
             <hr>
 
-            <h2>Links</h2>
 
-            <ul>
-                <li><a href="/community/node_graph/{{ community.code }}">Link to Community Graph</a></li>
-                <li><a href="{{ add_community_profile_url }}">Link to Add Profile to Community</a></li>
-            </ul>
 
             <hr>
             <h3>Template email to participants</h3>

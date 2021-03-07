@@ -56,7 +56,7 @@ async fn main() -> std::io::Result<()> {
 
     // load master graph into app data
     println!("Generate graph representation");
-    let graph: handlers::CytoGraph = handlers::generate_cyto_graph(people_vec, node_vec, lens_vec);
+    let graph: handlers::CytoGraph = handlers::generate_cyto_graph(people_vec, node_vec, lens_vec, None);
 
     let node_names = models::Nodes::find_all_linked_names().expect("Unable to load names");
     

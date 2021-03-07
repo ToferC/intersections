@@ -7,28 +7,59 @@
 {% block content %}
     <div class="col m-md-2 m-1">
         <br>
-        <h1>User page for {{ user.user_name }}</h1>
-        <p>User details and account management.</p>
+        <h1>Profile for {{ user.user_name }}</h1>
+        <div class="card card-body">
+            <p>User details and account management.</p>
+    
+                <p>{{ user.user_name }}</p>
+    
+                <p>{{ user.email }}</p>
 
-            <p>{{ user.user_name }}</p>
+                <h2>Account Options</h2>
+                <p><a style="color:red" href="/delete_user/{{ user.id }}">Delete User</a></p>
+                <p><a href="#">Change Email</a></p>
+                <p><a href="#">Change Password</a></p>
 
-            <p>{{ user.email }}</p>
+        </div>
+        <br>
 
-            <ul>
-                {% if user.communities %}
-                {% for community in user.communities %}
-                    <li>{{ community.tag }}</li>
+        <h2>Communities</h2>
+        <p>Communities and organizations on intersections</p>
+
+        <table>
+            <tr>
+                <th style="text-align: center;">Community</th>
+                <th style="text-align: center;">Created</th>
+                <th style="text-align: center;">Open</th>
+                <th style="text-align: center;">Contact</th>
+                <th style="text-align: center;">Delete</th>
+            </tr>
+            {% if communities %}
+                {% for community in communities %} 
+                
+                <tr>
+                    <td><a href="/community/{{ community.slug }}">{{ community.tag | title }}</a></td>
+                    <td>{{ community.date_created | date(format="%Y-%m-%d") }}</td>
+                    <td>{{ community.open }}</td>
+                    <td>{{ community.contact_email }}</td>
+                    <td><a style="color:red" href="/delete_community/{{ community.id }}">Delete</a></td>
+                </tr>
+                        
                 {% endfor %}
-                {% endif %}
-            </ul>
+            {% else %}
+            <tr>
+                <td>N/A</td>
+                <td>N/A</td>
+                <td>N/A</td>
+                <td>N/A</td>
+                <td>N/A</td>
+            </tr>
+            {% endif %}
+        </table>
+
+        <br>
 
             <p><a class="btn btn-dark" href="/add_community">Add Community</a></p>
-
-        
-            <h2>Account Options</h2>
-            <p><a style="color:red" href="/delete_user/{{ user.id }}">Delete User</a></p>
-            <p><a href="#">Change Email</a></p>
-            <p><a href="#">Change Password</a></p>
 
     </div>
 {% endblock content %}
