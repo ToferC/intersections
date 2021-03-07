@@ -116,11 +116,17 @@ pub async fn view_community(
     
     let community = Communities::find_from_slug(&community_slug).expect("Could not load community");
 
-    let user = User::find_from_slug(&id.identity().unwrap());
-
-    // Redirect if community is closed and user isn't community owner
-    if !community.open && community.user_id != user.unwrap().id {
-        return HttpResponse::Found().header("Location", String::from("/")).finish()
+    if &session_user != "" {
+        let user = User::find_from_slug(&id.identity().unwrap());
+    
+        // Redirect if community is closed and user isn't community owner
+        if !community.open && community.user_id != user.unwrap().id {
+            return HttpResponse::Found().header("Location", String::from("/")).finish()
+        };
+    } else {
+        if !community.open {
+            return HttpResponse::Found().header("Location", String::from("/")).finish()
+        }
     };
 
     ctx.insert("community", &community);
