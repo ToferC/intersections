@@ -17,13 +17,18 @@
                 <p>{{ community.code }}</p>
     
                 <p>This community is {% if community.open %}open{% else %}private{% endif %}</p>
+                <br>
+                
                 <h2>Actions</h2>
 
                 <a class="btn btn-dark" href="/full_community_graph/{{ community.slug }}">View Community Graph</a>
                 <br> 
+                {% if owner %}
                 <a class="btn btn-dark" href="{{ add_community_profile_url }}">Link to Add Profile to Community</a>
+                {% endif %}
         </div>
 
+            {% if owner %}
             <h2>Scan or share QR code to participants.</h2>
 
             {{ qrcode | safe }}
@@ -54,7 +59,7 @@
             <h2>Community Options</h2>
             <p><a style="color:red" href="/delete_community/{{ community.id }}">Delete Community</a></p>
             <p><a href="/edit_community/{{ community.slug }}">Edit Community</a></p>
-
+        {% endif %}
     </div>
 {% endblock content %}
 

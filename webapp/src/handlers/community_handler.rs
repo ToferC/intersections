@@ -116,11 +116,17 @@ pub async fn view_community(
     
     let community = Communities::find_from_slug(&community_slug).expect("Could not load community");
 
+    let mut owner = false;
+
     if &session_user != "" {
         let user = User::find_from_slug(&id.identity().unwrap());
+
+        if community.user_id == user.unwrap().id {
+            owner = true;
+        }
     
         // Redirect if community is closed and user isn't community owner
-        if !community.open && community.user_id != user.unwrap().id {
+        if !community.open && !owner {
             return HttpResponse::Found().header("Location", String::from("/")).finish()
         };
     } else {
@@ -130,6 +136,7 @@ pub async fn view_community(
     };
 
     ctx.insert("community", &community);
+    ctx.insert("owner", &owner);
     
     // add node_names for navbar drop down
     ctx.insert("node_names", &node_names.lock().expect("Unable to unlock").clone());

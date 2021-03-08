@@ -138,13 +138,27 @@ pub async fn community_node_page(
 
     // validate user has rights to view
     let community = Communities::find_from_slug(&community_slug).expect("Could not load community");
+
+    let mut owner = false;
+
+    if &session_user != "" {
+        let user = User::find_from_slug(&id.identity().unwrap());
+
+        if community.user_id == user.unwrap().id {
+            owner = true;
+        }
     
-    let user = User::find_from_slug(&id.identity().unwrap());
-    
-    // Redirect if community is closed and user isn't community owner
-    if !community.open && community.user_id != user.unwrap().id {
-        return HttpResponse::Found().header("Location", String::from("/")).finish()
+        // Redirect if community is closed and user isn't community owner
+        if !community.open && !owner {
+            return HttpResponse::Found().header("Location", String::from("/")).finish()
+        };
+    } else {
+        if !community.open {
+            return HttpResponse::Found().header("Location", String::from("/")).finish()
+        }
     };
+
+    ctx.insert("owner", &owner);
     
     // connect to db --> move this into helper function
     let conn = database::connection().expect("Unable to connect to db");
@@ -340,12 +354,26 @@ pub async fn community_node_graph(
 
     let community = Communities::find_from_slug(&community_slug).expect("Could not load community");
 
-    let user = User::find_from_slug(&id.identity().unwrap());
+    let mut owner = false;
 
-    // Redirect if community is closed and user isn't community owner
-    if !community.open && community.user_id != user.unwrap().id {
-        return HttpResponse::Found().header("Location", String::from("/")).finish()
+    if &session_user != "" {
+        let user = User::find_from_slug(&id.identity().unwrap());
+
+        if community.user_id == user.unwrap().id {
+            owner = true;
+        }
+    
+        // Redirect if community is closed and user isn't community owner
+        if !community.open && !owner {
+            return HttpResponse::Found().header("Location", String::from("/")).finish()
+        };
+    } else {
+        if !community.open {
+            return HttpResponse::Found().header("Location", String::from("/")).finish()
+        }
     };
+
+    ctx.insert("owner", &owner);
 
     let conn = database::connection().expect("Unable to connect to db");
     
