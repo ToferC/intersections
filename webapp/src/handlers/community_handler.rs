@@ -329,6 +329,7 @@ pub async fn edit_community_form_input(
                         community.tag = form.community_name.trim().to_owned();
                         community.slug = form.community_name.trim().to_snake_case().to_owned();
                         community.description = form.description.trim().to_owned();
+                        community.data_use_case= form.data_use_case.trim().to_owned();
                         community.open = open;
 
                         let update = Communities::update(community);
