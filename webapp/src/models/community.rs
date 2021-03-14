@@ -24,10 +24,11 @@ pub struct NewCommunity {
     pub slug: String,
     pub user_id: i32,
     pub data: serde_json::Value,
+    pub test: bool,
 }
 
 impl NewCommunity {
-    pub fn new(tag: String, description: String, data_use_case: String, contact_email: String, open: bool, user_id: i32) -> NewCommunity {
+    pub fn new(tag: String, description: String, data_use_case: String, contact_email: String, open: bool, user_id: i32, test: bool) -> NewCommunity {
         NewCommunity {
             tag: tag.clone(),
             description,
@@ -42,6 +43,7 @@ impl NewCommunity {
                 "members": 0,
                 "mean_inclusivity": 0.0
             }"#).unwrap(),
+            test,
         }
     }
 
@@ -59,6 +61,7 @@ impl NewCommunity {
             slug: community.tag.to_snake_case(),
             user_id: community.user_id,
             data: community.data.to_owned(),
+            test: community.test,
         }
     }
 }
@@ -77,6 +80,7 @@ pub struct Communities {
     pub slug: String,
     pub user_id: i32,
     pub data: serde_json::Value,
+    pub test: bool,
 }
 
 // Database operations
@@ -92,8 +96,26 @@ impl Communities {
 
     pub fn find_all() -> Result<Vec<Self>, CustomError> {
         let conn = database::connection()?;
-        let communities = communities::table.load::<Communities>(&conn)?;
+        let communities = communities::table
+            .load::<Communities>(&conn)?;
         Ok(communities)
+    }
+
+    pub fn find_all_real() -> Result<Vec<Self>, CustomError> {
+        let conn = database::connection()?;
+        let communities = communities::table
+            .filter(communities::test.eq(false))
+            .load::<Communities>(&conn)?;
+        Ok(communities)
+    }
+
+    pub fn find_test_ids() -> Result<Vec<i32>, CustomError> {
+        let conn = database::connection()?;
+        let community_ids = communities::table
+            .select(communities::id)
+            .filter(communities::test.eq(true))
+            .load::<i32>(&conn)?;
+        Ok(community_ids)
     }
 
     pub fn find_all_open() -> Result<Vec<Self>, CustomError> {

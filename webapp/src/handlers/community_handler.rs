@@ -211,6 +211,7 @@ pub async fn add_community_form_input(
                 u.email.to_owned(),
                 open,
                 u.id,
+                false,
             );
             
             let community = Communities::create(&community_data);

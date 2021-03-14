@@ -109,6 +109,14 @@ impl User {
         Ok(users)
     }
 
+    pub fn find_admins() -> Result<Vec<Self>, CustomError> {
+        let conn = database::connection()?;
+        let users = users::table
+            .filter(users::role.eq("admin"))
+            .load::<User>(&conn)?;
+        Ok(users)
+    }
+
     pub fn find(id: i32) -> Result<Self, CustomError> {
         let conn = database::connection()?;
         let user = users::table.filter(users::id.eq(id)).first(&conn)?;

@@ -49,7 +49,7 @@ pub async fn full_node_graph(
     id:Identity,
 ) -> impl Responder {
         
-    let lens_vec = Lenses::find_all().expect("Unable to load lenses");
+    let lens_vec = Lenses::find_all_real().expect("Unable to load lenses");
 
     // create vec of bridge connections from people
     let mut people_connections: HashMap<i32, Vec<String>> = HashMap::new();

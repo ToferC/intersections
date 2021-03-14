@@ -4,10 +4,11 @@ use serde::{Serialize, Deserialize};
 use chrono::prelude::*;
 use diesel::prelude::*;
 use diesel::RunQueryDsl;
+use diesel::dsl::any;
 use diesel::{QueryDsl, BelongingToDsl};
 
 use crate::schema::{people};
-use crate::models::{Lenses};
+use crate::models::{Lenses, Communities};
 use error_handler::error_handler::CustomError;
 use database;
 
@@ -67,6 +68,30 @@ impl People {
         let conn = database::connection()?;
         let people = people::table.load::<People>(&conn)?;
         Ok(people)
+    }
+
+    pub fn find_all_real() -> Result<Vec<Self>, CustomError> {
+        let conn = database::connection()?;
+
+        let test_commmunity_ids = Communities::find_test_ids().expect("Unable to load communities");
+        
+        let people = people::table
+            .filter(people::community_id.ne(any(test_commmunity_ids)))
+            .load::<People>(&conn)?;
+        Ok(people)
+    }
+
+    pub fn find_real_ids() -> Result<Vec<i32>, CustomError> {
+        let conn = database::connection()?;
+
+        let test_commmunity_ids = Communities::find_test_ids().expect("Unable to load communities");
+        
+        let people_ids = people::table
+            .select(people::id)
+            .filter(people::community_id.ne(any(test_commmunity_ids)))
+            .load::<i32>(&conn)?;
+            
+        Ok(people_ids)
     }
 
     pub fn find(id: i32) -> Result<Self, CustomError> {

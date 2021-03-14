@@ -25,7 +25,8 @@ CREATE TABLE communities (
     user_id INT NOT NULL DEFAULT 0,
     FOREIGN KEY(user_id)
         REFERENCES users(id),
-    data JSONB NOT NULL
+    data JSONB NOT NULL,
+    test BOOL NOT NULL DEFAULT FALSE
 );
 
 CREATE TABLE people (

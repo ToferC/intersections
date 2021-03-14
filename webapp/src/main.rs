@@ -7,7 +7,6 @@ use actix_web_static_files;
 use tera::Tera;
 
 use database;
-use webapp::prepopulate_db;
 use webapp::handlers; 
 use webapp::models;
 use webapp::AppData;
@@ -37,22 +36,12 @@ async fn main() -> std::io::Result<()> {
 
     database::init();
 
-    // prepopulate database for test instance
-    match models::User::find_from_email(&String::from("admin@email.com")) {
-        Ok(_u) => println!("Database initialized"),
-        Err(_e) => {
-            println!("Database empty");
-            if environment == "test" {
-                println!("Test environment. Prepopulating DB");
-                prepopulate_db();
-            };
-        },
-    };
+    // to prepopulate database for test instance run databaseutils
 
     println!("Loading data for graph");
-    let people_vec = models::People::find_all().expect("Unable to load people");
+    let people_vec = models::People::find_all_real().expect("Unable to load people");
     let node_vec = models::Nodes::find_all().expect("Unable to load nodes");
-    let lens_vec = models::Lenses::find_all().expect("Unable to load lenses");
+    let lens_vec = models::Lenses::find_all_real().expect("Unable to load lenses");
 
     // load master graph into app data
     println!("Generate graph representation");

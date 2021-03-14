@@ -87,6 +87,18 @@ impl Lenses {
         Ok(lenses)
     }
 
+    pub fn find_all_real() -> Result<Vec<Self>, CustomError> {
+        let conn = database::connection()?;
+
+        let real_people_ids = People::find_real_ids().expect("Unable to load real people");
+
+        let lenses = lenses::table
+            .filter(lenses::person_id.eq_any(real_people_ids))
+            .load::<Lenses>(&conn)?;
+            
+        Ok(lenses)
+    }
+
     pub fn find_all_node_ids() -> Result<Vec<i32>, CustomError> {
         let conn = database::connection()?;
 
