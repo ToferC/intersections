@@ -13,10 +13,12 @@ fn main() {
         println!("Welcome to Intersections ADMIN CLI interface");
         println!("--------");
         println!("OPTIONS");
-        println!("1 - Prepopulate Database");
-        println!("2 - Create Production Admin");
-        println!("3 - Create Test Admin");
-        println!("4 - Quit");
+        println!("1 - Prepopulate Database w/ Demo Data");
+        println!("2 - Prepopulate Database w/ Test Data");
+        println!("--------");
+        println!("3 - Create Production Admin");
+        println!("4 - Create Test Admin");
+        println!("5 - Quit");
         println!("--------");
         println!("Choose your option (1-3): ");
 
@@ -28,14 +30,15 @@ fn main() {
         match choice {
             Ok(i) => {
                 match i {
-                    1 => prepopulate_db(),
-                    2 => {
+                    1 => prepopulate_db("demo"),
+                    2 => prepopulate_db("test"),
+                    3 => {
                         let _ = create_prod_admin();
                     },
-                    3 => {
+                    4 => {
                         let _ = create_test_admin();
                     },
-                    4 => break,
+                    5 => break,
                     _ => continue,
                 };
             },
@@ -44,5 +47,7 @@ fn main() {
                 continue
             }
         }
+
+        println!("COMPLETE\n\n");
     };
 }

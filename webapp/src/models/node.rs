@@ -50,6 +50,14 @@ impl Nodes {
         Ok(n)
     }
 
+    pub fn detailed_create(node: &Nodes) -> Result<Self, CustomError> {
+        let conn = database::connection()?;
+        let node = diesel::insert_into(nodes::table)
+            .values(node)
+            .get_result(&conn)?;
+        Ok(node)
+    }
+
     pub fn find_all() -> Result<Vec<Self>, CustomError> {
         let conn = database::connection()?;
         let nodes = nodes::table.load::<Nodes>(&conn)?;

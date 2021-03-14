@@ -2,6 +2,7 @@ use bigdecimal::{BigDecimal, ToPrimitive};
 use num_bigint::{ToBigInt};
 use std::{io::{stdin, stdout, copy}, process::exit};
 use std::{num::ParseIntError};
+use chrono::prelude::*;
 
 use std::fs::File;
 use serde_json::Value;
@@ -62,7 +63,7 @@ pub fn create_test_admin() -> Result<i32, CustomError> {
     Ok(test_admin.id)
 }
 
-pub fn prepopulate_db() {
+pub fn prepopulate_db(mode: &str) {
 
     // choose admin
 
@@ -121,19 +122,99 @@ pub fn prepopulate_db() {
                 community_data
             ).expect("Unable to create generic community");
 
-            generate_dummy_data(test_community.id);
+            match mode {
+                "demo" => import_demo_data(test_community.id),
+                _ => generate_dummy_data(test_community.id),
+            };
 
             println!("SUCCESS");
 
         },
         Err(e) => {
-            println!("No administrators found in DB. Try creating an admin user first.");
+            println!("No administrators found in DB. Try creating an admin user first. Error {}", e);
             exit(0)
         }
     }
 }
 
-pub fn import_json_data(community_id: i32) {
+pub fn import_demo_data(community_id: i32) {
+
+    let file = File::open("test_data.json").unwrap();
+    let data: Vec<Vec<serde_json::Value>> = serde_json::from_reader(file).unwrap();
+
+    let now = Utc::now().naive_utc();
+
+    for e in &data {
+        println!("PERSON");
+        println!("{:?}", &e[0]); // person Object
+
+        let p = models::People {
+            id: *&e[0]["id"].as_i64().unwrap() as i32,
+            code: models::generate_unique_code(),
+            date_created: now,
+            related_codes: Vec::new(),
+            community_id,
+        };
+
+        models::People::detailed_create(&p).expect("Unable to insert person.");
+
+        println!("LENSES");
+        for i in e[1].as_array() { // lens Array
+            
+            for n in i {
+                println!("NODE");
+                println!("{:?}", n[1]); // node Object
+                println!("Node name: {}", n[1]["node_name"]);
+
+                let node = models::Nodes {
+                    id: n[1]["id"].as_i64().unwrap() as i32,
+                    node_name: n[1]["node_name"].as_str().unwrap().to_owned(),
+                    domain_token: n[1]["domain_token"].as_str().unwrap().to_owned(),
+                    translation: "".to_owned(),
+                    synonyms: Vec::new(),
+                };
+
+                let _ = models::Nodes::detailed_create(&node);
+
+                println!("LENS");
+
+                let mut statements: Vec<String> = Vec::new();
+
+                for s in n[0]["statements"].as_array().unwrap() {
+                    statements.push(s.as_str().unwrap().to_owned());
+                };
+
+                let inclusivity = BigDecimal::new(n[0]["inclusivity"]
+                    .as_str()
+                    .unwrap()
+                    .to_owned()
+                    .parse::<f64>()
+                    .unwrap()
+                    .to_bigint()
+                    .unwrap(), 2);
+
+                let l = models::Lens::new(
+                    n[0]["node_name"].as_str().unwrap().to_owned(),
+                    n[0]["node_domain"].as_str().unwrap().to_owned(),
+                    n[0]["person_id"].as_i64().unwrap() as i32,
+                    n[0]["node_id"].as_i64().unwrap() as i32, 
+                    statements,
+                    inclusivity,
+                );
+
+                let _ = models::Lenses::create(&l);
+    
+                println!("{:?}", n[0]); // lens Object
+                println!("Lens statements: {}", n[0]["statements"]);
+                
+            };
+
+
+        };
+        
+
+        println!("");
+    };
 
 }
 

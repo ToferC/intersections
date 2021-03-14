@@ -64,6 +64,14 @@ impl People {
         Ok(person)
     }
 
+    pub fn detailed_create(person: &People) -> Result<Self, CustomError> {
+        let conn = database::connection()?;
+        let person = diesel::insert_into(people::table)
+            .values(person)
+            .get_result(&conn)?;
+        Ok(person)
+    }
+
     pub fn find_all() -> Result<Vec<Self>, CustomError> {
         let conn = database::connection()?;
         let people = people::table.load::<People>(&conn)?;
@@ -90,7 +98,7 @@ impl People {
             .select(people::id)
             .filter(people::community_id.ne(any(test_commmunity_ids)))
             .load::<i32>(&conn)?;
-            
+
         Ok(people_ids)
     }
 
