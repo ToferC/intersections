@@ -10,7 +10,7 @@ use error_handler::error_handler::CustomError;
 use webapp::models;
 use database;
 
-pub fn create_prod_admin() -> Result<i32, CustomError> {
+pub fn create_user(role: &str) -> Result<i32, CustomError> {
 
     dotenv::dotenv().ok();
     database::init();
@@ -34,7 +34,7 @@ pub fn create_prod_admin() -> Result<i32, CustomError> {
         user_name: user_name.trim().to_string(),
         email: email.to_lowercase().trim().to_string(),
         password: hash.trim().to_string(),
-        role: "admin".to_owned(),
+        role: role.to_owned(),
     };
 
     let user = models::User::create(user_data)?;
@@ -109,6 +109,8 @@ pub fn prepopulate_db(mode: &str) {
 
             // insert test community if needed
 
+            let owner = models::User::find(target_id).expect("Unable to load user");
+
             let mut test_id = 0;
 
             let test_communities = models::Communities::find_test_ids()
@@ -117,12 +119,12 @@ pub fn prepopulate_db(mode: &str) {
             if test_communities.len() == 0 as usize {
 
                 let community_data = &models::NewCommunity::new(
-                    "Test Community".to_owned(),
+                    "Demo Community".to_owned(),
                     "Original alpha test data for intersections. This data is a mix of dummy data, demonstration data and real people testing the platform. It is excluded from the global data set and can only be accessed as a separate community.".to_owned(),
                     "Demonstration of test data in app".to_owned(),
-                    "admin@email.com".to_owned(),
+                    owner.email.to_owned(),
                     true,
-                    target_id,
+                    owner.id,
                     true,
                 );
 

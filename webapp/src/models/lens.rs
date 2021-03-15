@@ -100,6 +100,7 @@ impl Lenses {
     }
 
     pub fn find_all_node_ids() -> Result<Vec<i32>, CustomError> {
+        // return vec of all node IDs (test, pre-populated and real)
         let conn = database::connection()?;
 
         let ids = lenses::table.select(lenses::node_id).load::<i32>(&conn)?;
@@ -108,6 +109,7 @@ impl Lenses {
     }
 
     pub fn find_real_node_ids() -> Result<Vec<i32>, CustomError> {
+        // return vec of user entered node IDs
         let conn = database::connection()?;
 
         let real_people_ids = People::find_real_ids().expect("Unable to load real people");

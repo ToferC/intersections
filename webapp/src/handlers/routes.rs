@@ -24,9 +24,11 @@ use crate::handlers::{
     full_node_graph,
     person_graph,
     full_community_node_graph,
+
     // registration
-    register_form_input,
-    register_handler,
+    // register_form_input,
+    // register_handler,
+    
     // login
     login_handler,
     login_form_input,
@@ -81,8 +83,8 @@ pub fn init_routes(config: &mut web::ServiceConfig) {
     config.service(person_graph);
     config.service(full_community_node_graph);
     // users 
-    config.service(register_handler);
-    config.service(register_form_input);
+    //config.service(register_handler);
+    //config.service(register_form_input);
     config.service(login_handler);
     config.service(login_form_input);
     config.service(logout);
