@@ -55,7 +55,6 @@ rust-argon2 = "0.8"
 
 database = { path = "../database"}
 error_handler = { path = "../error_handler" }
-databaseutils = { path = "../databaseutils" }
 
 [build-dependencies]
 actix-web-static-files = "3.0.1"

@@ -9,8 +9,4 @@ members = [
     "error_handler",
 ]
 
-default-members = ["webapp", "databaseutils"]
-
-[[bin]]
-name = "databaseutils"           # The name of the target.
-path = "databaseutils/src/main.rs"    # The source file of the target.
+default-members = ["webapp"]
