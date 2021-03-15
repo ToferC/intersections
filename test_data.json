@@ -1,2616 +1,2616 @@
 [
+  [
+    {
+      "id": 1,
+      "code": "protected",
+      "date_created": "2020-10-19T00:00:00",
+      "related_codes": []
+    },
     [
-      {
-        "id": 1,
-        "code": "protected",
-        "date_created": "2020-10-19T00:00:00",
-        "related_codes": []
-      },
       [
-        [
-          {
-            "id": 1,
-            "node_name": "father",
-            "node_domain": "person",
-            "person_id": 1,
-            "node_id": 1,
-            "date_created": "2020-10-19T00:00:00",
-            "statements": [
-              "tired",
-              "not doing enough",
-              "joyful"
-            ],
-            "inclusivity": "-0.18"
-          },
-          {
-            "id": 1,
-            "node_name": "father",
-            "domain_token": "person",
-            "translation": "",
-            "synonyms": [
-              ""
-            ]
-          }
-        ],
-        [
-          {
-            "id": 2,
-            "node_name": "manager",
-            "node_domain": "role",
-            "person_id": 1,
-            "node_id": 2,
-            "date_created": "2020-10-19T00:00:00",
-            "statements": [
-              "pulled many directions",
-              "influential",
-              "stressed"
-            ],
-            "inclusivity": "-0.25"
-          },
-          {
-            "id": 2,
-            "node_name": "manager",
-            "domain_token": "role",
-            "translation": "",
-            "synonyms": [
-              ""
-            ]
-          }
-        ],
-        [
-          {
-            "id": 3,
-            "node_name": "gen x",
-            "node_domain": "person",
-            "person_id": 1,
-            "node_id": 3,
-            "date_created": "2020-10-19T00:00:00",
-            "statements": [
-              "experienced",
-              "overlooked",
-              "depended upon"
-            ],
-            "inclusivity": "0.23"
-          },
-          {
-            "id": 3,
-            "node_name": "gen x",
-            "domain_token": "person",
-            "translation": "",
-            "synonyms": [
-              ""
-            ]
-          }
-        ]
+        {
+          "id": 1,
+          "node_name": "father",
+          "node_domain": "person",
+          "person_id": 1,
+          "node_id": 1,
+          "date_created": "2020-10-19T00:00:00",
+          "statements": [
+            "tired",
+            "not doing enough",
+            "joyful"
+          ],
+          "inclusivity": "-0.18"
+        },
+        {
+          "id": 1,
+          "node_name": "father",
+          "domain_token": "person",
+          "translation": "",
+          "synonyms": [
+            ""
+          ]
+        }
+      ],
+      [
+        {
+          "id": 2,
+          "node_name": "manager",
+          "node_domain": "role",
+          "person_id": 1,
+          "node_id": 2,
+          "date_created": "2020-10-19T00:00:00",
+          "statements": [
+            "pulled many directions",
+            "influential",
+            "stressed"
+          ],
+          "inclusivity": "-0.25"
+        },
+        {
+          "id": 2,
+          "node_name": "manager",
+          "domain_token": "role",
+          "translation": "",
+          "synonyms": [
+            ""
+          ]
+        }
+      ],
+      [
+        {
+          "id": 3,
+          "node_name": "gen x",
+          "node_domain": "person",
+          "person_id": 1,
+          "node_id": 3,
+          "date_created": "2020-10-19T00:00:00",
+          "statements": [
+            "experienced",
+            "overlooked",
+            "depended upon"
+          ],
+          "inclusivity": "0.23"
+        },
+        {
+          "id": 3,
+          "node_name": "gen x",
+          "domain_token": "person",
+          "translation": "",
+          "synonyms": [
+            ""
+          ]
+        }
       ]
-    ],
+    ]
+  ],
+  [
+    {
+      "id": 2,
+      "code": "protected",
+      "date_created": "2020-10-19T00:00:00",
+      "related_codes": []
+    },
     [
-      {
-        "id": 2,
-        "code": "protected",
-        "date_created": "2020-10-19T00:00:00",
-        "related_codes": []
-      },
       [
-        [
-          {
-            "id": 4,
-            "node_name": "mother",
-            "node_domain": "person",
-            "person_id": 2,
-            "node_id": 4,
-            "date_created": "2020-10-19T00:00:00",
-            "statements": [
-              "tired",
-              "guilty",
-              "excluded"
-            ],
-            "inclusivity": "-0.45"
-          },
-          {
-            "id": 4,
-            "node_name": "mother",
-            "domain_token": "person",
-            "translation": "",
-            "synonyms": [
-              ""
-            ]
-          }
-        ],
-        [
-          {
-            "id": 5,
-            "node_name": "white",
-            "node_domain": "person",
-            "person_id": 2,
-            "node_id": 5,
-            "date_created": "2020-10-19T00:00:00",
-            "statements": [
-              "normal"
-            ],
-            "inclusivity": "0.30"
-          },
-          {
-            "id": 5,
-            "node_name": "white",
-            "domain_token": "role",
-            "translation": "",
-            "synonyms": [
-              ""
-            ]
-          }
-        ]
+        {
+          "id": 4,
+          "node_name": "mother",
+          "node_domain": "person",
+          "person_id": 2,
+          "node_id": 4,
+          "date_created": "2020-10-19T00:00:00",
+          "statements": [
+            "tired",
+            "guilty",
+            "excluded"
+          ],
+          "inclusivity": "-0.45"
+        },
+        {
+          "id": 4,
+          "node_name": "mother",
+          "domain_token": "person",
+          "translation": "",
+          "synonyms": [
+            ""
+          ]
+        }
+      ],
+      [
+        {
+          "id": 5,
+          "node_name": "white",
+          "node_domain": "person",
+          "person_id": 2,
+          "node_id": 5,
+          "date_created": "2020-10-19T00:00:00",
+          "statements": [
+            "normal"
+          ],
+          "inclusivity": "0.30"
+        },
+        {
+          "id": 5,
+          "node_name": "white",
+          "domain_token": "role",
+          "translation": "",
+          "synonyms": [
+            ""
+          ]
+        }
       ]
-    ],
+    ]
+  ],
+  [
+    {
+      "id": 3,
+      "code": "protected",
+      "date_created": "2020-10-19T00:00:00",
+      "related_codes": []
+    },
     [
-      {
-        "id": 3,
-        "code": "protected",
-        "date_created": "2020-10-19T00:00:00",
-        "related_codes": []
-      },
       [
-        [
-          {
-            "id": 7,
-            "node_name": "mother",
-            "node_domain": "person",
-            "person_id": 3,
-            "node_id": 4,
-            "date_created": "2020-10-19T00:00:00",
-            "statements": [
-              "balanced",
-              "responsible",
-              "capable"
-            ],
-            "inclusivity": "0.29"
-          },
-          {
-            "id": 4,
-            "node_name": "mother",
-            "domain_token": "person",
-            "translation": "",
-            "synonyms": [
-              ""
-            ]
-          }
-        ],
-        [
-          {
-            "id": 6,
-            "node_name": "black",
-            "node_domain": "person",
-            "person_id": 3,
-            "node_id": 6,
-            "date_created": "2020-10-19T00:00:00",
-            "statements": [
-              "ignored",
-              "suffer microagressions",
-              "proud"
-            ],
-            "inclusivity": "-0.30"
-          },
-          {
-            "id": 6,
-            "node_name": "black",
-            "domain_token": "role",
-            "translation": "",
-            "synonyms": [
-              ""
-            ]
-          }
-        ],
-        [
-          {
-            "id": 8,
-            "node_name": "executive",
-            "node_domain": "role",
-            "person_id": 3,
-            "node_id": 7,
-            "date_created": "2020-10-19T00:00:00",
-            "statements": [
-              "powerful",
-              "overwhelmed",
-              "stifled"
-            ],
-            "inclusivity": "-0.10"
-          },
-          {
-            "id": 7,
-            "node_name": "executive",
-            "domain_token": "role",
-            "translation": "",
-            "synonyms": [
-              ""
-            ]
-          }
-        ],
-        [
-          {
-            "id": 9,
-            "node_name": "innovator",
-            "node_domain": "system",
-            "person_id": 3,
-            "node_id": 8,
-            "date_created": "2020-10-19T00:00:00",
-            "statements": [
-              "respected",
-              "sidelined",
-              "not recognized by system"
-            ],
-            "inclusivity": "0.20"
-          },
-          {
-            "id": 8,
-            "node_name": "innovator",
-            "domain_token": "system",
-            "translation": "",
-            "synonyms": [
-              ""
-            ]
-          }
-        ]
+        {
+          "id": 7,
+          "node_name": "mother",
+          "node_domain": "person",
+          "person_id": 3,
+          "node_id": 4,
+          "date_created": "2020-10-19T00:00:00",
+          "statements": [
+            "balanced",
+            "responsible",
+            "capable"
+          ],
+          "inclusivity": "0.29"
+        },
+        {
+          "id": 4,
+          "node_name": "mother",
+          "domain_token": "person",
+          "translation": "",
+          "synonyms": [
+            ""
+          ]
+        }
+      ],
+      [
+        {
+          "id": 6,
+          "node_name": "black",
+          "node_domain": "person",
+          "person_id": 3,
+          "node_id": 6,
+          "date_created": "2020-10-19T00:00:00",
+          "statements": [
+            "ignored",
+            "suffer microagressions",
+            "proud"
+          ],
+          "inclusivity": "-0.30"
+        },
+        {
+          "id": 6,
+          "node_name": "black",
+          "domain_token": "role",
+          "translation": "",
+          "synonyms": [
+            ""
+          ]
+        }
+      ],
+      [
+        {
+          "id": 8,
+          "node_name": "executive",
+          "node_domain": "role",
+          "person_id": 3,
+          "node_id": 7,
+          "date_created": "2020-10-19T00:00:00",
+          "statements": [
+            "powerful",
+            "overwhelmed",
+            "stifled"
+          ],
+          "inclusivity": "-0.10"
+        },
+        {
+          "id": 7,
+          "node_name": "executive",
+          "domain_token": "role",
+          "translation": "",
+          "synonyms": [
+            ""
+          ]
+        }
+      ],
+      [
+        {
+          "id": 9,
+          "node_name": "innovator",
+          "node_domain": "system",
+          "person_id": 3,
+          "node_id": 8,
+          "date_created": "2020-10-19T00:00:00",
+          "statements": [
+            "respected",
+            "sidelined",
+            "not recognized by system"
+          ],
+          "inclusivity": "0.20"
+        },
+        {
+          "id": 8,
+          "node_name": "innovator",
+          "domain_token": "system",
+          "translation": "",
+          "synonyms": [
+            ""
+          ]
+        }
       ]
-    ],
+    ]
+  ],
+  [
+    {
+      "id": 4,
+      "code": "protected",
+      "date_created": "2020-10-19T00:00:00",
+      "related_codes": []
+    },
     [
-      {
-        "id": 4,
-        "code": "protected",
-        "date_created": "2020-10-19T00:00:00",
-        "related_codes": []
-      },
       [
-        [
-          {
-            "id": 10,
-            "node_name": "white",
-            "node_domain": "person",
-            "person_id": 4,
-            "node_id": 5,
-            "date_created": "2020-10-19T00:00:00",
-            "statements": [
-              "listened to",
-              "persecuted by diversity iniatives",
-              "comfortable"
-            ],
-            "inclusivity": "0.09"
-          },
-          {
-            "id": 5,
-            "node_name": "white",
-            "domain_token": "role",
-            "translation": "",
-            "synonyms": [
-              ""
-            ]
-          }
-        ]
+        {
+          "id": 10,
+          "node_name": "white",
+          "node_domain": "person",
+          "person_id": 4,
+          "node_id": 5,
+          "date_created": "2020-10-19T00:00:00",
+          "statements": [
+            "listened to",
+            "persecuted by diversity iniatives",
+            "comfortable"
+          ],
+          "inclusivity": "0.09"
+        },
+        {
+          "id": 5,
+          "node_name": "white",
+          "domain_token": "role",
+          "translation": "",
+          "synonyms": [
+            ""
+          ]
+        }
       ]
-    ],
+    ]
+  ],
+  [
+    {
+      "id": 5,
+      "code": "protected",
+      "date_created": "2020-10-20T13:10:45.857334",
+      "related_codes": []
+    },
     [
-      {
-        "id": 5,
-        "code": "protected",
-        "date_created": "2020-10-20T13:10:45.857334",
-        "related_codes": []
-      },
       [
-        [
-          {
-            "id": 11,
-            "node_name": "millenial",
-            "node_domain": "person",
-            "person_id": 5,
-            "node_id": 9,
-            "date_created": "2020-10-20T13:10:45.881402",
-            "statements": [
-              "overlooked",
-              "pretty jazzy",
-              "like nothing ever changes"
-            ],
-            "inclusivity": "0.09"
-          },
-          {
-            "id": 9,
-            "node_name": "millenial",
-            "domain_token": "person",
-            "translation": "",
-            "synonyms": [
-              ""
-            ]
-          }
-        ],
-        [
-          {
-            "id": 12,
-            "node_name": "caregiver to my parents",
-            "node_domain": "person",
-            "person_id": 5,
-            "node_id": 10,
-            "date_created": "2020-10-20T13:11:38.914029",
-            "statements": [
-              "really struggling",
-              "wiped out",
-              "like i will never be done"
-            ],
-            "inclusivity": "-0.58"
-          },
-          {
-            "id": 10,
-            "node_name": "caregiver to my parents",
-            "domain_token": "person",
-            "translation": "",
-            "synonyms": [
-              ""
-            ]
-          }
-        ],
-        [
-          {
-            "id": 13,
-            "node_name": "senior policy analyst",
-            "node_domain": "role",
-            "person_id": 5,
-            "node_id": 11,
-            "date_created": "2020-10-20T13:12:11.723659",
-            "statements": [
-              "super smart",
-              "respected",
-              "academic"
-            ],
-            "inclusivity": "0.38"
-          },
-          {
-            "id": 11,
-            "node_name": "senior policy analyst",
-            "domain_token": "role",
-            "translation": "",
-            "synonyms": [
-              ""
-            ]
-          }
-        ]
+        {
+          "id": 11,
+          "node_name": "millenial",
+          "node_domain": "person",
+          "person_id": 5,
+          "node_id": 9,
+          "date_created": "2020-10-20T13:10:45.881402",
+          "statements": [
+            "overlooked",
+            "pretty jazzy",
+            "like nothing ever changes"
+          ],
+          "inclusivity": "0.09"
+        },
+        {
+          "id": 9,
+          "node_name": "millenial",
+          "domain_token": "person",
+          "translation": "",
+          "synonyms": [
+            ""
+          ]
+        }
+      ],
+      [
+        {
+          "id": 12,
+          "node_name": "caregiver to my parents",
+          "node_domain": "person",
+          "person_id": 5,
+          "node_id": 10,
+          "date_created": "2020-10-20T13:11:38.914029",
+          "statements": [
+            "really struggling",
+            "wiped out",
+            "like i will never be done"
+          ],
+          "inclusivity": "-0.58"
+        },
+        {
+          "id": 10,
+          "node_name": "caregiver to my parents",
+          "domain_token": "person",
+          "translation": "",
+          "synonyms": [
+            ""
+          ]
+        }
+      ],
+      [
+        {
+          "id": 13,
+          "node_name": "senior policy analyst",
+          "node_domain": "role",
+          "person_id": 5,
+          "node_id": 11,
+          "date_created": "2020-10-20T13:12:11.723659",
+          "statements": [
+            "super smart",
+            "respected",
+            "academic"
+          ],
+          "inclusivity": "0.38"
+        },
+        {
+          "id": 11,
+          "node_name": "senior policy analyst",
+          "domain_token": "role",
+          "translation": "",
+          "synonyms": [
+            ""
+          ]
+        }
       ]
-    ],
+    ]
+  ],
+  [
+    {
+      "id": 6,
+      "code": "protected",
+      "date_created": "2020-10-20T13:49:46.097165",
+      "related_codes": []
+    },
     [
-      {
-        "id": 6,
-        "code": "protected",
-        "date_created": "2020-10-20T13:49:46.097165",
-        "related_codes": []
-      },
       [
-        [
-          {
-            "id": 14,
-            "node_name": "father",
-            "node_domain": "person",
-            "person_id": 6,
-            "node_id": 1,
-            "date_created": "2020-10-20T13:49:46.105260",
-            "statements": [
-              "tired a lot",
-              "warm and fuzzy",
-              "joyful"
-            ],
-            "inclusivity": "0.10"
-          },
-          {
-            "id": 1,
-            "node_name": "father",
-            "domain_token": "person",
-            "translation": "",
-            "synonyms": [
-              ""
-            ]
-          }
-        ],
-        [
-          {
-            "id": 15,
-            "node_name": "executive",
-            "node_domain": "role",
-            "person_id": 6,
-            "node_id": 7,
-            "date_created": "2020-10-20T13:50:40.471581",
-            "statements": [
-              "helpful",
-              "able to create change",
-              "slightly bewildered"
-            ],
-            "inclusivity": "0.23"
-          },
-          {
-            "id": 7,
-            "node_name": "executive",
-            "domain_token": "role",
-            "translation": "",
-            "synonyms": [
-              ""
-            ]
-          }
-        ]
+        {
+          "id": 14,
+          "node_name": "father",
+          "node_domain": "person",
+          "person_id": 6,
+          "node_id": 1,
+          "date_created": "2020-10-20T13:49:46.105260",
+          "statements": [
+            "tired a lot",
+            "warm and fuzzy",
+            "joyful"
+          ],
+          "inclusivity": "0.10"
+        },
+        {
+          "id": 1,
+          "node_name": "father",
+          "domain_token": "person",
+          "translation": "",
+          "synonyms": [
+            ""
+          ]
+        }
+      ],
+      [
+        {
+          "id": 15,
+          "node_name": "executive",
+          "node_domain": "role",
+          "person_id": 6,
+          "node_id": 7,
+          "date_created": "2020-10-20T13:50:40.471581",
+          "statements": [
+            "helpful",
+            "able to create change",
+            "slightly bewildered"
+          ],
+          "inclusivity": "0.23"
+        },
+        {
+          "id": 7,
+          "node_name": "executive",
+          "domain_token": "role",
+          "translation": "",
+          "synonyms": [
+            ""
+          ]
+        }
       ]
-    ],
+    ]
+  ],
+  [
+    {
+      "id": 7,
+      "code": "protected",
+      "date_created": "2020-10-20T13:56:22.015592",
+      "related_codes": []
+    },
     [
-      {
-        "id": 7,
-        "code": "protected",
-        "date_created": "2020-10-20T13:56:22.015592",
-        "related_codes": []
-      },
       [
-        [
-          {
-            "id": 16,
-            "node_name": "middle class",
-            "node_domain": "person",
-            "person_id": 7,
-            "node_id": 12,
-            "date_created": "2020-10-20T13:56:22.028565",
-            "statements": [
-              "comfortable",
-              "like i have enough",
-              "safe"
-            ],
-            "inclusivity": "0.20"
-          },
-          {
-            "id": 12,
-            "node_name": "middle class",
-            "domain_token": "person",
-            "translation": "",
-            "synonyms": [
-              ""
-            ]
-          }
-        ]
+        {
+          "id": 16,
+          "node_name": "middle class",
+          "node_domain": "person",
+          "person_id": 7,
+          "node_id": 12,
+          "date_created": "2020-10-20T13:56:22.028565",
+          "statements": [
+            "comfortable",
+            "like i have enough",
+            "safe"
+          ],
+          "inclusivity": "0.20"
+        },
+        {
+          "id": 12,
+          "node_name": "middle class",
+          "domain_token": "person",
+          "translation": "",
+          "synonyms": [
+            ""
+          ]
+        }
       ]
-    ],
+    ]
+  ],
+  [
+    {
+      "id": 8,
+      "code": "protected",
+      "date_created": "2020-10-20T23:59:46.111181",
+      "related_codes": []
+    },
     [
-      {
-        "id": 8,
-        "code": "protected",
-        "date_created": "2020-10-20T23:59:46.111181",
-        "related_codes": []
-      },
       [
-        [
-          {
-            "id": 17,
-            "node_name": "baby boomer",
-            "node_domain": "person",
-            "person_id": 8,
-            "node_id": 13,
-            "date_created": "2020-10-20T23:59:46.162110",
-            "statements": [
-              "overlooked",
-              "like i can still contribute",
-              "disrespected"
-            ],
-            "inclusivity": "-0.11"
-          },
-          {
-            "id": 13,
-            "node_name": "baby boomer",
-            "domain_token": "person",
-            "translation": "",
-            "synonyms": [
-              ""
-            ]
-          }
-        ]
+        {
+          "id": 17,
+          "node_name": "baby boomer",
+          "node_domain": "person",
+          "person_id": 8,
+          "node_id": 13,
+          "date_created": "2020-10-20T23:59:46.162110",
+          "statements": [
+            "overlooked",
+            "like i can still contribute",
+            "disrespected"
+          ],
+          "inclusivity": "-0.11"
+        },
+        {
+          "id": 13,
+          "node_name": "baby boomer",
+          "domain_token": "person",
+          "translation": "",
+          "synonyms": [
+            ""
+          ]
+        }
       ]
-    ],
+    ]
+  ],
+  [
+    {
+      "id": 9,
+      "code": "protected",
+      "date_created": "2020-10-22T20:13:36.762254",
+      "related_codes": []
+    },
     [
-      {
-        "id": 9,
-        "code": "protected",
-        "date_created": "2020-10-22T20:13:36.762254",
-        "related_codes": []
-      },
       [
-        [
-          {
-            "id": 20,
-            "node_name": "manager",
-            "node_domain": "role",
-            "person_id": 9,
-            "node_id": 2,
-            "date_created": "2020-10-22T20:15:23.825579",
-            "statements": [
-              "pulled in different directions",
-              "stressed out",
-              "powerful"
-            ],
-            "inclusivity": "0.14"
-          },
-          {
-            "id": 2,
-            "node_name": "manager",
-            "domain_token": "role",
-            "translation": "",
-            "synonyms": [
-              ""
-            ]
-          }
-        ],
-        [
-          {
-            "id": 18,
-            "node_name": "white",
-            "node_domain": "person",
-            "person_id": 9,
-            "node_id": 5,
-            "date_created": "2020-10-22T20:13:36.779497",
-            "statements": [
-              "normal",
-              "confused sometimes",
-              "overlooked due to diversity initiatives"
-            ],
-            "inclusivity": "0.07"
-          },
-          {
-            "id": 5,
-            "node_name": "white",
-            "domain_token": "role",
-            "translation": "",
-            "synonyms": [
-              ""
-            ]
-          }
-        ],
-        [
-          {
-            "id": 19,
-            "node_name": "grew up lower income",
-            "node_domain": "person",
-            "person_id": 9,
-            "node_id": 14,
-            "date_created": "2020-10-22T20:14:43.268099",
-            "statements": [
-              "successful",
-              "i'm privileged",
-              "empathy for other"
-            ],
-            "inclusivity": "-0.05"
-          },
-          {
-            "id": 14,
-            "node_name": "grew up lower income",
-            "domain_token": "person",
-            "translation": "",
-            "synonyms": [
-              ""
-            ]
-          }
-        ]
+        {
+          "id": 20,
+          "node_name": "manager",
+          "node_domain": "role",
+          "person_id": 9,
+          "node_id": 2,
+          "date_created": "2020-10-22T20:15:23.825579",
+          "statements": [
+            "pulled in different directions",
+            "stressed out",
+            "powerful"
+          ],
+          "inclusivity": "0.14"
+        },
+        {
+          "id": 2,
+          "node_name": "manager",
+          "domain_token": "role",
+          "translation": "",
+          "synonyms": [
+            ""
+          ]
+        }
+      ],
+      [
+        {
+          "id": 18,
+          "node_name": "white",
+          "node_domain": "person",
+          "person_id": 9,
+          "node_id": 5,
+          "date_created": "2020-10-22T20:13:36.779497",
+          "statements": [
+            "normal",
+            "confused sometimes",
+            "overlooked due to diversity initiatives"
+          ],
+          "inclusivity": "0.07"
+        },
+        {
+          "id": 5,
+          "node_name": "white",
+          "domain_token": "role",
+          "translation": "",
+          "synonyms": [
+            ""
+          ]
+        }
+      ],
+      [
+        {
+          "id": 19,
+          "node_name": "grew up lower income",
+          "node_domain": "person",
+          "person_id": 9,
+          "node_id": 14,
+          "date_created": "2020-10-22T20:14:43.268099",
+          "statements": [
+            "successful",
+            "i'm privileged",
+            "empathy for other"
+          ],
+          "inclusivity": "-0.05"
+        },
+        {
+          "id": 14,
+          "node_name": "grew up lower income",
+          "domain_token": "person",
+          "translation": "",
+          "synonyms": [
+            ""
+          ]
+        }
       ]
-    ],
+    ]
+  ],
+  [
+    {
+      "id": 10,
+      "code": "protected",
+      "date_created": "2020-10-22T20:44:41.013972",
+      "related_codes": []
+    },
     [
-      {
-        "id": 10,
-        "code": "protected",
-        "date_created": "2020-10-22T20:44:41.013972",
-        "related_codes": []
-      },
       [
-        [
-          {
-            "id": 21,
-            "node_name": "mother",
-            "node_domain": "role",
-            "person_id": 10,
-            "node_id": 4,
-            "date_created": "2020-10-22T20:44:41.021339",
-            "statements": [
-              "pressured for time",
-              "torn between priorites",
-              "able to offer less then some of my colleagues"
-            ],
-            "inclusivity": "-0.52"
-          },
-          {
-            "id": 4,
-            "node_name": "mother",
-            "domain_token": "person",
-            "translation": "",
-            "synonyms": [
-              ""
-            ]
-          }
-        ],
-        [
-          {
-            "id": 23,
-            "node_name": "white",
-            "node_domain": "person",
-            "person_id": 10,
-            "node_id": 5,
-            "date_created": "2020-10-22T20:47:35.042597",
-            "statements": [
-              "like i have more opportunities then bipoc people",
-              "unafraid of speaking my mind",
-              "at home on my team"
-            ],
-            "inclusivity": "0.58"
-          },
-          {
-            "id": 5,
-            "node_name": "white",
-            "domain_token": "role",
-            "translation": "",
-            "synonyms": [
-              ""
-            ]
-          }
-        ],
-        [
-          {
-            "id": 22,
-            "node_name": "person in recovery",
-            "node_domain": "person",
-            "person_id": 10,
-            "node_id": 15,
-            "date_created": "2020-10-22T20:46:23.921260",
-            "statements": [
-              "like i have very different life experiences from most of my colleagues",
-              "strong",
-              "like i have access to many resources that others may not"
-            ],
-            "inclusivity": "0.03"
-          },
-          {
-            "id": 15,
-            "node_name": "person in recovery",
-            "domain_token": "person",
-            "translation": "",
-            "synonyms": [
-              ""
-            ]
-          }
-        ],
-        [
-          {
-            "id": 24,
-            "node_name": "someone without formal education",
-            "node_domain": "person",
-            "person_id": 10,
-            "node_id": 16,
-            "date_created": "2020-10-22T20:49:22.416392",
-            "statements": [
-              "like an imposter",
-              "like i have to work harder then others"
-            ],
-            "inclusivity": "-0.64"
-          },
-          {
-            "id": 16,
-            "node_name": "someone without formal education",
-            "domain_token": "person",
-            "translation": "",
-            "synonyms": [
-              ""
-            ]
-          }
-        ]
+        {
+          "id": 21,
+          "node_name": "mother",
+          "node_domain": "role",
+          "person_id": 10,
+          "node_id": 4,
+          "date_created": "2020-10-22T20:44:41.021339",
+          "statements": [
+            "pressured for time",
+            "torn between priorites",
+            "able to offer less then some of my colleagues"
+          ],
+          "inclusivity": "-0.52"
+        },
+        {
+          "id": 4,
+          "node_name": "mother",
+          "domain_token": "person",
+          "translation": "",
+          "synonyms": [
+            ""
+          ]
+        }
+      ],
+      [
+        {
+          "id": 23,
+          "node_name": "white",
+          "node_domain": "person",
+          "person_id": 10,
+          "node_id": 5,
+          "date_created": "2020-10-22T20:47:35.042597",
+          "statements": [
+            "like i have more opportunities then bipoc people",
+            "unafraid of speaking my mind",
+            "at home on my team"
+          ],
+          "inclusivity": "0.58"
+        },
+        {
+          "id": 5,
+          "node_name": "white",
+          "domain_token": "role",
+          "translation": "",
+          "synonyms": [
+            ""
+          ]
+        }
+      ],
+      [
+        {
+          "id": 22,
+          "node_name": "person in recovery",
+          "node_domain": "person",
+          "person_id": 10,
+          "node_id": 15,
+          "date_created": "2020-10-22T20:46:23.921260",
+          "statements": [
+            "like i have very different life experiences from most of my colleagues",
+            "strong",
+            "like i have access to many resources that others may not"
+          ],
+          "inclusivity": "0.03"
+        },
+        {
+          "id": 15,
+          "node_name": "person in recovery",
+          "domain_token": "person",
+          "translation": "",
+          "synonyms": [
+            ""
+          ]
+        }
+      ],
+      [
+        {
+          "id": 24,
+          "node_name": "someone without formal education",
+          "node_domain": "person",
+          "person_id": 10,
+          "node_id": 16,
+          "date_created": "2020-10-22T20:49:22.416392",
+          "statements": [
+            "like an imposter",
+            "like i have to work harder then others"
+          ],
+          "inclusivity": "-0.64"
+        },
+        {
+          "id": 16,
+          "node_name": "someone without formal education",
+          "domain_token": "person",
+          "translation": "",
+          "synonyms": [
+            ""
+          ]
+        }
       ]
-    ],
+    ]
+  ],
+  [
+    {
+      "id": 11,
+      "code": "protected",
+      "date_created": "2020-10-24T18:13:31.499909",
+      "related_codes": []
+    },
     [
-      {
-        "id": 11,
-        "code": "protected",
-        "date_created": "2020-10-24T18:13:31.499909",
-        "related_codes": []
-      },
       [
-        [
-          {
-            "id": 26,
-            "node_name": "black",
-            "node_domain": "person",
-            "person_id": 11,
-            "node_id": 6,
-            "date_created": "2020-10-24T18:15:56.853240",
-            "statements": [
-              "vulnerable",
-              "different",
-              "questionable"
-            ],
-            "inclusivity": "-1.00"
-          },
-          {
-            "id": 6,
-            "node_name": "black",
-            "domain_token": "role",
-            "translation": "",
-            "synonyms": [
-              ""
-            ]
-          }
-        ],
-        [
-          {
-            "id": 28,
-            "node_name": "executive",
-            "node_domain": "role",
-            "person_id": 11,
-            "node_id": 7,
-            "date_created": "2020-10-24T18:18:05.980097",
-            "statements": [
-              "responsible",
-              "hardworking",
-              "tired"
-            ],
-            "inclusivity": "0"
-          },
-          {
-            "id": 7,
-            "node_name": "executive",
-            "domain_token": "role",
-            "translation": "",
-            "synonyms": [
-              ""
-            ]
-          }
-        ],
-        [
-          {
-            "id": 25,
-            "node_name": "black female mid career executiv",
-            "node_domain": "person",
-            "person_id": 11,
-            "node_id": 159,
-            "date_created": "2020-10-24T18:13:31.525806",
-            "statements": [
-              "unique",
-              "qualified ",
-              "lonely"
-            ],
-            "inclusivity": "-0.41"
-          },
-          {
-            "id": 159,
-            "node_name": "black female mid career executiv",
-            "domain_token": "person",
-            "translation": "",
-            "synonyms": [
-              ""
-            ]
-          }
-        ],
-        [
-          {
-            "id": 27,
-            "node_name": "working mother",
-            "node_domain": "person",
-            "person_id": 11,
-            "node_id": 160,
-            "date_created": "2020-10-24T18:17:12.182534",
-            "statements": [
-              "busy",
-              "misunderstood",
-              "unsupported"
-            ],
-            "inclusivity": "-0.96"
-          },
-          {
-            "id": 160,
-            "node_name": "working mother",
-            "domain_token": "person",
-            "translation": "",
-            "synonyms": [
-              ""
-            ]
-          }
-        ],
-        [
-          {
-            "id": 29,
-            "node_name": "young executive ",
-            "node_domain": "role",
-            "person_id": 11,
-            "node_id": 161,
-            "date_created": "2020-10-24T18:20:21.359689",
-            "statements": [
-              "different",
-              "undervalued",
-              "diminished"
-            ],
-            "inclusivity": "-0.83"
-          },
-          {
-            "id": 161,
-            "node_name": "young executive ",
-            "domain_token": "role",
-            "translation": "",
-            "synonyms": [
-              ""
-            ]
-          }
-        ],
-        [
-          {
-            "id": 30,
-            "node_name": "invisible disability",
-            "node_domain": "person",
-            "person_id": 11,
-            "node_id": 162,
-            "date_created": "2020-10-24T18:22:12.727518",
-            "statements": [
-              "alone",
-              "broken",
-              "hurt"
-            ],
-            "inclusivity": "-0.76"
-          },
-          {
-            "id": 162,
-            "node_name": "invisible disability",
-            "domain_token": "person",
-            "translation": "",
-            "synonyms": [
-              ""
-            ]
-          }
-        ]
+        {
+          "id": 26,
+          "node_name": "black",
+          "node_domain": "person",
+          "person_id": 11,
+          "node_id": 6,
+          "date_created": "2020-10-24T18:15:56.853240",
+          "statements": [
+            "vulnerable",
+            "different",
+            "questionable"
+          ],
+          "inclusivity": "-1.00"
+        },
+        {
+          "id": 6,
+          "node_name": "black",
+          "domain_token": "role",
+          "translation": "",
+          "synonyms": [
+            ""
+          ]
+        }
+      ],
+      [
+        {
+          "id": 28,
+          "node_name": "executive",
+          "node_domain": "role",
+          "person_id": 11,
+          "node_id": 7,
+          "date_created": "2020-10-24T18:18:05.980097",
+          "statements": [
+            "responsible",
+            "hardworking",
+            "tired"
+          ],
+          "inclusivity": "0"
+        },
+        {
+          "id": 7,
+          "node_name": "executive",
+          "domain_token": "role",
+          "translation": "",
+          "synonyms": [
+            ""
+          ]
+        }
+      ],
+      [
+        {
+          "id": 25,
+          "node_name": "black female mid career executiv",
+          "node_domain": "person",
+          "person_id": 11,
+          "node_id": 159,
+          "date_created": "2020-10-24T18:13:31.525806",
+          "statements": [
+            "unique",
+            "qualified ",
+            "lonely"
+          ],
+          "inclusivity": "-0.41"
+        },
+        {
+          "id": 159,
+          "node_name": "black female mid career executiv",
+          "domain_token": "person",
+          "translation": "",
+          "synonyms": [
+            ""
+          ]
+        }
+      ],
+      [
+        {
+          "id": 27,
+          "node_name": "working mother",
+          "node_domain": "person",
+          "person_id": 11,
+          "node_id": 160,
+          "date_created": "2020-10-24T18:17:12.182534",
+          "statements": [
+            "busy",
+            "misunderstood",
+            "unsupported"
+          ],
+          "inclusivity": "-0.96"
+        },
+        {
+          "id": 160,
+          "node_name": "working mother",
+          "domain_token": "person",
+          "translation": "",
+          "synonyms": [
+            ""
+          ]
+        }
+      ],
+      [
+        {
+          "id": 29,
+          "node_name": "young executive ",
+          "node_domain": "role",
+          "person_id": 11,
+          "node_id": 161,
+          "date_created": "2020-10-24T18:20:21.359689",
+          "statements": [
+            "different",
+            "undervalued",
+            "diminished"
+          ],
+          "inclusivity": "-0.83"
+        },
+        {
+          "id": 161,
+          "node_name": "young executive ",
+          "domain_token": "role",
+          "translation": "",
+          "synonyms": [
+            ""
+          ]
+        }
+      ],
+      [
+        {
+          "id": 30,
+          "node_name": "invisible disability",
+          "node_domain": "person",
+          "person_id": 11,
+          "node_id": 162,
+          "date_created": "2020-10-24T18:22:12.727518",
+          "statements": [
+            "alone",
+            "broken",
+            "hurt"
+          ],
+          "inclusivity": "-0.76"
+        },
+        {
+          "id": 162,
+          "node_name": "invisible disability",
+          "domain_token": "person",
+          "translation": "",
+          "synonyms": [
+            ""
+          ]
+        }
       ]
-    ],
+    ]
+  ],
+  [
+    {
+      "id": 12,
+      "code": "protected",
+      "date_created": "2020-10-24T18:30:31.572374",
+      "related_codes": []
+    },
     [
-      {
-        "id": 12,
-        "code": "protected",
-        "date_created": "2020-10-24T18:30:31.572374",
-        "related_codes": []
-      },
       [
-        [
-          {
-            "id": 31,
-            "node_name": "christian",
-            "node_domain": "person",
-            "person_id": 12,
-            "node_id": 163,
-            "date_created": "2020-10-24T18:30:31.592515",
-            "statements": [
-              "unique",
-              "happy",
-              "different"
-            ],
-            "inclusivity": "0.47"
-          },
-          {
-            "id": 163,
-            "node_name": "christian",
-            "domain_token": "person",
-            "translation": "",
-            "synonyms": [
-              ""
-            ]
-          }
-        ]
+        {
+          "id": 31,
+          "node_name": "christian",
+          "node_domain": "person",
+          "person_id": 12,
+          "node_id": 163,
+          "date_created": "2020-10-24T18:30:31.592515",
+          "statements": [
+            "unique",
+            "happy",
+            "different"
+          ],
+          "inclusivity": "0.47"
+        },
+        {
+          "id": 163,
+          "node_name": "christian",
+          "domain_token": "person",
+          "translation": "",
+          "synonyms": [
+            ""
+          ]
+        }
       ]
-    ],
+    ]
+  ],
+  [
+    {
+      "id": 13,
+      "code": "protected",
+      "date_created": "2020-10-24T18:30:51.648009",
+      "related_codes": []
+    },
     [
-      {
-        "id": 13,
-        "code": "protected",
-        "date_created": "2020-10-24T18:30:51.648009",
-        "related_codes": []
-      },
       [
-        [
-          {
-            "id": 32,
-            "node_name": "christian",
-            "node_domain": "person",
-            "person_id": 13,
-            "node_id": 163,
-            "date_created": "2020-10-24T18:30:51.656544",
-            "statements": [
-              "unique",
-              "happy",
-              "different"
-            ],
-            "inclusivity": "0.85"
-          },
-          {
-            "id": 163,
-            "node_name": "christian",
-            "domain_token": "person",
-            "translation": "",
-            "synonyms": [
-              ""
-            ]
-          }
-        ]
+        {
+          "id": 32,
+          "node_name": "christian",
+          "node_domain": "person",
+          "person_id": 13,
+          "node_id": 163,
+          "date_created": "2020-10-24T18:30:51.656544",
+          "statements": [
+            "unique",
+            "happy",
+            "different"
+          ],
+          "inclusivity": "0.85"
+        },
+        {
+          "id": 163,
+          "node_name": "christian",
+          "domain_token": "person",
+          "translation": "",
+          "synonyms": [
+            ""
+          ]
+        }
       ]
-    ],
+    ]
+  ],
+  [
+    {
+      "id": 14,
+      "code": "protected",
+      "date_created": "2020-10-26T01:18:50.620745",
+      "related_codes": []
+    },
     [
-      {
-        "id": 14,
-        "code": "protected",
-        "date_created": "2020-10-26T01:18:50.620745",
-        "related_codes": []
-      },
       [
-        [
-          {
-            "id": 33,
-            "node_name": "first go at this",
-            "node_domain": "person",
-            "person_id": 14,
-            "node_id": 164,
-            "date_created": "2020-10-26T01:18:50.640633",
-            "statements": [
-              "parent",
-              "junior",
-              "white"
-            ],
-            "inclusivity": "1.00"
-          },
-          {
-            "id": 164,
-            "node_name": "first go at this",
-            "domain_token": "person",
-            "translation": "",
-            "synonyms": [
-              ""
-            ]
-          }
-        ]
+        {
+          "id": 33,
+          "node_name": "first go at this",
+          "node_domain": "person",
+          "person_id": 14,
+          "node_id": 164,
+          "date_created": "2020-10-26T01:18:50.640633",
+          "statements": [
+            "parent",
+            "junior",
+            "white"
+          ],
+          "inclusivity": "1.00"
+        },
+        {
+          "id": 164,
+          "node_name": "first go at this",
+          "domain_token": "person",
+          "translation": "",
+          "synonyms": [
+            ""
+          ]
+        }
       ]
-    ],
+    ]
+  ],
+  [
+    {
+      "id": 15,
+      "code": "protected",
+      "date_created": "2020-11-02T04:32:01.135228",
+      "related_codes": []
+    },
     [
-      {
-        "id": 15,
-        "code": "protected",
-        "date_created": "2020-11-02T04:32:01.135228",
-        "related_codes": []
-      },
       [
-        [
-          {
-            "id": 34,
-            "node_name": "senior policy advisor",
-            "node_domain": "role",
-            "person_id": 15,
-            "node_id": 165,
-            "date_created": "2020-11-02T04:32:01.157241",
-            "statements": [
-              "seen as a subject matter expert ",
-              "as if i am the only one who is concerned about those who are excluded directly or indirectly ",
-              "additional responsibilities "
-            ],
-            "inclusivity": "0.18"
-          },
-          {
-            "id": 165,
-            "node_name": "senior policy advisor",
-            "domain_token": "role",
-            "translation": "",
-            "synonyms": [
-              ""
-            ]
-          }
-        ],
-        [
-          {
-            "id": 35,
-            "node_name": "black ",
-            "node_domain": "person",
-            "person_id": 15,
-            "node_id": 166,
-            "date_created": "2020-11-02T04:33:17.605839",
-            "statements": [
-              "excluded or made to feel like the other ",
-              "the need to always deliver a high standard of work ",
-              "my passions can be misconstrued as anger"
-            ],
-            "inclusivity": "-0.87"
-          },
-          {
-            "id": 166,
-            "node_name": "black ",
-            "domain_token": "person",
-            "translation": "",
-            "synonyms": [
-              ""
-            ]
-          }
-        ],
-        [
-          {
-            "id": 36,
-            "node_name": "man",
-            "node_domain": "person",
-            "person_id": 15,
-            "node_id": 167,
-            "date_created": "2020-11-02T04:34:27.778599",
-            "statements": [
-              "i work in a workplace dominated by men",
-              "nothing special as this identity cant be separated from being black ",
-              "the need to use this privilege of being a man for good. "
-            ],
-            "inclusivity": "-0.03"
-          },
-          {
-            "id": 167,
-            "node_name": "man",
-            "domain_token": "person",
-            "translation": "",
-            "synonyms": [
-              ""
-            ]
-          }
-        ],
-        [
-          {
-            "id": 37,
-            "node_name": "father ",
-            "node_domain": "person",
-            "person_id": 15,
-            "node_id": 168,
-            "date_created": "2020-11-02T04:35:21.972086",
-            "statements": [
-              "joy, love and gratitude ",
-              "responsibility to teach him positive masculinity ",
-              "gives me purpose "
-            ],
-            "inclusivity": "0.39"
-          },
-          {
-            "id": 168,
-            "node_name": "father ",
-            "domain_token": "person",
-            "translation": "",
-            "synonyms": [
-              ""
-            ]
-          }
-        ],
-        [
-          {
-            "id": 38,
-            "node_name": "feminist ",
-            "node_domain": "person",
-            "person_id": 15,
-            "node_id": 169,
-            "date_created": "2020-11-02T04:49:24.944832",
-            "statements": [
-              "the need to question and be critical ",
-              "i am doing good and purposeful work ",
-              "i am challenging the status quo "
-            ],
-            "inclusivity": "0.15"
-          },
-          {
-            "id": 169,
-            "node_name": "feminist ",
-            "domain_token": "person",
-            "translation": "",
-            "synonyms": [
-              ""
-            ]
-          }
-        ],
-        [
-          {
-            "id": 39,
-            "node_name": "brother ",
-            "node_domain": "person",
-            "person_id": 15,
-            "node_id": 170,
-            "date_created": "2020-11-02T04:51:11.425441",
-            "statements": [
-              "little impact on my work relationships ",
-              "i look out for others and mentor junior staff ",
-              "good role model "
-            ],
-            "inclusivity": "0"
-          },
-          {
-            "id": 170,
-            "node_name": "brother ",
-            "domain_token": "person",
-            "translation": "",
-            "synonyms": [
-              ""
-            ]
-          }
-        ]
+        {
+          "id": 34,
+          "node_name": "senior policy advisor",
+          "node_domain": "role",
+          "person_id": 15,
+          "node_id": 165,
+          "date_created": "2020-11-02T04:32:01.157241",
+          "statements": [
+            "seen as a subject matter expert ",
+            "as if i am the only one who is concerned about those who are excluded directly or indirectly ",
+            "additional responsibilities "
+          ],
+          "inclusivity": "0.18"
+        },
+        {
+          "id": 165,
+          "node_name": "senior policy advisor",
+          "domain_token": "role",
+          "translation": "",
+          "synonyms": [
+            ""
+          ]
+        }
+      ],
+      [
+        {
+          "id": 35,
+          "node_name": "black ",
+          "node_domain": "person",
+          "person_id": 15,
+          "node_id": 166,
+          "date_created": "2020-11-02T04:33:17.605839",
+          "statements": [
+            "excluded or made to feel like the other ",
+            "the need to always deliver a high standard of work ",
+            "my passions can be misconstrued as anger"
+          ],
+          "inclusivity": "-0.87"
+        },
+        {
+          "id": 166,
+          "node_name": "black ",
+          "domain_token": "person",
+          "translation": "",
+          "synonyms": [
+            ""
+          ]
+        }
+      ],
+      [
+        {
+          "id": 36,
+          "node_name": "man",
+          "node_domain": "person",
+          "person_id": 15,
+          "node_id": 167,
+          "date_created": "2020-11-02T04:34:27.778599",
+          "statements": [
+            "i work in a workplace dominated by men",
+            "nothing special as this identity cant be separated from being black ",
+            "the need to use this privilege of being a man for good. "
+          ],
+          "inclusivity": "-0.03"
+        },
+        {
+          "id": 167,
+          "node_name": "man",
+          "domain_token": "person",
+          "translation": "",
+          "synonyms": [
+            ""
+          ]
+        }
+      ],
+      [
+        {
+          "id": 37,
+          "node_name": "father ",
+          "node_domain": "person",
+          "person_id": 15,
+          "node_id": 168,
+          "date_created": "2020-11-02T04:35:21.972086",
+          "statements": [
+            "joy, love and gratitude ",
+            "responsibility to teach him positive masculinity ",
+            "gives me purpose "
+          ],
+          "inclusivity": "0.39"
+        },
+        {
+          "id": 168,
+          "node_name": "father ",
+          "domain_token": "person",
+          "translation": "",
+          "synonyms": [
+            ""
+          ]
+        }
+      ],
+      [
+        {
+          "id": 38,
+          "node_name": "feminist ",
+          "node_domain": "person",
+          "person_id": 15,
+          "node_id": 169,
+          "date_created": "2020-11-02T04:49:24.944832",
+          "statements": [
+            "the need to question and be critical ",
+            "i am doing good and purposeful work ",
+            "i am challenging the status quo "
+          ],
+          "inclusivity": "0.15"
+        },
+        {
+          "id": 169,
+          "node_name": "feminist ",
+          "domain_token": "person",
+          "translation": "",
+          "synonyms": [
+            ""
+          ]
+        }
+      ],
+      [
+        {
+          "id": 39,
+          "node_name": "brother ",
+          "node_domain": "person",
+          "person_id": 15,
+          "node_id": 170,
+          "date_created": "2020-11-02T04:51:11.425441",
+          "statements": [
+            "little impact on my work relationships ",
+            "i look out for others and mentor junior staff ",
+            "good role model "
+          ],
+          "inclusivity": "0"
+        },
+        {
+          "id": 170,
+          "node_name": "brother ",
+          "domain_token": "person",
+          "translation": "",
+          "synonyms": [
+            ""
+          ]
+        }
       ]
-    ],
+    ]
+  ],
+  [
+    {
+      "id": 16,
+      "code": "protected",
+      "date_created": "2020-11-09T17:59:49.039945",
+      "related_codes": []
+    },
     [
-      {
-        "id": 16,
-        "code": "protected",
-        "date_created": "2020-11-09T17:59:49.039945",
-        "related_codes": []
-      },
       [
-        [
-          {
-            "id": 40,
-            "node_name": "woman, black, lgbtq, career",
-            "node_domain": "person",
-            "person_id": 16,
-            "node_id": 171,
-            "date_created": "2020-11-09T17:59:49.066383",
-            "statements": [
-              "dedicated, unique, earned privilege",
-              "respected, admired, opportunities",
-              "disrespected, invisible, targeted, limited"
-            ],
-            "inclusivity": "-0.44"
-          },
-          {
-            "id": 171,
-            "node_name": "woman, black, lgbtq, career",
-            "domain_token": "person",
-            "translation": "",
-            "synonyms": [
-              ""
-            ]
-          }
-        ]
+        {
+          "id": 40,
+          "node_name": "woman, black, lgbtq, career",
+          "node_domain": "person",
+          "person_id": 16,
+          "node_id": 171,
+          "date_created": "2020-11-09T17:59:49.066383",
+          "statements": [
+            "dedicated, unique, earned privilege",
+            "respected, admired, opportunities",
+            "disrespected, invisible, targeted, limited"
+          ],
+          "inclusivity": "-0.44"
+        },
+        {
+          "id": 171,
+          "node_name": "woman, black, lgbtq, career",
+          "domain_token": "person",
+          "translation": "",
+          "synonyms": [
+            ""
+          ]
+        }
       ]
-    ],
+    ]
+  ],
+  [
+    {
+      "id": 17,
+      "code": "protected",
+      "date_created": "2020-11-09T18:04:55.755654",
+      "related_codes": []
+    },
     [
-      {
-        "id": 17,
-        "code": "protected",
-        "date_created": "2020-11-09T18:04:55.755654",
-        "related_codes": []
-      },
       [
-        [
-          {
-            "id": 41,
-            "node_name": "a black woman",
-            "node_domain": "person",
-            "person_id": 17,
-            "node_id": 172,
-            "date_created": "2020-11-09T18:04:55.791295",
-            "statements": [
-              "sometimes unsafe",
-              "sometimes understood",
-              "sometimes ignored, excluded and targeted"
-            ],
-            "inclusivity": "-0.44"
-          },
-          {
-            "id": 172,
-            "node_name": "a black woman",
-            "domain_token": "person",
-            "translation": "",
-            "synonyms": [
-              ""
-            ]
-          }
-        ],
-        [
-          {
-            "id": 42,
-            "node_name": "lgbtq2 lesbian",
-            "node_domain": "person",
-            "person_id": 17,
-            "node_id": 173,
-            "date_created": "2020-11-09T18:08:12.049461",
-            "statements": [
-              "hidden, unsafe",
-              "othered",
-              "cautious"
-            ],
-            "inclusivity": "-0.42"
-          },
-          {
-            "id": 173,
-            "node_name": "lgbtq2 lesbian",
-            "domain_token": "person",
-            "translation": "",
-            "synonyms": [
-              ""
-            ]
-          }
-        ],
-        [
-          {
-            "id": 43,
-            "node_name": "jamaican-canadian",
-            "node_domain": "person",
-            "person_id": 17,
-            "node_id": 174,
-            "date_created": "2020-11-09T18:11:26.871326",
-            "statements": [
-              "unique",
-              "misunderstood",
-              "sometimes othered"
-            ],
-            "inclusivity": "-0.16"
-          },
-          {
-            "id": 174,
-            "node_name": "jamaican-canadian",
-            "domain_token": "person",
-            "translation": "",
-            "synonyms": [
-              ""
-            ]
-          }
-        ],
-        [
-          {
-            "id": 45,
-            "node_name": "career",
-            "node_domain": "person",
-            "person_id": 17,
-            "node_id": 175,
-            "date_created": "2020-11-09T18:13:31.983535",
-            "statements": [
-              "dedicated, unique, earned privilege",
-              "supported",
-              "limited, placed in a box"
-            ],
-            "inclusivity": "0.09"
-          },
-          {
-            "id": 175,
-            "node_name": "career",
-            "domain_token": "person",
-            "translation": "",
-            "synonyms": [
-              ""
-            ]
-          }
-        ],
-        [
-          {
-            "id": 44,
-            "node_name": "career",
-            "node_domain": "person",
-            "person_id": 17,
-            "node_id": 175,
-            "date_created": "2020-11-09T18:13:15.923942",
-            "statements": [
-              "dedicated, unique, earned privilege",
-              "supported",
-              "limited, placed in a box"
-            ],
-            "inclusivity": "0.09"
-          },
-          {
-            "id": 175,
-            "node_name": "career",
-            "domain_token": "person",
-            "translation": "",
-            "synonyms": [
-              ""
-            ]
-          }
-        ]
+        {
+          "id": 41,
+          "node_name": "a black woman",
+          "node_domain": "person",
+          "person_id": 17,
+          "node_id": 172,
+          "date_created": "2020-11-09T18:04:55.791295",
+          "statements": [
+            "sometimes unsafe",
+            "sometimes understood",
+            "sometimes ignored, excluded and targeted"
+          ],
+          "inclusivity": "-0.44"
+        },
+        {
+          "id": 172,
+          "node_name": "a black woman",
+          "domain_token": "person",
+          "translation": "",
+          "synonyms": [
+            ""
+          ]
+        }
+      ],
+      [
+        {
+          "id": 42,
+          "node_name": "lgbtq2 lesbian",
+          "node_domain": "person",
+          "person_id": 17,
+          "node_id": 173,
+          "date_created": "2020-11-09T18:08:12.049461",
+          "statements": [
+            "hidden, unsafe",
+            "othered",
+            "cautious"
+          ],
+          "inclusivity": "-0.42"
+        },
+        {
+          "id": 173,
+          "node_name": "lgbtq2 lesbian",
+          "domain_token": "person",
+          "translation": "",
+          "synonyms": [
+            ""
+          ]
+        }
+      ],
+      [
+        {
+          "id": 43,
+          "node_name": "jamaican-canadian",
+          "node_domain": "person",
+          "person_id": 17,
+          "node_id": 174,
+          "date_created": "2020-11-09T18:11:26.871326",
+          "statements": [
+            "unique",
+            "misunderstood",
+            "sometimes othered"
+          ],
+          "inclusivity": "-0.16"
+        },
+        {
+          "id": 174,
+          "node_name": "jamaican-canadian",
+          "domain_token": "person",
+          "translation": "",
+          "synonyms": [
+            ""
+          ]
+        }
+      ],
+      [
+        {
+          "id": 45,
+          "node_name": "career",
+          "node_domain": "person",
+          "person_id": 17,
+          "node_id": 175,
+          "date_created": "2020-11-09T18:13:31.983535",
+          "statements": [
+            "dedicated, unique, earned privilege",
+            "supported",
+            "limited, placed in a box"
+          ],
+          "inclusivity": "0.09"
+        },
+        {
+          "id": 175,
+          "node_name": "career",
+          "domain_token": "person",
+          "translation": "",
+          "synonyms": [
+            ""
+          ]
+        }
+      ],
+      [
+        {
+          "id": 44,
+          "node_name": "career",
+          "node_domain": "person",
+          "person_id": 17,
+          "node_id": 175,
+          "date_created": "2020-11-09T18:13:15.923942",
+          "statements": [
+            "dedicated, unique, earned privilege",
+            "supported",
+            "limited, placed in a box"
+          ],
+          "inclusivity": "0.09"
+        },
+        {
+          "id": 175,
+          "node_name": "career",
+          "domain_token": "person",
+          "translation": "",
+          "synonyms": [
+            ""
+          ]
+        }
       ]
-    ],
+    ]
+  ],
+  [
+    {
+      "id": 18,
+      "code": "protected",
+      "date_created": "2020-11-10T17:23:54.034369",
+      "related_codes": []
+    },
     [
-      {
-        "id": 18,
-        "code": "protected",
-        "date_created": "2020-11-10T17:23:54.034369",
-        "related_codes": []
-      },
       [
-        [
-          {
-            "id": 49,
-            "node_name": "father",
-            "node_domain": "person",
-            "person_id": 18,
-            "node_id": 1,
-            "date_created": "2020-11-10T17:29:09.562113",
-            "statements": [
-              "amazing",
-              "like i step out of work too often",
-              "like my employees are working longer than i am"
-            ],
-            "inclusivity": "0.29"
-          },
-          {
-            "id": 1,
-            "node_name": "father",
-            "domain_token": "person",
-            "translation": "",
-            "synonyms": [
-              ""
-            ]
-          }
-        ],
-        [
-          {
-            "id": 47,
-            "node_name": "white",
-            "node_domain": "person",
-            "person_id": 18,
-            "node_id": 5,
-            "date_created": "2020-11-10T17:27:03.995781",
-            "statements": [
-              "normal",
-              "listened to",
-              "slight guilty"
-            ],
-            "inclusivity": "0.05"
-          },
-          {
-            "id": 5,
-            "node_name": "white",
-            "domain_token": "role",
-            "translation": "",
-            "synonyms": [
-              ""
-            ]
-          }
-        ],
-        [
-          {
-            "id": 46,
-            "node_name": "executive",
-            "node_domain": "role",
-            "person_id": 18,
-            "node_id": 7,
-            "date_created": "2020-11-10T17:23:54.060085",
-            "statements": [
-              "kind of useful",
-              "pulled in a lot of different ways",
-              "burdened by bureaucratic process"
-            ],
-            "inclusivity": "0.07"
-          },
-          {
-            "id": 7,
-            "node_name": "executive",
-            "domain_token": "role",
-            "translation": "",
-            "synonyms": [
-              ""
-            ]
-          }
-        ],
-        [
-          {
-            "id": 48,
-            "node_name": "innovator",
-            "node_domain": "role",
-            "person_id": 18,
-            "node_id": 8,
-            "date_created": "2020-11-10T17:28:09.321198",
-            "statements": [
-              "valued because i can do stuff",
-              "really tired",
-              "somewhat excluded"
-            ],
-            "inclusivity": "-0.21"
-          },
-          {
-            "id": 8,
-            "node_name": "innovator",
-            "domain_token": "system",
-            "translation": "",
-            "synonyms": [
-              ""
-            ]
-          }
-        ]
+        {
+          "id": 49,
+          "node_name": "father",
+          "node_domain": "person",
+          "person_id": 18,
+          "node_id": 1,
+          "date_created": "2020-11-10T17:29:09.562113",
+          "statements": [
+            "amazing",
+            "like i step out of work too often",
+            "like my employees are working longer than i am"
+          ],
+          "inclusivity": "0.29"
+        },
+        {
+          "id": 1,
+          "node_name": "father",
+          "domain_token": "person",
+          "translation": "",
+          "synonyms": [
+            ""
+          ]
+        }
+      ],
+      [
+        {
+          "id": 47,
+          "node_name": "white",
+          "node_domain": "person",
+          "person_id": 18,
+          "node_id": 5,
+          "date_created": "2020-11-10T17:27:03.995781",
+          "statements": [
+            "normal",
+            "listened to",
+            "slight guilty"
+          ],
+          "inclusivity": "0.05"
+        },
+        {
+          "id": 5,
+          "node_name": "white",
+          "domain_token": "role",
+          "translation": "",
+          "synonyms": [
+            ""
+          ]
+        }
+      ],
+      [
+        {
+          "id": 46,
+          "node_name": "executive",
+          "node_domain": "role",
+          "person_id": 18,
+          "node_id": 7,
+          "date_created": "2020-11-10T17:23:54.060085",
+          "statements": [
+            "kind of useful",
+            "pulled in a lot of different ways",
+            "burdened by bureaucratic process"
+          ],
+          "inclusivity": "0.07"
+        },
+        {
+          "id": 7,
+          "node_name": "executive",
+          "domain_token": "role",
+          "translation": "",
+          "synonyms": [
+            ""
+          ]
+        }
+      ],
+      [
+        {
+          "id": 48,
+          "node_name": "innovator",
+          "node_domain": "role",
+          "person_id": 18,
+          "node_id": 8,
+          "date_created": "2020-11-10T17:28:09.321198",
+          "statements": [
+            "valued because i can do stuff",
+            "really tired",
+            "somewhat excluded"
+          ],
+          "inclusivity": "-0.21"
+        },
+        {
+          "id": 8,
+          "node_name": "innovator",
+          "domain_token": "system",
+          "translation": "",
+          "synonyms": [
+            ""
+          ]
+        }
       ]
-    ],
+    ]
+  ],
+  [
+    {
+      "id": 19,
+      "code": "protected",
+      "date_created": "2020-11-18T19:29:27.289678",
+      "related_codes": []
+    },
     [
-      {
-        "id": 19,
-        "code": "protected",
-        "date_created": "2020-11-18T19:29:27.289678",
-        "related_codes": []
-      },
       [
-        [
-          {
-            "id": 53,
-            "node_name": "father",
-            "node_domain": "person",
-            "person_id": 19,
-            "node_id": 1,
-            "date_created": "2020-11-18T20:45:41.478802",
-            "statements": [
-              "blessed",
-              "like kids help me balance my work and life",
-              "like i don't have a lot of free time"
-            ],
-            "inclusivity": "0.10"
-          },
-          {
-            "id": 1,
-            "node_name": "father",
-            "domain_token": "person",
-            "translation": "",
-            "synonyms": [
-              ""
-            ]
-          }
-        ],
-        [
-          {
-            "id": 56,
-            "node_name": "gen x",
-            "node_domain": "person",
-            "person_id": 19,
-            "node_id": 3,
-            "date_created": "2020-11-18T20:49:10.258888",
-            "statements": [
-              "experienced",
-              "capable of getting things done",
-              "respected"
-            ],
-            "inclusivity": "0.13"
-          },
-          {
-            "id": 3,
-            "node_name": "gen x",
-            "domain_token": "person",
-            "translation": "",
-            "synonyms": [
-              ""
-            ]
-          }
-        ],
-        [
-          {
-            "id": 50,
-            "node_name": "executive",
-            "node_domain": "role",
-            "person_id": 19,
-            "node_id": 7,
-            "date_created": "2020-11-18T19:29:27.305787",
-            "statements": [
-              "capable of making things better",
-              "pulled in a lot of different ways",
-              "respected"
-            ],
-            "inclusivity": "0.24"
-          },
-          {
-            "id": 7,
-            "node_name": "executive",
-            "domain_token": "role",
-            "translation": "",
-            "synonyms": [
-              ""
-            ]
-          }
-        ],
-        [
-          {
-            "id": 57,
-            "node_name": "innovator",
-            "node_domain": "role",
-            "person_id": 19,
-            "node_id": 8,
-            "date_created": "2020-11-18T20:50:09.028878",
-            "statements": [
-              "energized",
-              "like i can help transform govt",
-              "dragged down by process"
-            ],
-            "inclusivity": "0.05"
-          },
-          {
-            "id": 8,
-            "node_name": "innovator",
-            "domain_token": "system",
-            "translation": "",
-            "synonyms": [
-              ""
-            ]
-          }
-        ],
-        [
-          {
-            "id": 54,
-            "node_name": "university education",
-            "node_domain": "person",
-            "person_id": 19,
-            "node_id": 100,
-            "date_created": "2020-11-18T20:46:43.152033",
-            "statements": [
-              "capable of navigating complex situations",
-              "like i am normal"
-            ],
-            "inclusivity": "0.01"
-          },
-          {
-            "id": 100,
-            "node_name": "university education",
-            "domain_token": "person",
-            "translation": "",
-            "synonyms": [
-              ""
-            ]
-          }
-        ],
-        [
-          {
-            "id": 59,
-            "node_name": "male",
-            "node_domain": "person",
-            "person_id": 19,
-            "node_id": 116,
-            "date_created": "2020-11-18T20:52:28.887120",
-            "statements": [
-              "normal",
-              "listened to",
-              "respected"
-            ],
-            "inclusivity": "0.05"
-          },
-          {
-            "id": 116,
-            "node_name": "male",
-            "domain_token": "person",
-            "translation": "",
-            "synonyms": [
-              ""
-            ]
-          }
-        ],
-        [
-          {
-            "id": 61,
-            "node_name": "heterosexual",
-            "node_domain": "person",
-            "person_id": 19,
-            "node_id": 118,
-            "date_created": "2020-12-10T20:13:47.279685",
-            "statements": [
-              "normal"
-            ],
-            "inclusivity": "0.23"
-          },
-          {
-            "id": 118,
-            "node_name": "heterosexual",
-            "domain_token": "person",
-            "translation": "",
-            "synonyms": [
-              ""
-            ]
-          }
-        ],
-        [
-          {
-            "id": 58,
-            "node_name": "heterosexual",
-            "node_domain": "person",
-            "person_id": 19,
-            "node_id": 118,
-            "date_created": "2020-11-18T20:50:59.252223",
-            "statements": [
-              "normal"
-            ],
-            "inclusivity": "0"
-          },
-          {
-            "id": 118,
-            "node_name": "heterosexual",
-            "domain_token": "person",
-            "translation": "",
-            "synonyms": [
-              ""
-            ]
-          }
-        ],
-        [
-          {
-            "id": 52,
-            "node_name": "grew up middle class",
-            "node_domain": "person",
-            "person_id": 19,
-            "node_id": 176,
-            "date_created": "2020-11-18T20:44:40.496170",
-            "statements": [
-              "comfortable",
-              "well supported"
-            ],
-            "inclusivity": "0.13"
-          },
-          {
-            "id": 176,
-            "node_name": "grew up middle class",
-            "domain_token": "person",
-            "translation": "",
-            "synonyms": [
-              ""
-            ]
-          }
-        ],
-        [
-          {
-            "id": 51,
-            "node_name": "grew up middle class",
-            "node_domain": "person",
-            "person_id": 19,
-            "node_id": 176,
-            "date_created": "2020-11-18T20:44:40.482857",
-            "statements": [
-              "comfortable",
-              "well supported"
-            ],
-            "inclusivity": "0.13"
-          },
-          {
-            "id": 176,
-            "node_name": "grew up middle class",
-            "domain_token": "person",
-            "translation": "",
-            "synonyms": [
-              ""
-            ]
-          }
-        ],
-        [
-          {
-            "id": 55,
-            "node_name": "divorced",
-            "node_domain": "person",
-            "person_id": 19,
-            "node_id": 177,
-            "date_created": "2020-11-18T20:47:30.035242",
-            "statements": [
-              "financially stressed",
-              "need to manage complex social situations",
-              "separated from my kids"
-            ],
-            "inclusivity": "-0.16"
-          },
-          {
-            "id": 177,
-            "node_name": "divorced",
-            "domain_token": "person",
-            "translation": "",
-            "synonyms": [
-              ""
-            ]
-          }
-        ],
-        [
-          {
-            "id": 62,
-            "node_name": "virtual worker",
-            "node_domain": "role",
-            "person_id": 19,
-            "node_id": 179,
-            "date_created": "2021-01-13T19:06:30.268605",
-            "statements": [
-              "like i have more personal time",
-              "tired of looking at screens",
-              "like i'm missing social interaction"
-            ],
-            "inclusivity": "-0.16"
-          },
-          {
-            "id": 179,
-            "node_name": "virtual worker",
-            "domain_token": "role",
-            "translation": "",
-            "synonyms": [
-              ""
-            ]
-          }
-        ]
+        {
+          "id": 53,
+          "node_name": "father",
+          "node_domain": "person",
+          "person_id": 19,
+          "node_id": 1,
+          "date_created": "2020-11-18T20:45:41.478802",
+          "statements": [
+            "blessed",
+            "like kids help me balance my work and life",
+            "like i don't have a lot of free time"
+          ],
+          "inclusivity": "0.10"
+        },
+        {
+          "id": 1,
+          "node_name": "father",
+          "domain_token": "person",
+          "translation": "",
+          "synonyms": [
+            ""
+          ]
+        }
+      ],
+      [
+        {
+          "id": 56,
+          "node_name": "gen x",
+          "node_domain": "person",
+          "person_id": 19,
+          "node_id": 3,
+          "date_created": "2020-11-18T20:49:10.258888",
+          "statements": [
+            "experienced",
+            "capable of getting things done",
+            "respected"
+          ],
+          "inclusivity": "0.13"
+        },
+        {
+          "id": 3,
+          "node_name": "gen x",
+          "domain_token": "person",
+          "translation": "",
+          "synonyms": [
+            ""
+          ]
+        }
+      ],
+      [
+        {
+          "id": 50,
+          "node_name": "executive",
+          "node_domain": "role",
+          "person_id": 19,
+          "node_id": 7,
+          "date_created": "2020-11-18T19:29:27.305787",
+          "statements": [
+            "capable of making things better",
+            "pulled in a lot of different ways",
+            "respected"
+          ],
+          "inclusivity": "0.24"
+        },
+        {
+          "id": 7,
+          "node_name": "executive",
+          "domain_token": "role",
+          "translation": "",
+          "synonyms": [
+            ""
+          ]
+        }
+      ],
+      [
+        {
+          "id": 57,
+          "node_name": "innovator",
+          "node_domain": "role",
+          "person_id": 19,
+          "node_id": 8,
+          "date_created": "2020-11-18T20:50:09.028878",
+          "statements": [
+            "energized",
+            "like i can help transform govt",
+            "dragged down by process"
+          ],
+          "inclusivity": "0.05"
+        },
+        {
+          "id": 8,
+          "node_name": "innovator",
+          "domain_token": "system",
+          "translation": "",
+          "synonyms": [
+            ""
+          ]
+        }
+      ],
+      [
+        {
+          "id": 54,
+          "node_name": "university education",
+          "node_domain": "person",
+          "person_id": 19,
+          "node_id": 100,
+          "date_created": "2020-11-18T20:46:43.152033",
+          "statements": [
+            "capable of navigating complex situations",
+            "like i am normal"
+          ],
+          "inclusivity": "0.01"
+        },
+        {
+          "id": 100,
+          "node_name": "university education",
+          "domain_token": "person",
+          "translation": "",
+          "synonyms": [
+            ""
+          ]
+        }
+      ],
+      [
+        {
+          "id": 59,
+          "node_name": "male",
+          "node_domain": "person",
+          "person_id": 19,
+          "node_id": 116,
+          "date_created": "2020-11-18T20:52:28.887120",
+          "statements": [
+            "normal",
+            "listened to",
+            "respected"
+          ],
+          "inclusivity": "0.05"
+        },
+        {
+          "id": 116,
+          "node_name": "male",
+          "domain_token": "person",
+          "translation": "",
+          "synonyms": [
+            ""
+          ]
+        }
+      ],
+      [
+        {
+          "id": 61,
+          "node_name": "heterosexual",
+          "node_domain": "person",
+          "person_id": 19,
+          "node_id": 118,
+          "date_created": "2020-12-10T20:13:47.279685",
+          "statements": [
+            "normal"
+          ],
+          "inclusivity": "0.23"
+        },
+        {
+          "id": 118,
+          "node_name": "heterosexual",
+          "domain_token": "person",
+          "translation": "",
+          "synonyms": [
+            ""
+          ]
+        }
+      ],
+      [
+        {
+          "id": 58,
+          "node_name": "heterosexual",
+          "node_domain": "person",
+          "person_id": 19,
+          "node_id": 118,
+          "date_created": "2020-11-18T20:50:59.252223",
+          "statements": [
+            "normal"
+          ],
+          "inclusivity": "0"
+        },
+        {
+          "id": 118,
+          "node_name": "heterosexual",
+          "domain_token": "person",
+          "translation": "",
+          "synonyms": [
+            ""
+          ]
+        }
+      ],
+      [
+        {
+          "id": 52,
+          "node_name": "grew up middle class",
+          "node_domain": "person",
+          "person_id": 19,
+          "node_id": 176,
+          "date_created": "2020-11-18T20:44:40.496170",
+          "statements": [
+            "comfortable",
+            "well supported"
+          ],
+          "inclusivity": "0.13"
+        },
+        {
+          "id": 176,
+          "node_name": "grew up middle class",
+          "domain_token": "person",
+          "translation": "",
+          "synonyms": [
+            ""
+          ]
+        }
+      ],
+      [
+        {
+          "id": 51,
+          "node_name": "grew up middle class",
+          "node_domain": "person",
+          "person_id": 19,
+          "node_id": 176,
+          "date_created": "2020-11-18T20:44:40.482857",
+          "statements": [
+            "comfortable",
+            "well supported"
+          ],
+          "inclusivity": "0.13"
+        },
+        {
+          "id": 176,
+          "node_name": "grew up middle class",
+          "domain_token": "person",
+          "translation": "",
+          "synonyms": [
+            ""
+          ]
+        }
+      ],
+      [
+        {
+          "id": 55,
+          "node_name": "divorced",
+          "node_domain": "person",
+          "person_id": 19,
+          "node_id": 177,
+          "date_created": "2020-11-18T20:47:30.035242",
+          "statements": [
+            "financially stressed",
+            "need to manage complex social situations",
+            "separated from my kids"
+          ],
+          "inclusivity": "-0.16"
+        },
+        {
+          "id": 177,
+          "node_name": "divorced",
+          "domain_token": "person",
+          "translation": "",
+          "synonyms": [
+            ""
+          ]
+        }
+      ],
+      [
+        {
+          "id": 62,
+          "node_name": "virtual worker",
+          "node_domain": "role",
+          "person_id": 19,
+          "node_id": 179,
+          "date_created": "2021-01-13T19:06:30.268605",
+          "statements": [
+            "like i have more personal time",
+            "tired of looking at screens",
+            "like i'm missing social interaction"
+          ],
+          "inclusivity": "-0.16"
+        },
+        {
+          "id": 179,
+          "node_name": "virtual worker",
+          "domain_token": "role",
+          "translation": "",
+          "synonyms": [
+            ""
+          ]
+        }
       ]
-    ],
+    ]
+  ],
+  [
+    {
+      "id": 20,
+      "code": "protected",
+      "date_created": "2020-12-04T19:43:18.002724",
+      "related_codes": []
+    },
     [
-      {
-        "id": 20,
-        "code": "protected",
-        "date_created": "2020-12-04T19:43:18.002724",
-        "related_codes": []
-      },
       [
-        [
-          {
-            "id": 60,
-            "node_name": "husband",
-            "node_domain": "person",
-            "person_id": 20,
-            "node_id": 178,
-            "date_created": "2020-12-04T19:43:18.024678",
-            "statements": [
-              "loved",
-              "like i have a lot to learn",
-              "supported"
-            ],
-            "inclusivity": "0.23"
-          },
-          {
-            "id": 178,
-            "node_name": "husband",
-            "domain_token": "person",
-            "translation": "",
-            "synonyms": [
-              ""
-            ]
-          }
-        ]
+        {
+          "id": 60,
+          "node_name": "husband",
+          "node_domain": "person",
+          "person_id": 20,
+          "node_id": 178,
+          "date_created": "2020-12-04T19:43:18.024678",
+          "statements": [
+            "loved",
+            "like i have a lot to learn",
+            "supported"
+          ],
+          "inclusivity": "0.23"
+        },
+        {
+          "id": 178,
+          "node_name": "husband",
+          "domain_token": "person",
+          "translation": "",
+          "synonyms": [
+            ""
+          ]
+        }
       ]
-    ],
+    ]
+  ],
+  [
+    {
+      "id": 21,
+      "code": "protected",
+      "date_created": "2021-01-14T15:04:37.574235",
+      "related_codes": []
+    },
     [
-      {
-        "id": 21,
-        "code": "protected",
-        "date_created": "2021-01-14T15:04:37.574235",
-        "related_codes": []
-      },
       [
-        [
-          {
-            "id": 66,
-            "node_name": "white",
-            "node_domain": "person",
-            "person_id": 21,
-            "node_id": 5,
-            "date_created": "2021-01-14T15:15:37.050555",
-            "statements": [
-              "lucky",
-              "like i belong",
-              "privileged"
-            ],
-            "inclusivity": "0.37"
-          },
-          {
-            "id": 5,
-            "node_name": "white",
-            "domain_token": "role",
-            "translation": "",
-            "synonyms": [
-              ""
-            ]
-          }
-        ],
-        [
-          {
-            "id": 64,
-            "node_name": "low socioeconomic upbringing",
-            "node_domain": "person",
-            "person_id": 21,
-            "node_id": 93,
-            "date_created": "2021-01-14T15:08:28.205385",
-            "statements": [
-              "misunderstood",
-              "judged",
-              "not in my place"
-            ],
-            "inclusivity": "-0.51"
-          },
-          {
-            "id": 93,
-            "node_name": "low socioeconomic upbringing",
-            "domain_token": "person",
-            "translation": "",
-            "synonyms": [
-              ""
-            ]
-          }
-        ],
-        [
-          {
-            "id": 67,
-            "node_name": "working mother",
-            "node_domain": "person",
-            "person_id": 21,
-            "node_id": 160,
-            "date_created": "2021-01-14T15:17:34.480681",
-            "statements": [
-              "torn",
-              "happy",
-              "misunderstood"
-            ],
-            "inclusivity": "-0.66"
-          },
-          {
-            "id": 160,
-            "node_name": "working mother",
-            "domain_token": "person",
-            "translation": "",
-            "synonyms": [
-              ""
-            ]
-          }
-        ],
-        [
-          {
-            "id": 63,
-            "node_name": "white mother from lower class",
-            "node_domain": "role",
-            "person_id": 21,
-            "node_id": 180,
-            "date_created": "2021-01-14T15:04:37.608122",
-            "statements": [
-              "like i don't belong",
-              "excluded",
-              "not appreciated"
-            ],
-            "inclusivity": "-0.94"
-          },
-          {
-            "id": 180,
-            "node_name": "white mother from lower class",
-            "domain_token": "role",
-            "translation": "",
-            "synonyms": [
-              ""
-            ]
-          }
-        ],
-        [
-          {
-            "id": 65,
-            "node_name": "woman",
-            "node_domain": "person",
-            "person_id": 21,
-            "node_id": 181,
-            "date_created": "2021-01-14T15:09:44.792967",
-            "statements": [
-              "under appreciated",
-              "stereotyped / tokenized",
-              "force into roles i don't want"
-            ],
-            "inclusivity": "-0.47"
-          },
-          {
-            "id": 181,
-            "node_name": "woman",
-            "domain_token": "person",
-            "translation": "",
-            "synonyms": [
-              ""
-            ]
-          }
-        ],
-        [
-          {
-            "id": 68,
-            "node_name": "highly educated",
-            "node_domain": "person",
-            "person_id": 21,
-            "node_id": 182,
-            "date_created": "2021-01-14T15:19:17.088100",
-            "statements": [
-              "misunderstood",
-              "invisible",
-              "accomplished"
-            ],
-            "inclusivity": "0.12"
-          },
-          {
-            "id": 182,
-            "node_name": "highly educated",
-            "domain_token": "person",
-            "translation": "",
-            "synonyms": [
-              ""
-            ]
-          }
-        ],
-        [
-          {
-            "id": 69,
-            "node_name": "young-looking genxer",
-            "node_domain": "person",
-            "person_id": 21,
-            "node_id": 183,
-            "date_created": "2021-01-14T15:52:50.736409",
-            "statements": [
-              "disrespected",
-              "underestimated",
-              "discriminated"
-            ],
-            "inclusivity": "-0.76"
-          },
-          {
-            "id": 183,
-            "node_name": "young-looking genxer",
-            "domain_token": "person",
-            "translation": "",
-            "synonyms": [
-              ""
-            ]
-          }
-        ]
+        {
+          "id": 66,
+          "node_name": "white",
+          "node_domain": "person",
+          "person_id": 21,
+          "node_id": 5,
+          "date_created": "2021-01-14T15:15:37.050555",
+          "statements": [
+            "lucky",
+            "like i belong",
+            "privileged"
+          ],
+          "inclusivity": "0.37"
+        },
+        {
+          "id": 5,
+          "node_name": "white",
+          "domain_token": "role",
+          "translation": "",
+          "synonyms": [
+            ""
+          ]
+        }
+      ],
+      [
+        {
+          "id": 64,
+          "node_name": "low socioeconomic upbringing",
+          "node_domain": "person",
+          "person_id": 21,
+          "node_id": 93,
+          "date_created": "2021-01-14T15:08:28.205385",
+          "statements": [
+            "misunderstood",
+            "judged",
+            "not in my place"
+          ],
+          "inclusivity": "-0.51"
+        },
+        {
+          "id": 93,
+          "node_name": "low socioeconomic upbringing",
+          "domain_token": "person",
+          "translation": "",
+          "synonyms": [
+            ""
+          ]
+        }
+      ],
+      [
+        {
+          "id": 67,
+          "node_name": "working mother",
+          "node_domain": "person",
+          "person_id": 21,
+          "node_id": 160,
+          "date_created": "2021-01-14T15:17:34.480681",
+          "statements": [
+            "torn",
+            "happy",
+            "misunderstood"
+          ],
+          "inclusivity": "-0.66"
+        },
+        {
+          "id": 160,
+          "node_name": "working mother",
+          "domain_token": "person",
+          "translation": "",
+          "synonyms": [
+            ""
+          ]
+        }
+      ],
+      [
+        {
+          "id": 63,
+          "node_name": "white mother from lower class",
+          "node_domain": "role",
+          "person_id": 21,
+          "node_id": 180,
+          "date_created": "2021-01-14T15:04:37.608122",
+          "statements": [
+            "like i don't belong",
+            "excluded",
+            "not appreciated"
+          ],
+          "inclusivity": "-0.94"
+        },
+        {
+          "id": 180,
+          "node_name": "white mother from lower class",
+          "domain_token": "role",
+          "translation": "",
+          "synonyms": [
+            ""
+          ]
+        }
+      ],
+      [
+        {
+          "id": 65,
+          "node_name": "woman",
+          "node_domain": "person",
+          "person_id": 21,
+          "node_id": 181,
+          "date_created": "2021-01-14T15:09:44.792967",
+          "statements": [
+            "under appreciated",
+            "stereotyped / tokenized",
+            "force into roles i don't want"
+          ],
+          "inclusivity": "-0.47"
+        },
+        {
+          "id": 181,
+          "node_name": "woman",
+          "domain_token": "person",
+          "translation": "",
+          "synonyms": [
+            ""
+          ]
+        }
+      ],
+      [
+        {
+          "id": 68,
+          "node_name": "highly educated",
+          "node_domain": "person",
+          "person_id": 21,
+          "node_id": 182,
+          "date_created": "2021-01-14T15:19:17.088100",
+          "statements": [
+            "misunderstood",
+            "invisible",
+            "accomplished"
+          ],
+          "inclusivity": "0.12"
+        },
+        {
+          "id": 182,
+          "node_name": "highly educated",
+          "domain_token": "person",
+          "translation": "",
+          "synonyms": [
+            ""
+          ]
+        }
+      ],
+      [
+        {
+          "id": 69,
+          "node_name": "young-looking genxer",
+          "node_domain": "person",
+          "person_id": 21,
+          "node_id": 183,
+          "date_created": "2021-01-14T15:52:50.736409",
+          "statements": [
+            "disrespected",
+            "underestimated",
+            "discriminated"
+          ],
+          "inclusivity": "-0.76"
+        },
+        {
+          "id": 183,
+          "node_name": "young-looking genxer",
+          "domain_token": "person",
+          "translation": "",
+          "synonyms": [
+            ""
+          ]
+        }
       ]
-    ],
+    ]
+  ],
+  [
+    {
+      "id": 22,
+      "code": "protected",
+      "date_created": "2021-02-18T19:49:12.103015",
+      "related_codes": []
+    },
     [
-      {
-        "id": 22,
-        "code": "protected",
-        "date_created": "2021-02-18T19:49:12.103015",
-        "related_codes": []
-      },
       [
-        [
-          {
-            "id": 75,
-            "node_name": "white",
-            "node_domain": "person",
-            "person_id": 22,
-            "node_id": 5,
-            "date_created": "2021-02-18T20:05:47.487561",
-            "statements": [
-              "part of the majority",
-              "like i need to learn a lot",
-              "guilty"
-            ],
-            "inclusivity": "0.35"
-          },
-          {
-            "id": 5,
-            "node_name": "white",
-            "domain_token": "role",
-            "translation": "",
-            "synonyms": [
-              ""
-            ]
-          }
-        ],
-        [
-          {
-            "id": 70,
-            "node_name": "childless",
-            "node_domain": "person",
-            "person_id": 22,
-            "node_id": 184,
-            "date_created": "2021-02-18T19:49:12.137178",
-            "statements": [
-              "left out",
-              "judged",
-              "forgotten"
-            ],
-            "inclusivity": "-0.81"
-          },
-          {
-            "id": 184,
-            "node_name": "childless",
-            "domain_token": "person",
-            "translation": "",
-            "synonyms": [
-              ""
-            ]
-          }
-        ],
-        [
-          {
-            "id": 71,
-            "node_name": "grew up poor",
-            "node_domain": "person",
-            "person_id": 22,
-            "node_id": 185,
-            "date_created": "2021-02-18T19:50:37.076003",
-            "statements": [
-              "left out",
-              "out-numbered",
-              "like i sometimes pass"
-            ],
-            "inclusivity": "-0.75"
-          },
-          {
-            "id": 185,
-            "node_name": "grew up poor",
-            "domain_token": "person",
-            "translation": "",
-            "synonyms": [
-              ""
-            ]
-          }
-        ],
-        [
-          {
-            "id": 72,
-            "node_name": "bisexual but passing",
-            "node_domain": "person",
-            "person_id": 22,
-            "node_id": 186,
-            "date_created": "2021-02-18T19:53:10.613272",
-            "statements": [
-              "hidden",
-              "not represented",
-              "insincere"
-            ],
-            "inclusivity": "-0.30"
-          },
-          {
-            "id": 186,
-            "node_name": "bisexual but passing",
-            "domain_token": "person",
-            "translation": "",
-            "synonyms": [
-              ""
-            ]
-          }
-        ],
-        [
-          {
-            "id": 73,
-            "node_name": "caregiver to parents not childr",
-            "node_domain": "person",
-            "person_id": 22,
-            "node_id": 187,
-            "date_created": "2021-02-18T19:56:52.666527",
-            "statements": [
-              "forgotten",
-              "judged",
-              "people think it's the same for them, but it isn't"
-            ],
-            "inclusivity": "-0.72"
-          },
-          {
-            "id": 187,
-            "node_name": "caregiver to parents not childr",
-            "domain_token": "person",
-            "translation": "",
-            "synonyms": [
-              ""
-            ]
-          }
-        ],
-        [
-          {
-            "id": 74,
-            "node_name": "non-driver",
-            "node_domain": "person",
-            "person_id": 22,
-            "node_id": 188,
-            "date_created": "2021-02-18T19:59:51.770264",
-            "statements": [
-              "left out of particular jobs",
-              "judged as irresponsible",
-              "i can pass sometimes"
-            ],
-            "inclusivity": "-0.20"
-          },
-          {
-            "id": 188,
-            "node_name": "non-driver",
-            "domain_token": "person",
-            "translation": "",
-            "synonyms": [
-              ""
-            ]
-          }
-        ],
-        [
-          {
-            "id": 76,
-            "node_name": "from ol minority community",
-            "node_domain": "person",
-            "person_id": 22,
-            "node_id": 189,
-            "date_created": "2021-02-18T20:08:04.258723",
-            "statements": [
-              "like i pass",
-              "like i can relate to clients with opposite ol",
-              "like i can relate to colleagues with opposite ol"
-            ],
-            "inclusivity": "0"
-          },
-          {
-            "id": 189,
-            "node_name": "from ol minority community",
-            "domain_token": "person",
-            "translation": "",
-            "synonyms": [
-              ""
-            ]
-          }
-        ]
+        {
+          "id": 75,
+          "node_name": "white",
+          "node_domain": "person",
+          "person_id": 22,
+          "node_id": 5,
+          "date_created": "2021-02-18T20:05:47.487561",
+          "statements": [
+            "part of the majority",
+            "like i need to learn a lot",
+            "guilty"
+          ],
+          "inclusivity": "0.35"
+        },
+        {
+          "id": 5,
+          "node_name": "white",
+          "domain_token": "role",
+          "translation": "",
+          "synonyms": [
+            ""
+          ]
+        }
+      ],
+      [
+        {
+          "id": 70,
+          "node_name": "childless",
+          "node_domain": "person",
+          "person_id": 22,
+          "node_id": 184,
+          "date_created": "2021-02-18T19:49:12.137178",
+          "statements": [
+            "left out",
+            "judged",
+            "forgotten"
+          ],
+          "inclusivity": "-0.81"
+        },
+        {
+          "id": 184,
+          "node_name": "childless",
+          "domain_token": "person",
+          "translation": "",
+          "synonyms": [
+            ""
+          ]
+        }
+      ],
+      [
+        {
+          "id": 71,
+          "node_name": "grew up poor",
+          "node_domain": "person",
+          "person_id": 22,
+          "node_id": 185,
+          "date_created": "2021-02-18T19:50:37.076003",
+          "statements": [
+            "left out",
+            "out-numbered",
+            "like i sometimes pass"
+          ],
+          "inclusivity": "-0.75"
+        },
+        {
+          "id": 185,
+          "node_name": "grew up poor",
+          "domain_token": "person",
+          "translation": "",
+          "synonyms": [
+            ""
+          ]
+        }
+      ],
+      [
+        {
+          "id": 72,
+          "node_name": "bisexual but passing",
+          "node_domain": "person",
+          "person_id": 22,
+          "node_id": 186,
+          "date_created": "2021-02-18T19:53:10.613272",
+          "statements": [
+            "hidden",
+            "not represented",
+            "insincere"
+          ],
+          "inclusivity": "-0.30"
+        },
+        {
+          "id": 186,
+          "node_name": "bisexual but passing",
+          "domain_token": "person",
+          "translation": "",
+          "synonyms": [
+            ""
+          ]
+        }
+      ],
+      [
+        {
+          "id": 73,
+          "node_name": "caregiver to parents not childr",
+          "node_domain": "person",
+          "person_id": 22,
+          "node_id": 187,
+          "date_created": "2021-02-18T19:56:52.666527",
+          "statements": [
+            "forgotten",
+            "judged",
+            "people think it's the same for them, but it isn't"
+          ],
+          "inclusivity": "-0.72"
+        },
+        {
+          "id": 187,
+          "node_name": "caregiver to parents not childr",
+          "domain_token": "person",
+          "translation": "",
+          "synonyms": [
+            ""
+          ]
+        }
+      ],
+      [
+        {
+          "id": 74,
+          "node_name": "non-driver",
+          "node_domain": "person",
+          "person_id": 22,
+          "node_id": 188,
+          "date_created": "2021-02-18T19:59:51.770264",
+          "statements": [
+            "left out of particular jobs",
+            "judged as irresponsible",
+            "i can pass sometimes"
+          ],
+          "inclusivity": "-0.20"
+        },
+        {
+          "id": 188,
+          "node_name": "non-driver",
+          "domain_token": "person",
+          "translation": "",
+          "synonyms": [
+            ""
+          ]
+        }
+      ],
+      [
+        {
+          "id": 76,
+          "node_name": "from ol minority community",
+          "node_domain": "person",
+          "person_id": 22,
+          "node_id": 189,
+          "date_created": "2021-02-18T20:08:04.258723",
+          "statements": [
+            "like i pass",
+            "like i can relate to clients with opposite ol",
+            "like i can relate to colleagues with opposite ol"
+          ],
+          "inclusivity": "0"
+        },
+        {
+          "id": 189,
+          "node_name": "from ol minority community",
+          "domain_token": "person",
+          "translation": "",
+          "synonyms": [
+            ""
+          ]
+        }
       ]
-    ],
+    ]
+  ],
+  [
+    {
+      "id": 23,
+      "code": "protected",
+      "date_created": "2021-03-09T15:15:26.612192",
+      "related_codes": []
+    },
     [
-      {
-        "id": 23,
-        "code": "protected",
-        "date_created": "2021-03-09T15:15:26.612192",
-        "related_codes": []
-      },
       [
-        [
-          {
-            "id": 77,
-            "node_name": "millenial",
-            "node_domain": "person",
-            "person_id": 23,
-            "node_id": 9,
-            "date_created": "2021-03-09T15:15:26.627587",
-            "statements": [
-              "joyful",
-              "confused sometimes",
-              "like people think i'm privileged"
-            ],
-            "inclusivity": "0.04"
-          },
-          {
-            "id": 9,
-            "node_name": "millenial",
-            "domain_token": "person",
-            "translation": "",
-            "synonyms": [
-              ""
-            ]
-          }
-        ],
-        [
-          {
-            "id": 79,
-            "node_name": "senior policy analyst",
-            "node_domain": "role",
-            "person_id": 23,
-            "node_id": 11,
-            "date_created": "2021-03-09T15:16:34.329999",
-            "statements": [
-              "listened to",
-              "privileged",
-              "like my recommendations are sometimes ignored"
-            ],
-            "inclusivity": "0.36"
-          },
-          {
-            "id": 11,
-            "node_name": "senior policy analyst",
-            "domain_token": "role",
-            "translation": "",
-            "synonyms": [
-              ""
-            ]
-          }
-        ]
+        {
+          "id": 77,
+          "node_name": "millenial",
+          "node_domain": "person",
+          "person_id": 23,
+          "node_id": 9,
+          "date_created": "2021-03-09T15:15:26.627587",
+          "statements": [
+            "joyful",
+            "confused sometimes",
+            "like people think i'm privileged"
+          ],
+          "inclusivity": "0.04"
+        },
+        {
+          "id": 9,
+          "node_name": "millenial",
+          "domain_token": "person",
+          "translation": "",
+          "synonyms": [
+            ""
+          ]
+        }
+      ],
+      [
+        {
+          "id": 79,
+          "node_name": "senior policy analyst",
+          "node_domain": "role",
+          "person_id": 23,
+          "node_id": 11,
+          "date_created": "2021-03-09T15:16:34.329999",
+          "statements": [
+            "listened to",
+            "privileged",
+            "like my recommendations are sometimes ignored"
+          ],
+          "inclusivity": "0.36"
+        },
+        {
+          "id": 11,
+          "node_name": "senior policy analyst",
+          "domain_token": "role",
+          "translation": "",
+          "synonyms": [
+            ""
+          ]
+        }
       ]
-    ],
+    ]
+  ],
+  [
+    {
+      "id": 24,
+      "code": "protected",
+      "date_created": "2021-03-09T15:16:33.399965",
+      "related_codes": []
+    },
     [
-      {
-        "id": 24,
-        "code": "protected",
-        "date_created": "2021-03-09T15:16:33.399965",
-        "related_codes": []
-      },
       [
-        [
-          {
-            "id": 78,
-            "node_name": "pwg",
-            "node_domain": "person",
-            "person_id": 24,
-            "node_id": 190,
-            "date_created": "2021-03-09T15:16:33.415250",
-            "statements": [
-              "gratitude",
-              "discriminated",
-              "hopeful"
-            ],
-            "inclusivity": "0.28"
-          },
-          {
-            "id": 190,
-            "node_name": "pwg",
-            "domain_token": "person",
-            "translation": "",
-            "synonyms": [
-              ""
-            ]
-          }
-        ]
+        {
+          "id": 78,
+          "node_name": "pwg",
+          "node_domain": "person",
+          "person_id": 24,
+          "node_id": 190,
+          "date_created": "2021-03-09T15:16:33.415250",
+          "statements": [
+            "gratitude",
+            "discriminated",
+            "hopeful"
+          ],
+          "inclusivity": "0.28"
+        },
+        {
+          "id": 190,
+          "node_name": "pwg",
+          "domain_token": "person",
+          "translation": "",
+          "synonyms": [
+            ""
+          ]
+        }
       ]
-    ],
+    ]
+  ],
+  [
+    {
+      "id": 25,
+      "code": "protected",
+      "date_created": "2021-03-09T18:45:49.591335",
+      "related_codes": []
+    },
     [
-      {
-        "id": 25,
-        "code": "protected",
-        "date_created": "2021-03-09T18:45:49.591335",
-        "related_codes": []
-      },
       [
-        [
-          {
-            "id": 83,
-            "node_name": "white",
-            "node_domain": "person",
-            "person_id": 25,
-            "node_id": 5,
-            "date_created": "2021-03-09T18:52:36.255472",
-            "statements": [
-              "i have been given opportunities because of this.",
-              "comfortable in most spaces.",
-              "compelled to dismantle systems of oppression and racism."
-            ],
-            "inclusivity": "1.00"
-          },
-          {
-            "id": 5,
-            "node_name": "white",
-            "domain_token": "role",
-            "translation": "",
-            "synonyms": [
-              ""
-            ]
-          }
-        ],
-        [
-          {
-            "id": 80,
-            "node_name": "c-ptsd",
-            "node_domain": "person",
-            "person_id": 25,
-            "node_id": 191,
-            "date_created": "2021-03-09T18:45:49.606106",
-            "statements": [
-              "sensitive to power, people, team dynamics",
-              "triggered by sudden changes to responsibility.",
-              "self-conscious about working relationships."
-            ],
-            "inclusivity": "-0.41"
-          },
-          {
-            "id": 191,
-            "node_name": "c-ptsd",
-            "domain_token": "person",
-            "translation": "",
-            "synonyms": [
-              ""
-            ]
-          }
-        ],
-        [
-          {
-            "id": 81,
-            "node_name": "being gender fluid",
-            "node_domain": "person",
-            "person_id": 25,
-            "node_id": 192,
-            "date_created": "2021-03-09T18:46:58.490928",
-            "statements": [
-              "scared of judgement and stigma"
-            ],
-            "inclusivity": "-0.11"
-          },
-          {
-            "id": 192,
-            "node_name": "being gender fluid",
-            "domain_token": "person",
-            "translation": "",
-            "synonyms": [
-              ""
-            ]
-          }
-        ],
-        [
-          {
-            "id": 82,
-            "node_name": "queer",
-            "node_domain": "person",
-            "person_id": 25,
-            "node_id": 193,
-            "date_created": "2021-03-09T18:49:56.406224",
-            "statements": [
-              "ashamed of this identity and so i need to hide it.",
-              "when i don't hide it, i feel like i am more present and authentic.",
-              "scared to be outted by accident in conversation, or that i will have to lie."
-            ],
-            "inclusivity": "-0.26"
-          },
-          {
-            "id": 193,
-            "node_name": "queer",
-            "domain_token": "person",
-            "translation": "",
-            "synonyms": [
-              ""
-            ]
-          }
-        ],
-        [
-          {
-            "id": 84,
-            "node_name": "trades school education",
-            "node_domain": "role",
-            "person_id": 25,
-            "node_id": 194,
-            "date_created": "2021-03-09T18:55:40.848203",
-            "statements": [
-              "self-conscious that trade school is seen less valuable than university eduction.",
-              "defensive when i am introduced to ways of working that came from university settings.",
-              "pressure to over-perform, be perfect, in order to justify my role."
-            ],
-            "inclusivity": "-0.22"
-          },
-          {
-            "id": 194,
-            "node_name": "trades school education",
-            "domain_token": "role",
-            "translation": "",
-            "synonyms": [
-              ""
-            ]
-          }
-        ]
+        {
+          "id": 83,
+          "node_name": "white",
+          "node_domain": "person",
+          "person_id": 25,
+          "node_id": 5,
+          "date_created": "2021-03-09T18:52:36.255472",
+          "statements": [
+            "i have been given opportunities because of this.",
+            "comfortable in most spaces.",
+            "compelled to dismantle systems of oppression and racism."
+          ],
+          "inclusivity": "1.00"
+        },
+        {
+          "id": 5,
+          "node_name": "white",
+          "domain_token": "role",
+          "translation": "",
+          "synonyms": [
+            ""
+          ]
+        }
+      ],
+      [
+        {
+          "id": 80,
+          "node_name": "c-ptsd",
+          "node_domain": "person",
+          "person_id": 25,
+          "node_id": 191,
+          "date_created": "2021-03-09T18:45:49.606106",
+          "statements": [
+            "sensitive to power, people, team dynamics",
+            "triggered by sudden changes to responsibility.",
+            "self-conscious about working relationships."
+          ],
+          "inclusivity": "-0.41"
+        },
+        {
+          "id": 191,
+          "node_name": "c-ptsd",
+          "domain_token": "person",
+          "translation": "",
+          "synonyms": [
+            ""
+          ]
+        }
+      ],
+      [
+        {
+          "id": 81,
+          "node_name": "being gender fluid",
+          "node_domain": "person",
+          "person_id": 25,
+          "node_id": 192,
+          "date_created": "2021-03-09T18:46:58.490928",
+          "statements": [
+            "scared of judgement and stigma"
+          ],
+          "inclusivity": "-0.11"
+        },
+        {
+          "id": 192,
+          "node_name": "being gender fluid",
+          "domain_token": "person",
+          "translation": "",
+          "synonyms": [
+            ""
+          ]
+        }
+      ],
+      [
+        {
+          "id": 82,
+          "node_name": "queer",
+          "node_domain": "person",
+          "person_id": 25,
+          "node_id": 193,
+          "date_created": "2021-03-09T18:49:56.406224",
+          "statements": [
+            "ashamed of this identity and so i need to hide it.",
+            "when i don't hide it, i feel like i am more present and authentic.",
+            "scared to be outted by accident in conversation, or that i will have to lie."
+          ],
+          "inclusivity": "-0.26"
+        },
+        {
+          "id": 193,
+          "node_name": "queer",
+          "domain_token": "person",
+          "translation": "",
+          "synonyms": [
+            ""
+          ]
+        }
+      ],
+      [
+        {
+          "id": 84,
+          "node_name": "trades school education",
+          "node_domain": "role",
+          "person_id": 25,
+          "node_id": 194,
+          "date_created": "2021-03-09T18:55:40.848203",
+          "statements": [
+            "self-conscious that trade school is seen less valuable than university eduction.",
+            "defensive when i am introduced to ways of working that came from university settings.",
+            "pressure to over-perform, be perfect, in order to justify my role."
+          ],
+          "inclusivity": "-0.22"
+        },
+        {
+          "id": 194,
+          "node_name": "trades school education",
+          "domain_token": "role",
+          "translation": "",
+          "synonyms": [
+            ""
+          ]
+        }
       ]
-    ],
+    ]
+  ],
+  [
+    {
+      "id": 26,
+      "code": "protected",
+      "date_created": "2021-03-09T21:57:48.754684",
+      "related_codes": []
+    },
     [
-      {
-        "id": 26,
-        "code": "protected",
-        "date_created": "2021-03-09T21:57:48.754684",
-        "related_codes": []
-      },
       [
-        [
-          {
-            "id": 87,
-            "node_name": "woman",
-            "node_domain": "person",
-            "person_id": 26,
-            "node_id": 181,
-            "date_created": "2021-03-09T22:00:31.392415",
-            "statements": [
-              "that the experience of being sidelined is invisible to male colleagues",
-              "respected in one-on-one discussions",
-              "that it's up to me to figure out a way to make it all work for me"
-            ],
-            "inclusivity": "0.10"
-          },
-          {
-            "id": 181,
-            "node_name": "woman",
-            "domain_token": "person",
-            "translation": "",
-            "synonyms": [
-              ""
-            ]
-          }
-        ],
-        [
-          {
-            "id": 85,
-            "node_name": "mental health",
-            "node_domain": "person",
-            "person_id": 26,
-            "node_id": 195,
-            "date_created": "2021-03-09T21:57:48.768043",
-            "statements": [
-              "lonely / isolated",
-              "like not having a personal life makes it hard to connect with people professionally"
-            ],
-            "inclusivity": "-0.21"
-          },
-          {
-            "id": 195,
-            "node_name": "mental health",
-            "domain_token": "person",
-            "translation": "",
-            "synonyms": [
-              ""
-            ]
-          }
-        ],
-        [
-          {
-            "id": 86,
-            "node_name": "acting manager",
-            "node_domain": "role",
-            "person_id": 26,
-            "node_id": 196,
-            "date_created": "2021-03-09T21:59:08.986092",
-            "statements": [
-              "empowered to make decisions day to day",
-              "a lack of momentum from senior management for big decisions",
-              "happy to be a mentor"
-            ],
-            "inclusivity": "0.50"
-          },
-          {
-            "id": 196,
-            "node_name": "acting manager",
-            "domain_token": "role",
-            "translation": "",
-            "synonyms": [
-              ""
-            ]
-          }
-        ]
+        {
+          "id": 87,
+          "node_name": "woman",
+          "node_domain": "person",
+          "person_id": 26,
+          "node_id": 181,
+          "date_created": "2021-03-09T22:00:31.392415",
+          "statements": [
+            "that the experience of being sidelined is invisible to male colleagues",
+            "respected in one-on-one discussions",
+            "that it's up to me to figure out a way to make it all work for me"
+          ],
+          "inclusivity": "0.10"
+        },
+        {
+          "id": 181,
+          "node_name": "woman",
+          "domain_token": "person",
+          "translation": "",
+          "synonyms": [
+            ""
+          ]
+        }
+      ],
+      [
+        {
+          "id": 85,
+          "node_name": "mental health",
+          "node_domain": "person",
+          "person_id": 26,
+          "node_id": 195,
+          "date_created": "2021-03-09T21:57:48.768043",
+          "statements": [
+            "lonely / isolated",
+            "like not having a personal life makes it hard to connect with people professionally"
+          ],
+          "inclusivity": "-0.21"
+        },
+        {
+          "id": 195,
+          "node_name": "mental health",
+          "domain_token": "person",
+          "translation": "",
+          "synonyms": [
+            ""
+          ]
+        }
+      ],
+      [
+        {
+          "id": 86,
+          "node_name": "acting manager",
+          "node_domain": "role",
+          "person_id": 26,
+          "node_id": 196,
+          "date_created": "2021-03-09T21:59:08.986092",
+          "statements": [
+            "empowered to make decisions day to day",
+            "a lack of momentum from senior management for big decisions",
+            "happy to be a mentor"
+          ],
+          "inclusivity": "0.50"
+        },
+        {
+          "id": 196,
+          "node_name": "acting manager",
+          "domain_token": "role",
+          "translation": "",
+          "synonyms": [
+            ""
+          ]
+        }
       ]
-    ],
+    ]
+  ],
+  [
+    {
+      "id": 27,
+      "code": "protected",
+      "date_created": "2021-03-10T21:29:37.282298",
+      "related_codes": []
+    },
     [
-      {
-        "id": 27,
-        "code": "protected",
-        "date_created": "2021-03-10T21:29:37.282298",
-        "related_codes": []
-      },
       [
-        [
-          {
-            "id": 89,
-            "node_name": "white",
-            "node_domain": "person",
-            "person_id": 27,
-            "node_id": 5,
-            "date_created": "2021-03-10T21:31:08.273034",
-            "statements": [
-              "validated",
-              "seen and heard"
-            ],
-            "inclusivity": "0.81"
-          },
-          {
-            "id": 5,
-            "node_name": "white",
-            "domain_token": "role",
-            "translation": "",
-            "synonyms": [
-              ""
-            ]
-          }
-        ],
-        [
-          {
-            "id": 93,
-            "node_name": "francophone",
-            "node_domain": "person",
-            "person_id": 27,
-            "node_id": 104,
-            "date_created": "2021-03-10T21:34:20.784882",
-            "statements": [
-              "part of a minority",
-              "tired",
-              "used for my language skills"
-            ],
-            "inclusivity": "-0.48"
-          },
-          {
-            "id": 104,
-            "node_name": "francophone",
-            "domain_token": "person",
-            "translation": "",
-            "synonyms": [
-              ""
-            ]
-          }
-        ],
-        [
-          {
-            "id": 91,
-            "node_name": "heterosexual",
-            "node_domain": "person",
-            "person_id": 27,
-            "node_id": 118,
-            "date_created": "2021-03-10T21:32:20.005924",
-            "statements": [
-              "accepted"
-            ],
-            "inclusivity": "0.35"
-          },
-          {
-            "id": 118,
-            "node_name": "heterosexual",
-            "domain_token": "person",
-            "translation": "",
-            "synonyms": [
-              ""
-            ]
-          }
-        ],
-        [
-          {
-            "id": 92,
-            "node_name": "young",
-            "node_domain": "person",
-            "person_id": 27,
-            "node_id": 129,
-            "date_created": "2021-03-10T21:33:02.061661",
-            "statements": [
-              "doubtful",
-              "not taken seriously",
-              "scared to speak up"
-            ],
-            "inclusivity": "-0.26"
-          },
-          {
-            "id": 129,
-            "node_name": "young",
-            "domain_token": "person",
-            "translation": "",
-            "synonyms": [
-              ""
-            ]
-          }
-        ],
-        [
-          {
-            "id": 90,
-            "node_name": "researcher",
-            "node_domain": "role",
-            "person_id": 27,
-            "node_id": 141,
-            "date_created": "2021-03-10T21:31:48.394184",
-            "statements": [
-              "pressured",
-              "important",
-              "estimated"
-            ],
-            "inclusivity": "0.33"
-          },
-          {
-            "id": 141,
-            "node_name": "researcher",
-            "domain_token": "role",
-            "translation": "",
-            "synonyms": [
-              ""
-            ]
-          }
-        ],
-        [
-          {
-            "id": 88,
-            "node_name": "woman",
-            "node_domain": "person",
-            "person_id": 27,
-            "node_id": 181,
-            "date_created": "2021-03-10T21:29:37.384841",
-            "statements": [
-              "insecure",
-              "doubtful",
-              "accepted"
-            ],
-            "inclusivity": "-0.11"
-          },
-          {
-            "id": 181,
-            "node_name": "woman",
-            "domain_token": "person",
-            "translation": "",
-            "synonyms": [
-              ""
-            ]
-          }
-        ]
+        {
+          "id": 89,
+          "node_name": "white",
+          "node_domain": "person",
+          "person_id": 27,
+          "node_id": 5,
+          "date_created": "2021-03-10T21:31:08.273034",
+          "statements": [
+            "validated",
+            "seen and heard"
+          ],
+          "inclusivity": "0.81"
+        },
+        {
+          "id": 5,
+          "node_name": "white",
+          "domain_token": "role",
+          "translation": "",
+          "synonyms": [
+            ""
+          ]
+        }
+      ],
+      [
+        {
+          "id": 93,
+          "node_name": "francophone",
+          "node_domain": "person",
+          "person_id": 27,
+          "node_id": 104,
+          "date_created": "2021-03-10T21:34:20.784882",
+          "statements": [
+            "part of a minority",
+            "tired",
+            "used for my language skills"
+          ],
+          "inclusivity": "-0.48"
+        },
+        {
+          "id": 104,
+          "node_name": "francophone",
+          "domain_token": "person",
+          "translation": "",
+          "synonyms": [
+            ""
+          ]
+        }
+      ],
+      [
+        {
+          "id": 91,
+          "node_name": "heterosexual",
+          "node_domain": "person",
+          "person_id": 27,
+          "node_id": 118,
+          "date_created": "2021-03-10T21:32:20.005924",
+          "statements": [
+            "accepted"
+          ],
+          "inclusivity": "0.35"
+        },
+        {
+          "id": 118,
+          "node_name": "heterosexual",
+          "domain_token": "person",
+          "translation": "",
+          "synonyms": [
+            ""
+          ]
+        }
+      ],
+      [
+        {
+          "id": 92,
+          "node_name": "young",
+          "node_domain": "person",
+          "person_id": 27,
+          "node_id": 129,
+          "date_created": "2021-03-10T21:33:02.061661",
+          "statements": [
+            "doubtful",
+            "not taken seriously",
+            "scared to speak up"
+          ],
+          "inclusivity": "-0.26"
+        },
+        {
+          "id": 129,
+          "node_name": "young",
+          "domain_token": "person",
+          "translation": "",
+          "synonyms": [
+            ""
+          ]
+        }
+      ],
+      [
+        {
+          "id": 90,
+          "node_name": "researcher",
+          "node_domain": "role",
+          "person_id": 27,
+          "node_id": 141,
+          "date_created": "2021-03-10T21:31:48.394184",
+          "statements": [
+            "pressured",
+            "important",
+            "estimated"
+          ],
+          "inclusivity": "0.33"
+        },
+        {
+          "id": 141,
+          "node_name": "researcher",
+          "domain_token": "role",
+          "translation": "",
+          "synonyms": [
+            ""
+          ]
+        }
+      ],
+      [
+        {
+          "id": 88,
+          "node_name": "woman",
+          "node_domain": "person",
+          "person_id": 27,
+          "node_id": 181,
+          "date_created": "2021-03-10T21:29:37.384841",
+          "statements": [
+            "insecure",
+            "doubtful",
+            "accepted"
+          ],
+          "inclusivity": "-0.11"
+        },
+        {
+          "id": 181,
+          "node_name": "woman",
+          "domain_token": "person",
+          "translation": "",
+          "synonyms": [
+            ""
+          ]
+        }
       ]
-    ],
+    ]
+  ],
+  [
+    {
+      "id": 28,
+      "code": "protected",
+      "date_created": "2021-03-12T11:57:17.006366",
+      "related_codes": []
+    },
     [
-      {
-        "id": 28,
-        "code": "protected",
-        "date_created": "2021-03-12T11:57:17.006366",
-        "related_codes": []
-      },
       [
-        [
-          {
-            "id": 94,
-            "node_name": "student",
-            "node_domain": "role",
-            "person_id": 28,
-            "node_id": 197,
-            "date_created": "2021-03-12T11:57:17.035555",
-            "statements": [
-              "tired",
-              "overwhelmed",
-              "undervalued"
-            ],
-            "inclusivity": "0"
-          },
-          {
-            "id": 197,
-            "node_name": "student",
-            "domain_token": "role",
-            "translation": "",
-            "synonyms": [
-              ""
-            ]
-          }
-        ]
+        {
+          "id": 94,
+          "node_name": "student",
+          "node_domain": "role",
+          "person_id": 28,
+          "node_id": 197,
+          "date_created": "2021-03-12T11:57:17.035555",
+          "statements": [
+            "tired",
+            "overwhelmed",
+            "undervalued"
+          ],
+          "inclusivity": "0"
+        },
+        {
+          "id": 197,
+          "node_name": "student",
+          "domain_token": "role",
+          "translation": "",
+          "synonyms": [
+            ""
+          ]
+        }
       ]
     ]
   ]
+]
