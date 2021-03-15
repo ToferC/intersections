@@ -29,7 +29,7 @@ pub struct DeleteCommunityForm {
 #[get("/community_index")]
 pub async fn community_index(
     data: web::Data<AppData>,
-    node_names: web::Data<Mutex<Vec<String>>>,
+    node_names: web::Data<Mutex<Vec<(String, String)>>>,
     id: Identity,
     _req:HttpRequest) -> impl Responder {
     let mut ctx = Context::new();
@@ -68,7 +68,7 @@ pub async fn community_index(
 #[get("/open_community_index")]
 pub async fn open_community_index(
     data: web::Data<AppData>,
-    node_names: web::Data<Mutex<Vec<String>>>,
+    node_names: web::Data<Mutex<Vec<(String, String)>>>,
     id: Identity,
     _req:HttpRequest) -> impl Responder {
     let mut ctx = Context::new();
@@ -103,7 +103,7 @@ pub async fn open_community_index(
 pub async fn view_community(
     web::Path(community_slug): web::Path<String>,
     data: web::Data<AppData>,
-    node_names: web::Data<Mutex<Vec<String>>>,
+    node_names: web::Data<Mutex<Vec<(String, String)>>>,
     req:HttpRequest,
     id: Identity,
 ) -> impl Responder {
@@ -159,7 +159,7 @@ pub async fn view_community(
 #[get("/add_community")]
 pub async fn add_community(
     data: web::Data<AppData>,
-    node_names: web::Data<Mutex<Vec<String>>>,
+    node_names: web::Data<Mutex<Vec<(String, String)>>>,
     _req:HttpRequest,
     id: Identity,
 ) -> impl Responder {
@@ -238,7 +238,7 @@ pub async fn add_community_form_input(
 pub async fn edit_community(
     web::Path(community_slug): web::Path<String>,
     data: web::Data<AppData>,
-    node_names: web::Data<Mutex<Vec<String>>>,
+    node_names: web::Data<Mutex<Vec<(String, String)>>>,
     _req:HttpRequest,
     id: Identity,
 ) -> impl Responder {
@@ -368,7 +368,7 @@ pub async fn edit_community_form_input(
 pub async fn delete_community(
     web::Path(target_id): web::Path<i32>,
     data: web::Data<AppData>,
-    node_names: web::Data<Mutex<Vec<String>>>,
+    node_names: web::Data<Mutex<Vec<(String, String)>>>,
     _req: HttpRequest,
     id: Identity,
 ) -> impl Responder {

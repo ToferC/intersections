@@ -14,16 +14,17 @@
     
                 <p>{{ community.description }}</p>
     
-                <p>{{ community.code }}</p>
-    
+                
                 <p>This community is {% if community.open %}open{% else %}private{% endif %}</p>
                 <br>
                 
                 <h2>Actions</h2>
-
+                
                 <a class="btn btn-dark" href="/full_community_graph/{{ community.slug }}">View Community Graph</a>
                 <br> 
                 {% if owner %}
+                <p>Your community code is {{ community.code }}</p>
+                <br>
                 <a class="btn btn-dark" href="{{ add_community_profile_url }}">Link to Add Profile to Community</a>
                 {% endif %}
         </div>

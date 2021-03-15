@@ -41,6 +41,7 @@ table! {
         domain_token -> Varchar,
         translation -> Varchar,
         synonyms -> Array<Text>,
+        slug -> Varchar,
     }
 }
 

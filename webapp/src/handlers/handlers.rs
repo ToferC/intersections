@@ -11,13 +11,10 @@ use database;
 
 use crate::schema::{nodes};
 
-use super::community_handler;
-
-
 #[get("/")]
 pub async fn index(
     data: web::Data<AppData>,
-    node_names: web::Data<Mutex<Vec<String>>>, 
+    node_names: web::Data<Mutex<Vec<(String, String)>>>, 
     _req:HttpRequest,
     id: Identity,
 ) -> impl Responder {
@@ -41,7 +38,7 @@ pub async fn survey_intro(
     data: web::Data<AppData>,
     web::Path(community_code): web::Path<String>, 
     _req:HttpRequest,
-    node_names: web::Data<Mutex<Vec<String>>>,
+    node_names: web::Data<Mutex<Vec<(String, String)>>>,
     id: Identity,
 ) -> impl Responder {
     println!("Access index");

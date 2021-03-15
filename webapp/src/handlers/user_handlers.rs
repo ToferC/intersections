@@ -32,7 +32,7 @@ pub struct DeleteUserForm {
 #[get("/user_index")]
 pub async fn user_index(
     data: web::Data<AppData>,
-    node_names: web::Data<Mutex<Vec<String>>>,
+    node_names: web::Data<Mutex<Vec<(String, String)>>>,
     id: Identity,
     _req:HttpRequest) -> impl Responder {
     let mut ctx = Context::new();
@@ -73,7 +73,7 @@ pub async fn user_index(
 pub async fn user_page_handler(
     web::Path(slug): web::Path<String>,
     data: web::Data<AppData>,
-    node_names: web::Data<Mutex<Vec<String>>>,
+    node_names: web::Data<Mutex<Vec<(String, String)>>>,
     _req:HttpRequest,
     id: Identity,
 ) -> impl Responder {
@@ -116,7 +116,7 @@ pub async fn user_page_handler(
 #[get("/log_in")]
 pub async fn login_handler(
     data: web::Data<AppData>,
-    node_names: web::Data<Mutex<Vec<String>>>,
+    node_names: web::Data<Mutex<Vec<(String, String)>>>,
     _req:HttpRequest,
     id: Identity,
 ) -> impl Responder {
@@ -179,7 +179,7 @@ pub async fn login_form_input(
 #[get("/register")]
 pub async fn register_handler(
     data: web::Data<AppData>,
-    node_names: web::Data<Mutex<Vec<String>>>,
+    node_names: web::Data<Mutex<Vec<(String, String)>>>,
     _req:HttpRequest,
     id: Identity,
 ) -> impl Responder {
@@ -255,7 +255,7 @@ pub async fn logout(
 pub async fn delete_user_handler(
     web::Path(target_id): web::Path<i32>,
     data: web::Data<AppData>,
-    node_names: web::Data<Mutex<Vec<String>>>,
+    node_names: web::Data<Mutex<Vec<(String, String)>>>,
     _req: HttpRequest,
     id: Identity,
 ) -> impl Responder {

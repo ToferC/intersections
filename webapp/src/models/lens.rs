@@ -107,6 +107,19 @@ impl Lenses {
         Ok(ids)
     }
 
+    pub fn find_real_node_ids() -> Result<Vec<i32>, CustomError> {
+        let conn = database::connection()?;
+
+        let real_people_ids = People::find_real_ids().expect("Unable to load real people");
+
+        let ids = lenses::table
+            .select(lenses::node_id)
+            .filter(lenses::person_id.eq_any(real_people_ids))
+            .load::<i32>(&conn)?;
+
+        Ok(ids)
+    }
+
     pub fn load_api_data() -> Result<Vec<(People, Vec<(Lenses, Nodes)>)>, CustomError> {
         let conn = database::connection()?;
         let mut people = People::find_all()?;

@@ -62,7 +62,7 @@ impl AggLens {
 pub async fn person_page(
     web::Path(code): web::Path<String>, 
     data: web::Data<AppData>,
-    node_names: web::Data<Mutex<Vec<String>>>,
+    node_names: web::Data<Mutex<Vec<(String, String)>>>,
     _req:HttpRequest,
     id: Identity,
 ) -> impl Responder {
@@ -114,7 +114,7 @@ pub async fn person_page(
 pub async fn person_graph(
     web::Path(person_id): web::Path<i32>,
     data: web::Data<AppData>,
-    node_names: web::Data<Mutex<Vec<String>>>,
+    node_names: web::Data<Mutex<Vec<(String, String)>>>,
     _req: HttpRequest,
     id: Identity,
 ) -> impl Responder {

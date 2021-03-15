@@ -9,7 +9,7 @@
         <br>
         <h1>{{ node.node_name | title }} - {{ node.domain_token | title }}</h1>
         <p><a href="/full_person_graph">View full graph</a> | <a href="/full_node_graph">View global graph</a> | <a href="/">Return to Index</a></p>
-        <p><a href="/node_graph/{{ node.node_name }}">View graph for {{ node.node_name }}</a></p>
+        <p><a href="/node_graph/{{ node.slug }}">View graph for {{ node.node_name }}</a></p>
 
         <hr>
         <p>The table below shows the data from this specific node.</p>
@@ -95,7 +95,7 @@
                             <th style="text-align: center;">Mean Inclusivity</th>
                         </tr>
                         <tr>
-                            <td style="text-align: center;"><a href="/node/{{ lens.name }}">{{ lens.name | title }}</a></td>
+                            <td style="text-align: center;"><a href="/node/{{ lens.name | snake_case }}">{{ lens.name | title }}</a></td>
                             <td style="text-align: center;">{{ lens.domain | title }}</td>
                             <td style="text-align: center;">{{ lens.count }}</td>
                             <td style="text-align: center;">

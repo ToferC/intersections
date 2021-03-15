@@ -5,6 +5,7 @@ use actix_session::{CookieSession};
 use actix_identity::{CookieIdentityPolicy, IdentityService};
 use actix_web_static_files;
 use tera::Tera;
+use tera_text_filters::snake_case;
 
 use database;
 use webapp::handlers; 
@@ -47,7 +48,7 @@ async fn main() -> std::io::Result<()> {
     println!("Generate graph representation");
     let graph: handlers::CytoGraph = handlers::generate_cyto_graph(people_vec, node_vec, lens_vec, None);
 
-    let node_names = models::Nodes::find_all_linked_names().expect("Unable to load names");
+    let node_names = models::Nodes::find_all_linked_names_slugs().expect("Unable to load names");
     
     let x = Arc::new(Mutex::new(graph));
     let y = Arc::new(Mutex::new(node_names));
@@ -58,7 +59,8 @@ async fn main() -> std::io::Result<()> {
         
         let mut tera = Tera::new(
             "templates/**/*").unwrap();
-            
+        
+        tera.register_filter("snake_case", snake_case);
         tera.full_reload().expect("Error running auto reload with Tera");
             
         let x = Arc::clone(&x);

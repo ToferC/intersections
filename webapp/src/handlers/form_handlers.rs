@@ -75,7 +75,7 @@ impl RenderPerson {
 pub async fn lens_form_handler(
     data: web::Data<AppData>,
     web::Path(community_code): web::Path<String>, 
-    node_names: web::Data<Mutex<Vec<String>>>,
+    node_names: web::Data<Mutex<Vec<(String, String)>>>,
     _req:HttpRequest,
     id: Identity,
 ) -> impl Responder {
@@ -116,7 +116,7 @@ pub async fn lens_form_handler(
 pub async fn handle_lens_form_input(
     _data: web::Data<AppData>,
     graph: web::Data<Mutex<CytoGraph>>,
-    node_names: web::Data<Mutex<Vec<String>>>,
+    node_names: web::Data<Mutex<Vec<(String, String)>>>,
     web::Path(community_code): web::Path<String>, 
     req: HttpRequest, 
     form: web::Form<FirstLensForm>,
@@ -202,7 +202,7 @@ pub async fn handle_lens_form_input(
             
                         let mut temp_data = node_names.lock().expect("Unable to unlock node_names");
             
-                        temp_data.push(new_node.node_name);
+                        temp_data.push((new_node.node_name, new_node.slug));
             
                         drop(g);
                         drop(temp_data);
@@ -251,7 +251,7 @@ pub async fn handle_lens_form_input(
 pub async fn add_lens_form_handler(
     web::Path(code): web::Path<String>, 
     data: web::Data<AppData>,
-    node_names: web::Data<Mutex<Vec<String>>>,
+    node_names: web::Data<Mutex<Vec<(String, String)>>>,
     _req:HttpRequest,
     id: Identity,
 ) -> impl Responder {
@@ -288,7 +288,7 @@ pub async fn add_handle_lens_form_input(
     web::Path(code): web::Path<String>,
     _data: web::Data<AppData>,
     graph: web::Data<Mutex<CytoGraph>>,
-    node_names: web::Data<Mutex<Vec<String>>>,
+    node_names: web::Data<Mutex<Vec<(String, String)>>>,
     _req: HttpRequest, 
     form: web::Form<AddLensForm>,
 ) -> impl Responder {
@@ -349,7 +349,7 @@ pub async fn add_handle_lens_form_input(
 
             // add node_names to appData
             let mut nn = node_names.lock().expect("Unable to unlock");
-            nn.push(new_node.node_name);
+            nn.push((new_node.node_name, new_node.slug));
             drop(nn);
 
             new_node.id

@@ -15,8 +15,11 @@
                 <th style="text-align: center;">Community</th>
                 <th style="text-align: center;">Created</th>
                 <th style="text-align: center;">Open</th>
+                <th style="text-align: center;">Demo</th>
                 <th style="text-align: center;">Contact</th>
+                {% if role == "admin" %}
                 <th style="text-align: center;">Delete</th>
+                {% endif %}
             </tr>
             {% if communities %}
                 {% for community in communities %} 
@@ -25,8 +28,11 @@
                     <td><a href="/community/{{ community.slug }}">{{ community.tag | title }}</a></td>
                     <td>{{ community.date_created | date(format="%Y-%m-%d") }}</td>
                     <td>{{ community.open }}</td>
+                    <td>{{ community.test }}</td>
                     <td>{{ community.contact_email }}</td>
+                    {% if role == "admin" %}
                     <td><a style="color:red" href="/delete_community/{{ community.id }}">Delete</a></td>
+                    {% endif %}
                 </tr>
                         
                 {% endfor %}
@@ -42,6 +48,9 @@
         </table>
 
         <hr>
+        {% if session_user != "" %}
+            <p><a class="btn btn-dark" href="/add_community">Add Community</a></p>
+        {% endif %}
 
     </div>
 {% endblock content %}

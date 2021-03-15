@@ -15,11 +15,11 @@ use crate::handlers::{AggLens, generate_node_cyto_graph};
 
 use crate::schema::{nodes, lenses};
 
-#[get("/node/{label}")]
+#[get("/node/{node_slug}")]
 pub async fn node_page(
-    web::Path(label): web::Path<String>, 
+    web::Path(node_slug): web::Path<String>, 
     data: web::Data<AppData>, 
-    node_names: web::Data<Mutex<Vec<String>>>,
+    node_names: web::Data<Mutex<Vec<(String, String)>>>,
     _req:HttpRequest,
     id: Identity,
 ) -> impl Responder {
@@ -32,7 +32,7 @@ pub async fn node_page(
 
     let conn = database::connection().expect("Unable to connect to db");
     
-    let node: Nodes = nodes::table.filter(nodes::node_name.eq(label))
+    let node: Nodes = nodes::table.filter(nodes::slug.eq(node_slug))
         .first(&conn)
         .expect("Unable to load node");
     
@@ -120,11 +120,11 @@ pub async fn node_page(
     HttpResponse::Ok().body(rendered)
 }
 
-#[get("/community_node/{community_slug}/{label}")]
+#[get("/community_node/{community_slug}/{node_slug}")]
 pub async fn community_node_page(
-    web::Path((community_slug, label)): web::Path<(String, String)>, 
+    web::Path((community_slug, node_slug)): web::Path<(String, String)>, 
     data: web::Data<AppData>, 
-    node_names: web::Data<Mutex<Vec<String>>>,
+    node_names: web::Data<Mutex<Vec<(String, String)>>>,
     _req:HttpRequest,
     id: Identity,
 ) -> impl Responder {
@@ -166,15 +166,16 @@ pub async fn community_node_page(
     // get ids of people in the community
     let community_people_ids = People::find_ids_from_community(community.id).expect("Unable to find community members");
     
-    let node: Nodes = nodes::table.filter(nodes::node_name.eq(label))
+    let node: Nodes = nodes::table.filter(nodes::slug.eq(node_slug))
         .first(&conn)
         .expect("Unable to load node");
     
     // get connected nodes via people with lense connections to our prime node and community
-    let lens_vec: Vec<Lenses> = Lenses::belonging_to(&node)
-        .filter(lenses::person_id.eq_any(&community_people_ids))
+    let lens_vec: Vec<Lenses> = lenses::table
+        .filter(lenses::person_id.eq_any(&community_people_ids)
+            .and(lenses::node_name.like(&node.node_name)))
         .load::<Lenses>(&conn)
-        .expect("Error leading connected lenses");
+        .expect("Error loading connected lenses");
 
     let mut people_id_vec: Vec<i32> = Vec::new();
     let mut node_id_vec: Vec<i32> = Vec::new();
@@ -189,6 +190,7 @@ pub async fn community_node_page(
     people_id_vec.sort();
     people_id_vec.dedup();
 
+    println!("People ID VEC: {:?}", &people_id_vec);
 
     // add lenses for the people connected by node
     let connected_lenses = lenses::table
@@ -257,12 +259,11 @@ pub async fn community_node_page(
     HttpResponse::Ok().body(rendered)
 }
 
-#[get("/node_graph/{label}")]
+#[get("/node_graph/{node_slug}")]
 pub async fn node_graph(
-    // Rework this as a connected node graph
-    web::Path(label): web::Path<String>,
+    web::Path(node_slug): web::Path<String>,
+    node_names: web::Data<Mutex<Vec<(String, String)>>>,
     data: web::Data<AppData>,
-    node_names: web::Data<Mutex<Vec<String>>>,
     _req: HttpRequest,
     id: Identity,
 ) -> impl Responder {
@@ -276,7 +277,7 @@ pub async fn node_graph(
 
     let conn = database::connection().expect("Unable to connect to db");
     
-    let node: Nodes = nodes::table.filter(nodes::node_name.eq(label))
+    let node: Nodes = nodes::table.filter(nodes::slug.eq(node_slug))
         .first(&conn)
         .expect("Unable to load node");
     
@@ -335,12 +336,12 @@ pub async fn node_graph(
     HttpResponse::Ok().body(rendered)
 }
 
-#[get("/community_node_graph/{community_slug}/{label}")]
+#[get("/community_node_graph/{community_slug}/{node_slug}")]
 pub async fn community_node_graph(
     // Rework this as a connected node graph
-    web::Path((community_slug, label)): web::Path<(String, String)>, 
+    web::Path((community_slug, node_slug)): web::Path<(String, String)>, 
     data: web::Data<AppData>,
-    node_names: web::Data<Mutex<Vec<String>>>,
+    node_names: web::Data<Mutex<Vec<(String, String)>>>,
     _req: HttpRequest,
     id: Identity,
 ) -> impl Responder {
@@ -377,17 +378,14 @@ pub async fn community_node_graph(
 
     let conn = database::connection().expect("Unable to connect to db");
     
-    let node: Nodes = nodes::table.filter(nodes::node_name.eq(label))
+    let node: Nodes = nodes::table.filter(nodes::slug.eq(node_slug))
         .first(&conn)
         .expect("Unable to load node");
     
     // get connected nodes via people with lense connections to our prime node
-
-
-    
     let mut lens_vec: Vec<Lenses> = Lenses::belonging_to(&node)
-    .load::<Lenses>(&conn)
-    .expect("Error leading connected lenses");
+        .load::<Lenses>(&conn)
+        .expect("Error leading connected lenses");
     
     let mut people_id_vec: Vec<i32> = Vec::new();
     let mut node_id_vec: Vec<i32> = Vec::new();
@@ -403,8 +401,8 @@ pub async fn community_node_graph(
     
     // add lenses for the people connected by node
     let mut connected_lenses = lenses::table.filter(lenses::person_id.eq_any(&people_id_vec))
-    .load::<Lenses>(&conn)
-    .expect("Unable to load lenses");
+        .load::<Lenses>(&conn)
+        .expect("Unable to load lenses");
     
     lens_vec.append(&mut connected_lenses);
     

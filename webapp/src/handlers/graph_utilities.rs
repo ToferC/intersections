@@ -3,6 +3,7 @@ use std::fmt;
 
 use bigdecimal::{ToPrimitive};
 use std::collections::{BTreeMap, HashMap};
+use inflector::Inflector;
 
 use crate::models::{Lenses, Nodes, People};
 
@@ -85,8 +86,8 @@ impl GNode {
         };
 
         let href = match community {
-            Some(c) => format!("/community_node/{}/{}", c, n.node_name),
-            None => format!("/node/{}", n.node_name),
+            Some(c) => format!("/community_node/{}/{}", c, n.slug),
+            None => format!("/node/{}", n.slug),
         };
 
         let node = GNode {
@@ -111,9 +112,11 @@ impl GNode {
             (String::from("blue"), String::from("triangle"))
         };
 
+        let slug = l.node_name.trim().to_string().to_snake_case();
+
         let href = match community {
-            Some(c) => format!("/community_node/{}/{}", c, l.node_name.trim()),
-            None => format!("/node/{}", l.node_name.trim()),
+            Some(c) => format!("/community_node/{}/{}", c, slug),
+            None => format!("/node/{}", slug),
         };
 
         let node = GNode {

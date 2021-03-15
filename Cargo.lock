@@ -1174,6 +1174,7 @@ dependencies = [
 name = "databaseutils"
 version = "0.1.0"
 dependencies = [
+ "Inflector",
  "bigdecimal",
  "chrono",
  "database",
@@ -3226,6 +3227,16 @@ dependencies = [
 ]
 
 [[package]]
+name = "tera-text-filters"
+version = "1.0.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "fef4d0b73a2c9f3cbf55a1b0511bf8173024471da07266d0184f8cd0a480a5a0"
+dependencies = [
+ "heck",
+ "tera",
+]
+
+[[package]]
 name = "termcolor"
 version = "1.1.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -3920,6 +3931,7 @@ dependencies = [
  "serde_json",
  "shrinkwraprs",
  "tera",
+ "tera-text-filters",
  "uuid 0.8.2",
 ]
 

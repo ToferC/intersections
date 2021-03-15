@@ -1,5 +1,6 @@
 use serde::{Serialize, Deserialize};
 use diesel::prelude::*;
+use inflector::Inflector;
 
 use error_handler::error_handler::CustomError;
 use database;
@@ -12,20 +13,23 @@ use crate::schema::nodes;
 pub struct Node {
     pub node_name: String,
     pub domain_token: String,
+    pub slug: String,
 }
 
 impl Node {
     pub fn new(name: String, domain: String) -> Self {
         Node {
-            node_name: name,
+            node_name: name.to_owned(),
             domain_token: domain,
+            slug: name.to_snake_case(),
         }
     }
 
     pub fn from(node: &Node) -> Node {
         Node {
             node_name: node.node_name.to_owned(),
-            domain_token: node.domain_token.to_owned(), 
+            domain_token: node.domain_token.to_owned(),
+            slug: node.slug.to_owned(),
         }
     }
 }
@@ -37,7 +41,8 @@ pub struct Nodes {
     pub node_name: String,
     pub domain_token: String,
     pub translation: String,
-    pub synonyms: Vec<String>
+    pub synonyms: Vec<String>,
+    pub slug: String,
 }
 
 impl Nodes {
@@ -71,15 +76,15 @@ impl Nodes {
         Ok(names)
     }
 
-    pub fn find_all_linked_names() -> Result<Vec<String>, CustomError> {
+    pub fn find_all_linked_names_slugs() -> Result<Vec<(String, String)>, CustomError> {
         let conn = database::connection()?;
 
-        let node_ids = Lenses::find_all_node_ids().expect("Unable to load lenses");
+        let node_ids = Lenses::find_real_node_ids().expect("Unable to load lenses");
 
         let node_names = nodes::table
-            .select(nodes::node_name)
+            .select((nodes::node_name, nodes::slug))
             .filter(nodes::id.eq_any(node_ids))
-            .load::<String>(&conn)?;
+            .load::<(String, String)>(&conn)?;
 
         Ok(node_names)
     }

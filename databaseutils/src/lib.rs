@@ -3,6 +3,7 @@ use num_bigint::{ToBigInt};
 use std::{io::{stdin, stdout, copy}, process::exit};
 use std::{num::ParseIntError};
 use chrono::prelude::*;
+use inflector::Inflector;
 
 use std::fs::File;
 use serde_json::Value;
@@ -108,23 +109,38 @@ pub fn prepopulate_db(mode: &str) {
                 exit(0);
             };
 
-            let community_data = &models::NewCommunity::new(
-                "Test Community".to_owned(),
-                "Original alpha test data for intersections. This data is a mix of dummy data, demonstration data and real people testing the platform. It is excluded from the global data set and can only be accessed as a separate community.".to_owned(),
-                "Demonstration of test data in app".to_owned(),
-                "admin@email.com".to_owned(),
-                true,
-                target_id,
-                true,
-            );
+            // insert test community if needed
 
-            let test_community = models::Communities::create(
-                community_data
-            ).expect("Unable to create generic community");
+            let mut test_id = 0;
+
+            let test_communities = models::Communities::find_test_ids()
+                .expect("Unable to load communities");
+
+            if test_communities.len() == 0 as usize {
+
+                let community_data = &models::NewCommunity::new(
+                    "Test Community".to_owned(),
+                    "Original alpha test data for intersections. This data is a mix of dummy data, demonstration data and real people testing the platform. It is excluded from the global data set and can only be accessed as a separate community.".to_owned(),
+                    "Demonstration of test data in app".to_owned(),
+                    "admin@email.com".to_owned(),
+                    true,
+                    target_id,
+                    true,
+                );
+
+                let test_community = models::Communities::create(
+                    community_data
+                ).expect("Unable to create generic community");
+
+                test_id = test_community.id;
+
+            } else {
+                test_id = test_communities[0];
+            };
 
             match mode {
-                "demo" => import_demo_data(test_community.id),
-                _ => generate_dummy_data(test_community.id),
+                "demo" => import_demo_data(test_id),
+                _ => generate_dummy_data(test_id),
             };
 
             println!("SUCCESS");
@@ -139,6 +155,8 @@ pub fn prepopulate_db(mode: &str) {
 
 pub fn import_demo_data(community_id: i32) {
 
+    add_base_nodes();
+
     let file = File::open("test_data.json").unwrap();
     let data: Vec<Vec<serde_json::Value>> = serde_json::from_reader(file).unwrap();
 
@@ -148,15 +166,9 @@ pub fn import_demo_data(community_id: i32) {
         println!("PERSON");
         println!("{:?}", &e[0]); // person Object
 
-        let p = models::People {
-            id: *&e[0]["id"].as_i64().unwrap() as i32,
-            code: models::generate_unique_code(),
-            date_created: now,
-            related_codes: Vec::new(),
-            community_id,
-        };
+        let p = models::NewPerson::new(community_id);
 
-        models::People::detailed_create(&p).expect("Unable to insert person.");
+        let person = models::People::create(&p).expect("Unable to insert person.");
 
         println!("LENSES");
         for i in e[1].as_array() { // lens Array
@@ -166,15 +178,22 @@ pub fn import_demo_data(community_id: i32) {
                 println!("{:?}", n[1]); // node Object
                 println!("Node name: {}", n[1]["node_name"]);
 
-                let node = models::Nodes {
-                    id: n[1]["id"].as_i64().unwrap() as i32,
-                    node_name: n[1]["node_name"].as_str().unwrap().to_owned(),
-                    domain_token: n[1]["domain_token"].as_str().unwrap().to_owned(),
-                    translation: "".to_owned(),
-                    synonyms: Vec::new(),
-                };
+                let name = n[1]["node_name"].as_str().unwrap().to_owned();
 
-                let _ = models::Nodes::detailed_create(&node);
+                let node_data = models::Node::new(
+                    name.to_owned(),
+                    n[1]["domain_token"].as_str().unwrap().to_owned(),
+                );
+
+                let node = models::Nodes::create(&node_data);
+
+                let node = match node {
+                    Ok(n) => n,
+                    Err(e) => {
+                        println!("{}", e);
+                        models::Nodes::find_by_name(name.to_owned()).expect("Unable to load node")
+                    }
+                };
 
                 println!("LENS");
 
@@ -194,10 +213,10 @@ pub fn import_demo_data(community_id: i32) {
                     .unwrap(), 2);
 
                 let l = models::Lens::new(
-                    n[0]["node_name"].as_str().unwrap().to_owned(),
-                    n[0]["node_domain"].as_str().unwrap().to_owned(),
-                    n[0]["person_id"].as_i64().unwrap() as i32,
-                    n[0]["node_id"].as_i64().unwrap() as i32, 
+                    node.node_name.to_owned(),
+                    node.domain_token.to_owned(),
+                    person.id,
+                    node.id, 
                     statements,
                     inclusivity,
                 );
@@ -224,6 +243,8 @@ pub fn generate_dummy_data(community_id: i32) {
             &models::NewPerson::new(community_id)
         ).expect("Unable to create new person {}");
     };
+
+    add_base_nodes();
 
     let base_lenses = vec![
         ("father", "person", 1, 1, "tired", "not doing enough", "joyful", -0.18),
@@ -260,3 +281,176 @@ pub fn generate_dummy_data(community_id: i32) {
         ).expect("Unable to create lens");
     }
 }
+
+/// Add base nodes to database for autosuggest
+pub fn add_base_nodes() {
+
+    let current_nodes = models::Nodes::find_all()
+        .expect("Unable to load nodes")
+        .len();
+
+    if current_nodes == 0 {
+
+        let nodes = vec![
+            ("father", "person"),
+            ("manager", "role"),
+            ("gen x", "person"),
+            ("mother", "person"),
+            ("white", "person"),
+            ("black", "person"),
+            ("executive", "role"),
+            ("innovator", "role"),
+            ("white", "person"),
+            ("caucasian", "person"),
+            ("black", "person"),
+            ("african american", "person"),
+            ("african", "person"),
+            ("african canadian", "person"),
+            ("indigenous", "person"),
+            ("easter european", "person"),
+            ("western european", "person"),
+            ("mixed", "person"),
+            ("latino", "person"),
+            ("hispanic", "person"),
+            ("metis", "person"),
+            ("inuit", "person"),
+            ("native", "person"),
+            ("asian", "person"),
+            ("japanese", "person"),
+            ("korean", "person"),
+            ("chinese", "person"),
+            ("cambodian", "person"),
+            ("arab", "person"),
+            ("jewish", "person"),
+            ("irish", "person"),
+            ("han chinese", "person"),
+            ("french", "person"),
+            ("italian", "person"),
+            ("russian", "person"),
+            ("dutch", "person"),
+            ("swedish", "person"),
+            ("greek", "person"),
+            ("carribean", "person"),
+            ("parent", "person"),
+            ("grandparent", "person"),
+            ("caregiver to parents", "person"),
+            ("caregiver to children", "person"),
+            ("caregiver to family", "person"),
+            ("volunteer", "person"),
+            ("citizen", "person"),
+            ("landed immigrant", "person"),
+            ("work permit", "person"),
+            ("study permit", "person"),
+            ("undocumented", "person"),
+            ("able-bodied", "person"),
+            ("some physical disability", "person"),
+            ("significant physical disability", "person"),
+            ("vision impairment", "person"),
+            ("hearing impairment", "person"),
+            ("speech impairment", "person"),
+            ("slim body type", "person"),
+            ("average body type", "person"),
+            ("large body type", "person"),
+            ("property owner", "person"),
+            ("renter", "person"),
+            ("shelter user", "person"),
+            ("homeless", "person"),
+            ("neuro-typical", "person"),
+            ("some neuro-divergent", "person"),
+            ("significant neuro-divergent", "person"),
+            ("anxiety disorder", "person"),
+            ("mood disorder", "person"),
+            ("psychotic disorder", "person"),
+            ("eating disorder", "person"),
+            ("impulse control", "person"),
+            ("addiction disorder", "person"),
+            ("personality disorder", "person"),
+            ("obsessive-compulsive disorder", "person"),
+            ("post-traumatic stress disorder", "person"),
+            ("stress response syndrome", "person"),
+            ("dissociative disorder", "person"),
+            ("factitious disorder", "person"),
+            ("sexual or gender disorder", "person"),
+            ("somatic symptom disorder", "person"),
+            ("tic disorder", "person"),
+            ("struggling financial situation", "person"),
+            ("comfortable financial situation", "person"),
+            ("surplus financial situation", "person"),
+            ("low socioeconomic upbringing", "person"),
+            ("middle socioeconomic upbringing", "person"),
+            ("upper socioeconomic upbringing", "person"),
+            ("primary school education", "person"),
+            ("high school education", "person"),
+            ("trade school education", "person"),
+            ("college education", "person"),
+            ("university education", "person"),
+            ("masters level education", "person"),
+            ("doctorate level education", "person"),
+            ("anglophone", "person"),
+            ("francophone", "person"),
+            ("unilingual", "person"),
+            ("bilingual", "person"),
+            ("non-native english speaker", "person"),
+            ("non-native french speaker", "person"),
+            ("cisgender", "person"),
+            ("transgender", "person"),
+            ("transexual", "person"),
+            ("gender fluid", "person"),
+            ("non-binary", "person"),
+            ("genderqueer", "person"),
+            ("two spirit", "person"),
+            ("male", "person"),
+            ("female", "person"),
+            ("heterosexual", "person"),
+            ("homosexual", "person"),
+            ("lesbian", "person"),
+            ("gay", "person"),
+            ("bisexual", "person"),
+            ("pansexual", "person"),
+            ("bicurious", "person"),
+            ("questioning", "person"),
+            ("millenial", "person"),
+            ("gen y", "person"),
+            ("boomer", "person"),
+            ("young", "person"),
+            ("middle-aged", "person"),
+            ("old", "person"),
+            ("nearing retirement", "person"),
+            ("analyst", "role"),
+            ("program officer", "role"),
+            ("operations", "role"),
+            ("communications", "role"),
+            ("law enforcement", "role"),
+            ("correctional officer", "role"),
+            ("marketing professional", "role"),
+            ("scientist", "role"),
+            ("researcher", "role"),
+            ("security", "role"),
+            ("computer scientist", "role"),
+            ("lawyer", "role"),
+            ("auditor", "role"),
+            ("procurement officer", "role"),
+            ("hr officer", "role"),
+            ("executive", "role"),
+            ("finance officer", "role"),
+            ("supervisor", "role"),
+            ("psychologist", "role"),
+            ("teacher", "role"),
+            ("educator", "role"),
+            ("it officer", "role"),
+            ("leader", "role"),
+            ("networker", "role"),
+            ("entrepreneur", "role"),
+            ("policy analyst", "role"),
+            ];
+            
+            for n in nodes {
+                let node = models::Node::new(
+                    n.0.to_owned(),
+                    n.1.to_owned(),
+                );
+                
+                let _ = models::Nodes::create(&node);
+            };
+        };
+    }

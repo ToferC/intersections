@@ -14,7 +14,7 @@ use crate::handlers::{CytoGraph, generate_node_cyto_graph};
 pub async fn full_person_graph(
     data: web::Data<AppData>,
     graph: web::Data<Mutex<CytoGraph>>,
-    node_names: web::Data<Mutex<Vec<String>>>,
+    node_names: web::Data<Mutex<Vec<(String, String)>>>,
     id: Identity,
 ) -> impl Responder {
 
@@ -45,7 +45,7 @@ pub async fn full_person_graph(
 #[get("/full_node_graph")]
 pub async fn full_node_graph(
     data: web::Data<AppData>,
-    node_names: web::Data<Mutex<Vec<String>>>,
+    node_names: web::Data<Mutex<Vec<(String, String)>>>,
     id:Identity,
 ) -> impl Responder {
         
@@ -85,7 +85,7 @@ pub async fn full_node_graph(
 pub async fn full_community_node_graph(
     data: web::Data<AppData>,
     web::Path(community_slug): web::Path<String>,
-    node_names: web::Data<Mutex<Vec<String>>>,
+    node_names: web::Data<Mutex<Vec<(String, String)>>>,
     id:Identity,
 ) -> impl Responder {
 
