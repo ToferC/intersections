@@ -2,6 +2,7 @@ use bigdecimal::{BigDecimal};
 use num_bigint::{ToBigInt};
 use std::{io::{stdin}, process::exit};
 use std::{num::ParseIntError};
+use std::env;
 
 use std::fs::File;
 use serde_json::Value;
@@ -157,7 +158,20 @@ pub fn import_demo_data(community_id: i32) {
 
     add_base_nodes();
 
-    let file = File::open("test_data.json").unwrap();
+    let environment = env::var("ENVIRONMENT");
+
+    let e_var = match environment {
+        Ok(v) => v,
+        Err(_) => String::from("test"),
+    };
+
+    let mut json_path = "test_data.json";
+
+    if e_var == String::from("production") {
+        json_path = "~/test_data.json"
+    };
+
+    let file = File::open(json_path).unwrap();
     let data: Vec<Vec<serde_json::Value>> = serde_json::from_reader(file).unwrap();
 
     for e in &data {
