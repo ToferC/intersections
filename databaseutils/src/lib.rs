@@ -1,9 +1,7 @@
-use bigdecimal::{BigDecimal, ToPrimitive};
+use bigdecimal::{BigDecimal};
 use num_bigint::{ToBigInt};
-use std::{io::{stdin, stdout, copy}, process::exit};
+use std::{io::{stdin}, process::exit};
 use std::{num::ParseIntError};
-use chrono::prelude::*;
-use inflector::Inflector;
 
 use std::fs::File;
 use serde_json::Value;
@@ -159,8 +157,6 @@ pub fn import_demo_data(community_id: i32) {
 
     let file = File::open("test_data.json").unwrap();
     let data: Vec<Vec<serde_json::Value>> = serde_json::from_reader(file).unwrap();
-
-    let now = Utc::now().naive_utc();
 
     for e in &data {
         println!("PERSON");
