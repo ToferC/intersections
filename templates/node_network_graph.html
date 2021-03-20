@@ -41,8 +41,9 @@
               style: {
                 'background-color': '#666',
                 'label': 'data(inclusivity)',
-                'background-color': 'data(color)',
+                'background-color': 'mapData(inclusivity, -1.00, 1.00, red, white)',
                 'border-color': 'black',
+                'border-width': 0.5,
                 'width': 'data(size)',
                 'height': 'data(size)',
                 'shape': 'data(shape)',
@@ -53,7 +54,7 @@
             {
               selector: 'edge',
               style: {
-                'width': 'data(weight)' * 0.25,
+                'width': 0.75,
                 'line-color': '#ccc',
                 'source-arrow-shape': 'triangle',
                 'target-arrow-shape': 'triangle',
@@ -66,9 +67,9 @@
   
           layout: {
             name: 'fcose',
-            nodeSeparation: 300,
-            nodeRepulsion: 4500,
-            idealEdgeLength: 125
+            nodeSeparation: 500,
+            nodeRepulsion: 4000,
+            idealEdgeLength: 170
           }
   
           });
@@ -106,17 +107,21 @@
           
           cy.nodes().forEach( n => {
             
-            let bn = bc.degree( n ).toFixed(2);
+            // let bn = bc.degree( n ).toFixed(2);
 
             // use this to set inclusivity
+            /*
             n.data({
               inclusivity: bn,
             });
+            */
 
+            /*
             n.style({
               'height': bn * 30.0,
               'width': bn * 30.0,
             });
+            */
           } );
         });
 

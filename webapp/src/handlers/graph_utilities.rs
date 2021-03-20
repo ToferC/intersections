@@ -7,6 +7,8 @@ use inflector::Inflector;
 
 use crate::models::{Lenses, Nodes, People};
 
+use super::AggLens;
+
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct CytoGraph {
     pub nodes: Vec<CytoNode>,
@@ -132,6 +134,35 @@ impl GNode {
 
         node
     }
+
+    pub fn from_agg_lens(a: &AggLens, community: &Option<String>) -> GNode {
+
+        let (colour, shape): (String, String) = if a.domain == "person" {
+            (String::from("green"), String::from("rectangle"))
+        } else {
+            (String::from("blue"), String::from("ellipse"))
+        };
+
+        let slug = a.name.trim().to_string().to_snake_case();
+
+        let href = match community {
+            Some(c) => format!("/community_node/{}/{}", c, slug),
+            None => format!("/node/{}", slug),
+        };
+
+        let node = GNode {
+            id: format!("{}", &a.name.trim()),
+            node_type: String::from("Node"),
+            text: vec![a.domain.to_owned()],
+            shape: shape,
+            size: 25,
+            color: colour,
+            inclusivity: a.mean_inclusivity.to_f32().expect("Unable to convert BigDecimal"),
+            href,
+        };
+
+        node
+    }
 }
 
 /// Accepts vectors of people, nodes and lenses and formats the data into
@@ -194,9 +225,42 @@ pub fn generate_node_cyto_graph(
     // what else do I need to render the graph?
     let mut edge_map: BTreeMap<String, GEdge> = BTreeMap::new();
 
-    for l in &lens_vec {
+    // prep for aggregating lenses
+    let mut node_id_vec: Vec<i32> = Vec::new();
 
-        let n = GNode::from_lens(&l, &community);
+    for l in &lens_vec {
+        node_id_vec.push(l.node_id);
+    };
+
+    node_id_vec.sort();
+    node_id_vec.dedup();
+
+    let mut aggregate_lenses: Vec<AggLens> = Vec::new();
+
+    for i in node_id_vec {
+        let mut temp_lens_vec: Vec<Lenses> = Vec::new();
+
+        for l in &lens_vec {
+
+            if i == l.node_id {
+                temp_lens_vec.push(l.clone());
+            }
+            // count people associated to multiple similar nodes
+            // show connections across the nodes and lenses
+        };
+
+        if temp_lens_vec.len() > 0 {
+            let agg_lenses = AggLens::from(temp_lens_vec);
+            aggregate_lenses.push(agg_lenses);
+        }
+    };
+
+    aggregate_lenses.sort_by(|a, b|b.count.partial_cmp(&a.count).unwrap());
+    aggregate_lenses.dedup();
+
+    for a in &aggregate_lenses {
+
+        let n = GNode::from_agg_lens(&a, &community);
 
         cyto_node_array.push(CytoNode {
             data: n,

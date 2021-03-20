@@ -215,14 +215,11 @@ pub fn import_demo_data(community_id: i32) {
                     statements.push(s.as_str().unwrap().to_owned());
                 };
 
-                let inclusivity = BigDecimal::new(n[0]["inclusivity"]
-                    .as_str()
-                    .unwrap()
-                    .to_owned()
-                    .parse::<f64>()
-                    .unwrap()
+                let raw_num: f64 = n[0]["inclusivity"].as_str().unwrap().to_owned().parse().unwrap();
+
+                let inclusivity = BigDecimal::new((raw_num * 1000.0)
                     .to_bigint()
-                    .unwrap(), 2);
+                    .unwrap(), 3);
 
                 let l = models::Lens::new(
                     node.node_name.to_owned(),

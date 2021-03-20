@@ -20,13 +20,13 @@
                 
                 <h2>Actions</h2>
                 
-                <a class="btn btn-dark" href="/full_community_graph/{{ community.slug }}">View Community Graph</a>
-                <br> 
                 {% if owner %}
                 <p>Your community code is {{ community.code }}</p>
                 <br>
                 <a class="btn btn-dark" href="{{ add_community_profile_url }}">Link to Add Profile to Community</a>
                 {% endif %}
+                <a class="btn btn-dark" href="/full_community_graph/{{ community.slug }}">View Community Graph</a>
+                <br> 
         </div>
 
             {% if owner %}
@@ -44,7 +44,7 @@
                     The purpose of the pilot is to help individuals and organizations learn about intersectionality and identify bias by
                     anonymously tracking inclusion and exclusion in the community or organization.</p>
 
-                <p>This community is {{ community.description }}</p>
+                <p>Community description: {{ community.description }}</p>
                 
                 <p>No identifying information is stored as part of the survey. When you finish the survey, you will be provided with a code so you can access your profile.</p>
                 <p>You are the only person who will receive this code and without the code, no-one can view your profile.</p>

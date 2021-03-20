@@ -76,16 +76,7 @@ pub async fn node_page(
         for l in &connected_lenses {
 
             if i == l.node_id && i != node.id {
-                temp_lens_vec.push( Lenses {
-                    id: l.id,
-                    node_name: l.node_name.to_owned(),
-                    node_domain: l.node_domain.to_owned(),
-                    person_id: l.person_id,
-                    node_id: l.node_id,
-                    date_created: l.date_created,
-                    statements: l.statements.to_owned(),
-                    inclusivity: l.inclusivity.clone(),
-                });
+                temp_lens_vec.push(l.clone());
             }
             // count people associated to multiple similar nodes
             // show connections across the nodes and lenses
