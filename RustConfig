@@ -1,2 +1,2 @@
 VERSION=stable
-RUST_CARGO_BUILD_FLAGS="--release --workspace --bins --verbose"
+RUST_CARGO_BUILD_FLAGS="--release --workspace"
