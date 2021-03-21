@@ -22,3 +22,8 @@ Inflector = "0.5.1"
 
 [[bin]]
 name = "databaseutils"
+path = "src/main.rs"
+
+[lib]
+name = "databaseutils"
+path = "src/lib.rs"
