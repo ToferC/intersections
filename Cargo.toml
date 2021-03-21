@@ -1,6 +1,4 @@
 
-default-run = "webapp"
-
 [workspace]
 members = [
     "webapp",
@@ -9,4 +7,4 @@ members = [
     "error_handler",
 ]
 
-default-members = ["webapp"]
+default-members = ["webapp", "databaseutils"]
