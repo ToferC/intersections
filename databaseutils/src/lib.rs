@@ -158,6 +158,7 @@ pub fn import_demo_data(community_id: i32) {
 
     add_base_nodes();
 
+    /*
     let environment = env::var("ENVIRONMENT");
 
     let e_var = match environment {
@@ -165,31 +166,28 @@ pub fn import_demo_data(community_id: i32) {
         Err(_) => String::from("test"),
     };
 
-    let mut json_path = "test_data.json";
 
     if e_var == String::from("production") {
         json_path = "~/test_data.json"
     };
 
+    println!("{}", json_path);
+    */
+    
+    let mut json_path = "test_data.json";
+
     let file = File::open(json_path).unwrap();
     let data: Vec<Vec<serde_json::Value>> = serde_json::from_reader(file).unwrap();
 
     for e in &data {
-        println!("PERSON");
-        println!("{:?}", &e[0]); // person Object
 
         let p = models::NewPerson::new(community_id);
 
         let person = models::People::create(&p).expect("Unable to insert person.");
 
-        println!("LENSES");
         for i in e[1].as_array() { // lens Array
             
             for n in i {
-                println!("NODE");
-                println!("{:?}", n[1]); // node Object
-                println!("Node name: {}", n[1]["node_name"]);
-
                 let name = n[1]["node_name"].as_str().unwrap().to_owned();
 
                 let node_data = models::Node::new(
@@ -206,8 +204,6 @@ pub fn import_demo_data(community_id: i32) {
                         models::Nodes::find_by_name(name.to_owned()).expect("Unable to load node")
                     }
                 };
-
-                println!("LENS");
 
                 let mut statements: Vec<String> = Vec::new();
 
@@ -230,11 +226,7 @@ pub fn import_demo_data(community_id: i32) {
                     inclusivity,
                 );
 
-                let _ = models::Lenses::create(&l);
-    
-                println!("{:?}", n[0]); // lens Object
-                println!("Lens statements: {}", n[0]["statements"]);
-                
+                let _ = models::Lenses::create(&l);                
             };
 
 
