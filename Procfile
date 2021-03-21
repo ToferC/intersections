@@ -1,3 +1,3 @@
 release: cargo build -p databaseutils
-release: ./bins/diesel migration run
+release: ./bin/diesel migration run
 web: ./target/release/webapp
