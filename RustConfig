@@ -1,2 +1,1 @@
 VERSION=stable
-RUST_CARGO_BUILD_FLAGS="--release --workspace --bin databaseutils"
