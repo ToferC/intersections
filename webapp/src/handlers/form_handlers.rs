@@ -243,11 +243,12 @@ pub async fn handle_lens_form_input(
                 let mut comm_data = comm_data.to_owned();
 
                 comm_data.members += 1;
+                comm_data.lenses += 1;
                 comm_data.inclusivity_vec.push(inclusivity.to_f32().unwrap());
 
                 let total: f32 = comm_data.inclusivity_vec.iter().sum();
 
-                comm_data.mean_inclusivity = total / comm_data.members as f32;
+                comm_data.mean_inclusivity = total / comm_data.lenses as f32;
 
                 community.data = serde_json::to_value(comm_data).unwrap();
 
@@ -413,12 +414,12 @@ pub async fn add_handle_lens_form_input(
 
     let mut comm_data = comm_data.to_owned();
 
-    comm_data.members += 1;
+    comm_data.lenses += 1;
     comm_data.inclusivity_vec.push(inclusivity.to_f32().unwrap());
 
     let total: f32 = comm_data.inclusivity_vec.iter().sum();
 
-    comm_data.mean_inclusivity = total / comm_data.members as f32;
+    comm_data.mean_inclusivity = total / comm_data.lenses as f32;
 
     community.data = serde_json::to_value(comm_data).unwrap();
 

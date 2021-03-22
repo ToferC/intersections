@@ -14,6 +14,7 @@ use database;
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct CommunityData {
     pub members: i32,
+    pub lenses: i32,
     pub diversity: f64,
     pub inclusivity_vec: Vec<f32>,
     pub mean_inclusivity: f32,
@@ -41,6 +42,7 @@ impl NewCommunity {
 
         let comm_data = CommunityData {
             members: 0,
+            lenses: 0,
             diversity: 0.0,
             inclusivity_vec: vec![0.0],
             mean_inclusivity: 0.0,
