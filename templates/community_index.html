@@ -16,6 +16,9 @@
                 <th style="text-align: center;">Created</th>
                 <th style="text-align: center;">Open</th>
                 <th style="text-align: center;">Demo</th>
+                <th style="text-align: center;">Members</th>
+                <th style="text-align: center;">Experiences</th>
+                <th style="text-align: center;">Avg. Inclusvity</th>
                 <th style="text-align: center;">Contact</th>
                 {% if role == "admin" %}
                 <th style="text-align: center;">Delete</th>
@@ -26,10 +29,13 @@
                 
                 <tr>
                     <td><a href="/community/{{ community.slug }}">{{ community.tag | title }}</a></td>
-                    <td>{{ community.date_created | date(format="%Y-%m-%d") }}</td>
-                    <td>{{ community.open }}</td>
-                    <td>{{ community.test }}</td>
-                    <td>{{ community.contact_email }}</td>
+                    <td style="text-align: center;">{{ community.date_created | date(format="%Y-%m-%d") }}</td>
+                    <td style="text-align: center;">{{ community.open }}</td>
+                    <td style="text-align: center;">{{ community.test }}</td>
+                    <td style="text-align: center;">{{ community.data.members }}</td>
+                    <td style="text-align: center;">{{ community.data.lenses }}</td>
+                    <td style="text-align: center;">{{ community.data.mean_inclusivity | round(method="ceil", precision=3) }}</td>
+                    <td style="text-align: center;">{{ community.contact_email }}</td>
                     {% if role == "admin" %}
                     <td><a style="color:red" href="/delete_community/{{ community.id }}">Delete</a></td>
                     {% endif %}

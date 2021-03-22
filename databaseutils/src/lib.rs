@@ -1,8 +1,7 @@
-use bigdecimal::{BigDecimal};
+use bigdecimal::{BigDecimal, ToPrimitive};
 use num_bigint::{ToBigInt};
 use std::{io::{stdin}, process::exit};
 use std::{num::ParseIntError};
-use std::env;
 
 use std::fs::File;
 use serde_json::Value;
@@ -157,33 +156,27 @@ pub fn prepopulate_db(mode: &str) {
 pub fn import_demo_data(community_id: i32) {
 
     add_base_nodes();
-
-    /*
-    let environment = env::var("ENVIRONMENT");
-
-    let e_var = match environment {
-        Ok(v) => v,
-        Err(_) => String::from("test"),
-    };
-
-
-    if e_var == String::from("production") {
-        json_path = "~/test_data.json"
-    };
-
-    println!("{}", json_path);
-    */
     
-    let mut json_path = "test_data.json";
+    let json_path = "test_data.json";
 
     let file = File::open(json_path).unwrap();
     let data: Vec<Vec<serde_json::Value>> = serde_json::from_reader(file).unwrap();
+
+    let mut community = models::Communities::find(community_id).expect("Unable to load community");
+
+    let comm_data: models::CommunityData = serde_json::from_value(community.data).unwrap();
+
+    let mut comm_data = comm_data.to_owned();
+    let mut temp_incl_vec: Vec<f32> = comm_data.inclusivity_vec.clone();
 
     for e in &data {
 
         let p = models::NewPerson::new(community_id);
 
         let person = models::People::create(&p).expect("Unable to insert person.");
+
+        comm_data.members += 1;
+
 
         for i in e[1].as_array() { // lens Array
             
@@ -223,19 +216,32 @@ pub fn import_demo_data(community_id: i32) {
                     person.id,
                     node.id, 
                     statements,
-                    inclusivity,
+                    inclusivity.to_owned(),
                 );
 
-                let _ = models::Lenses::create(&l);                
+                let _ = models::Lenses::create(&l);
+                
+                comm_data.lenses += 1;
+                temp_incl_vec.push(inclusivity.to_f32().unwrap());
+
+                let total: f32 = temp_incl_vec.iter().sum();
+
+                comm_data.mean_inclusivity = total / comm_data.lenses as f32;
             };
-
-
         };
-        
-
-        println!("");
     };
+    
+    comm_data.inclusivity_vec = temp_incl_vec;
+    community.data = serde_json::to_value(comm_data).unwrap();
 
+    let update = models::Communities::update(&community);
+
+    match update {
+        Ok(c)=> println!("Community Updated: {}", c.tag),
+        Err(e) => println!("Error:{}", e),
+    }
+
+    println!("");
 }
 
 pub fn generate_dummy_data(community_id: i32) {
