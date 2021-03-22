@@ -11,6 +11,15 @@ use crate::models::{generate_unique_code};
 use error_handler::error_handler::CustomError;
 use database;
 
+#[derive(Debug, Serialize, Deserialize, Clone)]
+pub struct CommunityData {
+    pub members: i32,
+    pub diversity: f64,
+    pub inclusivity_vec: Vec<f32>,
+    pub mean_inclusivity: f32,
+    pub tags: Vec<String>,
+}
+
 #[derive(Debug, Serialize, Deserialize, AsChangeset, Insertable, Clone)]
 #[table_name = "communities"]
 pub struct NewCommunity {
@@ -29,6 +38,15 @@ pub struct NewCommunity {
 
 impl NewCommunity {
     pub fn new(tag: String, description: String, data_use_case: String, contact_email: String, open: bool, user_id: i32, test: bool) -> NewCommunity {
+
+        let comm_data = CommunityData {
+            members: 0,
+            diversity: 0.0,
+            inclusivity_vec: vec![0.0],
+            mean_inclusivity: 0.0,
+            tags: Vec::new(),
+        };
+
         NewCommunity {
             tag: tag.clone(),
             description,
@@ -39,10 +57,7 @@ impl NewCommunity {
             code: generate_unique_code(),
             slug: tag.to_snake_case(),
             user_id,
-            data: serde_json::from_str(r#"{
-                "members": 0,
-                "mean_inclusivity": 0.0
-            }"#).unwrap(),
+            data: serde_json::to_value(&comm_data).unwrap(),
             test,
         }
     }
@@ -158,7 +173,7 @@ impl Communities {
         Ok(index)
     }
 
-    pub fn update(community: Communities) -> Result<Self, CustomError> {
+    pub fn update(community: &Communities) -> Result<Self, CustomError> {
         let conn = database::connection()?;
         let community = diesel::update(communities::table)
             .filter(communities::id.eq(community.id))

@@ -330,7 +330,7 @@ pub async fn edit_community_form_input(
                         community.data_use_case= form.data_use_case.trim().to_owned();
                         community.open = open;
 
-                        let update = Communities::update(community);
+                        let update = Communities::update(&community);
 
                         match update {
                             Ok(c) => {

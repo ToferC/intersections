@@ -7,7 +7,7 @@ use tera::Context;
 use serde::{Deserialize, Serialize};
 
 use crate::{AppData, extract_identity_data};
-use crate::models::{Lens, Lenses, NewPerson, People, Node, Nodes, Communities};
+use crate::models::{Lens, Lenses, NewPerson, People, Node, Nodes, Communities, CommunityData};
 use crate::handlers::{CytoGraph, CytoNode, CytoEdge, GNode, GEdge};
 use error_handler::error_handler::CustomError;
 
@@ -126,7 +126,7 @@ pub async fn handle_lens_form_input(
     let community_result = Communities::find_from_code(&community_code);
 
     match community_result {
-        Ok(community) => {
+        Ok(mut community) => {
             
                 // validate form has data or re-load form
                 if form.name.is_empty() || form.response_1.is_empty() {
@@ -192,7 +192,7 @@ pub async fn handle_lens_form_input(
                         // no target
                         let new_node = Nodes::create(&node).expect("Unable to create node.");
             
-                        let node_rep = GNode::from_node(&new_node, &Some(community.slug));
+                        let node_rep = GNode::from_node(&new_node, &Some(community.slug.to_owned()));
             
                         let mut g = graph.lock().expect("Unable to unlock graph");
             
@@ -218,7 +218,7 @@ pub async fn handle_lens_form_input(
                     new_person.id,
                     node_id,
                     lived_statements,
-                    inclusivity,
+                    inclusivity.to_owned(),
                 );
             
                 let new_lens = Lenses::create(&l).expect("Unable to create lens.");
@@ -235,9 +235,34 @@ pub async fn handle_lens_form_input(
                 println!("Post-lens length: {}", &g.edges.len());
             
                 drop(g);
-            
-                HttpResponse::Found().header("Location", format!("/add_lens_form/{}", new_person.code)).finish()
 
+                // update the community based on new data
+
+                let comm_data: CommunityData = serde_json::from_value(community.data).unwrap();
+
+                let mut comm_data = comm_data.to_owned();
+
+                comm_data.members += 1;
+                comm_data.inclusivity_vec.push(inclusivity.to_f32().unwrap());
+
+                let total: f32 = comm_data.inclusivity_vec.iter().sum();
+
+                comm_data.mean_inclusivity = total / comm_data.members as f32;
+
+                community.data = serde_json::to_value(comm_data).unwrap();
+
+                let update = Communities::update(&community);
+
+                match update {
+                    Ok(c) => {
+                        println!("Community {} updated", c.tag);
+                        return HttpResponse::Found().header("Location", format!("/add_lens_form/{}", new_person.code)).finish()
+                    },
+                    Err(e) => {
+                        println!("Community update failed: {}", e);
+                        return HttpResponse::Found().header("Location", String::from("/edit_community")).finish()
+                    }
+                };
         },
         Err(e) => {
             // invalid code - redirect
@@ -362,7 +387,7 @@ pub async fn add_handle_lens_form_input(
         p.id,
         node_id,
         lived_statements,
-        inclusivity,
+        inclusivity.to_owned(),
     );
 
     let new_lens = Lenses::create(&l).expect("Unable to create lens.");
@@ -380,5 +405,33 @@ pub async fn add_handle_lens_form_input(
 
     drop(g);
 
-    HttpResponse::Found().header("Location", format!("/add_lens_form/{}", code)).finish()
+    // update the community based on new data
+
+    let mut community = Communities::find(p.community_id).expect("Unable to load community");
+
+    let comm_data: CommunityData = serde_json::from_value(community.data).unwrap();
+
+    let mut comm_data = comm_data.to_owned();
+
+    comm_data.members += 1;
+    comm_data.inclusivity_vec.push(inclusivity.to_f32().unwrap());
+
+    let total: f32 = comm_data.inclusivity_vec.iter().sum();
+
+    comm_data.mean_inclusivity = total / comm_data.members as f32;
+
+    community.data = serde_json::to_value(comm_data).unwrap();
+
+    let update = Communities::update(&community);
+
+    match update {
+        Ok(c) => {
+            println!("Community {} updated", c.tag);
+            return HttpResponse::Found().header("Location", format!("/add_lens_form/{}", code)).finish()
+        },
+        Err(e) => {
+            println!("Community update failed: {}", e);
+            return HttpResponse::Found().header("Location", String::from("/edit_community")).finish()
+        }
+    };
 }

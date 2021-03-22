@@ -8,4 +8,4 @@ pub use lens::{Lens, Lenses};
 pub use person::{NewPerson, People, generate_unique_code};
 pub use node::{Node, Nodes};
 pub use user::{User, InsertableUser, SlimUser, LoggedUser, UserData, verify};
-pub use community::{Communities, NewCommunity};
+pub use community::{Communities, NewCommunity, CommunityData};
