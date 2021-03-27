@@ -10,6 +10,8 @@ use crate::handlers::{
     survey_intro,
     person_page,
     find_lens,
+    // emails
+    email_person_info,
     // nodes
     node_page,
     community_node_page,
@@ -57,6 +59,9 @@ pub fn init_routes(config: &mut web::ServiceConfig) {
     config.service(survey_intro);
     config.service(person_page);
     config.service(find_lens);
+
+    // emails
+    config.service(email_person_info);
 
     // nodes
 

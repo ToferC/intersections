@@ -54,6 +54,8 @@ rand = "0.7.3"
 petgraph = { version = "0.5.1", features = ["serde-1"] }
 rust-argon2 = "0.8"
 
+sendgrid = "0.17.0"
+
 database = { path = "../database"}
 error_handler = { path = "../error_handler" }
 

@@ -1,9 +1,13 @@
 #[macro_use]
 extern crate diesel;
 
+use std::env;
 use tera::Tera;
 use actix_session::Session;
 use actix_identity::Identity;
+
+use sendgrid::SGClient;
+use sendgrid::{Destination, Mail};
 
 pub mod models;
 pub mod handlers;
@@ -11,6 +15,7 @@ pub mod schema;
 
 pub struct AppData {
     pub tmpl: Tera,
+    pub mail_client: SGClient,
 }
 
 pub fn extract_session_data(session: &Session) -> (String, String) {
@@ -53,4 +58,23 @@ pub fn extract_identity_data(id: &Identity) -> (String, String) {
     println!("{}-{}", &session_user, &role);
 
     (session_user, role)
+}
+
+pub fn send_email(target_address: String, email_html: String, sg: SGClient) {
+
+    let mail_info = Mail::new()
+        .add_to(Destination {
+            address: target_address.as_str(),
+            name: "Participant",
+        })
+        .add_from("user_info@intersectional-data.ca")
+        .add_subject("Your personal data link from Intersectional-Data.ca")
+        .add_html(email_html.as_str())
+        .add_from_name("Chris")
+        .add_header("x-data".to_string(), "confirmed");
+
+        match sg.send(mail_info) {
+            Err(err) => println!("Error: {}", err),
+            Ok(body) => println!("Response: {:?}", body),
+        };
 }

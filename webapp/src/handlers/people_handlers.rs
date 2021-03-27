@@ -1,22 +1,23 @@
 use std::sync::Mutex;
 
-use actix_web::{web, get, HttpResponse, HttpRequest, Responder};
+use actix_web::{web, get, post, HttpResponse, HttpRequest, Responder};
 use actix_identity::Identity;
 use crate::{AppData, extract_identity_data};
 use tera::{Context};
 use diesel::prelude::*;
 use diesel::{QueryDsl, BelongingToDsl};
-use serde::Serialize;
+use serde::{Serialize, Deserialize};
 
 use bigdecimal::{ToPrimitive};
 use std::collections::BTreeMap;
 use std::iter::FromIterator;
 
-use crate::models::{Lenses, Nodes, People};
+use crate::models::{Lenses, Nodes, People, Communities};
 use database;
 use crate::handlers::{generate_cyto_graph, RenderPerson};
 
 use crate::schema::{people, nodes};
+use crate::send_email;
 
 #[derive(Serialize, Debug, PartialEq, PartialOrd)]
 pub struct AggLens {
@@ -56,6 +57,11 @@ impl AggLens {
             frequency_distribution: v,
         }
     }
+}
+
+#[derive(Debug, Deserialize)]
+pub struct EmailForm {
+    email: String,
 }
 
 #[get("/person/{code}")]
@@ -108,6 +114,44 @@ pub async fn person_page(
 
     let rendered = data.tmpl.render("person.html", &ctx).unwrap();
     HttpResponse::Ok().body(rendered)
+}
+
+#[post("/person/{code}")]
+pub async fn email_person_info(
+    web::Path(code): web::Path<String>,
+    data: web::Data<AppData>,
+    _req: HttpRequest,
+    _id: Identity,
+    form: web::Form<EmailForm>,
+) -> impl Responder {
+
+    // validate form has data or re-load form
+    if form.email.is_empty() {
+        return HttpResponse::Found().header("Location", format!("/person/{}", code)).finish()
+    };
+
+    let person = People::find_from_code(&code);
+
+    match person {
+        Ok(person) => {
+            let mut ctx = Context::new();
+
+            let community = Communities::find(person.community_id).unwrap();
+
+            ctx.insert("person", &person);
+            ctx.insert("community", &community);
+
+            let rendered = data.tmpl.render("email_person.html", &ctx).unwrap();
+            
+            send_email(form.email.to_owned(), rendered, data.mail_client.clone());
+
+            return HttpResponse::Found().header("Location", format!("/person/{}", code)).finish()
+        },
+        Err(err) => {
+            println!("Error: {}", err);
+            return HttpResponse::Found().header("Location", format!("/person/{}", code)).finish()
+        }
+    };
 }
 
 #[get("/person_network_graph/{person_id}")]

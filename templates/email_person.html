@@ -1,0 +1,34 @@
+{% block content %}
+
+    <div class="col m-md-2 m-1">
+        <br>
+        <p>Hello/bonjour,</p>
+        <p>
+            Thank you for participating in the Intersectional Data MVP. This is the only email you will receive unless you specifically request your data again. Your email address is not saved or associated with your data in the Intersectional Data application.
+        </p>
+        <p>
+            You will find links below to access your data, see the data for your community and to delete your data. You will also find a record of the data on your profile. Note that your data will remain the same, but the comparison data may change over time as more people add their experiences.
+        </p>
+        <hr>
+        <h2>Important Links</h2>
+        <ul>
+            <li><a href="/person/{{ person.code }}">Link to my profile</a></li>
+            <li><a href="/community/{{ community.code }}">Link to my community: {{ community.tag }}</a></li>
+            <li><a href="/delete_person/{{ person.code }}">Delete my profile</a></li>
+            <li>---------------------</li>
+            <li><a href="https://www.intersectional-data.ca">Return to the application</a></li>
+        </ul>
+
+        <h2>Community Information</h2>
+        <p>Name: {{ community.tag }}</p>
+        <p>Description: {{ community.description }}</p>
+        <p>Data Policy: {{ community.data_use_case }}</p>
+        <p>Administrator: <a href="mailto:{{ community.contact_email }}">{{ community.contact_email }}</a></p>
+
+        <hr>
+        <p>Thank you again for participating in this project. If you have any questions on the community you participated in, please contact your community administrator above. If you have any questions or would like to provide feedback on the application, please contact Chris Allison at cgeist7@gmail.com.</p>
+        <p>Sincere regards,</p>
+        <p>Chris</p>
+    </div>
+
+{% endblock content %}

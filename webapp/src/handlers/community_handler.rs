@@ -146,7 +146,7 @@ pub async fn view_community(
     ctx.insert("add_community_profile_url", &community_add_profile_url);
 
     // add qr code to add profile (prod only)
-    let qr = qrcode_generator::to_svg_to_string(format!("https://intersectional-data.herokuapp.com{}", community_add_profile_url), QrCodeEcc::Low, 245, Some("Invitation link for intersections")).unwrap();
+    let qr = qrcode_generator::to_svg_to_string(format!("https://www.intersectional-data.ca{}", community_add_profile_url), QrCodeEcc::Low, 245, Some("Invitation link for intersections")).unwrap();
     ctx.insert("qrcode", &qr);
 
     let rendered = data.tmpl.render("view_community.html", &ctx).unwrap();
