@@ -1,7 +1,6 @@
 #[macro_use]
 extern crate diesel;
 
-use std::env;
 use tera::Tera;
 use actix_session::Session;
 use actix_identity::Identity;
@@ -71,7 +70,7 @@ pub fn send_email(target_address: String, email_html: String, sg: SGClient) {
         .add_subject("Your personal data link from Intersectional-Data.ca")
         .add_html(email_html.as_str())
         .add_from_name("Chris")
-        .add_header("x-data".to_string(), "confirmed");
+        .add_header("x-system-generated".to_string(), "confirmed");
 
         match sg.send(mail_info) {
             Err(err) => println!("Error: {}", err),

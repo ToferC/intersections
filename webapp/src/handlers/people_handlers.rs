@@ -1,4 +1,5 @@
 use std::sync::Mutex;
+use std::env;
 
 use actix_web::{web, get, post, HttpResponse, HttpRequest, Responder};
 use actix_identity::Identity;
@@ -138,8 +139,18 @@ pub async fn email_person_info(
 
             let community = Communities::find(person.community_id).unwrap();
 
+            let application_url: String;
+            let environment = env::var("ENVIRONMENT").unwrap();
+
+            if environment == "production" {
+                application_url = "https://intersectional-data.ca".to_string();
+            } else {
+                application_url = "http://localhost:8088".to_string();
+            };
+
             ctx.insert("person", &person);
             ctx.insert("community", &community);
+            ctx.insert("application_url", &application_url);
 
             let rendered = data.tmpl.render("email_person.html", &ctx).unwrap();
             

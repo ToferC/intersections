@@ -12,11 +12,11 @@
         <hr>
         <h2>Important Links</h2>
         <ul>
-            <li><a href="/person/{{ person.code }}">Link to my profile</a></li>
-            <li><a href="/community/{{ community.code }}">Link to my community: {{ community.tag }}</a></li>
-            <li><a href="/delete_person/{{ person.code }}">Delete my profile</a></li>
+            <li><a href="{{ application_url }}/person/{{ person.code }}">Link to my profile</a></li>
+            <li><a href="{{ application_url }}/community/{{ community.slug }}">Link to my community: {{ community.tag }}</a></li>
+            <li><a href="{{ application_url }}/delete_person/{{ person.code }}">Delete my profile</a></li>
             <li>---------------------</li>
-            <li><a href="https://www.intersectional-data.ca">Return to the application</a></li>
+            <li><a href="{{ application_url }}">Return to the application</a></li>
         </ul>
 
         <h2>Community Information</h2>

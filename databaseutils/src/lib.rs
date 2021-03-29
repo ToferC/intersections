@@ -111,7 +111,7 @@ pub fn prepopulate_db(mode: &str) {
 
             let owner = models::User::find(target_id).expect("Unable to load user");
 
-            let mut test_id = 0;
+            let mut test_id:i32;
 
             let test_communities = models::Communities::find_test_ids()
                 .expect("Unable to load communities");
