@@ -151,7 +151,7 @@ pub async fn view_community(
     let environment = env::var("ENVIRONMENT").unwrap();
 
     if environment == "production" {
-        application_url = "https://intersectional-data.ca".to_string();
+        application_url = "https://www.intersectional-data.ca".to_string();
     } else {
         application_url = "http://localhost:8088".to_string();
     };
