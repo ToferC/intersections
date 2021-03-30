@@ -66,7 +66,7 @@ pub fn send_email(target_address: String, email_html: String, sg: SGClient) {
             address: target_address.as_str(),
             name: "Participant",
         })
-        .add_from("user_info@intersectional-data.ca")
+        .add_from("chris@intersectional-data.ca")
         .add_subject("Your personal data link from Intersectional-Data.ca")
         .add_html(email_html.as_str())
         .add_from_name("Chris")

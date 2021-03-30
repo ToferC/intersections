@@ -3,7 +3,7 @@ CREATE TABLE users (
     user_uuid UUID NOT NULL,
     hash BYTEA NOT NULL,
     salt VARCHAR(255) NOT NULL,
-    email VARCHAR(120) NOT NULL UNIQUE,
+    email VARCHAR(128) NOT NULL UNIQUE,
     user_name VARCHAR(32) NOT NULL UNIQUE,
     slug VARCHAR(32) NOT NULL UNIQUE,
     created_at TIMESTAMP NOT NULL DEFAULT NOW(),
@@ -14,14 +14,14 @@ CREATE UNIQUE INDEX users__email_idx ON users(email);
 
 CREATE TABLE communities (
     id SERIAL PRIMARY KEY,
-    tag VARCHAR(32) NOT NULL,
+    tag VARCHAR(64) NOT NULL,
     description VARCHAR NOT NULL,
     data_use_case VARCHAR NOT NULL,
-    contact_email VARCHAR(64) NOT NULL,
+    contact_email VARCHAR(128) NOT NULL,
     date_created TIMESTAMP NOT NULL default CURRENT_DATE,
     open BOOL NOT NULL DEFAULT FALSE,
-    code VARCHAR(11) UNIQUE NOT NULL,
-    slug VARCHAR(50) UNIQUE NOT NULL,
+    code VARCHAR(128) UNIQUE NOT NULL,
+    slug VARCHAR(128) UNIQUE NOT NULL,
     user_id INT NOT NULL DEFAULT 0,
     FOREIGN KEY(user_id)
         REFERENCES users(id),
@@ -31,7 +31,7 @@ CREATE TABLE communities (
 
 CREATE TABLE people (
     id SERIAL PRIMARY KEY,
-    code VARCHAR(11) NOT NULL,
+    code VARCHAR(128) NOT NULL,
     date_created TIMESTAMP NOT NULL default CURRENT_DATE,
     related_codes TEXT[] NOT NULL,
     community_id INT NOT NULL,

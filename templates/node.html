@@ -24,12 +24,12 @@
                 As more peole complete the survey, this insight will deepen.</p>
             <p>Here are what the results mean:</p>
             <ul>
-                <li><strong>Lens</strong> - the name of the lived experience</li>
+                <li><strong>experience</strong> - the name of the lived experience</li>
                 <li><strong>Domain</strong> - whether the experience is a part of the person or a part of the system of work</li>
                 <li><strong>Instances</strong> - how many times this experience has been entered in the survey. If the result is "1", then you are the first person to do so</li>
                 <li><strong>Mean Inclusivity</strong> - the average inclusivity rating for the experience from -1.00 to +1.00.</li>
             </ul>
-            <p>The next chart is a frequency distribution of the responses to the statement: "Though this lens, in the workplace, I feel..."</p>
+            <p>The next chart is a frequency distribution of the responses to the statement: "Though this experience, in the workplace, I feel..."</p>
             <ul>
                 <li><strong>Statement</strong> - the explanation of how the experience effected the person</li>
                 <li><strong>Count</strong> - the number of times people recorded this explanation</li>
@@ -40,7 +40,7 @@
 
         <table>
             <tr>
-                <th style="text-align: center;">Lens</th>
+                <th style="text-align: center;">Experience</th>
                 <th style="text-align: center;">Domain</th>
                 <th style="text-align: center;">Instances</th>
                 <th style="text-align: center;">Mean Inclusivity</th>
@@ -81,15 +81,15 @@
 
     <div class="col-md m-md-2 m-1">
         <br>
-        <h1>Associated Lenses</h1>
-        <p>These are lenses from other nodes that have been linked to the {{ node.domain_token }} trait of {{ node.node_name }}. 
+        <h1>Associated Experiences</h1>
+        <p>These are experiences from other nodes that have been linked to the {{ node.domain_token }} trait of {{ node.node_name }}. 
             They are presented here to show how the nodes relate and how by looking at more than one facet of a person's experience, 
             we can better understand our people's needs.</p>
         <hr>
                 {% for lens in other_lenses %}
                     <table>
                         <tr>
-                            <th style="text-align: center;">Lens</th>
+                            <th style="text-align: center;">Experience</th>
                             <th style="text-align: center;">Domain</th>
                             <th style="text-align: center;">Instances</th>
                             <th style="text-align: center;">Mean Inclusivity</th>

@@ -24,7 +24,7 @@ pub struct NewPerson {
 impl NewPerson {
     pub fn new(community_id: i32) -> NewPerson {
         NewPerson {
-            code: generate_unique_code(),
+            code: generate_unique_code(24),
             date_created: chrono::NaiveDate::from_ymd(2020, 6, 6).and_hms(3, 3, 3),
             related_codes: Vec::new(),
             community_id,
@@ -178,14 +178,22 @@ impl People {
     }
 }
 
-pub fn generate_unique_code() -> String {
+pub fn generate_unique_code(mut characters: usize) -> String {
+
+    if characters > 64 {
+        characters = 64;
+    };
+
     let mut rand_string: String = thread_rng()
         .sample_iter(&Alphanumeric)
-        .take(9)
+        .take(characters)
         .collect();
 
-    rand_string.insert(6, '-');
-    rand_string.insert(3, '-');
+    for i in 0..rand_string.len() + rand_string.len() / 4 {
+        if i > 2 && i % 4 == 0 {
+            rand_string.insert(i, '-');
+        }
+    }
 
     rand_string
 }

@@ -1,6 +1,7 @@
 // example auth: https://github.com/actix/actix-extras/blob/master/actix-identity/src/lib.rs
 
 use std::sync::Mutex;
+use std::env;
 
 use actix_web::{HttpRequest, HttpResponse, Responder, get, post, web};
 use actix_identity::{Identity};
@@ -104,7 +105,7 @@ pub async fn view_community(
     web::Path(community_slug): web::Path<String>,
     data: web::Data<AppData>,
     node_names: web::Data<Mutex<Vec<(String, String)>>>,
-    req:HttpRequest,
+    _req:HttpRequest,
     id: Identity,
 ) -> impl Responder {
     let mut ctx = Context::new();
@@ -145,8 +146,17 @@ pub async fn view_community(
     let community_add_profile_url = format!("/survey_intro/{}", &community.code);
     ctx.insert("add_community_profile_url", &community_add_profile_url);
 
-    // add qr code to add profile (prod only)
-    let qr = qrcode_generator::to_svg_to_string(format!("https://www.intersectional-data.ca{}", community_add_profile_url), QrCodeEcc::Low, 245, Some("Invitation link for intersections")).unwrap();
+    // add qr code to add profile
+    let application_url: String;
+    let environment = env::var("ENVIRONMENT").unwrap();
+
+    if environment == "production" {
+        application_url = "https://intersectional-data.ca".to_string();
+    } else {
+        application_url = "http://localhost:8088".to_string();
+    };
+
+    let qr = qrcode_generator::to_svg_to_string(format!("{}/{}", application_url, community_add_profile_url), QrCodeEcc::Low, 245, Some("Invitation link for intersections")).unwrap();
     ctx.insert("qrcode", &qr);
 
     let rendered = data.tmpl.render("view_community.html", &ctx).unwrap();

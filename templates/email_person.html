@@ -1,7 +1,14 @@
-{% block content %}
+<!DOCTYPE html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="Intersectional Data Survey & Analysis MVP">
+    <meta name="author" content="ToferC">
+    <meta property="og:title" content="Intersectional Data Survey & Analysis MVP">
+</head>
+<body>
 
     <div class="col m-md-2 m-1">
-        <br>
         <p>Hello/bonjour,</p>
         <p>
             Thank you for participating in the Intersectional Data MVP. This is the only email you will receive unless you specifically request your data again. Your email address is not saved or associated with your data in the Intersectional Data application.
@@ -18,7 +25,8 @@
             <li>---------------------</li>
             <li><a href="{{ application_url }}">Return to the application</a></li>
         </ul>
-
+        <hr>
+        
         <h2>Community Information</h2>
         <p>Name: {{ community.tag }}</p>
         <p>Description: {{ community.description }}</p>
@@ -30,5 +38,5 @@
         <p>Sincere regards,</p>
         <p>Chris</p>
     </div>
-
-{% endblock content %}
+</body>
+</html>

@@ -56,7 +56,7 @@ impl NewCommunity {
             contact_email,
             date_created: chrono::NaiveDate::from_ymd(2020, 6, 6).and_hms(3, 3, 3),
             open,
-            code: generate_unique_code(),
+            code: generate_unique_code(24),
             slug: tag.to_snake_case(),
             user_id,
             data: serde_json::to_value(&comm_data).unwrap(),

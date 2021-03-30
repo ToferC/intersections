@@ -12,6 +12,7 @@ use serde::{Serialize, Deserialize};
 use bigdecimal::{ToPrimitive};
 use std::collections::BTreeMap;
 use std::iter::FromIterator;
+use qrcode_generator::QrCodeEcc;
 
 use crate::models::{Lenses, Nodes, People, Communities};
 use database;
@@ -86,7 +87,10 @@ pub async fn person_page(
 
     ctx.insert("person_id", &p.id);
 
-    let title = format!("Person: {}", &p.code);
+    let community = Communities::find(p.community_id).expect("Unable to find community");
+    ctx.insert("community", &community);
+
+    let title = "Profile Page";
     ctx.insert("title", &title);
     
     // add pull for lens data
@@ -147,6 +151,11 @@ pub async fn email_person_info(
             } else {
                 application_url = "http://localhost:8088".to_string();
             };
+
+            // add qr code to add profile (prod only)
+            // let qr = qrcode_generator::to_svg_to_string(format!("{}/{}", application_url, &person.code), QrCodeEcc::Low, 245, Some("Invitation link for intersections")).unwrap();
+            // ctx.insert("qrcode", &qr);
+
 
             ctx.insert("person", &person);
             ctx.insert("community", &community);

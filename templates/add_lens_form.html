@@ -14,8 +14,8 @@
             <h1>Add another lens</h1>
             <p><strong>OR</strong>  <a class="btn btn-dark" href="/person/{{ user_code }}">Take me to my completed profile.</a></p>
             <hr>
-            <h2>Your unique code is: {{ user_code }}</h2>
-            <p>Please make a copy of this code. It is the only way that you can return to your profile.</p>
+            <h2>Your unique code is:</h2> <p><strong>{{ user_code }}</strong></p>
+            <p>You can make a copy of this code or request an email when you finish your profile. Only someone with this code can see your profile.</p>
             <hr>
 
             {% set lens_len = people_lenses | last %}
