@@ -156,7 +156,7 @@ pub async fn view_community(
         application_url = "http://localhost:8088".to_string();
     };
 
-    let qr = qrcode_generator::to_svg_to_string(format!("{}/{}", application_url, community_add_profile_url), QrCodeEcc::Low, 245, Some("Invitation link for intersections")).unwrap();
+    let qr = qrcode_generator::to_svg_to_string(format!("{}{}", application_url, community_add_profile_url), QrCodeEcc::Low, 245, Some("Invitation link for intersections")).unwrap();
     ctx.insert("qrcode", &qr);
 
     let rendered = data.tmpl.render("view_community.html", &ctx).unwrap();
