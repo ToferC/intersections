@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="Intersectional Data Survey & Analysis MVP">
+    <meta name="author" content="ToferC">
+    <meta property="og:title" content="Intersectional Data Survey & Analysis MVP">
+</head>
+<body>
+
+    <div class="card card-body">
+        <P>Hello/bonjour,</P>
+        
+        <p>I'm pleased to invite you to be part of the {{ community.tag }} community on the intersectional data pilot.
+            The purpose of the pilot is to help individuals and organizations learn about intersectionality and identify bias by
+            anonymously tracking inclusion and exclusion in the community or organization.</p>
+
+        <p>Community description: {{ community.description }}</p>
+        
+        <p>No identifying information is stored as part of the survey. When you finish the survey, you will be provided with a code so you can access your profile.</p>
+        <p>You are the only person who will receive this code and without the code, no-one can view your profile.</p>
+
+        <p>The intended use of this data within the community is as follows: {{ community.data_use_case }}</p>
+
+        <p>You can access and complete the survey by <a href="{{ add_community_profile_url }}">clicking this link</a>.</p>
+
+        <p>Thank you and you can reach me at {{ community.contact_email }} if you have any questions.</p>
+    </div>
+</body>
+</html>

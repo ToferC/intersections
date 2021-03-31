@@ -50,6 +50,29 @@
 
             <hr>
 
+            <h2>Send emails to participants</h2>
+            <p>Enter the email addresses for your desired participants in the text box below and then hit send. Each will receive an invitation to join your community. 
+                You can enter multiple email addresses in the text box at one time.
+            </p>
+
+            <form name="EmailsForm" id="emailsForm" action=/send_community_email/{{ community.slug }} method=POST>
+                
+                <label>
+                    <strong>Invite to Community</strong>
+                    <textarea class="form-control form-control-lg" type="text" name="emails" placeholder="yourname@domain.com, another@email.com" required></textarea>
+                    <small id="code_help" class="form-text text-muted">Enter the email addresses to invite to the community.</small>
+                </label>
+        
+                <button 
+                    class="btn g-recaptcha btn-dark" 
+                    data-sitekey="6LfAltkZAAAAAN7rJGBvRUPm36M1aiL7q2a8SznA" 
+                    data-callback='onSubmit' 
+                    data-action='submit'
+                    type=submit
+                    >Send Invitation Emails</button>
+                <hr>
+            </form>
+
             <h3>Template email to participants</h3>
             <p>You can modify and send this email to people in your community.</p>
             <div class="card card-body">
@@ -69,7 +92,6 @@
 
                 <p>Thank you and you can reach me at {{ community.contact_email }} if you have any questions.</p>
             </div>
-            <p>Placeholder - </p>
         
             <h2>Community Options</h2>
             <p><a style="color:red" href="/delete_community/{{ community.id }}">Delete Community</a></p>
@@ -80,6 +102,12 @@
 
 {% block scripts %}
 <script>
+
+    window.onSubmit = onSubmit;
+
+    function onSubmit(token) {
+     document.getElementById("emailsForm").submit();
+   };
 
 </script>
 {% endblock scripts %}

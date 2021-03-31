@@ -27,4 +27,4 @@ pub use self::node_handlers::{node_graph, node_page, community_node_page, commun
 pub use self::user_handlers::{register_handler, register_form_input, user_index, user_page_handler,
     login_handler, login_form_input, logout, delete_user, delete_user_handler};
 pub use self::community_handler::{add_community, add_community_form_input, delete_community_form, delete_community,
-    view_community, community_index, edit_community, edit_community_form_input, open_community_index};
+    view_community, community_index, edit_community, edit_community_form_input, open_community_index, send_community_email};

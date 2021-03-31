@@ -12,6 +12,7 @@ use crate::handlers::{
     find_lens,
     // emails
     email_person_info,
+    send_community_email,
     // nodes
     node_page,
     community_node_page,
@@ -62,6 +63,7 @@ pub fn init_routes(config: &mut web::ServiceConfig) {
 
     // emails
     config.service(email_person_info);
+    config.service(send_community_email);
 
     // nodes
 

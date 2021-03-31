@@ -8,11 +8,13 @@ use actix_identity::{Identity};
 use inflector::Inflector;
 use tera::Context;
 use serde::{Deserialize};
+use regex::Regex;
 
 use qrcode_generator::QrCodeEcc;
 
 use crate::{AppData, extract_identity_data};
 use crate::models::{Communities, NewCommunity, User};
+use crate::send_email;
 
 #[derive(Deserialize, Debug)]
 pub struct CommunityForm {
@@ -25,6 +27,11 @@ pub struct CommunityForm {
 #[derive(Deserialize, Debug)]
 pub struct DeleteCommunityForm {
     user_verify: String,
+}
+
+#[derive(Debug, Deserialize)]
+pub struct EmailsForm {
+    emails: String,
 }
 
 #[get("/community_index")]
@@ -162,6 +169,79 @@ pub async fn view_community(
     let rendered = data.tmpl.render("view_community.html", &ctx).unwrap();
     HttpResponse::Ok().body(rendered)
 }
+
+#[post("/send_community_email/{slug}")]
+pub async fn send_community_email(
+    web::Path(slug): web::Path<String>,
+    data: web::Data<AppData>,
+    _req: HttpRequest,
+    _id: Identity,
+    form: web::Form<EmailsForm>,
+) -> impl Responder {
+
+    // instantiate regex
+    let re = Regex::new(r"([a-zA-Z0-9+._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9_-]+)").unwrap();
+    
+    let mut emails: Vec<String> = Vec::new();
+    
+    for mat in re.captures_iter(form.emails.as_str()) {
+        emails.push(mat[0].to_owned());
+    };
+    
+    // validate form had emails or re-load page
+    if emails.is_empty() {
+        return HttpResponse::Found().header("Location", format!("/community/{}", slug)).finish()
+    };
+
+    let community = Communities::find_from_slug(&slug);
+
+    match community {
+        Ok(community) => {
+            let mut ctx = Context::new();
+
+            let application_url: String;
+            let environment = env::var("ENVIRONMENT").unwrap();
+
+            if environment == "production" {
+                application_url = "https://intersectional-data.ca".to_string();
+            } else {
+                application_url = "http://localhost:8088".to_string();
+            };
+
+            let community_add_profile_url = format!("{}/survey_intro/{}", application_url, &community.code);
+            ctx.insert("add_community_profile_url", &community_add_profile_url);
+
+            ctx.insert("community", &community);
+
+            let rendered = data.tmpl.render("email_community_invitation.html", &ctx).unwrap();
+
+            // Send emails
+            for email in &emails {
+                send_email(
+                    email.to_owned(), 
+                    &rendered,
+                    &format!("Please join the {} community on intersectional-data.ca", &community.tag), 
+                    data.mail_client.clone()
+                );
+            };
+
+            // Send email to community owner for reference
+            send_email(
+                community.contact_email.to_owned(), 
+                &format!("Email invitations sent to: {:?}", &emails),
+                &format!("Reference: invitations sent for {} community on intersectional-data.ca", &community.tag), 
+                data.mail_client.clone()
+            );
+
+            return HttpResponse::Found().header("Location", format!("/community/{}", slug)).finish()
+        },
+        Err(err) => {
+            println!("Error: {}", err);
+            return HttpResponse::Found().header("Location", format!("/community/{}", slug)).finish()
+        }
+    };
+}
+
 
 #[get("/add_community")]
 pub async fn add_community(

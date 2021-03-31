@@ -59,7 +59,7 @@ pub fn extract_identity_data(id: &Identity) -> (String, String) {
     (session_user, role)
 }
 
-pub fn send_email(target_address: String, email_html: String, sg: SGClient) {
+pub fn send_email(target_address: String, email_html: &String, subject: &String, sg: SGClient) {
 
     let mail_info = Mail::new()
         .add_to(Destination {
@@ -67,7 +67,7 @@ pub fn send_email(target_address: String, email_html: String, sg: SGClient) {
             name: "Participant",
         })
         .add_from("chris@intersectional-data.ca")
-        .add_subject("Your personal data link from Intersectional-Data.ca")
+        .add_subject(subject)
         .add_html(email_html.as_str())
         .add_from_name("Chris")
         .add_header("x-system-generated".to_string(), "confirmed");
