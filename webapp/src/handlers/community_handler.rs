@@ -454,9 +454,9 @@ pub async fn edit_community_form_input(
     };
 }
 
-#[get("/delete_community/{target_id}")]
+#[get("/delete_community/{code}")]
 pub async fn delete_community(
-    web::Path(target_id): web::Path<i32>,
+    web::Path(code): web::Path<String>,
     data: web::Data<AppData>,
     node_names: web::Data<Mutex<Vec<(String, String)>>>,
     _req: HttpRequest,
@@ -465,18 +465,27 @@ pub async fn delete_community(
 
     let (session_user, role) = extract_identity_data(&id);
     
-    if role != "admin".to_string() {
-        println!("User not admin");
-        HttpResponse::Found().header("Location", "/").finish()
-    } else {
+    let user = match User::find_from_slug(&session_user){
+        Ok(u) => u,
+        Err(e) => {
+            println!("{}", e);
+            User::dummy()
+        },
+    };
 
-        let user = User::find(target_id);
+    let community = Communities::find_from_code(&code);
+
+    match community {
+        Ok(community) => {
+            if role != "admin".to_string() && community.user_id != user.id {
+                // user isn't admin or the community owner
+                println!("User not community owner - access denied");
+                HttpResponse::Found().header("Location", "/community_index").finish()
+            } else {
         
-        match user {
-            Ok(u) => {
                 let mut ctx = Context::new();
 
-                ctx.insert("user", &u);
+                ctx.insert("community", &community);
             
                 ctx.insert("session_user", &session_user);
                 ctx.insert("role", &role);
@@ -484,21 +493,21 @@ pub async fn delete_community(
                 // add node_names for navbar drop down
                 ctx.insert("node_names", &node_names.lock().expect("Unable to unlock").clone());
 
-                let rendered = data.tmpl.render("delete_user.html", &ctx).unwrap();
+                let rendered = data.tmpl.render("delete_community.html", &ctx).unwrap();
                 return HttpResponse::Ok().body(rendered)
-            },
-            Err(c) => {
-                // no user returned for ID
-                println!("{}", c);
-                return HttpResponse::Found().header("Location", "/user_index").finish()
-            },
+            }
+        },
+        Err(e) => {
+            // no community found
+            println!("{}", e);
+            return HttpResponse::Found().header("Location", "/").finish();
         }
     }
 }
 
-#[post("/delete_community/{target_id}")]
+#[post("/delete_community/{code}")]
 pub async fn delete_community_form(
-    web::Path(target_id): web::Path<i32>,
+    web::Path(code): web::Path<String>,
     _data: web::Data<AppData>,
     _req: HttpRequest,
     id: Identity,
@@ -507,34 +516,39 @@ pub async fn delete_community_form(
 
     let (session_user, role) = extract_identity_data(&id);
     
-    if role != "admin".to_string() {
-        println!("User not admin");
-        HttpResponse::Found().header("Location", "/").finish()
-    } else {
+    let user = match User::find_from_slug(&session_user){
+        Ok(u) => u,
+        Err(e) => {
+            println!("{}", e);
+            User::dummy()
+        },
+    };
 
-        let user = User::find(target_id);
+    let community = Communities::find_from_code(&code);
+
+    match community {
+        Ok(community) => {
+            if role != "admin".to_string() && community.user_id != user.id {
+                // user isn't admin or the community owner
+                println!("User not community owner - access denied");
+                HttpResponse::Found().header("Location", "/community_index").finish()
+            } else {
         
-        match user {
-            Ok(u) => {
-                if form.user_verify.trim().to_string() == u.user_name {
-                    println!("User matches verify string - deleting");
-                    // forget id if delete target is user
-                    if session_user == u.slug {
-                        id.forget();
-                    };
+                if form.user_verify.trim().to_string() == community.tag {
+                    println!("Community matches verify string - deleting");
                     // delete user
-                    User::delete(u.id).expect("Unable to delete user");
-                    return HttpResponse::Found().header("Location", "/user_index").finish()
+                    Communities::delete(community.id).expect("Unable to delete community");
+                    return HttpResponse::Found().header("Location", "/community_index").finish()
                 } else {
-                    println!("User does not match verify string - return to delete page");
-                    return HttpResponse::Found().header("Location", format!("/delete_user/{}", u.id)).finish()
+                    println!("Community does not match verify string - return to delete page");
+                    return HttpResponse::Found().header("Location", format!("/delete_community/{}", community.code)).finish()
                 };
-            },
-            Err(c) => {
-                // no user returned for ID
-                println!("{}", c);
-                return HttpResponse::Found().header("Location", "/user_index").finish()
-            },
+            }
+        },
+        Err(e) => {
+            // no community found
+            println!("{}", e);
+            return HttpResponse::Found().header("Location", "/").finish();
         }
     }
 }

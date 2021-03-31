@@ -1,33 +1,45 @@
 {% extends "base.html" %}
 
 {% block title %}
-    <title>Delete User: {{ user.user_name }}</title>
+    <title>Delete Community: {{ community.tag }}</title>
 {% endblock title %}
 
 {% block content %}
     <div class="col m-md-2 m-1">
         <br>
-        <h1>User page for {{ user.user_name }}</h1>
-        <p>User details and account management.</p>
+        <h1>Delete Community: {{ community.tag }}</h1>
 
-            <p>{{ user.user_name }}</p>
+        <h2>Details</h2>
+        <p>Community details and management.</p>
+    
+        <p>{{ community.description }}</p>
 
-            <p>{{ user.email }}</p>
+        <p>Your community code is {{ community.code }}</p>
+        
+        <p>This community is {% if community.open %}open{% else %}private{% endif %}</p>
+        <br>
 
-            <ul>
-                {% if user.communities %}
-                {% for community in user.communities %}
-                    <li>{{ community.tag }}</li>
-                {% endfor %}
-                {% endif %}
-            </ul>
+        <table>
+            <tr>
+                <th style="text-align: center;">Members</th>
+                <th style="text-align: center;">Experiences</th>
+                <th style="text-align: center;">Avg. Inclusvity</th>
+            </tr>
+            <tr>
+                <td style="text-align: center;">{{ community.data.members }}</td>
+                <td style="text-align: center;">{{ community.data.lenses }}</td>
+                <td style="text-align: center;">{{ community.data.mean_inclusivity | round(method="ceil", precision=3) }}</td>
+            </tr>
+        </table>
+        <br>
 
-            <form name="DeleteUserForm" id="deleteUserForm" action=/delete_user/{{ user.id }} method=POST>
-
+        <div class="card-body">
+            <form name="DeleteCommunityForm" id="deleteCommunityForm" action=/delete_community/{{ community.code }} method=POST>
+    
                 <label>
-                    <strong>Delete User: {{ user.user_name }}</strong>
-                    <input class="form-control form-control-lg" type="text" name="user_verify" placeholder="User to delete..." required>
-                    <small id="code_help" class="form-text text-muted">Enter the user name of the user you would like to delete. This action is permanent.
+                    <strong>Delete Community: {{ community.tag }}</strong>
+                    <input class="form-control form-control-lg" type="text" name="user_verify" placeholder="Community to delete..." required>
+                    <small id="code_help" class="form-text text-muted">Enter the community name to delete. This action is permanent.
                     </small>
                 </label>
                 <hr>
@@ -39,11 +51,12 @@
                     data-action='submit'
                     type=submit
                     >Delete</button>
-
-                <button class="btn btn-dark" href="/user_index">Return</button>
+    
+                <button class="btn btn-dark" href="/user/{{ session_user }}">Return to User Profile</button>
                 <hr>
             
             </form>
+        </div>
 
     </div>
 {% endblock content %}
@@ -54,7 +67,7 @@
     window.onSubmit = onSubmit;
 
     function onSubmit(token) {
-    document.getElementById("deleteUserForm").submit();
+    document.getElementById("deleteCommunityForm").submit();
     };
 
 </script>

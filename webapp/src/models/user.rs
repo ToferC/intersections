@@ -179,12 +179,12 @@ impl User {
 
     pub fn dummy() -> Self {
         User {
-            id: 0,
+            id: 9999999,
             user_uuid: Uuid::default(),
             hash: Vec::new(),
             salt: "".to_string(),
             email: "".to_string(),
-            user_name: "".to_string(),
+            user_name: "dummy".to_string(),
             slug: "".to_string(),
             created_at: NaiveDateTime::from_timestamp(1_000_000_000, 0),
             role: "".to_string(),

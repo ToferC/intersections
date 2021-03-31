@@ -69,7 +69,7 @@ pub async fn user_index(
 }
 
 
-#[get("/user/{user_name}")]
+#[get("/user/{slug}")]
 pub async fn user_page_handler(
     web::Path(slug): web::Path<String>,
     data: web::Data<AppData>,
