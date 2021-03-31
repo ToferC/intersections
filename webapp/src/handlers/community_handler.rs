@@ -217,12 +217,15 @@ pub async fn send_community_email(
 
             // Send emails
             for email in &emails {
+
+                println!("{}", &email);
+
                 send_email(
                     email.to_owned(), 
                     &rendered,
                     &format!("Please join the {} community on intersectional-data.ca", &community.tag), 
                     data.mail_client.clone()
-                );
+                ).await;
             };
 
             // Send email to community owner for reference
@@ -231,7 +234,7 @@ pub async fn send_community_email(
                 &format!("Email invitations sent to: {:?}", &emails),
                 &format!("Reference: invitations sent for {} community on intersectional-data.ca", &community.tag), 
                 data.mail_client.clone()
-            );
+            ).await;
 
             return HttpResponse::Found().header("Location", format!("/community/{}", slug)).finish()
         },

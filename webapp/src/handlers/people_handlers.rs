@@ -167,7 +167,7 @@ pub async fn email_person_info(
                 &rendered, 
                 &String::from("Your personal data link from Intersectional-Data.ca"), 
                 data.mail_client.clone()
-            );
+            ).await;
 
             return HttpResponse::Found().header("Location", format!("/person/{}", code)).finish()
         },

@@ -59,7 +59,7 @@ pub fn extract_identity_data(id: &Identity) -> (String, String) {
     (session_user, role)
 }
 
-pub fn send_email(target_address: String, email_html: &String, subject: &String, sg: SGClient) {
+pub async fn send_email(target_address: String, email_html: &String, subject: &String, sg: SGClient) {
 
     let mail_info = Mail::new()
         .add_to(Destination {
