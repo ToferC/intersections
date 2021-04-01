@@ -529,7 +529,7 @@ pub async fn delete_community_form(
 
     match community {
         Ok(community) => {
-            if role != "admin".to_string() && community.user_id != user.id {
+            if role != "admin".to_string() && community.user_id != user.id && community.slug != "global".to_string() {
                 // user isn't admin or the community owner
                 println!("User not community owner - access denied");
                 HttpResponse::Found().header("Location", "/community_index").finish()
