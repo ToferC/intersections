@@ -9,11 +9,12 @@ use inflector::Inflector;
 use tera::Context;
 use serde::{Deserialize};
 use regex::Regex;
+use bigdecimal::{ToPrimitive};
 
 use qrcode_generator::QrCodeEcc;
 
 use crate::{AppData, extract_identity_data};
-use crate::models::{Communities, NewCommunity, User, People};
+use crate::models::{Communities, NewCommunity, CommunityData, User, People, Lenses};
 use crate::send_email;
 
 #[derive(Deserialize, Debug)]
@@ -537,21 +538,58 @@ pub async fn delete_community_form(
                 if form.user_verify.trim().to_string() == community.tag {
                     println!("Community matches verify string - deleting");
 
-                    let global = Communities::find_from_slug(&"global".to_string()).expect("Unable to load global community");
+                    let mut global = Communities::find_from_slug(&"global".to_string()).expect("Unable to load global community");
 
                     // update people to demo community
                     let people: Vec<People> = People::find_from_community(community.id).expect("Unable to find people in community");
 
+                    let comm_data: CommunityData = serde_json::from_value(global.data).unwrap();
+
+                    let mut comm_data = comm_data.to_owned();
+
+                    let mut lenses: Vec<Lenses> = Vec::new();
+
+                    println!("Transferring people to global");
                     for person in people {
+                        println!("copying {}", person.id);
                         let mut p = person.clone();
                         p.community_id = global.id;
                         People::update(person.id, p).expect("Unable to update person");
-                    }
 
+                        // update the community based on new data
+                        comm_data.members += 1;
 
-                    // delete community
-                    Communities::delete(community.id).expect("Unable to delete community");
-                    return HttpResponse::Found().header("Location", "/community_index").finish()
+                        lenses.append(&mut Lenses::find_from_people_id(person.id).unwrap());
+                    };
+
+                    for lens in lenses {
+                        comm_data.lenses += 1;
+                        comm_data.inclusivity_vec.push(lens.inclusivity.to_f32().unwrap());
+                    };
+
+                    let total: f32 = comm_data.inclusivity_vec.iter().sum();
+
+                    comm_data.mean_inclusivity = total / comm_data.lenses as f32;
+                    
+                    global.data = serde_json::to_value(comm_data).unwrap();
+
+                    let update = Communities::update(&global);
+
+                    match update {
+                        Ok(c) => {
+                            println!("Community {} updated", c.tag);
+
+                            // delete community
+                            Communities::delete(community.id).expect("Unable to delete community");
+                            return HttpResponse::Found().header("Location", "/community_index").finish()
+                        },
+                        Err(e) => {
+                            println!("Community update failed: {}", e);
+                            return HttpResponse::Found().header("Location", 
+                            format!("/delete_community/{}", community.code)).finish()
+                        }
+                    };
+                    
                 } else {
                     println!("Community does not match verify string - return to delete page");
                     return HttpResponse::Found().header("Location", format!("/delete_community/{}", community.code)).finish()

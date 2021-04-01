@@ -163,6 +163,14 @@ impl Lenses {
         Ok(lens_vec)
     }
 
+    pub fn find_from_people_id(id: i32) -> Result<Vec<Self>, CustomError> {
+        let conn = database::connection()?;
+        let lens_vec = lenses::table.filter(lenses::person_id.eq(id))
+            .load::<Lenses>(&conn)?;
+        
+        Ok(lens_vec)
+    }
+
     pub fn update(id: i32, lens: Lens) -> Result<Self, CustomError> {
         let conn = database::connection()?;
         let lens = diesel::update(lenses::table)

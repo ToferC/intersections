@@ -57,7 +57,7 @@ CREATE TABLE lenses (
         REFERENCES people(id) ON DELETE CASCADE,
     node_id INT NOT NULL,
     FOREIGN KEY(node_id)
-        REFERENCES nodes(id) on DELETE DO NOTHING,
+        REFERENCES nodes(id),
     date_created TIMESTAMP NOT NULL default CURRENT_DATE,
     statements TEXT[] NOT NULL,
     inclusivity NUMERIC NOT NULL
