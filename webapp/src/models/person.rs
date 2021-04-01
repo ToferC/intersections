@@ -44,7 +44,7 @@ impl NewPerson {
     }
 }
 
-#[derive(Serialize, Deserialize, Queryable, Insertable, Debug, Associations, Identifiable, Clone)]
+#[derive(Serialize, Deserialize, Queryable, Insertable, Debug, Associations, Identifiable, Clone, AsChangeset)]
 #[table_name = "people"]
 pub struct People {
     pub id: i32,
@@ -114,6 +114,16 @@ impl People {
         Ok(person)
     }
 
+    pub fn find_from_community(community_id: i32) -> Result<Vec<Self>, CustomError> {
+        let conn = database::connection()?;
+
+        let people = people::table
+            .filter(people::community_id.eq(community_id))
+            .load::<People>(&conn)?;
+
+        Ok(people)
+    }
+
     pub fn find_ids_from_community(community_id: i32) -> Result<Vec<i32>, CustomError> {
         let conn = database::connection()?;
 
@@ -125,7 +135,7 @@ impl People {
         Ok(people_ids)
     }
 
-    pub fn update(id: i32, person: NewPerson) -> Result<Self, CustomError> {
+    pub fn update(id: i32, person: People) -> Result<Self, CustomError> {
         let conn = database::connection()?;
         let person = diesel::update(people::table)
             .filter(people::id.eq(id))

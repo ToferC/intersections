@@ -118,7 +118,7 @@ pub fn prepopulate_db(mode: &str) {
 
             if test_communities.len() == 0 as usize {
 
-                let community_data = &models::NewCommunity::new(
+                let test_community_data = &models::NewCommunity::new(
                     "Demo Community".to_owned(),
                     "Original alpha test data for intersections. This data is a mix of dummy data, demonstration data and real people testing the platform. It is excluded from the global data set and can only be accessed as a separate community.".to_owned(),
                     "Demonstration of test data in app".to_owned(),
@@ -129,10 +129,26 @@ pub fn prepopulate_db(mode: &str) {
                 );
 
                 let test_community = models::Communities::create(
-                    community_data
-                ).expect("Unable to create generic community");
+                    test_community_data
+                ).expect("Unable to create demo community");
 
                 test_id = test_community.id;
+
+                // Generate global community placeholder
+                let global_community_data = &models::NewCommunity::new(
+                    "Global".to_owned(),
+                    "Global community for disaggregated data".to_owned(),
+                    "Holder for disaggregated community data".to_owned(),
+                    owner.email.to_owned(),
+                    true,
+                    owner.id,
+                    false,
+                );
+
+                let _global_community = models::Communities::create(
+                    global_community_data
+                ).expect("Unable to create generic community");
+
 
             } else {
                 test_id = test_communities[0];

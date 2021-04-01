@@ -13,7 +13,7 @@ use regex::Regex;
 use qrcode_generator::QrCodeEcc;
 
 use crate::{AppData, extract_identity_data};
-use crate::models::{Communities, NewCommunity, User};
+use crate::models::{Communities, NewCommunity, User, People};
 use crate::send_email;
 
 #[derive(Deserialize, Debug)]
@@ -536,7 +536,20 @@ pub async fn delete_community_form(
         
                 if form.user_verify.trim().to_string() == community.tag {
                     println!("Community matches verify string - deleting");
-                    // delete user
+
+                    let global = Communities::find_from_slug(&"global".to_string()).expect("Unable to load global community");
+
+                    // update people to demo community
+                    let people: Vec<People> = People::find_from_community(community.id).expect("Unable to find people in community");
+
+                    for person in people {
+                        let mut p = person.clone();
+                        p.community_id = global.id;
+                        People::update(person.id, p).expect("Unable to update person");
+                    }
+
+
+                    // delete community
                     Communities::delete(community.id).expect("Unable to delete community");
                     return HttpResponse::Found().header("Location", "/community_index").finish()
                 } else {
