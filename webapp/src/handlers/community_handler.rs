@@ -9,12 +9,11 @@ use inflector::Inflector;
 use tera::Context;
 use serde::{Deserialize};
 use regex::Regex;
-use bigdecimal::{ToPrimitive};
 
 use qrcode_generator::QrCodeEcc;
 
 use crate::{AppData, extract_identity_data};
-use crate::models::{Communities, NewCommunity, CommunityData, User, People, Lenses};
+use crate::models::{Communities, NewCommunity, User};
 use crate::send_email;
 
 #[derive(Deserialize, Debug)]
@@ -530,52 +529,17 @@ pub async fn delete_community_form(
     match community {
         Ok(community) => {
             if role != "admin".to_string() && community.user_id != user.id && community.slug != "global".to_string() {
-                // user isn't admin or the community owner
+                // user isn't admin or the community owner and we're not trying to delete the global community
                 println!("User not community owner - access denied");
                 HttpResponse::Found().header("Location", "/community_index").finish()
             } else {
         
                 if form.user_verify.trim().to_string() == community.tag {
-                    println!("Community matches verify string - deleting");
+                    println!("Community matches verify string - transferring users and deleting");
 
-                    let mut global = Communities::find_from_slug(&"global".to_string()).expect("Unable to load global community");
+                    let transfer = Communities::transfer_people(community.id, &"global".to_string());
 
-                    // update people to demo community
-                    let people: Vec<People> = People::find_from_community(community.id).expect("Unable to find people in community");
-
-                    let comm_data: CommunityData = serde_json::from_value(global.data).unwrap();
-
-                    let mut comm_data = comm_data.to_owned();
-
-                    let mut lenses: Vec<Lenses> = Vec::new();
-
-                    println!("Transferring people to global");
-                    for person in people {
-                        println!("copying {}", person.id);
-                        let mut p = person.clone();
-                        p.community_id = global.id;
-                        People::update(person.id, p).expect("Unable to update person");
-
-                        // update the community based on new data
-                        comm_data.members += 1;
-
-                        lenses.append(&mut Lenses::find_from_people_id(person.id).unwrap());
-                    };
-
-                    for lens in lenses {
-                        comm_data.lenses += 1;
-                        comm_data.inclusivity_vec.push(lens.inclusivity.to_f32().unwrap());
-                    };
-
-                    let total: f32 = comm_data.inclusivity_vec.iter().sum();
-
-                    comm_data.mean_inclusivity = total / comm_data.lenses as f32;
-                    
-                    global.data = serde_json::to_value(comm_data).unwrap();
-
-                    let update = Communities::update(&global);
-
-                    match update {
+                    match transfer {
                         Ok(c) => {
                             println!("Community {} updated", c.tag);
 

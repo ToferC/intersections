@@ -319,6 +319,14 @@ pub async fn delete_user(
                     if session_user == u.slug {
                         id.forget();
                     };
+
+                    // transfer people from user communities to global community
+                    let communities = Communities::find_by_owner_user_id(&u.id).expect("Unable to load communities");
+
+                    for community in communities {
+                        Communities::transfer_people(community.id, &"global".to_string()).expect("Unable to transfer people");
+                    };
+
                     // delete user
                     User::delete(u.id).expect("Unable to delete user");
                     return HttpResponse::Found().header("Location", "/user_index").finish()

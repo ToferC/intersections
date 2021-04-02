@@ -5,9 +5,10 @@ use diesel::RunQueryDsl;
 use diesel::{QueryDsl};
 
 use inflector::Inflector;
+use bigdecimal::{ToPrimitive};
 
 use crate::schema::{communities};
-use crate::models::{generate_unique_code};
+use crate::models::{generate_unique_code, People, Lenses};
 use error_handler::error_handler::CustomError;
 use database;
 
@@ -188,6 +189,48 @@ impl Communities {
         let conn = database::connection()?;
         let res = diesel::delete(communities::table.filter(communities::id.eq(id))).execute(&conn)?;
         Ok(res)
+    }
+
+    pub fn transfer_people(source_id: i32, target_slug: &String) -> Result<Self, CustomError> {
+        // transfer people from source community to target community
+
+        let mut target = Communities::find_from_slug(target_slug).expect("Unable to load target community");
+        let people: Vec<People> = People::find_from_community(source_id).expect("Unable to find people in community");
+
+        let comm_data: CommunityData = serde_json::from_value(target.data).unwrap();
+
+        let mut comm_data = comm_data.to_owned();
+
+        let mut lenses: Vec<Lenses> = Vec::new();
+        let mut counter: i32 = 0;
+
+        println!("Transferring people to target");
+        for person in people {
+            let mut p = person.clone();
+            p.community_id = target.id;
+            People::update(person.id, p).expect("Unable to update person");
+
+            // update the community based on new data
+            comm_data.members += 1;
+            counter += 1;
+
+            lenses.append(&mut Lenses::find_from_people_id(person.id).unwrap());
+        };
+
+        println!("{} members transferred", counter);
+
+        for lens in lenses {
+            comm_data.lenses += 1;
+            comm_data.inclusivity_vec.push(lens.inclusivity.to_f32().unwrap());
+        };
+
+        let total: f32 = comm_data.inclusivity_vec.iter().sum();
+
+        comm_data.mean_inclusivity = total / comm_data.lenses as f32;
+        
+        target.data = serde_json::to_value(comm_data).expect("Unable to update json data");
+
+        Communities::update(&target)
     }
 }
 
