@@ -24,7 +24,7 @@ CREATE TABLE communities (
     slug VARCHAR(128) UNIQUE NOT NULL,
     user_id INT NOT NULL DEFAULT 0,
     FOREIGN KEY(user_id)
-        REFERENCES users(id),
+        REFERENCES users(id) ON DELETE CASCADE,
     data JSONB NOT NULL,
     test BOOL NOT NULL DEFAULT FALSE
 );

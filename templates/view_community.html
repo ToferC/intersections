@@ -24,11 +24,13 @@
                 <table>
                     <tr>
                         <th style="text-align: center;">Members</th>
+                        <th style="text-align: center;">Invitations</th>
                         <th style="text-align: center;">Experiences</th>
                         <th style="text-align: center;">Avg. Inclusvity</th>
                     </tr>
                     <tr>
                         <td style="text-align: center;">{{ community.data.members }}</td>
+                        <td style="text-align: center;">{{ community.data.invitations }}</td>
                         <td style="text-align: center;">{{ community.data.lenses }}</td>
                         <td style="text-align: center;">{{ community.data.mean_inclusivity | round(method="ceil", precision=3) }}</td>
                     </tr>

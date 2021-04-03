@@ -1,13 +1,11 @@
 #[macro_use]
 extern crate diesel;
 
-use error_handler::error_handler::CustomError;
 use tera::Tera;
 use actix_session::Session;
 use actix_identity::Identity;
 
 use sendgrid::SGClient;
-use sendgrid::{Destination, Mail};
 
 pub mod models;
 pub mod handlers;

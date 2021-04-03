@@ -59,11 +59,6 @@ impl AggLens {
     }
 }
 
-#[derive(Debug, Deserialize)]
-pub struct EmailForm {
-    email: String,
-}
-
 #[get("/person/{code}")]
 pub async fn person_page(
     web::Path(code): web::Path<String>, 
@@ -117,71 +112,6 @@ pub async fn person_page(
 
     let rendered = data.tmpl.render("person.html", &ctx).unwrap();
     HttpResponse::Ok().body(rendered)
-}
-
-#[post("/person/{code}")]
-pub async fn email_person_info(
-    web::Path(code): web::Path<String>,
-    data: web::Data<AppData>,
-    _req: HttpRequest,
-    _id: Identity,
-    form: web::Form<EmailForm>,
-) -> impl Responder {
-
-    // validate form has data or re-load form
-    if form.email.is_empty() {
-        return HttpResponse::Found().header("Location", format!("/person/{}", code)).finish()
-    };
-
-    let person = People::find_from_code(&code);
-
-    match person {
-        Ok(person) => {
-            let mut ctx = Context::new();
-
-            let community = Communities::find(person.community_id).unwrap();
-
-            let application_url: String;
-            let environment = env::var("ENVIRONMENT").unwrap();
-
-            if environment == "production" {
-                application_url = "https://intersectional-data.ca".to_string();
-            } else {
-                application_url = "http://localhost:8088".to_string();
-            };
-
-            // add qr code to add profile (prod only)
-            // let qr = qrcode_generator::to_svg_to_string(format!("{}/{}", application_url, &person.code), QrCodeEcc::Low, 245, Some("Invitation link for intersections")).unwrap();
-            // ctx.insert("qrcode", &qr);
-
-
-            ctx.insert("person", &person);
-            ctx.insert("community", &community);
-            ctx.insert("application_url", &application_url);
-
-            let rendered = data.tmpl.render("email_person.html", &ctx).unwrap();
-            
-            let email = Email::new(
-                form.email.to_owned(),
-                rendered,
-                String::from("Your personal data link from Intersectional-Data.ca"), 
-                data.mail_client.clone(),
-            );
-
-            let r = Email::send(&email).await;
-
-            match r {
-                Ok(_) => println!("Message sent"),
-                _ => println!("Message not sent"),
-            };
-
-            return HttpResponse::Found().header("Location", format!("/person/{}", code)).finish()
-        },
-        Err(err) => {
-            println!("Error: {}", err);
-            return HttpResponse::Found().header("Location", format!("/person/{}", code)).finish()
-        }
-    };
 }
 
 #[get("/person_network_graph/{person_id}")]

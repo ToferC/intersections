@@ -20,6 +20,7 @@ pub struct CommunityData {
     pub inclusivity_vec: Vec<f32>,
     pub mean_inclusivity: f32,
     pub tags: Vec<String>,
+    pub invitations: i32,
 }
 
 #[derive(Debug, Serialize, Deserialize, AsChangeset, Insertable, Clone)]
@@ -48,6 +49,7 @@ impl NewCommunity {
             inclusivity_vec: vec![0.0],
             mean_inclusivity: 0.0,
             tags: Vec::new(),
+            invitations: 0,
         };
 
         NewCommunity {
