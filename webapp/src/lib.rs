@@ -1,6 +1,7 @@
 #[macro_use]
 extern crate diesel;
 
+use error_handler::error_handler::CustomError;
 use tera::Tera;
 use actix_session::Session;
 use actix_identity::Identity;
@@ -57,23 +58,4 @@ pub fn extract_identity_data(id: &Identity) -> (String, String) {
     println!("{}-{}", &session_user, &role);
 
     (session_user, role)
-}
-
-pub async fn send_email(target_address: String, email_html: &String, subject: &String, sg: SGClient) {
-
-    let mail_info = Mail::new()
-        .add_to(Destination {
-            address: target_address.as_str(),
-            name: "Participant",
-        })
-        .add_from("chris@intersectional-data.ca")
-        .add_subject(subject)
-        .add_html(email_html.as_str())
-        .add_from_name("Chris")
-        .add_header("x-system-generated".to_string(), "confirmed");
-
-        match sg.send(mail_info) {
-            Err(err) => println!("Error: {}", err),
-            Ok(body) => println!("Response: {:?}", body),
-        };
 }

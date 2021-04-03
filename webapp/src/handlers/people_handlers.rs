@@ -13,12 +13,11 @@ use bigdecimal::{ToPrimitive};
 use std::collections::BTreeMap;
 use std::iter::FromIterator;
 
-use crate::models::{Lenses, Nodes, People, Communities};
+use crate::models::{Lenses, Nodes, People, Communities, Email};
 use database;
 use crate::handlers::{generate_cyto_graph, RenderPerson};
 
 use crate::schema::{people, nodes};
-use crate::send_email;
 
 #[derive(Serialize, Debug, PartialEq, PartialOrd)]
 pub struct AggLens {
@@ -162,12 +161,19 @@ pub async fn email_person_info(
 
             let rendered = data.tmpl.render("email_person.html", &ctx).unwrap();
             
-            send_email(
-                form.email.to_owned(), 
-                &rendered, 
-                &String::from("Your personal data link from Intersectional-Data.ca"), 
-                data.mail_client.clone()
-            ).await;
+            let email = Email::new(
+                form.email.to_owned(),
+                rendered,
+                String::from("Your personal data link from Intersectional-Data.ca"), 
+                data.mail_client.clone(),
+            );
+
+            let r = Email::send(&email).await;
+
+            match r {
+                Ok(_) => println!("Message sent"),
+                _ => println!("Message not sent"),
+            };
 
             return HttpResponse::Found().header("Location", format!("/person/{}", code)).finish()
         },

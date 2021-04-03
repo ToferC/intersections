@@ -13,8 +13,7 @@ use regex::Regex;
 use qrcode_generator::QrCodeEcc;
 
 use crate::{AppData, extract_identity_data};
-use crate::models::{Communities, NewCommunity, User};
-use crate::send_email;
+use crate::models::{Communities, NewCommunity, User, Email};
 
 #[derive(Deserialize, Debug)]
 pub struct CommunityForm {
@@ -220,21 +219,35 @@ pub async fn send_community_email(
 
                 println!("{}", &email);
 
-                send_email(
-                    email.to_owned(), 
-                    &rendered,
-                    &format!("Please join the {} community on intersectional-data.ca", &community.tag), 
-                    data.mail_client.clone()
-                ).await;
+                let e = Email::new(
+                    email.to_owned(),
+                    rendered.clone(),
+                    String::from("Your personal data link from Intersectional-Data.ca"), 
+                    data.mail_client.clone(),
+                );
+    
+                let r = Email::send(&e).await;
+    
+                match r {
+                    Ok(_) => println!("Message to {} sent", &email),
+                    _ => println!("Message to {} not sent", &email),
+                };
             };
 
             // Send email to community owner for reference
-            send_email(
+            let owner_email = Email::new(
                 community.contact_email.to_owned(), 
-                &format!("Email invitations sent to: {:?}", &emails),
-                &format!("Reference: invitations sent for {} community on intersectional-data.ca", &community.tag), 
+                format!("Email invitations sent to: {:?}", &emails),
+                format!("Reference: invitations sent for {} community on intersectional-data.ca", &community.tag), 
                 data.mail_client.clone()
-            ).await;
+            );
+
+            let r = Email::send(&&owner_email).await;
+
+            match r {
+                Ok(_) => println!("Message to owner sent"),
+                _ => println!("Message to owner not sent"),
+            };
 
             return HttpResponse::Found().header("Location", format!("/community/{}", slug)).finish()
         },
