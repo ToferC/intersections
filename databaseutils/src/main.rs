@@ -21,7 +21,7 @@ fn main() {
         println!("5 - Prepopulate Database w/ Demo Data");
         println!("6 - Quit");
         println!("--------");
-        println!("Choose your option (1-3): ");
+        println!("Choose your option (1-6): ");
 
         let mut response = String::new();
         stdin().read_line(&mut response).expect("Unable to read input.");
@@ -43,7 +43,10 @@ fn main() {
                     4 => prepopulate_db("test"),
                     5 => prepopulate_db("demo"),
                     6 => break,
-                    _ => continue,
+                    _ => {
+                        println!("Command not recognized. Please try again.\n");
+                        continue
+                    },
                 };
             },
             Err(e) => {

@@ -62,7 +62,7 @@ pub async fn email_person_info(
             ctx.insert("community", &community);
             ctx.insert("application_url", &application_url);
 
-            let rendered = data.tmpl.render("email_person.html", &ctx).unwrap();
+            let rendered = data.tmpl.render("/emails/email_person.html", &ctx).unwrap();
             
             let email = Email::new(
                 form.email.to_owned(),
@@ -132,7 +132,7 @@ pub async fn send_community_email(
 
             ctx.insert("community", &community);
 
-            let rendered = data.tmpl.render("email_community_invitation.html", &ctx).unwrap();
+            let rendered = data.tmpl.render("/emails/email_community_invitation.html", &ctx).unwrap();
 
             // Send emails
             for email in &emails {

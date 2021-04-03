@@ -58,8 +58,9 @@
         </table>
 
         <br>
-
+        {% if user.validated %}
             <p><a class="btn btn-dark" href="/add_community">Add Community</a></p>
+        {% endif %}
 
     </div>
 {% endblock content %}

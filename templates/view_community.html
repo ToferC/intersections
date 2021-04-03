@@ -14,7 +14,7 @@
     
                 <p>{{ community.description }}</p>
 
-                {% if owner %}
+                {% if owner and user.validated %}
                     <p>Your community code is {{ community.code }}</p>
                 {% endif %}
                 
@@ -41,7 +41,7 @@
                 
                 <a class="btn btn-dark" href="/full_community_graph/{{ community.slug }}">View Community Graph</a>
                 <br>
-                {% if owner %}
+                {% if owner and user.validated %}
                 <a class="btn btn-dark" href="{{ add_community_profile_url }}">Link to Add Profile to Community</a>
                 <br>
                 <a class="btn btn-dark" href="/edit_community/{{ community.slug }}">Edit Community</a>
@@ -50,7 +50,7 @@
                 <br> 
         </div>
 
-            {% if owner %}
+            {% if owner and user.validated %}
             <div class="card card-body">
                 <h2>Scan or share QR code to participants.</h2>
     

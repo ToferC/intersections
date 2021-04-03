@@ -7,7 +7,8 @@ CREATE TABLE users (
     user_name VARCHAR(32) NOT NULL UNIQUE,
     slug VARCHAR(32) NOT NULL UNIQUE,
     created_at TIMESTAMP NOT NULL DEFAULT NOW(),
-    role VARCHAR(32) NOT NULL DEFAULT 'user'
+    role VARCHAR(32) NOT NULL DEFAULT 'user',
+    validated bool NOT NULL DEFAULT false
 );
 
 CREATE UNIQUE INDEX users__email_idx ON users(email);

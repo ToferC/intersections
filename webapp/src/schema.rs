@@ -20,6 +20,17 @@ table! {
 table! {
     use diesel::sql_types::*;
 
+    email_verification_code (id) {
+        id -> Int4,
+        email_address -> Varchar,
+        activation_code -> Varchar,
+        expires_on -> Timestamp,
+    }
+}
+
+table! {
+    use diesel::sql_types::*;
+
     lenses (id) {
         id -> Int4,
         node_name -> Varchar,
@@ -70,6 +81,7 @@ table! {
         slug -> Varchar,
         created_at -> Timestamp,
         role -> Varchar,
+        validated -> Bool,
     }
 }
 
@@ -80,6 +92,7 @@ joinable!(people -> communities (community_id));
 
 allow_tables_to_appear_in_same_query!(
     communities,
+    email_verification_code,
     lenses,
     nodes,
     people,

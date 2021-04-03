@@ -35,6 +35,7 @@ pub fn create_user(role: &str) -> Result<i32, CustomError> {
         email: email.to_lowercase().trim().to_string(),
         password: hash.trim().to_string(),
         role: role.to_owned(),
+        validated: true,
     };
 
     let user = models::User::create(user_data)?;
@@ -48,14 +49,17 @@ pub fn create_user(role: &str) -> Result<i32, CustomError> {
 
 pub fn create_test_admin() -> Result<i32, CustomError> {
     // prepopulate database
-    let test_admin = models::User::create(
+    let mut test_admin = models::User::create(
         models::UserData {
             user_name: "admin".to_owned(),
             email: "admin@email.com".to_owned(),
             password: "ChumbaWumba11".to_owned(),
             role: "admin".to_owned(),
+            validated: true,
         }
     )?;
+
+    test_admin.validated = true;
 
     println!("TEST ADMIN CREATED: {:?}", &test_admin);
 

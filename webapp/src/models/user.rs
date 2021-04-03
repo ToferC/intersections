@@ -26,6 +26,7 @@ pub struct User {
     pub slug: String,
     pub created_at: NaiveDateTime,
     pub role: String,
+    pub validated: bool,
 }
 
 #[derive(Debug, Insertable)]
@@ -39,6 +40,7 @@ pub struct InsertableUser {
     pub slug: String,
     pub created_at: NaiveDateTime,
     pub role: String,
+    pub validated: bool,
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
@@ -50,12 +52,13 @@ pub struct SlimUser {
     pub role: String,
 }
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug, Deserialize, Clone)]
 pub struct UserData {
     pub user_name: String,
     pub email: String,
     pub password: String,
     pub role: String,
+    pub validated: bool,
 }
 
 #[derive(Shrinkwrap, Clone, Default)]
@@ -74,6 +77,7 @@ impl From<UserData> for InsertableUser {
             email,
             password,
             role,
+            validated,
             ..
         } = user_data;
 
@@ -89,6 +93,7 @@ impl From<UserData> for InsertableUser {
             created_at: chrono::Local::now().naive_local(),
             salt,
             role,
+            validated,
         }
     }
 }
@@ -96,9 +101,15 @@ impl From<UserData> for InsertableUser {
 impl User {
     pub fn create(user_data: UserData) -> Result<Self, CustomError> {
         let conn = database::connection()?;
-        let insertable_user = InsertableUser::from(user_data);
+        let insertable_user = InsertableUser::from(user_data.clone());
         let user = diesel::insert_into(users::table)
             .values(insertable_user)
+            .on_conflict(users::id)
+            .do_update()
+            .set((
+                users::role.eq(&user_data.role),
+                users::validated.eq(&user_data.validated),
+            ))
             .get_result(&conn)?;
         Ok(user)
     }
@@ -188,6 +199,7 @@ impl User {
             slug: "".to_string(),
             created_at: NaiveDateTime::from_timestamp(1_000_000_000, 0),
             role: "".to_string(),
+            validated: false,
         }
     }
 }

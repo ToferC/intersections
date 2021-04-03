@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block title %}
+    <title>Email Verification</title>
+{% endblock title %}
+
+{% block content %}
+    <div class="col m-md-2 m-1">
+        <br>
+        <h1>Verify your email</h1>
+        <p>Please enter the code you received at {{ user.email }} to complete your registration.</p>
+
+
+        <form name="VerifyForm" id="verifyForm" action=/verify/{{ user_id }} method=POST>
+        
+        <label>
+            <strong>Code</strong>
+            <input class="form-control form-control-lg" type="text" name="code" placeholder="EGH83" required>
+            <small id="code_help" class="form-text text-muted">Enter the five digit code you received at the email you used to register.</small>
+        </label>
+
+        <hr>
+
+        <button 
+            class="btn g-recaptcha btn-dark" 
+            data-sitekey="6LfAltkZAAAAAN7rJGBvRUPm36M1aiL7q2a8SznA" 
+            data-callback='onSubmit' 
+            data-action='submit'
+            type=submit
+            >Verify</button>
+        <hr>
+    </form>
+                
+    </div>
+{% endblock content %}
+
+{% block scripts %}
+<script>
+
+    window.onSubmit = onSubmit;
+
+    function onSubmit(token) {
+     document.getElementById("verifyForm").submit();
+   };
+
+</script>
+{% endblock scripts %}
