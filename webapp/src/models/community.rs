@@ -8,7 +8,8 @@ use inflector::Inflector;
 use bigdecimal::{ToPrimitive};
 
 use crate::schema::{communities};
-use crate::models::{generate_unique_code, People, Lenses};
+use crate::generate_unique_code;
+use crate::models::{People, Lenses};
 use error_handler::error_handler::CustomError;
 use database;
 
@@ -59,7 +60,7 @@ impl NewCommunity {
             contact_email,
             date_created: chrono::NaiveDate::from_ymd(2020, 6, 6).and_hms(3, 3, 3),
             open,
-            code: generate_unique_code(24),
+            code: generate_unique_code(24, true),
             slug: tag.to_snake_case(),
             user_id,
             data: serde_json::to_value(&comm_data).unwrap(),

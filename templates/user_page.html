@@ -60,6 +60,9 @@
         <br>
         {% if user.validated %}
             <p><a class="btn btn-dark" href="/add_community">Add Community</a></p>
+        {% else %}
+            <p><strong>You need to verify your account before you can create communities.</strong></p>
+            <a class="btn btn-dark" href="/email_verification">Send email verification</a>
         {% endif %}
 
     </div>

@@ -1,13 +1,11 @@
-use uuid::Uuid;
+use actix_web_httpauth::extractors;
 use error_handler::error_handler::CustomError;
-use chrono::prelude::*;
+use chrono::{Duration, prelude::*};
 use serde::{Serialize, Deserialize};
-use inflector::Inflector;
 
-use crate::schema::users;
+use crate::{generate_unique_code, schema::email_verification_code};
 use database;
 
-use shrinkwraprs::Shrinkwrap;
 use diesel::prelude::*;
 use diesel::RunQueryDsl;
 use diesel::{QueryDsl};
@@ -29,12 +27,47 @@ pub struct InsertableVerification {
     pub expires_on: NaiveDateTime,
 }
 
+impl InsertableVerification {
+    pub fn new(email_address: &String) -> Self {
+        let expires_on = Utc::now().naive_utc() + Duration::minutes(30);
+        let activation_code = generate_unique_code(5, false);
+
+        InsertableVerification {
+            email_address: email_address.to_owned(),
+            activation_code,
+            expires_on,
+        }
+    }
+}
+
 impl EmailVerification {
     pub fn create(e: &InsertableVerification) -> Result<Self, CustomError> {
         let conn = database::connection()?;
         let ev = diesel::insert_into(email_verification_code::table)
             .values(e)
+            .on_conflict(email_verification_code::email_address)
+            .do_update()
+            .set((
+                email_verification_code::activation_code.eq(&e.activation_code),
+                email_verification_code::expires_on.eq(&e.expires_on),
+            ))
             .get_result(&conn)?;
         Ok(ev)
+    }
+
+    pub fn find_by_email(email: &String) -> Result<Self, CustomError> {
+        let conn = database::connection()?;
+        let v = email_verification_code::table
+            .filter(email_verification_code::email_address.eq(&email))
+            .first(&conn)?;
+        Ok(v)
+    }
+
+    pub fn delete(id: i32) -> Result<usize, CustomError> {
+        let conn = database::connection()?;
+        let res = diesel::delete(email_verification_code::table.filter(
+            email_verification_code::id.eq(id)
+        )).execute(&conn)?;
+        Ok(res)
     }
 }

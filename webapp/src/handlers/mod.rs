@@ -30,4 +30,5 @@ pub use self::user_handlers::{user_index, user_page_handler, delete_user, delete
 pub use self::community_handler::{add_community, add_community_form_input, delete_community_form, delete_community,
     view_community, community_index, edit_community, edit_community_form_input, open_community_index};
 pub use self::email_handlers::{email_person_info, send_community_email};
-pub use self::authentication_handlers::{register_handler, register_form_input, login_handler, login_form_input, logout};
+pub use self::authentication_handlers::{register_handler, register_form_input, login_handler, login_form_input, logout,
+    email_verification, verify_code};
