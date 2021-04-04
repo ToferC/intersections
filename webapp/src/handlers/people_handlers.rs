@@ -1,19 +1,18 @@
 use std::sync::Mutex;
-use std::env;
 
-use actix_web::{web, get, post, HttpResponse, HttpRequest, Responder};
+use actix_web::{web, get, HttpResponse, HttpRequest, Responder};
 use actix_identity::Identity;
 use crate::{AppData, extract_identity_data};
 use tera::{Context};
 use diesel::prelude::*;
 use diesel::{QueryDsl, BelongingToDsl};
-use serde::{Serialize, Deserialize};
+use serde::{Serialize};
 
 use bigdecimal::{ToPrimitive};
 use std::collections::BTreeMap;
 use std::iter::FromIterator;
 
-use crate::models::{Lenses, Nodes, People, Communities, Email};
+use crate::models::{Lenses, Nodes, People, Communities};
 use database;
 use crate::handlers::{generate_cyto_graph, RenderPerson};
 

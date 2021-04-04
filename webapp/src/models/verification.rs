@@ -1,4 +1,3 @@
-use actix_web_httpauth::extractors;
 use error_handler::error_handler::CustomError;
 use chrono::{Duration, prelude::*};
 use serde::{Serialize, Deserialize};
