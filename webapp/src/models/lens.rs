@@ -3,6 +3,10 @@ use diesel::prelude::*;
 use diesel::{QueryDsl, BelongingToDsl};
 use bigdecimal::BigDecimal;
 
+use bigdecimal::{ToPrimitive};
+use std::collections::BTreeMap;
+use std::iter::FromIterator;
+
 use error_handler::error_handler::CustomError;
 use database;
 
@@ -184,5 +188,45 @@ impl Lenses {
         let conn = database::connection()?;
         let res = diesel::delete(lenses::table.filter(lenses::id.eq(id))).execute(&conn)?;
         Ok(res)
+    }
+}
+
+#[derive(Serialize, Debug, PartialEq, PartialOrd)]
+pub struct AggregateLens {
+    pub name: String,
+    pub domain: String,
+    pub count: u32,
+    pub mean_inclusivity: f32,
+    pub frequency_distribution: Vec<(String, u32)>,
+}
+
+impl AggregateLens {
+    pub fn from(lenses: Vec<Lenses>) -> AggregateLens {
+        let name = &lenses[0].node_name;
+        let domain = &lenses[0].node_domain;
+
+        let mut inclusivity: f32 = 0.0;
+        let mut counts = BTreeMap::new();
+
+        for l in &lenses {
+            inclusivity += l.inclusivity.to_f32().expect("Unable to convert bigdecimal");
+
+            for s in &l.statements {
+                *counts.entry(s.to_owned()).or_insert(0) += 1;
+            };
+        };
+
+        let mut v = Vec::from_iter(counts);
+        v.sort_by(|&(_, a), &(_, b)|b.cmp(&a));
+
+        let count = lenses.len() as u32;
+
+        AggregateLens {
+            name: name.to_owned(),
+            domain: domain.to_owned(),
+            count: count,
+            mean_inclusivity: inclusivity / count as f32,
+            frequency_distribution: v,
+        }
     }
 }

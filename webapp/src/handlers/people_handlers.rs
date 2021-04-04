@@ -6,57 +6,13 @@ use crate::{AppData, extract_identity_data};
 use tera::{Context};
 use diesel::prelude::*;
 use diesel::{QueryDsl, BelongingToDsl};
-use serde::{Serialize};
 
-use bigdecimal::{ToPrimitive};
-use std::collections::BTreeMap;
-use std::iter::FromIterator;
-
-use crate::models::{Lenses, Nodes, People, Communities};
+use crate::models::{Lenses, Nodes, People, Communities, generate_cyto_graph};
 use database;
-use crate::handlers::{generate_cyto_graph, RenderPerson};
+use crate::handlers::{RenderPerson};
+use crate::models::AggregateLens;
 
 use crate::schema::{people, nodes};
-
-#[derive(Serialize, Debug, PartialEq, PartialOrd)]
-pub struct AggLens {
-    pub name: String,
-    pub domain: String,
-    pub count: u32,
-    pub mean_inclusivity: f32,
-    pub frequency_distribution: Vec<(String, u32)>,
-}
-
-impl AggLens {
-    pub fn from(lenses: Vec<Lenses>) -> AggLens {
-        let name = &lenses[0].node_name;
-        let domain = &lenses[0].node_domain;
-
-        let mut inclusivity: f32 = 0.0;
-        let mut counts = BTreeMap::new();
-
-        for l in &lenses {
-            inclusivity += l.inclusivity.to_f32().expect("Unable to convert bigdecimal");
-
-            for s in &l.statements {
-                *counts.entry(s.to_owned()).or_insert(0) += 1;
-            };
-        };
-
-        let mut v = Vec::from_iter(counts);
-        v.sort_by(|&(_, a), &(_, b)|b.cmp(&a));
-
-        let count = lenses.len() as u32;
-
-        AggLens {
-            name: name.to_owned(),
-            domain: domain.to_owned(),
-            count: count,
-            mean_inclusivity: inclusivity / count as f32,
-            frequency_distribution: v,
-        }
-    }
-}
 
 #[get("/person/{code}")]
 pub async fn person_page(
@@ -90,13 +46,13 @@ pub async fn person_page(
 
     ctx.insert("people_lenses", &people_with_lenses);
 
-    let mut aggregate_lenses: Vec<AggLens> = Vec::new();
+    let mut aggregate_lenses: Vec<AggregateLens> = Vec::new();
 
     for p in people_with_lenses.into_iter() {
         for l in p.lenses {
             let node = Nodes::find(l.node_id).expect("Unable to load lenses");
             let lenses = Lenses::find_from_node_id(node.id).expect("Unable to load lenses");
-            let agg_lenses = AggLens::from(lenses);
+            let agg_lenses = AggregateLens::from(lenses);
             aggregate_lenses.push(agg_lenses);
         }
     };

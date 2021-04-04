@@ -7,7 +7,7 @@ use inflector::Inflector;
 
 use crate::models::{Lenses, Nodes, People};
 
-use super::AggLens;
+use super::AggregateLens;
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct CytoGraph {
@@ -135,7 +135,7 @@ impl GNode {
         node
     }
 
-    pub fn from_agg_lens(a: &AggLens, community: &Option<String>) -> GNode {
+    pub fn from_agg_lens(a: &AggregateLens, community: &Option<String>) -> GNode {
 
         let (colour, shape): (String, String) = if a.domain == "person" {
             (String::from("green"), String::from("rectangle"))
@@ -235,7 +235,7 @@ pub fn generate_node_cyto_graph(
     node_id_vec.sort();
     node_id_vec.dedup();
 
-    let mut aggregate_lenses: Vec<AggLens> = Vec::new();
+    let mut aggregate_lenses: Vec<AggregateLens> = Vec::new();
 
     for i in node_id_vec {
         let mut temp_lens_vec: Vec<Lenses> = Vec::new();
@@ -250,7 +250,7 @@ pub fn generate_node_cyto_graph(
         };
 
         if temp_lens_vec.len() > 0 {
-            let agg_lenses = AggLens::from(temp_lens_vec);
+            let agg_lenses = AggregateLens::from(temp_lens_vec);
             aggregate_lenses.push(agg_lenses);
         }
     };

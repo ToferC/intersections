@@ -8,7 +8,7 @@ use tera::{Context};
 use std::collections::HashMap;
 
 use crate::models::{Lenses, Communities, People, User};
-use crate::handlers::{CytoGraph, generate_node_cyto_graph};
+use crate::models::{CytoGraph, generate_node_cyto_graph};
 
 #[get("/full_person_graph")]
 pub async fn full_person_graph(

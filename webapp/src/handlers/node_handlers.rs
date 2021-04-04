@@ -11,7 +11,7 @@ use std::collections::HashMap;
 
 use crate::models::{Lenses, Nodes, Communities, User, People};
 use database;
-use crate::handlers::{AggLens, generate_node_cyto_graph};
+use crate::models::{AggregateLens, generate_node_cyto_graph};
 
 use crate::schema::{nodes, lenses};
 
@@ -68,7 +68,7 @@ pub async fn node_page(
     
     println!("nodes: {:?}, people: {:?}", &node_id_vec, &people_id_vec);
     
-    let mut aggregate_lenses: Vec<AggLens> = Vec::new();
+    let mut aggregate_lenses: Vec<AggregateLens> = Vec::new();
 
     for i in node_id_vec {
         let mut temp_lens_vec: Vec<Lenses> = Vec::new();
@@ -83,7 +83,7 @@ pub async fn node_page(
         };
 
         if temp_lens_vec.len() > 0 {
-            let agg_lenses = AggLens::from(temp_lens_vec);
+            let agg_lenses = AggregateLens::from(temp_lens_vec);
             aggregate_lenses.push(agg_lenses);
         }
     };
@@ -92,7 +92,7 @@ pub async fn node_page(
     aggregate_lenses.dedup();
 
     // Aggregate info from lenses related to the prime node
-    let node_lens = AggLens::from(lens_vec);
+    let node_lens = AggregateLens::from(lens_vec);
 
     ctx.insert("title", &format!("{} node", &node.node_name));
 
@@ -198,7 +198,7 @@ pub async fn community_node_page(
     
     println!("nodes: {:?}, people: {:?}", &node_id_vec, &people_id_vec);
     
-    let mut aggregate_lenses: Vec<AggLens> = Vec::new();
+    let mut aggregate_lenses: Vec<AggregateLens> = Vec::new();
 
     for i in node_id_vec {
         let mut temp_lens_vec: Vec<Lenses> = Vec::new();
@@ -222,7 +222,7 @@ pub async fn community_node_page(
         };
 
         if temp_lens_vec.len() > 0 {
-            let agg_lenses = AggLens::from(temp_lens_vec);
+            let agg_lenses = AggregateLens::from(temp_lens_vec);
             aggregate_lenses.push(agg_lenses);
         }
     };
@@ -231,7 +231,7 @@ pub async fn community_node_page(
     aggregate_lenses.dedup();
 
     // Aggregate info from lenses related to the prime node
-    let node_lens = AggLens::from(lens_vec);
+    let node_lens = AggregateLens::from(lens_vec);
 
     ctx.insert("title", &format!("{} node in {} community", &node.node_name, &community.tag));
 
@@ -310,7 +310,7 @@ pub async fn node_graph(
         node_id_vec.push(l.node_id);
     };
 
-    // now instead of building AggLens, we build the graph
+    // now instead of building AggregateLens, we build the graph
     let graph = generate_node_cyto_graph(lens_vec, people_connections, None);
 
     let j = serde_json::to_string_pretty(&graph).unwrap();
@@ -416,7 +416,7 @@ pub async fn community_node_graph(
         node_id_vec.push(l.node_id);
     };
 
-    // now instead of building AggLens, we build the graph
+    // now instead of building AggregateLens, we build the graph
     let graph = generate_node_cyto_graph(lens_vec, people_connections, Some(community.slug.clone()));
 
     let j = serde_json::to_string_pretty(&graph).unwrap();

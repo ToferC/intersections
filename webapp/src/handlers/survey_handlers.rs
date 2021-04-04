@@ -8,7 +8,7 @@ use serde::{Deserialize, Serialize};
 
 use crate::{AppData, extract_identity_data};
 use crate::models::{Lens, Lenses, NewPerson, People, Node, Nodes, Communities, CommunityData};
-use crate::handlers::{CytoGraph, CytoNode, CytoEdge, GNode, GEdge};
+use crate::models::{CytoGraph, CytoNode, CytoEdge, GNode, GEdge};
 use error_handler::error_handler::CustomError;
 
 #[derive(Deserialize, Debug)]
