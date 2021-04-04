@@ -10,6 +10,7 @@ use serde::{Deserialize};
 
 use crate::{AppData, extract_identity_data};
 use crate::models::{User, verify, UserData, EmailVerification, InsertableVerification, Email};
+use super::EmailForm;
 
 #[derive(Deserialize, Debug)]
 pub struct LoginForm {
@@ -238,8 +239,8 @@ pub async fn verify_code(
     let verification_code = EmailVerification::find_by_email(&user.email).expect("Unable to load email verification");
 
     // verify code entered vs code in email
-    if form.code.trim() != verification_code.activation_code {
-        // code doesn't match
+    if form.code.trim() != verification_code.activation_code || chrono::Utc::now().naive_local() > verification_code.expires_on {
+        // code doesn't match or time expired
         return HttpResponse::Found().header("Location", String::from("/email_verification")).finish()
     };
     
@@ -267,5 +268,65 @@ pub async fn logout(
     id.forget();
 
     HttpResponse::Found().header("Location", "/").finish()
+}
+
+#[get("/request_password_reset")]
+pub async fn request_password_reset(
+    data: web::Data<AppData>,
+    node_names: web::Data<Mutex<Vec<(String, String)>>>,
+    _req:HttpRequest,
+    id: Identity,
+) -> impl Responder {
+    
+    let mut ctx = Context::new();
+
+    // Get session data and add to context
+    let (session_user, role) = extract_identity_data(&id);
+    ctx.insert("session_user", &session_user);
+    ctx.insert("role", &role);
+
+    // add node_names for navbar drop down
+    ctx.insert("node_names", &node_names.lock().expect("Unable to unlock").clone());
+
+    let rendered = data.tmpl.render("authentication/request_password_reset.html", &ctx).unwrap();
+    HttpResponse::Ok().body(rendered)
+}
+
+#[post("/password_reset")]
+pub async fn password_reset(
+    _data: web::Data<AppData>,
+    req: HttpRequest, 
+    form: web::Form<EmailForm>,
+    id: Identity,
+) -> impl Responder {
+    println!("Handling Post Request: {:?}", req);
+
+    // Get session data and add to context
+    let (session_user, _role) = extract_identity_data(&id);
+
+    // validate form has data or re-load form
+    if form.email.is_empty() || session_user == "".to_string() {
+        return HttpResponse::Found().header("Location", String::from("/email_verification")).finish()
+    };
+
+    // load user
+    let mut user = User::find_from_slug(&session_user).expect("Unable to load user");
+
+    let verification_code = EmailVerification::find_by_email(&user.email).expect("Unable to load email verification");
+
+    // verify code entered vs code in email
+    if form.email.trim() != verification_code.activation_code {
+        // code doesn't match
+        return HttpResponse::Found().header("Location", String::from("/email_verification")).finish()
+    };
+    
+    // validate user
+    user.validated = true;
+    let user = User::update(user).expect("Unable to update user");
+
+    // delete email_verification
+    EmailVerification::delete(verification_code.id).expect("Unable to delete verification code");
+    
+    HttpResponse::Found().header("Location", format!("/user/{}", user.slug)).finish()
 }
 

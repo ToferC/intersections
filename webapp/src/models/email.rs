@@ -33,7 +33,7 @@ impl Email {
             .add_from("chris@intersectional-data.ca")
             .add_subject(&email.subject)
             .add_html(email.email_html.as_str())
-            .add_from_name("Chris")
+            .add_from_name("User Support at Intersectional-Data.ca")
             .add_header("x-system-generated".to_string(), "confirmed");
 
         match email.sg.send(mail_info) {

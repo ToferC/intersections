@@ -14,12 +14,12 @@ use crate::models::{Communities, CommunityData, Email, People};
 // for for single email address
 #[derive(Debug, Deserialize)]
 pub struct EmailForm {
-    email: String,
+    pub email: String,
 }
 // form for multiple email addresses
 #[derive(Debug, Deserialize)]
 pub struct EmailsForm {
-    emails: String,
+    pub emails: String,
 }
 
 #[post("/person/{code}")]
