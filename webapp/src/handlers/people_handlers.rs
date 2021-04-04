@@ -109,7 +109,7 @@ pub async fn person_page(
     // add node_names for navbar drop down
     ctx.insert("node_names", &node_names.lock().expect("Unable to unlock").clone());
 
-    let rendered = data.tmpl.render("person.html", &ctx).unwrap();
+    let rendered = data.tmpl.render("people/person.html", &ctx).unwrap();
     HttpResponse::Ok().body(rendered)
 }
 
@@ -181,7 +181,7 @@ pub async fn person_graph(
     // add node_names for navbar drop down
     ctx.insert("node_names", &node_names.lock().expect("Unable to unlock").clone());
     
-    let rendered = data.tmpl.render("network_graph.html", &ctx).unwrap();
+    let rendered = data.tmpl.render("graphs/network_graph.html", &ctx).unwrap();
     HttpResponse::Ok().body(rendered)
 }
 

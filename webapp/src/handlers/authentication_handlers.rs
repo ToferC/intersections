@@ -46,7 +46,7 @@ pub async fn login_handler(
     // add node_names for navbar drop down
     ctx.insert("node_names", &node_names.lock().expect("Unable to unlock").clone());
 
-    let rendered = data.tmpl.render("log_in.html", &ctx).unwrap();
+    let rendered = data.tmpl.render("authentication/log_in.html", &ctx).unwrap();
     HttpResponse::Ok().body(rendered)
 }
 
@@ -110,7 +110,7 @@ pub async fn register_handler(
     // add node_names for navbar drop down
     ctx.insert("node_names", &node_names.lock().expect("Unable to unlock").clone());
 
-    let rendered = data.tmpl.render("register.html", &ctx).unwrap();
+    let rendered = data.tmpl.render("authentication/register.html", &ctx).unwrap();
     HttpResponse::Ok().body(rendered)
 }
 
@@ -205,7 +205,7 @@ pub async fn email_verification(
             // add node_names for navbar drop down
             ctx.insert("node_names", &node_names.lock().expect("Unable to unlock").clone());
         
-            let rendered = data.tmpl.render("email_verification.html", &ctx).unwrap();
+            let rendered = data.tmpl.render("authentication/email_verification.html", &ctx).unwrap();
             HttpResponse::Ok().body(rendered)
         },
         Err(err) => {

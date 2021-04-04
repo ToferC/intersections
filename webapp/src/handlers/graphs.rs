@@ -38,7 +38,7 @@ pub async fn full_person_graph(
     // add node_names for navbar drop down
     ctx.insert("node_names", &node_names.lock().expect("Unable to unlock").clone());
     
-    let rendered = data.tmpl.render("network_graph.html", &ctx).unwrap();
+    let rendered = data.tmpl.render("graphs/network_graph.html", &ctx).unwrap();
     HttpResponse::Ok().body(rendered)
 }
 
@@ -77,7 +77,7 @@ pub async fn full_node_graph(
     // add node_names for navbar drop down
     ctx.insert("node_names", &node_names.lock().expect("Unable to unlock").clone());
     
-    let rendered = data.tmpl.render("node_network_graph.html", &ctx).unwrap();
+    let rendered = data.tmpl.render("graphs/node_network_graph.html", &ctx).unwrap();
     HttpResponse::Ok().body(rendered)
 }
 
@@ -137,7 +137,7 @@ pub async fn full_community_node_graph(
                 // add node_names for navbar drop down
                 ctx.insert("node_names", &node_names.lock().expect("Unable to unlock").clone());
                 
-                let rendered = data.tmpl.render("node_network_graph.html", &ctx).unwrap();
+                let rendered = data.tmpl.render("graphs/node_network_graph.html", &ctx).unwrap();
                 HttpResponse::Ok().body(rendered)
             } else {
                 // user not validated to see community

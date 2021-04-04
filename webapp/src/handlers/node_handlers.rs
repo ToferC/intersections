@@ -107,7 +107,7 @@ pub async fn node_page(
     // add node_names for navbar drop down
     ctx.insert("node_names", &node_names.lock().expect("Unable to unlock").clone());
 
-    let rendered = data.tmpl.render("node.html", &ctx).unwrap();
+    let rendered = data.tmpl.render("nodes/node.html", &ctx).unwrap();
     HttpResponse::Ok().body(rendered)
 }
 
@@ -246,7 +246,7 @@ pub async fn community_node_page(
     // add node_names for navbar drop down
     ctx.insert("node_names", &node_names.lock().expect("Unable to unlock").clone());
 
-    let rendered = data.tmpl.render("community_node.html", &ctx).unwrap();
+    let rendered = data.tmpl.render("graphs/community_node.html", &ctx).unwrap();
     HttpResponse::Ok().body(rendered)
 }
 
@@ -323,7 +323,7 @@ pub async fn node_graph(
     // add node_names for navbar drop down
     ctx.insert("node_names", &node_names.lock().expect("Unable to unlock").clone());
     
-    let rendered = data.tmpl.render("node_network_graph.html", &ctx).unwrap();
+    let rendered = data.tmpl.render("graphs/node_network_graph.html", &ctx).unwrap();
     HttpResponse::Ok().body(rendered)
 }
 

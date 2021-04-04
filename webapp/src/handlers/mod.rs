@@ -1,5 +1,5 @@
 mod handlers;
-mod form_handlers;
+mod survey_handlers;
 mod routes;
 mod graphs;
 mod graph_utilities;
@@ -10,10 +10,11 @@ mod community_handler;
 mod email_handlers;
 mod authentication_handlers;
 
-pub use self::handlers::{api_base, index, survey_intro,
+pub use self::handlers::{api_base, index,
     find_lens, person_api};
     
-pub use self::form_handlers::{
+pub use self::survey_handlers::{
+    survey_intro,
     lens_form_handler, 
     handle_lens_form_input,
     add_lens_form_handler,

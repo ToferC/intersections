@@ -93,7 +93,7 @@ pub async fn user_page_handler(
 
         ctx.insert("communities", &communities);
     
-        let rendered = data.tmpl.render("user_page.html", &ctx).unwrap();
+        let rendered = data.tmpl.render("users/user_page.html", &ctx).unwrap();
         HttpResponse::Ok().body(rendered)
     }
 }
@@ -128,7 +128,7 @@ pub async fn delete_user_handler(
                 // add node_names for navbar drop down
                 ctx.insert("node_names", &node_names.lock().expect("Unable to unlock").clone());
 
-                let rendered = data.tmpl.render("delete_user.html", &ctx).unwrap();
+                let rendered = data.tmpl.render("users/delete_user.html", &ctx).unwrap();
                 return HttpResponse::Ok().body(rendered)
             },
             Err(c) => {

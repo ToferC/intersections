@@ -71,6 +71,47 @@ impl RenderPerson {
     }
 }
 
+#[get("/survey_intro/{community_code}")]
+pub async fn survey_intro(
+    data: web::Data<AppData>,
+    web::Path(community_code): web::Path<String>, 
+    _req:HttpRequest,
+    node_names: web::Data<Mutex<Vec<(String, String)>>>,
+    id: Identity,
+) -> impl Responder {
+    println!("Access index");
+
+    // Validate community
+    let community_result = Communities::find_from_code(&community_code);
+    
+    match community_result {
+        Ok(community) => {
+            let mut ctx = Context::new();
+        
+            // Get session data and add to context
+            let (session_user, role) = extract_identity_data(&id);
+            ctx.insert("session_user", &session_user);
+            ctx.insert("role", &role);
+
+            ctx.insert("node_names", &node_names.lock().expect("Unable to unlock").clone());
+        
+            // all names for form autocomplete
+            let all_node_names = Nodes::find_all_names().expect("Unable to load node names");
+            ctx.insert("all_node_names", &all_node_names);
+
+            ctx.insert("community", &community);
+            
+            let rendered = data.tmpl.render("survey/survey_intro.html", &ctx).unwrap();
+            HttpResponse::Ok().body(rendered)
+        },
+        Err(e) => {
+            println!("Error: {}", e);
+            return HttpResponse::Found().header("Location","/").finish()
+        }
+    }
+
+}
+
 #[get("/first_lens_form/{community_code}")]
 pub async fn lens_form_handler(
     data: web::Data<AppData>,
@@ -101,7 +142,7 @@ pub async fn lens_form_handler(
             ctx.insert("community", &community);
             
         
-            let rendered = data.tmpl.render("first_lens_form.html", &ctx).unwrap();
+            let rendered = data.tmpl.render("survey/first_lens_form.html", &ctx).unwrap();
             HttpResponse::Ok().body(rendered)
         },
         Err(e) => {
@@ -305,7 +346,7 @@ pub async fn add_lens_form_handler(
 
     ctx.insert("people_lenses", &people_with_lenses);
 
-    let rendered = data.tmpl.render("add_lens_form.html", &ctx).unwrap();
+    let rendered = data.tmpl.render(".survey/add_lens_form.html", &ctx).unwrap();
     HttpResponse::Ok().body(rendered)
 }
 

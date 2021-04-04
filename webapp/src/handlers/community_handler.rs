@@ -61,7 +61,7 @@ pub async fn community_index(
 
         ctx.insert("communities", &communities);
 
-        let rendered = data.tmpl.render("community_index.html", &ctx).unwrap();
+        let rendered = data.tmpl.render("communities/community_index.html", &ctx).unwrap();
         HttpResponse::Ok().body(rendered)
     }
 }
@@ -95,7 +95,7 @@ pub async fn open_community_index(
 
     ctx.insert("communities", &communities);
 
-    let rendered = data.tmpl.render("community_index.html", &ctx).unwrap();
+    let rendered = data.tmpl.render("communities/community_index.html", &ctx).unwrap();
     HttpResponse::Ok().body(rendered)
 }
 
@@ -161,7 +161,7 @@ pub async fn view_community(
     let qr = qrcode_generator::to_svg_to_string(format!("{}{}", application_url, community_add_profile_url), QrCodeEcc::Low, 245, Some("Invitation link for intersections")).unwrap();
     ctx.insert("qrcode", &qr);
 
-    let rendered = data.tmpl.render("view_community.html", &ctx).unwrap();
+    let rendered = data.tmpl.render("communities/view_community.html", &ctx).unwrap();
     HttpResponse::Ok().body(rendered)
 }
 
@@ -183,7 +183,7 @@ pub async fn add_community(
     // add node_names for navbar drop down
     ctx.insert("node_names", &node_names.lock().expect("Unable to unlock").clone());
 
-    let rendered = data.tmpl.render("add_community.html", &ctx).unwrap();
+    let rendered = data.tmpl.render("communities/add_community.html", &ctx).unwrap();
     HttpResponse::Ok().body(rendered)
 }
 
@@ -297,7 +297,7 @@ pub async fn edit_community(
         },
     };
 
-    let rendered = data.tmpl.render("edit_community.html", &ctx).unwrap();
+    let rendered = data.tmpl.render("communities/edit_community.html", &ctx).unwrap();
     HttpResponse::Ok().body(rendered)
 }
 
