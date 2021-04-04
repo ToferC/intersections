@@ -17,3 +17,10 @@ CREATE TABLE IF NOT EXISTS email_verification_code (
     activation_code VARCHAR(5) UNIQUE NOT NULL,
     expires_on TIMESTAMP NOT NULL
 );
+
+CREATE TABLE IF NOT EXISTS password_reset_token (
+    id SERIAL PRIMARY KEY,
+    email_address VARCHAR(64) UNIQUE NOT NULL,
+    reset_token VARCHAR(36) UNIQUE NOT NULL,
+    expires_on TIMESTAMP NOT NULL
+);

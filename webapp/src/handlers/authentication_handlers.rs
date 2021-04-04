@@ -1,6 +1,7 @@
 // example auth: https://github.com/actix/actix-extras/blob/master/actix-identity/src/lib.rs
 
 use std::sync::Mutex;
+use std::env;
 
 use actix_web::{HttpRequest, HttpResponse, Responder, get, post, web};
 use actix_session::{Session, UserSession};
@@ -9,7 +10,9 @@ use tera::Context;
 use serde::{Deserialize};
 
 use crate::{AppData, extract_identity_data};
-use crate::models::{User, verify, UserData, EmailVerification, InsertableVerification, Email};
+use crate::models::{User, verify, UserData, EmailVerification, 
+    InsertableVerification, Email, PasswordResetToken, 
+    InsertablePasswordResetToken};
 use super::EmailForm;
 
 #[derive(Deserialize, Debug)]
@@ -28,6 +31,11 @@ pub struct RegisterForm {
 #[derive(Deserialize, Debug)]
 pub struct VerifyForm {
     code: String,
+}
+
+#[derive(Deserialize, Debug)]
+pub struct PasswordForm {
+    password: String,
 }
 
 #[get("/log_in")]
@@ -292,9 +300,9 @@ pub async fn request_password_reset(
     HttpResponse::Ok().body(rendered)
 }
 
-#[post("/password_reset")]
-pub async fn password_reset(
-    _data: web::Data<AppData>,
+#[post("/request_password_reset")]
+pub async fn request_password_reset_post(
+    data: web::Data<AppData>,
     req: HttpRequest, 
     form: web::Form<EmailForm>,
     id: Identity,
@@ -302,31 +310,183 @@ pub async fn password_reset(
     println!("Handling Post Request: {:?}", req);
 
     // Get session data and add to context
-    let (session_user, _role) = extract_identity_data(&id);
+    let (_session_user, _role) = extract_identity_data(&id);
 
     // validate form has data or re-load form
-    if form.email.is_empty() || session_user == "".to_string() {
+    if form.email.is_empty() {
         return HttpResponse::Found().header("Location", String::from("/email_verification")).finish()
     };
 
     // load user
-    let mut user = User::find_from_slug(&session_user).expect("Unable to load user");
+    let user = User::find_from_email(&form.email.trim().to_string());
 
-    let verification_code = EmailVerification::find_by_email(&user.email).expect("Unable to load email verification");
+    match user {
+        Ok(user) => {
 
-    // verify code entered vs code in email
-    if form.email.trim() != verification_code.activation_code {
-        // code doesn't match
-        return HttpResponse::Found().header("Location", String::from("/email_verification")).finish()
-    };
-    
-    // validate user
-    user.validated = true;
-    let user = User::update(user).expect("Unable to update user");
+            // create token
+            let token = PasswordResetToken::create(
+                &InsertablePasswordResetToken::new(&user.email)
+            ).expect("Unable to create verification");
 
-    // delete email_verification
-    EmailVerification::delete(verification_code.id).expect("Unable to delete verification code");
-    
-    HttpResponse::Found().header("Location", format!("/user/{}", user.slug)).finish()
+            // render email
+            let mut email_ctx = Context::new();
+            email_ctx.insert("user", &user);
+            email_ctx.insert("verification", &token);
+
+            // add application email link
+            let application_url: String;
+            let environment = env::var("ENVIRONMENT").unwrap();
+
+            if environment == "production" {
+                application_url = "https://www.intersectional-data.ca".to_string();
+            } else {
+                application_url = "http://localhost:8088".to_string();
+            };
+
+            email_ctx.insert("application_url", &application_url);
+
+            email_ctx.insert("token", &token.reset_token);
+
+            let rendered_email = data.tmpl.render("emails/password_reset_email.html", &email_ctx).unwrap();
+
+            let email = Email::new(
+                user.email.clone(), 
+                rendered_email, 
+                "Password Reset - Intersectional Data".to_string(), 
+                data.mail_client.clone(),
+            );
+
+            // send email
+            let r = Email::send(&email).await;
+
+            match r {
+                Ok(()) => println!("Email sent"),
+                Err(err) => println!("Error {}", err),
+            };
+
+            // redirect to page
+            HttpResponse::Found().header("Location", String::from("password_email_sent")).finish()
+
+        },
+        Err(err) => {
+            println!("Error: {}", err);
+            HttpResponse::Found().header("Location", String::from("log_in")).finish()
+        }
+    }
 }
 
+#[get("/password_email_sent")]
+pub async fn password_email_sent(
+    data: web::Data<AppData>,
+    node_names: web::Data<Mutex<Vec<(String, String)>>>,
+    _req:HttpRequest,
+    id: Identity,
+) -> impl Responder {
+    
+    let mut ctx = Context::new();
+
+    // Get session data and add to context
+    let (session_user, role) = extract_identity_data(&id);
+    ctx.insert("session_user", &session_user);
+    ctx.insert("role", &role);
+
+    // add node_names for navbar drop down
+    ctx.insert("node_names", &node_names.lock().expect("Unable to unlock").clone());
+
+    let rendered = data.tmpl.render("authentication/password_email_sent.html", &ctx).unwrap();
+    HttpResponse::Ok().body(rendered)
+}
+
+#[get("/password_reset/{token}")]
+pub async fn password_reset(
+    data: web::Data<AppData>,
+    web::Path(token): web::Path<String>,
+    node_names: web::Data<Mutex<Vec<(String, String)>>>,
+    _req:HttpRequest,
+    id: Identity,
+) -> impl Responder {
+
+    let result = PasswordResetToken::find_by_token(&token);
+
+    match result {
+        Ok(verified_token) => {
+            let user = User::find_from_email(&verified_token.email_address).expect("Unable to load user from email");
+
+            let mut ctx = Context::new();
+
+            // Get session data and add to context
+            let (session_user, role) = extract_identity_data(&id);
+            ctx.insert("session_user", &session_user);
+            ctx.insert("role", &role);
+
+            // add node_names for navbar drop down
+            ctx.insert("node_names", &node_names.lock().expect("Unable to unlock").clone());
+
+            ctx.insert("user", &user);
+            ctx.insert("token", &token);
+
+            let rendered = data.tmpl.render("authentication/change_password.html", &ctx).unwrap();
+            return HttpResponse::Ok().body(rendered)
+        },
+        Err(err) => {
+            // token not valid return to login screen
+            println!("Error: {}", &err);
+            return HttpResponse::Found().header("Location", String::from("log_in")).finish()
+        }
+    };
+}
+
+#[post("/password_reset/{token}")]
+pub async fn password_reset_post(
+    _data: web::Data<AppData>,
+    web::Path(token): web::Path<String>,
+    _req: HttpRequest, 
+    form: web::Form<PasswordForm>,
+    id: Identity,
+) -> impl Responder {
+
+    // validate form has data or re-load form
+    if form.password.is_empty() || &token == "" {
+        return HttpResponse::Found().header("Location", String::from("/login")).finish()
+    };
+
+    // update user
+    let reset_token = PasswordResetToken::find_by_token(&token);
+
+    match reset_token {
+        Ok(reset_token) => {
+
+            // check token is valid
+            if chrono::Utc::now().naive_local() > reset_token.expires_on {
+                return HttpResponse::Found().header("Location", String::from("/login")).finish()
+            };
+
+            let user = User::find_from_email(&reset_token.email_address).expect("Unable to load user from token email");
+
+            let result = User::update_password(user.id, &form.password.trim().to_string());
+
+            match result {
+                Ok(user) => {
+                    println!("User {} password updated", &user.user_name);
+
+                    // delete token
+                    PasswordResetToken::delete(reset_token.id).expect("Unable to delete token");
+
+                    // log in user
+                    id.remember(user.slug.to_owned());
+                        
+                    return HttpResponse::Found().header("Location", format!("/user/{}", user.slug)).finish()
+                },
+                Err(err) => {
+                    println!("Error: {}", err);
+                    return HttpResponse::Found().header("Location", String::from("log_in")).finish()
+
+                }
+            };
+        },
+        Err(err) => {
+            println!("Error: {}", err);
+            return HttpResponse::Found().header("Location", String::from("log_in")).finish()
+        }
+    };
+}

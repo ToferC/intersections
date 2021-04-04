@@ -59,6 +59,17 @@ table! {
 table! {
     use diesel::sql_types::*;
 
+    password_reset_token (id) {
+        id -> Int4,
+        email_address -> Varchar,
+        reset_token -> Varchar,
+        expires_on -> Timestamp,
+    }
+}
+
+table! {
+    use diesel::sql_types::*;
+
     people (id) {
         id -> Int4,
         code -> Varchar,
@@ -95,6 +106,7 @@ allow_tables_to_appear_in_same_query!(
     email_verification_code,
     lenses,
     nodes,
+    password_reset_token,
     people,
     users,
 );

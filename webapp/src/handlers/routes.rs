@@ -36,6 +36,13 @@ use crate::handlers::{
     email_verification,
     verify_code,
 
+    // password reset
+    request_password_reset,
+    request_password_reset_post,
+    password_email_sent,
+    password_reset,
+    password_reset_post,
+
     // login
     login_handler,
     login_form_input,
@@ -99,6 +106,13 @@ pub fn init_routes(config: &mut web::ServiceConfig) {
     config.service(register_form_input);
     config.service(email_verification);
     config.service(verify_code);
+
+    // forgot password
+    config.service(request_password_reset);
+    config.service(request_password_reset_post);
+    config.service(password_email_sent);
+    config.service(password_reset);
+    config.service(password_reset_post);
 
     // login and logout
     config.service(login_handler);

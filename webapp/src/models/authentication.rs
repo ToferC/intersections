@@ -2,7 +2,9 @@ use error_handler::error_handler::CustomError;
 use chrono::{Duration, prelude::*};
 use serde::{Serialize, Deserialize};
 
-use crate::{generate_unique_code, schema::email_verification_code};
+use crate::{generate_unique_code, schema::{
+    email_verification_code, password_reset_token}
+};
 use database;
 
 use diesel::prelude::*;
@@ -70,3 +72,68 @@ impl EmailVerification {
         Ok(res)
     }
 }
+
+#[derive(Serialize, Deserialize, Queryable, Insertable, Debug, Identifiable, AsChangeset, Clone)]
+#[table_name = "password_reset_token"]
+pub struct PasswordResetToken {
+    pub id: i32,
+    pub email_address: String,
+    pub reset_token: String,
+    pub expires_on: NaiveDateTime,
+}
+
+#[derive(Debug, Serialize, Deserialize, AsChangeset, Insertable)]
+#[table_name = "password_reset_token"]
+pub struct InsertablePasswordResetToken {
+    pub email_address: String,
+    pub reset_token: String,
+    pub expires_on: NaiveDateTime,
+}
+
+impl InsertablePasswordResetToken {
+    pub fn new(email_address: &String) -> Self {
+        let expires_on = Utc::now().naive_utc() + Duration::minutes(30);
+        let reset_token = generate_unique_code(36, false);
+
+        InsertablePasswordResetToken {
+            email_address: email_address.to_owned(),
+            reset_token,
+            expires_on,
+        }
+    }
+}
+
+impl PasswordResetToken {
+    pub fn create(e: &InsertablePasswordResetToken) -> Result<Self, CustomError> {
+        let conn = database::connection()?;
+        let ev = diesel::insert_into(password_reset_token::table)
+            .values(e)
+            .on_conflict(password_reset_token::email_address)
+            .do_update()
+            .set((
+                password_reset_token::reset_token.eq(&e.reset_token),
+                password_reset_token::expires_on.eq(&e.expires_on),
+            ))
+            .get_result(&conn)?;
+        Ok(ev)
+    }
+
+    pub fn find_by_token(token: &String) -> Result<Self, CustomError> {
+        let conn = database::connection()?;
+        let v = password_reset_token::table
+            .filter(password_reset_token::reset_token.eq(&token))
+            .first(&conn)?;
+        Ok(v)
+    }
+
+    pub fn delete(id: i32) -> Result<usize, CustomError> {
+        let conn = database::connection()?;
+        let res = diesel::delete(password_reset_token::table.filter(
+            password_reset_token::id.eq(id)
+        )).execute(&conn)?;
+        Ok(res)
+    }
+}
+
+
+

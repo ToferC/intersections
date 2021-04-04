@@ -182,6 +182,21 @@ impl User {
         Ok(user)
     }
 
+    pub fn update_password(user_id: i32, password: &String) -> Result<Self, CustomError> {
+        let conn = database::connection()?;
+
+        let salt = make_salt();
+
+        let user = diesel::update(users::table)
+            .filter(users::id.eq(user_id))
+            .set((
+                users::hash.eq(make_hash(&password, &salt).as_bytes().to_vec()),
+                users::salt.eq(salt),
+            ))
+            .get_result(&conn)?;
+        Ok(user)
+    }
+
     pub fn delete(id: i32) -> Result<usize, CustomError> {
         let conn = database::connection()?;
         let res = diesel::delete(users::table.filter(users::id.eq(id))).execute(&conn)?;
