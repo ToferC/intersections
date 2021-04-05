@@ -30,7 +30,7 @@ impl Email {
                 address: email.target_address.as_str(),
                 name: "Participant",
             })
-            .add_from("chris@intersectional-data.ca")
+            .add_from("usersupport@intersectional-data.ca")
             .add_subject(&email.subject)
             .add_html(email.email_html.as_str())
             .add_from_name("User Support at Intersectional-Data.ca")
