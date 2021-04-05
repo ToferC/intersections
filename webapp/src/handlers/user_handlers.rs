@@ -49,7 +49,7 @@ pub async fn user_index(
 
         ctx.insert("users", &users);
 
-        let rendered = data.tmpl.render("user_index.html", &ctx).unwrap();
+        let rendered = data.tmpl.render("users/user_index.html", &ctx).unwrap();
         HttpResponse::Ok().body(rendered)
     }
 }
