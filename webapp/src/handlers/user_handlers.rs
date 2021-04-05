@@ -174,11 +174,19 @@ pub async fn edit_user_post(
             let mut email_changed = false;
             let mut user_name_changed = false;
 
-            // update user
+            // update user email
             if &form.email.to_lower_case().trim() != &user.email {
                 user.email = form.email.to_lowercase().trim().to_owned();
                 user.validated = false;
                 email_changed = true;
+
+                // update contact email in owned communities
+                let communities = Communities::find_by_owner_user_id(&user.id).expect("Unable to load communities");
+
+                for mut c in communities {
+                    c.contact_email = user.email.to_owned();
+                    Communities::update(&c).expect("Unable to update community");
+                };
             };
 
             if &form.user_name.trim() != &user.user_name {
