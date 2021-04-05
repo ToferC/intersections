@@ -10,7 +10,7 @@ pub mod graph;
 pub use lens::{Lens, Lenses, AggregateLens};
 pub use person::{NewPerson, People};
 pub use node::{Node, Nodes};
-pub use user::{User, InsertableUser, SlimUser, LoggedUser, UserData, verify};
+pub use user::{User, InsertableUser, SlimUser, LoggedUser, UserData, verify, make_salt, make_hash};
 pub use community::{Communities, NewCommunity, CommunityData};
 pub use email::Email;
 pub use authentication::{EmailVerification, InsertableVerification,

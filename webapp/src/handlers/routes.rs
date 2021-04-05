@@ -47,12 +47,15 @@ use crate::handlers::{
     login_handler,
     login_form_input,
     logout,
+
     // users
     user_index,
     user_page_handler,
-    // delete users
+    edit_user,
+    edit_user_post,
     delete_user,
     delete_user_handler,
+
     // communities
     view_community,
     community_index,
@@ -122,8 +125,11 @@ pub fn init_routes(config: &mut web::ServiceConfig) {
     // users 
     config.service(user_page_handler);
     config.service(user_index);
+    config.service(edit_user);
+    config.service(edit_user_post);
     config.service(delete_user);
     config.service(delete_user_handler);
+
     // communities
     config.service(view_community);
     config.service(community_index);

@@ -241,7 +241,7 @@ impl From<User> for SlimUser {
 }
 
 // Utility Functions
-fn make_salt() -> String {
+pub fn make_salt() -> String {
     use rand::Rng;
     const CHARSET: &[u8] = b"ABCDEFGHIJKLMNOPQRSTUVWXYZ\
                             abcdefghijklmnopqrstuvwxyz\
@@ -258,7 +258,7 @@ fn make_salt() -> String {
     password
 }
 
-fn make_hash(password: &str, salt: &str) -> String {
+pub fn make_hash(password: &str, salt: &str) -> String {
     let config = argon2::Config::default();
     argon2::hash_encoded(password.as_bytes(), salt.as_bytes(), &config).unwrap()
 }
@@ -269,7 +269,7 @@ pub fn verify(user: &User, password: &str) -> bool {
     make_hash(password, salt).as_bytes().to_vec() == *hash
 }
 
-fn has_role(user: &LoggedUser, role: &str) -> Result<bool, CustomError> {
+pub fn has_role(user: &LoggedUser, role: &str) -> Result<bool, CustomError> {
     match user.0 {
         Some(ref user) if user.role == role => Ok(true),
         _ => Err(CustomError::new(002, "Role not present".to_string())),
