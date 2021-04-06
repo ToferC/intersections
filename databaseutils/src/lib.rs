@@ -2,6 +2,7 @@ use bigdecimal::{BigDecimal, ToPrimitive};
 use num_bigint::{ToBigInt};
 use std::{io::{stdin}, process::exit};
 use std::{num::ParseIntError};
+use std::collections::{BTreeMap};
 
 use std::fs::File;
 use serde_json::Value;
@@ -187,7 +188,7 @@ pub fn import_demo_data(community_id: i32) {
     let comm_data: models::CommunityData = serde_json::from_value(community.data).unwrap();
 
     let mut comm_data = comm_data.to_owned();
-    let mut temp_incl_vec: Vec<f32> = comm_data.inclusivity_vec.clone();
+    let mut temp_incl_map: BTreeMap<i32, f32> = comm_data.inclusivity_map.clone();
 
     for e in &data {
 
@@ -239,19 +240,19 @@ pub fn import_demo_data(community_id: i32) {
                     inclusivity.to_owned(),
                 );
 
-                let _ = models::Experiences::create(&l);
+                let ex = models::Experiences::create(&l).expect("Unable to create experience");
                 
                 comm_data.experiences += 1;
-                temp_incl_vec.push(inclusivity.to_f32().unwrap());
+                temp_incl_map.insert(ex.id, inclusivity.to_f32().unwrap());
 
-                let total: f32 = temp_incl_vec.iter().sum();
+                let total: f32 = temp_incl_map.values().sum();
 
-                comm_data.mean_inclusivity = total / temp_incl_vec.len() as f32;
+                comm_data.mean_inclusivity = total / temp_incl_map.len() as f32;
             };
         };
     };
     
-    comm_data.inclusivity_vec = temp_incl_vec;
+    comm_data.inclusivity_map = temp_incl_map;
     community.data = serde_json::to_value(comm_data).unwrap();
 
     let update = models::Communities::update(&community);
