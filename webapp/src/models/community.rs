@@ -3,22 +3,23 @@ use chrono::prelude::*;
 use diesel::prelude::*;
 use diesel::RunQueryDsl;
 use diesel::{QueryDsl};
+use std::collections::{BTreeMap};
 
 use inflector::Inflector;
 use bigdecimal::{ToPrimitive};
 
 use crate::schema::{communities};
 use crate::generate_unique_code;
-use crate::models::{People, Lenses};
+use crate::models::{People, Experiences};
 use error_handler::error_handler::CustomError;
 use database;
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct CommunityData {
     pub members: i32,
-    pub lenses: i32,
+    pub experiences: i32,
     pub diversity: f64,
-    pub inclusivity_vec: Vec<f32>,
+    pub inclusivity_map: BTreeMap<i32, f32>,
     pub mean_inclusivity: f32,
     pub tags: Vec<String>,
     pub invitations: i32,
@@ -45,9 +46,9 @@ impl NewCommunity {
 
         let comm_data = CommunityData {
             members: 0,
-            lenses: 0,
+            experiences: 0,
             diversity: 0.0,
-            inclusivity_vec: vec![0.0],
+            inclusivity_map: BTreeMap::new(),
             mean_inclusivity: 0.0,
             tags: Vec::new(),
             invitations: 0,
@@ -204,7 +205,7 @@ impl Communities {
 
         let mut comm_data = comm_data.to_owned();
 
-        let mut lenses: Vec<Lenses> = Vec::new();
+        let mut experiences: Vec<Experiences> = Vec::new();
         let mut counter: i32 = 0;
 
         println!("Transferring people to target");
@@ -217,19 +218,19 @@ impl Communities {
             comm_data.members += 1;
             counter += 1;
 
-            lenses.append(&mut Lenses::find_from_people_id(person.id).unwrap());
+            experiences.append(&mut Experiences::find_from_people_id(person.id).unwrap());
         };
 
         println!("{} members transferred", counter);
 
-        for lens in lenses {
-            comm_data.lenses += 1;
-            comm_data.inclusivity_vec.push(lens.inclusivity.to_f32().unwrap());
+        for experience in experiences {
+            comm_data.experiences += 1;
+            comm_data.inclusivity_map.insert(experience.id, experience.inclusivity.to_f32().unwrap());
         };
 
-        let total: f32 = comm_data.inclusivity_vec.iter().sum();
+        let total: f32 = comm_data.inclusivity_map.values().sum();
 
-        comm_data.mean_inclusivity = total / comm_data.lenses as f32;
+        comm_data.mean_inclusivity = total / comm_data.inclusivity_map.len() as f32;
         
         target.data = serde_json::to_value(comm_data).expect("Unable to update json data");
 

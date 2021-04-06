@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block title %}
-    <title>First Lens Form</title>
+    <title>First Experience Form</title>
 {% endblock title %}
 
 {% block add_preload %}
@@ -15,7 +15,7 @@
         <h1>Add an experience</h1>
         <hr>
 
-        <form name="LensForm" id="lensForm" action=/first_lens_form/{{ community.code }} method=POST>
+        <form name="ExperienceForm" id="experienceForm" action=/first_experience_form/{{ community.code }} method=POST>
         
         <label>
             <strong>If you already have a profile code, you can enter it here to connect your new profile with your existing profiles:</strong>
@@ -119,7 +119,7 @@
     window.onSubmit = onSubmit;
 
     function onSubmit(token) {
-     document.getElementById("lensForm").submit();
+     document.getElementById("experienceForm").submit();
    };
 
    var node_names = {{ all_node_names | json_encode | safe }};

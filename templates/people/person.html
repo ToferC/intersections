@@ -9,13 +9,13 @@
     <div class="col m-md-2 m-1">
         <br>
         <h1>{{ title }}</h1>
-        <p><a href="/person_network_graph/{{ person_id }}">View Person Graph</a> | <a href="/">Return to Index</a></p>
+        <p><a href="/person_network_graph/{{ person.id }}">View Person Graph</a> | <a href="/">Return to Index</a></p>
         <hr>
-        <h2>Your code is: </h2> <p><strong>{{ person_code }}</strong></p> 
+        <h2>Your code is: </h2> <p><strong>{{ person.code }}</strong></p> 
         <p>Please make a copy of your code or request an email that contains links back to this page and to your community.</p>
         <p>The application does not keep any identifying information and the administrators will not be able to provide you with this code once you've finished your survey and closed the window.</p>
 
-        <form name="EmailForm" id="emailForm" action=/person/{{ person_code }} method=POST>
+        <form name="EmailForm" id="emailForm" action=/person/{{ person.code }} method=POST>
         
         <label>
             <strong>Send me an email</strong>
@@ -37,18 +37,18 @@
         </button>
         <div class="collapse" id="collapseExample">
             <div class="card card-body">
-            <p>The lenses of your lived experience that you entered as part of the survey have been combined into a graph - a networked representation of your data, combined with the data of other people.</p>
+            <p>The experiences of your lived experience that you entered as part of the survey have been combined into a graph - a networked representation of your data, combined with the data of other people.</p>
             <p>Below, you will find your own data - a summary of what you entered in the survey. The only thing new to you here might be the <strong>total inclusivity</strong> measure. This takes the individual ratings that you entered through the slider and returns the sum.</p>
             <p>Further below, or in the next column depending on your device, you will see the results from the full data graph. This includes your results, but also those of every other person who described a similar lived experience. This lets you see how other people might interpret experiences similar to your own.
                 As more peole complete the survey, this insight will deepen.</p>
             <p>Here are what the results mean:</p>
             <ul>
-                <li><strong>Lens</strong> - the name of the lived experience</li>
+                <li><strong>Experience</strong> - the name of the lived experience</li>
                 <li><strong>Domain</strong> - whether the experience is a part of the person or a part of the system of work</li>
                 <li><strong>Instances</strong> - how many times this experience has been entered in the survey. If the result is "1", then you are the first person to do so</li>
                 <li><strong>Mean Inclusivity</strong> - the average inclusivity rating for the experience from -1.00 to +1.00.</li>
             </ul>
-            <p>The next chart is a frequency distribution of the responses to the statement: "Though this lens, in the workplace, I feel..."</p>
+            <p>The next chart is a frequency distribution of the responses to the statement: "Though this experience, in the workplace, I feel..."</p>
             <ul>
                 <li><strong>Statement</strong> - the explanation of how the experience effected the person</li>
                 <li><strong>Count</strong> - the number of times people recorded this explanation</li>
@@ -57,7 +57,7 @@
         </div>
         <hr>
         <h2>My Profile</h2>
-            {% for person in people_lenses %}
+            {% for person in people_experiences %}
             <li><strong>Date Created: {{ person.person.date_created | date }}</strong></li>
             <li><strong>Total Inclusion: {{ person.total_inclusivity | round(method="ceil", precision=3) }}
                 {% if person.total_inclusivity | float > 0.2 %}
@@ -69,7 +69,7 @@
                 {% endif %}
             </strong></li>
             <hr>
-                {% for lens in person.lenses %}
+                {% for experience in person.experiences %}
                     <table>
                         <tr>
                             <th style="text-align: center;">Experience</th>
@@ -77,13 +77,13 @@
                             <th style="text-align: center;">Inclusivity</th>
                         </tr>
                         <tr>
-                            <td style="text-align: center;"><a href="/node/{{ lens.node_name }}">{{ lens.node_name | title }}</a></td>
-                            <td style="text-align: center;">{{ lens.node_domain | title }}</td>
+                            <td style="text-align: center;"><a href="/node/{{ experience.node_name }}">{{ experience.node_name | title }}</a></td>
+                            <td style="text-align: center;">{{ experience.node_domain | title }}</td>
                             <td style="text-align: center;">
-                                {{ lens.inclusivity | float }}
-                                {% if lens.inclusivity | float > 0.2 %}
+                                {{ experience.inclusivity | float }}
+                                {% if experience.inclusivity | float > 0.2 %}
                                     <span style="color: green; font-size: 2em;">＋</span>
-                                {% elif lens.inclusivity | float < -0.2 %}
+                                {% elif experience.inclusivity | float < -0.2 %}
                                     <span style="color: red; font-size: 2em;">－</span>
                                 {% else %}
                                     <span style="color: blue; font-size: 1.5em;"><></span>
@@ -96,7 +96,7 @@
                         <tr>
                             <th style="text-align: center;">Statements</th>
                         </tr>
-                        {% for statement in lens.statements %}
+                        {% for statement in experience.statements %}
                             <tr>
                                 <td>{{ statement }}</td>
                             </tr>
@@ -105,17 +105,19 @@
                     <hr>
                     <br>
                 {% endfor %}
-                <hr>
+                <a class="btn btn-dark" href="/add_experience_form/{{ person.person.code }}">Add an experience</a>
+                <a class="btn btn-danger" href="/delete_person/{{ person.person.code }}">Delete Profile</a>
             {% endfor %}
+            <hr>
     </div>
 
     <div class="col m-md-2 m-1">
         <br>
         <h1>Global Experiences</h1>
         <br>
-        <p>These are the aggregate experiences from everyone who completed the survey and identified these lenses as part of their identity. They are presented here so that you can compare the person selected with the global ratings.</p>
+        <p>These are the aggregate experiences from everyone who completed the survey and identified these experiences as part of their identity. They are presented here so that you can compare the person selected with the global ratings.</p>
         <hr>
-                {% for lens in other_lenses %}
+                {% for experience in other_experiences %}
                     <table>
                         <tr>
                             <th style="text-align: center;">Experience</th>
@@ -124,14 +126,14 @@
                             <th style="text-align: center;">Mean Inclusivity</th>
                         </tr>
                         <tr>
-                            <td style="text-align: center;"><a href="/node/{{ lens.name }}">{{ lens.name | title }}</a></td>
-                            <td style="text-align: center;">{{ lens.domain | title }}</td>
-                            <td style="text-align: center;">{{ lens.count }}</td>
+                            <td style="text-align: center;"><a href="/node/{{ experience.name }}">{{ experience.name | title }}</a></td>
+                            <td style="text-align: center;">{{ experience.domain | title }}</td>
+                            <td style="text-align: center;">{{ experience.count }}</td>
                             <td style="text-align: center;">
-                                {{ lens.mean_inclusivity | round(method="ceil", precision=3) }}
-                                {% if lens.mean_inclusivity | float > 0.2 %}
+                                {{ experience.mean_inclusivity | round(method="ceil", precision=3) }}
+                                {% if experience.mean_inclusivity | float > 0.2 %}
                                     <span style="color: green; font-size: 2em;">＋</span>
-                                {% elif lens.mean_inclusivity | float < -0.2 %}
+                                {% elif experience.mean_inclusivity | float < -0.2 %}
                                     <span style="color: red; font-size: 2em;">－</span>
                                 {% else %}
                                     <span style="color: blue; font-size: 1.5em;"><></span>
@@ -145,7 +147,7 @@
                             <th style="text-align: center;">Statement</th>
                             <th style="text-align: center;">Count</th>
                         </tr>
-                        {% for tuple in lens.frequency_distribution %}
+                        {% for tuple in experience.frequency_distribution %}
                             <tr>
                                 <td>{{ tuple.0 }}</td>
                                 <td style="text-align: center;">{{ tuple.1 }}</td>

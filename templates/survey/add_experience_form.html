@@ -11,15 +11,15 @@
 {% block content %}
         <div class="col-md m-md-2 m-1">
             <br>
-            <h1>Add another lens</h1>
+            <h1>Add another experience</h1>
             <p><strong>OR</strong>  <a class="btn btn-dark" href="/person/{{ user_code }}">Take me to my completed profile.</a></p>
             <hr>
             <h2>Your unique code is:</h2> <p><strong>{{ user_code }}</strong></p>
             <p>You can make a copy of this code or request an email when you finish your profile. Only someone with this code can see your profile.</p>
             <hr>
 
-            {% set lens_len = people_lenses | last %}
-            {% set prog_bar = lens_len.lenses | length %}
+            {% set experience_len = people_experiences | last %}
+            {% set prog_bar = experience_len.experiences | length %}
             {% set progbar_width = prog_bar / 6 * 100 %}
 
             <strong>Progress ({{ prog_bar }}/6)</strong>
@@ -33,7 +33,7 @@
 
             <hr>
                 <br>
-                <form action="/add_lens_form/{{ user_code }}" method=POST id="lensForm" name="lensForm">
+                <form action="/add_experience_form/{{ user_code }}" method=POST id="experienceForm" name="experienceForm">
                 
                     <h2>1. Name your experience</h2>
     
@@ -119,7 +119,7 @@
     window.onSubmit = onSubmit;
 
     function onSubmit(token) {
-    document.getElementById("lensForm").submit();
+    document.getElementById("experienceForm").submit();
     };
 
     var node_names = {{ all_node_names | json_encode | safe }};

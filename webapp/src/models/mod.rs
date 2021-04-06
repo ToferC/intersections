@@ -1,4 +1,4 @@
-pub mod lens;
+pub mod experience;
 pub mod person;
 pub mod node;
 pub mod community;
@@ -7,7 +7,7 @@ pub mod email;
 pub mod authentication;
 pub mod graph;
 
-pub use lens::{Lens, Lenses, AggregateLens};
+pub use experience::{Experience, Experiences, AggregateExperience};
 pub use person::{NewPerson, People};
 pub use node::{Node, Nodes};
 pub use user::{User, InsertableUser, SlimUser, LoggedUser, UserData, verify, make_salt, make_hash};

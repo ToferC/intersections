@@ -4,7 +4,7 @@ use inflector::Inflector;
 
 use error_handler::error_handler::CustomError;
 use database;
-use crate::models::Lenses;
+use crate::models::Experiences;
 
 use crate::schema::nodes;
 
@@ -79,7 +79,7 @@ impl Nodes {
     pub fn find_all_linked_names_slugs() -> Result<Vec<(String, String)>, CustomError> {
         let conn = database::connection()?;
 
-        let node_ids = Lenses::find_real_node_ids().expect("Unable to load lenses");
+        let node_ids = Experiences::find_real_node_ids().expect("Unable to load experiences");
 
         let node_names = nodes::table
             .select((nodes::node_name, nodes::slug))

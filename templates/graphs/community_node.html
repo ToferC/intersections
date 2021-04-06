@@ -17,18 +17,18 @@
         </button>
         <div class="collapse" id="collapseExample">
             <div class="card card-body">
-            <p>The lenses of all lived experiences entered as part of the survey have been combined into a graph - a networked representation of connections across many people.</p>
+            <p>The experience of all lived experiences entered as part of the survey have been combined into a graph - a networked representation of connections across many people.</p>
             <p>Below, you will see the results for the experience you selected, called a node.</p>
             <p>Further below, or in the next column depending on your device, you will see the results for all of the other experiences that are connected with the one you selected.
                 As more peole complete the survey, this insight will deepen.</p>
             <p>Here are what the results mean:</p>
             <ul>
-                <li><strong>Lens</strong> - the name of the lived experience</li>
+                <li><strong>Experience</strong> - the name of the lived experience</li>
                 <li><strong>Domain</strong> - whether the experience is a part of the person or a part of the system of work</li>
                 <li><strong>Instances</strong> - how many times this experience has been entered in the survey. If the result is "1", then you are the first person to do so</li>
                 <li><strong>Mean Inclusivity</strong> - the average inclusivity rating for the experience from -1.00 to +1.00.</li>
             </ul>
-            <p>The next chart is a frequency distribution of the responses to the statement: "Though this lens, in the workplace, I feel..."</p>
+            <p>The next chart is a frequency distribution of the responses to the statement: "Though this experience, in the workplace, I feel..."</p>
             <ul>
                 <li><strong>Statement</strong> - the explanation of how the experience effected the person</li>
                 <li><strong>Count</strong> - the number of times people recorded this explanation</li>
@@ -39,20 +39,20 @@
 
         <table>
             <tr>
-                <th style="text-align: center;">Lens</th>
+                <th style="text-align: center;">Experience</th>
                 <th style="text-align: center;">Domain</th>
                 <th style="text-align: center;">Instances</th>
                 <th style="text-align: center;">Mean Inclusivity</th>
             </tr>
             <tr>
-                <td style="text-align: center;">{{ node_lens.name | title }}</td>
-                <td style="text-align: center;">{{ node_lens.domain | title }}</td>
-                <td style="text-align: center;">{{ node_lens.count }}</td>
+                <td style="text-align: center;">{{ node_experience.name | title }}</td>
+                <td style="text-align: center;">{{ node_experience.domain | title }}</td>
+                <td style="text-align: center;">{{ node_experience.count }}</td>
                 <td style="text-align: center;">
-                    {{ node_lens.mean_inclusivity | round(method="ceil", precision=3) }}
-                    {% if node_lens.mean_inclusivity | float > 0.2 %}
+                    {{ node_experience.mean_inclusivity | round(method="ceil", precision=3) }}
+                    {% if node_experience.mean_inclusivity | float > 0.2 %}
                         <span style="color: green; font-size: 2em;">＋</span>
-                    {% elif node_lens.mean_inclusivity | float < -0.2 %}
+                    {% elif node_experience.mean_inclusivity | float < -0.2 %}
                         <span style="color: red; font-size: 2em;">－</span>
                     {% else %}
                         <span style="color: blue; font-size: 1.5em;"><></span>
@@ -68,7 +68,7 @@
                 <th style="text-align: center;">Statement</th>
                 <th style="text-align: center;">Count</th>
             </tr>
-            {% for tuple in node_lens.frequency_distribution %}
+            {% for tuple in node_experience.frequency_distribution %}
                 <tr>
                     <td>{{ tuple.0 }}</td>
                     <td style="text-align: center;">{{ tuple.1 }}</td>
@@ -80,28 +80,28 @@
 
     <div class="col-md m-md-2 m-1">
         <br>
-        <h1>Associated Lenses</h1>
-        <p>These are lenses from other nodes that have been linked to the {{ node.domain_token }} trait of {{ node.node_name }}. 
+        <h1>Associated Experience</h1>
+        <p>These are experience from other nodes that have been linked to the {{ node.domain_token }} trait of {{ node.node_name }}. 
             They are presented here to show how the nodes relate and how by looking at more than one facet of a person's experience, 
             we can better understand our people's needs.</p>
         <hr>
-                {% for lens in other_lenses %}
+                {% for experience in other_experiences %}
                     <table>
                         <tr>
-                            <th style="text-align: center;">Lens</th>
+                            <th style="text-align: center;">Experience</th>
                             <th style="text-align: center;">Domain</th>
                             <th style="text-align: center;">Instances</th>
                             <th style="text-align: center;">Mean Inclusivity</th>
                         </tr>
                         <tr>
-                            <td style="text-align: center;"><a href="/community_node/{{ community.slug }}/{{ lens.name | snake_case }}">{{ lens.name | title }}</a></td>
-                            <td style="text-align: center;">{{ lens.domain | title }}</td>
-                            <td style="text-align: center;">{{ lens.count }}</td>
+                            <td style="text-align: center;"><a href="/community_node/{{ community.slug }}/{{ experience.name | snake_case }}">{{ experience.name | title }}</a></td>
+                            <td style="text-align: center;">{{ experience.domain | title }}</td>
+                            <td style="text-align: center;">{{ experience.count }}</td>
                             <td style="text-align: center;">
-                                {{ lens.mean_inclusivity | round(method="ceil", precision=3) }}
-                                {% if lens.mean_inclusivity | float > 0.2 %}
+                                {{ experience.mean_inclusivity | round(method="ceil", precision=3) }}
+                                {% if experience.mean_inclusivity | float > 0.2 %}
                                     <span style="color: green; font-size: 2em;">＋</span>
-                                {% elif lens.mean_inclusivity | float < -0.2 %}
+                                {% elif experience.mean_inclusivity | float < -0.2 %}
                                     <span style="color: red; font-size: 2em;">－</span>
                                 {% else %}
                                     <span style="color: blue; font-size: 1.5em;"><></span>
@@ -117,7 +117,7 @@
                             <th style="text-align: center;">Statement</th>
                             <th style="text-align: center;">Count</th>
                         </tr>
-                        {% for tuple in lens.frequency_distribution %}
+                        {% for tuple in experience.frequency_distribution %}
                             <tr>
                                 <td>{{ tuple.0 }}</td>
                                 <td style="text-align: center;">{{ tuple.1 }}</td>

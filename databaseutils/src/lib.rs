@@ -198,7 +198,7 @@ pub fn import_demo_data(community_id: i32) {
         comm_data.members += 1;
 
 
-        for i in e[1].as_array() { // lens Array
+        for i in e[1].as_array() { // experience Array
             
             for n in i {
                 let name = n[1]["node_name"].as_str().unwrap().to_owned();
@@ -230,7 +230,7 @@ pub fn import_demo_data(community_id: i32) {
                     .to_bigint()
                     .unwrap(), 3);
 
-                let l = models::Lens::new(
+                let l = models::Experience::new(
                     node.node_name.to_owned(),
                     node.domain_token.to_owned(),
                     person.id,
@@ -239,14 +239,14 @@ pub fn import_demo_data(community_id: i32) {
                     inclusivity.to_owned(),
                 );
 
-                let _ = models::Lenses::create(&l);
+                let _ = models::Experiences::create(&l);
                 
-                comm_data.lenses += 1;
+                comm_data.experiences += 1;
                 temp_incl_vec.push(inclusivity.to_f32().unwrap());
 
                 let total: f32 = temp_incl_vec.iter().sum();
 
-                comm_data.mean_inclusivity = total / comm_data.lenses as f32;
+                comm_data.mean_inclusivity = total / temp_incl_vec.len() as f32;
             };
         };
     };
@@ -273,7 +273,7 @@ pub fn generate_dummy_data(community_id: i32) {
 
     add_base_nodes();
 
-    let base_lenses = vec![
+    let base_experiences = vec![
         ("father", "person", 1, 1, "tired", "not doing enough", "joyful", -0.18),
         ("manager", "role", 1, 2, "pulled many directions", "influential", "stressed", -0.25),
         ("gen x", "person", 1, 3, "experienced", "overlooked", "depended upon", 0.23),
@@ -291,13 +291,13 @@ pub fn generate_dummy_data(community_id: i32) {
 
     println!("{}", &data);
 
-    for l in base_lenses.iter() {
+    for l in base_experiences.iter() {
 
         let i = l.7 as f32;
         let inclusivity = BigDecimal::new(i.to_bigint().unwrap(), 2);
 
-        models::Lenses::create(
-            &models::Lens::new(
+        models::Experiences::create(
+            &models::Experience::new(
                 l.0.to_string(), 
                 l.1.to_string(), 
                 l.2, 
@@ -305,7 +305,7 @@ pub fn generate_dummy_data(community_id: i32) {
                 vec![l.4.to_string(), l.5.to_string(), l.6.to_string()], 
                 inclusivity,
             )
-        ).expect("Unable to create lens");
+        ).expect("Unable to create experience");
     }
 }
 

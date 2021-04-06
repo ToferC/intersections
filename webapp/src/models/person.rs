@@ -6,7 +6,7 @@ use diesel::dsl::any;
 use diesel::{QueryDsl, BelongingToDsl};
 
 use crate::schema::{people};
-use crate::models::{Lenses, Communities};
+use crate::models::{Experiences, Communities};
 use crate::generate_unique_code;
 use error_handler::error_handler::CustomError;
 use database;
@@ -143,7 +143,7 @@ impl People {
         Ok(person)
     }
 
-    pub fn get_lenses(&self) -> Result<Vec<(People, Vec<Lenses>)>, CustomError> {
+    pub fn get_experiences(&self, related: bool) -> Result<Vec<(People, Vec<Experiences>)>, CustomError> {
 
         let conn = database::connection()?;
 
@@ -153,31 +153,32 @@ impl People {
 
         let zero_len: usize = 0;
 
-        if &target_person.related_codes.len() > &zero_len {
+        if related && &target_person.related_codes.len() > &zero_len {
+            // we want related codes and some exist
             people_vec.push(target_person.clone());
 
             for c in &target_person.related_codes {
                 people_vec.push(People::find_from_code(c).unwrap());
             }
         } else {
+            // only add the original person profile
             people_vec.push(target_person);
         };
 
-        // join lenses and nodes
-        let lenses = Lenses::belonging_to(&people_vec)
-            .load::<Lenses>(&conn).expect("Unable to load lenses");
+        // join experiences and nodes
+        let experiences = Experiences::belonging_to(&people_vec)
+            .load::<Experiences>(&conn).expect("Unable to load experiences");
 
-        // group node_lenses by people
-        let grouped = lenses.grouped_by(&people_vec);
+        // group node_experiences by people
+        let grouped = experiences.grouped_by(&people_vec);
 
         // structure result
-        let result: Vec<(People, Vec<Lenses>)> = people_vec
+        let result: Vec<(People, Vec<Experiences>)> = people_vec
             .into_iter()
             .zip(grouped)
             .collect();
 
         Ok(result)
-
     }
 
     pub fn delete(id: i32) -> Result<usize, CustomError> {

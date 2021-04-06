@@ -11,30 +11,30 @@ use error_handler::error_handler::CustomError;
 use database;
 
 use crate::models::{People, Nodes};
-use crate::schema::{lenses, nodes};
+use crate::schema::{experiences, nodes};
 
 #[derive(Debug, Serialize, Deserialize, AsChangeset, Insertable)]
-#[table_name = "lenses"]
-/// Represents an intersectional lens of lived human experience.
-/// Each lens will have many lenses, each of which represents one part of their
+#[table_name = "experiences"]
+/// Represents an intersectional experience of lived human experience.
+/// Each experience will have many experiences, each of which represents one part of their
 /// sum experiences.
-/// Based off the Lens-Role-System framework found here: 
-/// https://www.aecf.org/m/blogdoc/LensRoleSystemFramework-2013.pdf
-pub struct Lens {
+/// Based off the experience-Role-System framework found here: 
+/// https://www.aecf.org/m/blogdoc/experienceRoleSystemFramework-2013.pdf
+pub struct Experience {
     pub node_name: String,
     pub node_domain: String,
     pub person_id: i32,
     pub node_id: i32,
     pub date_created: chrono::NaiveDateTime,
-    // A lived statement of experience based on the lens.
-    // Expressed as "In the workplace, this lens makes me feel {adjective}."
+    // A lived statement of experience based on the experience.
+    // Expressed as "In the workplace, this experience makes me feel {adjective}."
     pub statements: Vec<String>,
     pub inclusivity: BigDecimal,
 }
 
-impl Lens {
+impl Experience {
     pub fn new(node_name: String, node_domain: String, person_id: i32, node_id: i32, statements: Vec<String>, inclusivity: BigDecimal) -> Self {
-        Lens {
+        Experience {
             node_name: node_name,
             node_domain: node_domain,
             person_id: person_id,
@@ -45,15 +45,15 @@ impl Lens {
         }
     }
 
-    pub fn from(lens: &Lens) -> Lens {
-        Lens {
-            node_name: lens.node_name.clone(),
-            node_domain: lens.node_domain.clone(),
-            person_id: lens.person_id,
-            node_id: lens.node_id, 
-            date_created: lens.date_created,
-            statements: lens.statements.clone(),
-            inclusivity: lens.inclusivity.clone(),
+    pub fn from(experience: &Experience) -> Experience {
+        Experience {
+            node_name: experience.node_name.clone(),
+            node_domain: experience.node_domain.clone(),
+            person_id: experience.person_id,
+            node_id: experience.node_id, 
+            date_created: experience.date_created,
+            statements: experience.statements.clone(),
+            inclusivity: experience.inclusivity.clone(),
         }
     }
 }
@@ -61,25 +61,25 @@ impl Lens {
 #[derive(Serialize, Deserialize, PartialEq, PartialOrd, Eq, Ord, Queryable, AsChangeset, Insertable, Associations, Identifiable, Debug, Clone)]
 #[belongs_to(People, foreign_key = "person_id")]
 #[belongs_to(Nodes, foreign_key = "node_id")]
-#[table_name = "lenses"]
-pub struct Lenses {
+#[table_name = "experiences"]
+pub struct Experiences {
     pub id: i32,
     pub node_name: String,
     pub node_domain: String,
     pub person_id: i32,
     pub node_id: i32,
     pub date_created: chrono::NaiveDateTime,
-    // A lived statement of experience based on the lens.
-    // Expressed as "In the workplace, this lens makes me feel {adjective}."
+    // A lived statement of experience based on the experience.
+    // Expressed as "In the workplace, this experience makes me feel {adjective}."
     pub statements: Vec<String>,
     pub inclusivity: BigDecimal,
 }
 
-impl Lenses {
-    pub fn create(lens: &Lens) -> Result<Self, CustomError> {
+impl Experiences {
+    pub fn create(experience: &Experience) -> Result<Self, CustomError> {
         let conn = database::connection()?;
-        let p = Lens::from(lens);
-        let p = diesel::insert_into(lenses::table)
+        let p = Experience::from(experience);
+        let p = diesel::insert_into(experiences::table)
             .values(p)
             .get_result(&conn)?;
         Ok(p)
@@ -87,8 +87,8 @@ impl Lenses {
 
     pub fn find_all() -> Result<Vec<Self>, CustomError> {
         let conn = database::connection()?;
-        let lenses = lenses::table.load::<Lenses>(&conn)?;
-        Ok(lenses)
+        let experiences = experiences::table.load::<Experiences>(&conn)?;
+        Ok(experiences)
     }
 
     pub fn find_all_real() -> Result<Vec<Self>, CustomError> {
@@ -96,18 +96,18 @@ impl Lenses {
 
         let real_people_ids = People::find_real_ids().expect("Unable to load real people");
 
-        let lenses = lenses::table
-            .filter(lenses::person_id.eq_any(real_people_ids))
-            .load::<Lenses>(&conn)?;
+        let experiences = experiences::table
+            .filter(experiences::person_id.eq_any(real_people_ids))
+            .load::<Experiences>(&conn)?;
             
-        Ok(lenses)
+        Ok(experiences)
     }
 
     pub fn find_all_node_ids() -> Result<Vec<i32>, CustomError> {
         // return vec of all node IDs (test, pre-populated and real)
         let conn = database::connection()?;
 
-        let ids = lenses::table.select(lenses::node_id).load::<i32>(&conn)?;
+        let ids = experiences::table.select(experiences::node_id).load::<i32>(&conn)?;
 
         Ok(ids)
     }
@@ -118,15 +118,15 @@ impl Lenses {
 
         let real_people_ids = People::find_real_ids().expect("Unable to load real people");
 
-        let ids = lenses::table
-            .select(lenses::node_id)
-            .filter(lenses::person_id.eq_any(real_people_ids))
+        let ids = experiences::table
+            .select(experiences::node_id)
+            .filter(experiences::person_id.eq_any(real_people_ids))
             .load::<i32>(&conn)?;
 
         Ok(ids)
     }
 
-    pub fn load_api_data() -> Result<Vec<(People, Vec<(Lenses, Nodes)>)>, CustomError> {
+    pub fn load_api_data() -> Result<Vec<(People, Vec<(Experiences, Nodes)>)>, CustomError> {
         let conn = database::connection()?;
         let mut people = People::find_all()?;
 
@@ -135,19 +135,19 @@ impl Lenses {
             person.related_codes = Vec::new();
         };
 
-        // join lenses and nodes
-        let node_lenses = Lenses::belonging_to(&people)
+        // join experiences and nodes
+        let node_experiences = Experiences::belonging_to(&people)
             .inner_join(nodes::table)
-            .load::<(Lenses, Nodes)>(&conn)
+            .load::<(Experiences, Nodes)>(&conn)
             .expect("Error leading people");
 
-        // group node_lenses by people
-        let grouped_lenses = node_lenses.grouped_by(&people);
+        // group node_experiences by people
+        let grouped_experiences = node_experiences.grouped_by(&people);
 
         // structure result
-        let result: Vec<(People, Vec<(Lenses, Nodes)>)> = people
+        let result: Vec<(People, Vec<(Experiences, Nodes)>)> = people
             .into_iter()
-            .zip(grouped_lenses)
+            .zip(grouped_experiences)
             .collect();
 
         Ok(result)
@@ -155,44 +155,44 @@ impl Lenses {
 
     pub fn find(id: i32) -> Result<Self, CustomError> {
         let conn = database::connection()?;
-        let lens = lenses::table.filter(lenses::id.eq(id)).first(&conn)?;
-        Ok(lens)
+        let experience = experiences::table.filter(experiences::id.eq(id)).first(&conn)?;
+        Ok(experience)
     }
 
     pub fn find_from_node_id(id: i32) -> Result<Vec<Self>, CustomError> {
         let conn = database::connection()?;
-        let lens_vec = lenses::table.filter(lenses::node_id.eq(id))
-            .load::<Lenses>(&conn)?;
+        let experience_vec = experiences::table.filter(experiences::node_id.eq(id))
+            .load::<Experiences>(&conn)?;
         
-        Ok(lens_vec)
+        Ok(experience_vec)
     }
 
     pub fn find_from_people_id(id: i32) -> Result<Vec<Self>, CustomError> {
         let conn = database::connection()?;
-        let lens_vec = lenses::table.filter(lenses::person_id.eq(id))
-            .load::<Lenses>(&conn)?;
+        let experience_vec = experiences::table.filter(experiences::person_id.eq(id))
+            .load::<Experiences>(&conn)?;
         
-        Ok(lens_vec)
+        Ok(experience_vec)
     }
 
-    pub fn update(id: i32, lens: Lens) -> Result<Self, CustomError> {
+    pub fn update(id: i32, experience: Experience) -> Result<Self, CustomError> {
         let conn = database::connection()?;
-        let lens = diesel::update(lenses::table)
-            .filter(lenses::id.eq(id))
-            .set(lens)
+        let experience = diesel::update(experiences::table)
+            .filter(experiences::id.eq(id))
+            .set(experience)
             .get_result(&conn)?;
-        Ok(lens)
+        Ok(experience)
     }
 
     pub fn delete(id: i32) -> Result<usize, CustomError> {
         let conn = database::connection()?;
-        let res = diesel::delete(lenses::table.filter(lenses::id.eq(id))).execute(&conn)?;
+        let res = diesel::delete(experiences::table.filter(experiences::id.eq(id))).execute(&conn)?;
         Ok(res)
     }
 }
 
 #[derive(Serialize, Debug, PartialEq, PartialOrd)]
-pub struct AggregateLens {
+pub struct AggregateExperience {
     pub name: String,
     pub domain: String,
     pub count: u32,
@@ -200,15 +200,15 @@ pub struct AggregateLens {
     pub frequency_distribution: Vec<(String, u32)>,
 }
 
-impl AggregateLens {
-    pub fn from(lenses: Vec<Lenses>) -> AggregateLens {
-        let name = &lenses[0].node_name;
-        let domain = &lenses[0].node_domain;
+impl AggregateExperience {
+    pub fn from(experiences: Vec<Experiences>) -> AggregateExperience {
+        let name = &experiences[0].node_name;
+        let domain = &experiences[0].node_domain;
 
         let mut inclusivity: f32 = 0.0;
         let mut counts = BTreeMap::new();
 
-        for l in &lenses {
+        for l in &experiences {
             inclusivity += l.inclusivity.to_f32().expect("Unable to convert bigdecimal");
 
             for s in &l.statements {
@@ -219,9 +219,9 @@ impl AggregateLens {
         let mut v = Vec::from_iter(counts);
         v.sort_by(|&(_, a), &(_, b)|b.cmp(&a));
 
-        let count = lenses.len() as u32;
+        let count = experiences.len() as u32;
 
-        AggregateLens {
+        AggregateExperience {
             name: name.to_owned(),
             domain: domain.to_owned(),
             count: count,

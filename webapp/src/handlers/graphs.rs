@@ -7,7 +7,7 @@ use tera::{Context};
 
 use std::collections::HashMap;
 
-use crate::models::{Lenses, Communities, People, User};
+use crate::models::{Experiences, Communities, People, User};
 use crate::models::{CytoGraph, generate_node_cyto_graph};
 
 #[get("/full_person_graph")]
@@ -49,17 +49,17 @@ pub async fn full_node_graph(
     id:Identity,
 ) -> impl Responder {
         
-    let lens_vec = Lenses::find_all_real().expect("Unable to load lenses");
+    let experience_vec = Experiences::find_all_real().expect("Unable to load experiences");
 
     // create vec of bridge connections from people
     let mut people_connections: HashMap<i32, Vec<String>> = HashMap::new();
 
-    for l in &lens_vec {
+    for l in &experience_vec {
         people_connections.entry(l.person_id).or_insert(Vec::new()).push(l.node_name.to_owned()); 
     };
 
-    // now instead of building AggLens, we build the graph
-    let graph = generate_node_cyto_graph(lens_vec, people_connections, None);
+    // now instead of building AggExperience, we build the graph
+    let graph = generate_node_cyto_graph(experience_vec, people_connections, None);
 
     let j = serde_json::to_string_pretty(&graph).unwrap();
     
@@ -106,21 +106,21 @@ pub async fn full_community_node_graph(
             // validate if user can view community graph
             if community.open || session_user_id == community.user_id {
                 
-                let lens_vec = Lenses::find_all().expect("Unable to load lenses");
+                let experience_vec = Experiences::find_all().expect("Unable to load experiences");
     
                 let community_people_ids = People::find_ids_from_community(community.id).expect("Unable to find community members");
             
                 // create vec of bridge connections from people
                 let mut people_connections: HashMap<i32, Vec<String>> = HashMap::new();
             
-                for l in &lens_vec {
+                for l in &experience_vec {
                     if community_people_ids.contains(&l.person_id) {
                         people_connections.entry(l.person_id).or_insert(Vec::new()).push(l.node_name.to_owned()); 
                     }
                 };
             
-                // now instead of building AggLens, we build the graph
-                let graph = generate_node_cyto_graph(lens_vec, people_connections, Some(community.slug));
+                // now instead of building AggExperience, we build the graph
+                let graph = generate_node_cyto_graph(experience_vec, people_connections, Some(community.slug));
             
                 let j = serde_json::to_string_pretty(&graph).unwrap();
                 

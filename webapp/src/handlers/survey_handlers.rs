@@ -7,12 +7,12 @@ use tera::Context;
 use serde::{Deserialize, Serialize};
 
 use crate::{AppData, extract_identity_data};
-use crate::models::{Lens, Lenses, NewPerson, People, Node, Nodes, Communities, CommunityData};
+use crate::models::{Experience, Experiences, NewPerson, People, Node, Nodes, Communities, CommunityData};
 use crate::models::{CytoGraph, CytoNode, CytoEdge, GNode, GEdge};
 use error_handler::error_handler::CustomError;
 
 #[derive(Deserialize, Debug)]
-pub struct FirstLensForm {
+pub struct FirstExperienceForm {
     name: String,
     domain: String,
     response_1: String,
@@ -23,7 +23,7 @@ pub struct FirstLensForm {
 }
 
 #[derive(Deserialize, Debug)]
-pub struct AddLensForm {
+pub struct AddExperienceForm {
     name: String,
     domain: String,
     response_1: String,
@@ -35,14 +35,14 @@ pub struct AddLensForm {
 #[derive(Deserialize, Serialize, Debug)]
 pub struct RenderPerson {
     pub person: People,
-    pub lenses: Vec<Lenses>,
+    pub experiences: Vec<Experiences>,
     pub total_inclusivity: f32,
 }
 
 impl RenderPerson {
-    pub fn from(person: People) -> Result<Vec<Self>, CustomError> {
+    pub fn from(person: &People, related: bool) -> Result<Vec<Self>, CustomError> {
 
-        let result = People::get_lenses(&person)?;
+        let result = People::get_experiences(&person, related)?;
 
         let mut result_vec: Vec<RenderPerson> = Vec::new();
 
@@ -60,7 +60,7 @@ impl RenderPerson {
         
             let p = RenderPerson {
                 person: r.0,
-                lenses: r.1,
+                experiences: r.1,
                 total_inclusivity: total_inclusivity,
             };
 
@@ -112,8 +112,8 @@ pub async fn survey_intro(
 
 }
 
-#[get("/first_lens_form/{community_code}")]
-pub async fn lens_form_handler(
+#[get("/first_experience_form/{community_code}")]
+pub async fn experience_form_handler(
     data: web::Data<AppData>,
     web::Path(community_code): web::Path<String>, 
     node_names: web::Data<Mutex<Vec<(String, String)>>>,
@@ -142,7 +142,7 @@ pub async fn lens_form_handler(
             ctx.insert("community", &community);
             
         
-            let rendered = data.tmpl.render("survey/first_lens_form.html", &ctx).unwrap();
+            let rendered = data.tmpl.render("survey/first_experience_form.html", &ctx).unwrap();
             HttpResponse::Ok().body(rendered)
         },
         Err(e) => {
@@ -153,14 +153,14 @@ pub async fn lens_form_handler(
 
 }
 
-#[post("/first_lens_form/{community_code}")]
-pub async fn handle_lens_form_input(
+#[post("/first_experience_form/{community_code}")]
+pub async fn handle_experience_form_input(
     _data: web::Data<AppData>,
     graph: web::Data<Mutex<CytoGraph>>,
     node_names: web::Data<Mutex<Vec<(String, String)>>>,
     web::Path(community_code): web::Path<String>, 
     req: HttpRequest, 
-    form: web::Form<FirstLensForm>,
+    form: web::Form<FirstExperienceForm>,
 ) -> impl Responder {
     println!("Handling Post Request: {:?}", req);
 
@@ -171,7 +171,7 @@ pub async fn handle_lens_form_input(
             
                 // validate form has data or re-load form
                 if form.name.is_empty() || form.response_1.is_empty() {
-                    return HttpResponse::Found().header("Location", String::from("/first_lens_form")).finish()
+                    return HttpResponse::Found().header("Location", String::from("/first_experience_form")).finish()
                 };
             
                 // associate person to community
@@ -252,8 +252,8 @@ pub async fn handle_lens_form_input(
                     }
                 };
                 
-                // Insert lens to db
-                let l = Lens::new(
+                // Insert experience to db
+                let l = Experience::new(
                     node.node_name.clone(),
                     node.domain_token.clone(),
                     new_person.id,
@@ -262,18 +262,18 @@ pub async fn handle_lens_form_input(
                     inclusivity.to_owned(),
                 );
             
-                let new_lens = Lenses::create(&l).expect("Unable to create lens.");
-                let lens_rep = GEdge::from_lens(&new_lens);
+                let new_experience = Experiences::create(&l).expect("Unable to create experience.");
+                let experience_rep = GEdge::from_experience(&new_experience);
                 
                 let mut g = graph.lock().expect("Unable to unlock graph");
             
-                println!("Pre-lens length: {}", &g.edges.len());
+                println!("Pre-experience length: {}", &g.edges.len());
             
                 g.edges.push(CytoEdge {
-                    data: lens_rep,
+                    data: experience_rep,
                 });
             
-                println!("Post-lens length: {}", &g.edges.len());
+                println!("Post-experience length: {}", &g.edges.len());
             
                 drop(g);
 
@@ -284,12 +284,12 @@ pub async fn handle_lens_form_input(
                 let mut comm_data = comm_data.to_owned();
 
                 comm_data.members += 1;
-                comm_data.lenses += 1;
-                comm_data.inclusivity_vec.push(inclusivity.to_f32().unwrap());
+                comm_data.experiences += 1;
+                comm_data.inclusivity_map.insert(new_experience.id, inclusivity.to_f32().unwrap());
 
-                let total: f32 = comm_data.inclusivity_vec.iter().sum();
+                let total: f32 = comm_data.inclusivity_map.values().sum();
 
-                comm_data.mean_inclusivity = total / comm_data.lenses as f32;
+                comm_data.mean_inclusivity = total / comm_data.experiences as f32;
 
                 community.data = serde_json::to_value(comm_data).unwrap();
 
@@ -298,7 +298,7 @@ pub async fn handle_lens_form_input(
                 match update {
                     Ok(c) => {
                         println!("Community {} updated", c.tag);
-                        return HttpResponse::Found().header("Location", format!("/add_lens_form/{}", new_person.code)).finish()
+                        return HttpResponse::Found().header("Location", format!("/add_experience_form/{}", new_person.code)).finish()
                     },
                     Err(e) => {
                         println!("Community update failed: {}", e);
@@ -314,8 +314,8 @@ pub async fn handle_lens_form_input(
     }
 }
 
-#[get("/add_lens_form/{code}")]
-pub async fn add_lens_form_handler(
+#[get("/add_experience_form/{code}")]
+pub async fn add_experience_form_handler(
     web::Path(code): web::Path<String>, 
     data: web::Data<AppData>,
     node_names: web::Data<Mutex<Vec<(String, String)>>>,
@@ -341,28 +341,28 @@ pub async fn add_lens_form_handler(
     // add node_names for navbar drop down
     ctx.insert("node_names", &node_names.lock().expect("Unable to unlock").clone());
 
-    // add pull for lens data
-    let people_with_lenses = RenderPerson::from(p).expect("Unable to load lenses");
+    // add pull for experience data
+    let people_with_experiences = RenderPerson::from(&p, true).expect("Unable to load experiences");
 
-    ctx.insert("people_lenses", &people_with_lenses);
+    ctx.insert("people_experiences", &people_with_experiences);
 
-    let rendered = data.tmpl.render(".survey/add_lens_form.html", &ctx).unwrap();
+    let rendered = data.tmpl.render("survey/add_experience_form.html", &ctx).unwrap();
     HttpResponse::Ok().body(rendered)
 }
 
-#[post("/add_lens_form/{code}")]
-pub async fn add_handle_lens_form_input(
+#[post("/add_experience_form/{code}")]
+pub async fn add_handle_experience_form_input(
     web::Path(code): web::Path<String>,
     _data: web::Data<AppData>,
     graph: web::Data<Mutex<CytoGraph>>,
     node_names: web::Data<Mutex<Vec<(String, String)>>>,
     _req: HttpRequest, 
-    form: web::Form<AddLensForm>,
+    form: web::Form<AddExperienceForm>,
 ) -> impl Responder {
 
     // validate form has data or re-load form
     if form.name.is_empty() || form.response_1.is_empty() {
-        return HttpResponse::Found().header("Location", format!("/add_lens_form/{}", &code)).finish()
+        return HttpResponse::Found().header("Location", format!("/add_experience_form/{}", &code)).finish()
     };
 
     println!("Find person");
@@ -423,7 +423,7 @@ pub async fn add_handle_lens_form_input(
         }
     };
     
-    let l = Lens::new(
+    let l = Experience::new(
         node.node_name.clone(),
         node.domain_token.clone(),
         p.id,
@@ -432,35 +432,34 @@ pub async fn add_handle_lens_form_input(
         inclusivity.to_owned(),
     );
 
-    let new_lens = Lenses::create(&l).expect("Unable to create lens.");
-    let lens_rep = GEdge::from_lens(&new_lens);
+    let new_experience = Experiences::create(&l).expect("Unable to create experience.");
+    let experience_rep = GEdge::from_experience(&new_experience);
     
     let mut g = graph.lock().expect("Unable to unlock graph");
 
-    println!("Pre-lens length: {}", &g.edges.len());
+    println!("Pre-experience length: {}", &g.edges.len());
 
     g.edges.push(CytoEdge {
-        data: lens_rep,
+        data: experience_rep,
     });
 
-    println!("Post-lens length: {}", &g.edges.len());
+    println!("Post-experience length: {}", &g.edges.len());
 
     drop(g);
 
     // update the community based on new data
-
     let mut community = Communities::find(p.community_id).expect("Unable to load community");
 
     let comm_data: CommunityData = serde_json::from_value(community.data).unwrap();
 
     let mut comm_data = comm_data.to_owned();
 
-    comm_data.lenses += 1;
-    comm_data.inclusivity_vec.push(inclusivity.to_f32().unwrap());
+    comm_data.experiences += 1;
+    comm_data.inclusivity_map.insert(new_experience.id, inclusivity.to_f32().unwrap());
 
-    let total: f32 = comm_data.inclusivity_vec.iter().sum();
+    let total: f32 = comm_data.inclusivity_map.values().sum();
 
-    comm_data.mean_inclusivity = total / comm_data.lenses as f32;
+    comm_data.mean_inclusivity = total / comm_data.inclusivity_map.len() as f32;
 
     community.data = serde_json::to_value(comm_data).unwrap();
 
@@ -469,7 +468,7 @@ pub async fn add_handle_lens_form_input(
     match update {
         Ok(c) => {
             println!("Community {} updated", c.tag);
-            return HttpResponse::Found().header("Location", format!("/add_lens_form/{}", code)).finish()
+            return HttpResponse::Found().header("Location", format!("/add_experience_form/{}", code)).finish()
         },
         Err(e) => {
             println!("Community update failed: {}", e);

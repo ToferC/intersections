@@ -22,11 +22,11 @@
                 {% endif %}
             </ul>
 
-            <form name="DeleteUserForm" id="deleteUserForm" action=/delete_user/{{ user.id }} method=POST>
+            <form name="DeleteForm" id="deleteForm" action=/delete_user/{{ user.id }} method=POST>
 
                 <label>
                     <strong>Delete User: {{ user.user_name }}</strong>
-                    <input class="form-control form-control-lg" type="text" name="user_verify" placeholder="User to delete..." required>
+                    <input class="form-control form-control-lg" type="text" name="verify" placeholder="User to delete..." required>
                     <small id="code_help" class="form-text text-muted">Enter the user name of the user you would like to delete. This action is permanent.
                     </small>
                 </label>
@@ -54,7 +54,7 @@
     window.onSubmit = onSubmit;
 
     function onSubmit(token) {
-    document.getElementById("deleteUserForm").submit();
+    document.getElementById("deleteForm").submit();
     };
 
 </script>

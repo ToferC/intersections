@@ -10,16 +10,12 @@ use serde::{Deserialize};
 
 use crate::{AppData, extract_identity_data};
 use crate::models::{User, Communities};
+use crate::handlers::DeleteForm;
 
 #[derive(Deserialize, Debug)]
 pub struct UserForm {
     user_name: String,
     email: String,
-}
-
-#[derive(Deserialize, Debug)]
-pub struct DeleteUserForm {
-    user_verify: String,
 }
 
 #[get("/user_index")]
@@ -270,7 +266,7 @@ pub async fn delete_user(
     _data: web::Data<AppData>,
     _req: HttpRequest,
     id: Identity,
-    form: web::Form<DeleteUserForm>,
+    form: web::Form<DeleteForm>,
 ) -> impl Responder {
 
     let (session_user, role) = extract_identity_data(&id);
@@ -284,7 +280,7 @@ pub async fn delete_user(
         
         match user {
             Ok(u) => {
-                if form.user_verify.trim().to_string() == u.user_name {
+                if form.verify.trim().to_string() == u.user_name {
                     println!("User matches verify string - deleting");
                     // forget id if delete target is user
                     if session_user == u.slug {

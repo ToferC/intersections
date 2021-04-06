@@ -31,7 +31,7 @@ table! {
 table! {
     use diesel::sql_types::*;
 
-    lenses (id) {
+    experiences (id) {
         id -> Int4,
         node_name -> Varchar,
         node_domain -> Varchar,
@@ -97,14 +97,14 @@ table! {
 }
 
 joinable!(communities -> users (user_id));
-joinable!(lenses -> nodes (node_id));
-joinable!(lenses -> people (person_id));
+joinable!(experiences -> nodes (node_id));
+joinable!(experiences -> people (person_id));
 joinable!(people -> communities (community_id));
 
 allow_tables_to_appear_in_same_query!(
     communities,
     email_verification_code,
-    lenses,
+    experiences,
     nodes,
     password_reset_token,
     people,

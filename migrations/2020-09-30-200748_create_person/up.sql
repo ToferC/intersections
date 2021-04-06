@@ -49,7 +49,7 @@ CREATE TABLE nodes (
     slug VARCHAR(48) UNIQUE NOT NULL
 );
 
-CREATE TABLE lenses (
+CREATE TABLE experiences (
     id SERIAL PRIMARY KEY,
     node_name VARCHAR(32) NOT NULL,
     node_domain VARCHAR(10) NOT NULL CHECK (node_domain IN ('person', 'role', 'system')),

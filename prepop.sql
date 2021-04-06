@@ -16,7 +16,7 @@ VALUES
     ('executive', 'role'),
     ('innovator', 'role');
 
-INSERT INTO lenses (node_name, node_domain, person_id, node_id, statements, inclusivity)
+INSERT INTO experience (node_name, node_domain, person_id, node_id, statements, inclusivity)
 VALUES
     ('father', 'person', 1, 1, '{"tired", "not doing enough", "joyful"}', -0.18),
     ('manager', 'role', 1, 2, '{"pulled many directions", "influential", "stressed"}', -0.25),

@@ -1,15 +1,23 @@
 use actix_web::{web};
 
 use crate::handlers::{
-    // forms
-    lens_form_handler, 
-    handle_lens_form_input,
-    add_handle_lens_form_input,
-    // pages
+    // base
     index,
+    
+    // survey
     survey_intro,
+    experience_form_handler, 
+    handle_experience_form_input,
+    add_handle_experience_form_input,
+
+    // experience
+    find_experience,
+
+    // people
     person_page,
-    find_lens,
+    delete_person,
+    delete_person_post,
+
     // emails
     email_person_info,
     send_community_email,
@@ -20,7 +28,7 @@ use crate::handlers::{
     community_node_graph,
     // API
     api_base,
-    add_lens_form_handler,
+    add_experience_form_handler,
     person_api,
     // graphs
     full_person_graph,
@@ -69,11 +77,21 @@ use crate::handlers::{
     };
 
 pub fn init_routes(config: &mut web::ServiceConfig) {
-    // pages
+    // base
     config.service(index);
+    config.service(find_experience);
+    
+    // survey
     config.service(survey_intro);
+    config.service(experience_form_handler);
+    config.service(handle_experience_form_input);
+    config.service(add_experience_form_handler);
+    config.service(add_handle_experience_form_input);
+    
+    // people
     config.service(person_page);
-    config.service(find_lens);
+    config.service(delete_person);
+    config.service(delete_person_post);
 
     // emails
     config.service(email_person_info);
@@ -93,11 +111,6 @@ pub fn init_routes(config: &mut web::ServiceConfig) {
     // api
     config.service(api_base);
     config.service(person_api);
-    // forms
-    config.service(lens_form_handler);
-    config.service(handle_lens_form_input);
-    config.service(add_lens_form_handler);
-    config.service(add_handle_lens_form_input);
     // graphs
     config.service(full_person_graph);
     config.service(full_node_graph);

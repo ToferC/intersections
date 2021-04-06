@@ -5,9 +5,9 @@ use bigdecimal::{ToPrimitive};
 use std::collections::{BTreeMap, HashMap};
 use inflector::Inflector;
 
-use crate::models::{Lenses, Nodes, People};
+use crate::models::{Experiences, Nodes, People};
 
-use super::AggregateLens;
+use super::AggregateExperience;
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct CytoGraph {
@@ -33,7 +33,7 @@ pub struct GEdge {
 }
 
 impl GEdge {
-    pub fn from_lens(l: &Lenses) -> GEdge {
+    pub fn from_experience(l: &Experiences) -> GEdge {
         let edge = GEdge {
             id: format!("P{}-{}", &l.person_id, &l.node_name.trim()),
             source: format!("P-{}", &l.person_id),
@@ -106,7 +106,7 @@ impl GNode {
         node
     }
 
-    pub fn from_lens(l: &Lenses, community: &Option<String>) -> GNode {
+    pub fn from_experience(l: &Experiences, community: &Option<String>) -> GNode {
 
         let (colour, shape): (String, String) = if l.node_domain == "person" {
             (String::from("green"), String::from("rectangle"))
@@ -135,7 +135,7 @@ impl GNode {
         node
     }
 
-    pub fn from_agg_lens(a: &AggregateLens, community: &Option<String>) -> GNode {
+    pub fn from_agg_experience(a: &AggregateExperience, community: &Option<String>) -> GNode {
 
         let (colour, shape): (String, String) = if a.domain == "person" {
             (String::from("green"), String::from("rectangle"))
@@ -165,12 +165,12 @@ impl GNode {
     }
 }
 
-/// Accepts vectors of people, nodes and lenses and formats the data into
+/// Accepts vectors of people, nodes and experiences and formats the data into
 /// JSON acceptable to Cytoscape.js
 pub fn generate_cyto_graph(
     people_vec: Vec<People>,
     node_vec: Vec<Nodes>,
-    lens_vec: Vec<Lenses>,
+    experience_vec: Vec<Experiences>,
     community: Option<String>,
 ) -> CytoGraph {
 
@@ -195,9 +195,9 @@ pub fn generate_cyto_graph(
         });
     };
 
-    for l in lens_vec {
+    for l in experience_vec {
 
-        let edge = GEdge::from_lens(&l);
+        let edge = GEdge::from_experience(&l);
 
         cyto_edge_array.push(CytoEdge {
             data: edge,
@@ -213,7 +213,7 @@ pub fn generate_cyto_graph(
 }
 
 pub fn generate_node_cyto_graph(
-    lens_vec: Vec<Lenses>,
+    experience_vec: Vec<Experiences>,
     people_connections: HashMap<i32, Vec<String>>,
     community: Option<String>,
 ) -> CytoGraph {
@@ -225,42 +225,42 @@ pub fn generate_node_cyto_graph(
     // what else do I need to render the graph?
     let mut edge_map: BTreeMap<String, GEdge> = BTreeMap::new();
 
-    // prep for aggregating lenses
+    // prep for aggregating experiences
     let mut node_id_vec: Vec<i32> = Vec::new();
 
-    for l in &lens_vec {
+    for l in &experience_vec {
         node_id_vec.push(l.node_id);
     };
 
     node_id_vec.sort();
     node_id_vec.dedup();
 
-    let mut aggregate_lenses: Vec<AggregateLens> = Vec::new();
+    let mut aggregate_experiences: Vec<AggregateExperience> = Vec::new();
 
     for i in node_id_vec {
-        let mut temp_lens_vec: Vec<Lenses> = Vec::new();
+        let mut temp_experience_vec: Vec<Experiences> = Vec::new();
 
-        for l in &lens_vec {
+        for l in &experience_vec {
 
             if i == l.node_id {
-                temp_lens_vec.push(l.clone());
+                temp_experience_vec.push(l.clone());
             }
             // count people associated to multiple similar nodes
-            // show connections across the nodes and lenses
+            // show connections across the nodes and experiences
         };
 
-        if temp_lens_vec.len() > 0 {
-            let agg_lenses = AggregateLens::from(temp_lens_vec);
-            aggregate_lenses.push(agg_lenses);
+        if temp_experience_vec.len() > 0 {
+            let agg_experiences = AggregateExperience::from(temp_experience_vec);
+            aggregate_experiences.push(agg_experiences);
         }
     };
 
-    aggregate_lenses.sort_by(|a, b|b.count.partial_cmp(&a.count).unwrap());
-    aggregate_lenses.dedup();
+    aggregate_experiences.sort_by(|a, b|b.count.partial_cmp(&a.count).unwrap());
+    aggregate_experiences.dedup();
 
-    for a in &aggregate_lenses {
+    for a in &aggregate_experiences {
 
-        let n = GNode::from_agg_lens(&a, &community);
+        let n = GNode::from_agg_experience(&a, &community);
 
         cyto_node_array.push(CytoNode {
             data: n,

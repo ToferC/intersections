@@ -6,7 +6,7 @@ use tera::{Context};
 use diesel::prelude::*;
 use diesel::{QueryDsl, BelongingToDsl};
 
-use crate::models::{Lenses, Nodes, People, Communities};
+use crate::models::{Experiences, Nodes, People};
 use database;
 
 use crate::schema::{nodes};
@@ -36,7 +36,7 @@ pub async fn index(
 #[get("/api")]
 pub async fn api_base() -> impl Responder {
 
-    let data = Lenses::load_api_data().unwrap();
+    let data = Experiences::load_api_data().unwrap();
 
     HttpResponse::Ok().json(data)
 }
@@ -64,17 +64,17 @@ pub async fn person_api(
         people_vec.push(target_person);
     };
 
-    // join lenses and nodes
-    let node_lenses: Vec<(Lenses, Nodes)> = Lenses::belonging_to(&people_vec)
+    // join experiences and nodes
+    let node_experiences: Vec<(Experiences, Nodes)> = Experiences::belonging_to(&people_vec)
         .inner_join(nodes::table)
-        .load::<(Lenses, Nodes)>(&conn)
+        .load::<(Experiences, Nodes)>(&conn)
         .expect("Error leading people");
 
-    // group node_lenses by people
-    let grouped = node_lenses.grouped_by(&people_vec);
+    // group node_experiences by people
+    let grouped = node_experiences.grouped_by(&people_vec);
 
     // structure result
-    let result: Vec<(People, Vec<(Lenses, Nodes)>)> = people_vec
+    let result: Vec<(People, Vec<(Experiences, Nodes)>)> = people_vec
         .into_iter()
         .zip(grouped)
         .collect();
@@ -82,10 +82,10 @@ pub async fn person_api(
     HttpResponse::Ok().json(result)
 }
 
-#[get("/lens/{id}")]
-pub async fn find_lens(web::Path(id): web::Path<i32>) -> impl Responder {
+#[get("/experience/{id}")]
+pub async fn find_experience(web::Path(id): web::Path<i32>) -> impl Responder {
     
-    HttpResponse::Ok().json(Lenses::find(id).unwrap())
+    HttpResponse::Ok().json(Experiences::find(id).unwrap())
 }
 
 

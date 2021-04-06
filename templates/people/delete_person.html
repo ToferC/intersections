@@ -1,49 +1,38 @@
 {% extends "base.html" %}
 
 {% block title %}
-    <title>Delete User: {{ user.user_name }}</title>
+    <title>Delete Person: {{ person.code }}</title>
 {% endblock title %}
 
 {% block content %}
     <div class="col m-md-2 m-1">
         <br>
-        <h1>User page for {{ user.user_name }}</h1>
-        <p>User details and account management.</p>
+        <h1>Delete Person: {{ person.code }}</h1>
+        <p>Delete your profile on Intersectional-Data.ca.</p>
+        <p>Date Created: {{ person.date_created }}</p>
 
-            <p>{{ user.user_name }}</p>
+        <form name="DeleteForm" id="deleteForm" action=/delete_person/{{ person.code }} method=POST>
 
-            <p>{{ user.email }}</p>
+            <label>
+                <strong>To delete your profile, enter: "Delete my profile" with no quotations in the field below.</strong>
+                <input class="form-control form-control-lg" type="text" name="verify" placeholder="Delete my profile" required>
+                <small id="code_help" class="form-text text-muted">Enter "Delete my profile" to continue. This action is permanent.
+                </small>
+            </label>
+            <hr>
+    
+            <button 
+                class="btn g-recaptcha btn-danger" 
+                data-sitekey="6LfAltkZAAAAAN7rJGBvRUPm36M1aiL7q2a8SznA" 
+                data-callback='onSubmit' 
+                data-action='submit'
+                type=submit
+                >Delete</button>
 
-            <ul>
-                {% if user.communities %}
-                {% for community in user.communities %}
-                    <li>{{ community.tag }}</li>
-                {% endfor %}
-                {% endif %}
-            </ul>
-
-            <form name="DeleteUserForm" id="deleteUserForm" action=/delete_user/{{ user.id }} method=POST>
-
-                <label>
-                    <strong>Delete User: {{ user.user_name }}</strong>
-                    <input class="form-control form-control-lg" type="text" name="user_verify" placeholder="User to delete..." required>
-                    <small id="code_help" class="form-text text-muted">Enter the user name of the user you would like to delete. This action is permanent.
-                    </small>
-                </label>
-                <hr>
+            <button class="btn btn-dark" href="/">Cancel</button>
+            <hr>
         
-                <button 
-                    class="btn g-recaptcha btn-danger" 
-                    data-sitekey="6LfAltkZAAAAAN7rJGBvRUPm36M1aiL7q2a8SznA" 
-                    data-callback='onSubmit' 
-                    data-action='submit'
-                    type=submit
-                    >Delete</button>
-
-                <button class="btn btn-dark" href="/user_index">Return</button>
-                <hr>
-            
-            </form>
+        </form>
 
     </div>
 {% endblock content %}
@@ -54,7 +43,7 @@
     window.onSubmit = onSubmit;
 
     function onSubmit(token) {
-    document.getElementById("deleteUserForm").submit();
+    document.getElementById("deleteForm").submit();
     };
 
 </script>

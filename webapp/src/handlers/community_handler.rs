@@ -120,7 +120,7 @@ pub async fn view_community(
     let mut owner = false;
 
     if &session_user != "" {
-        let user = User::find_from_slug(&&session_user).expect("Unable to load user");
+        let user = User::find_from_slug(&session_user).expect("Unable to load user");
 
         ctx.insert("user", &user);
         

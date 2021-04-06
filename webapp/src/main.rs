@@ -50,11 +50,11 @@ async fn main() -> std::io::Result<()> {
     println!("Loading data for graph");
     let people_vec = models::People::find_all_real().expect("Unable to load people");
     let node_vec = models::Nodes::find_all().expect("Unable to load nodes");
-    let lens_vec = models::Lenses::find_all_real().expect("Unable to load lenses");
+    let experience_vec = models::Experiences::find_all_real().expect("Unable to load experience");
 
     // load master graph into app data
     println!("Generate graph representation");
-    let graph: models::CytoGraph = models::generate_cyto_graph(people_vec, node_vec, lens_vec, None);
+    let graph: models::CytoGraph = models::generate_cyto_graph(people_vec, node_vec, experience_vec, None);
 
     let node_names = models::Nodes::find_all_linked_names_slugs().expect("Unable to load names");
     
