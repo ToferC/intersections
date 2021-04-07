@@ -51,7 +51,7 @@ pub async fn global_graph(
     id:Identity,
 ) -> impl Responder {
         
-    let experience_vec = Experiences::find_all().expect("Unable to load experiences");
+    let experience_vec = Experiences::find_all_real().expect("Unable to load experiences");
 
     // create vec of bridge connections from people
     let mut people_connections: HashMap<i32, Vec<String>> = HashMap::new();
