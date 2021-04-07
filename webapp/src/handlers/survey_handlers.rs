@@ -8,7 +8,7 @@ use serde::{Deserialize, Serialize};
 
 use crate::{AppData, extract_identity_data};
 use crate::models::{Experience, Experiences, NewPerson, People, Node, Nodes, Communities, CommunityData};
-use crate::models::{CytoGraph, CytoNode, CytoEdge, GNode, GEdge};
+use crate::models::{CytoGraph};
 use error_handler::error_handler::CustomError;
 
 #[derive(Deserialize, Debug)]
@@ -156,7 +156,7 @@ pub async fn experience_form_handler(
 #[post("/first_experience_form/{community_code}")]
 pub async fn handle_experience_form_input(
     _data: web::Data<AppData>,
-    graph: web::Data<Mutex<CytoGraph>>,
+    _graph: web::Data<Mutex<CytoGraph>>,
     node_names: web::Data<Mutex<Vec<(String, String)>>>,
     web::Path(community_code): web::Path<String>, 
     req: HttpRequest, 
@@ -207,17 +207,6 @@ pub async fn handle_experience_form_input(
             
                 // Post person to db
                 let new_person = People::create(&person.clone()).expect("Unable to add person to DB");
-            
-                // add person to graph representation
-                let person_node = GNode::from_person(&new_person);
-                
-                let mut g = graph.lock().expect("Unable to unlock graph");
-                
-                g.nodes.push(CytoNode {
-                        data: person_node,
-                    });
-            
-                drop(g);
                 
                 // Check if node exists, if not create it
                 let nodes = Nodes::find_all().unwrap();
@@ -232,7 +221,8 @@ pub async fn handle_experience_form_input(
                     None => {
                         // no target
                         let new_node = Nodes::create(&node).expect("Unable to create node.");
-            
+                        
+                        /*
                         let node_rep = GNode::from_node(&new_node, &Some(community.slug.to_owned()));
             
                         let mut g = graph.lock().expect("Unable to unlock graph");
@@ -240,12 +230,14 @@ pub async fn handle_experience_form_input(
                         g.nodes.push(CytoNode {
                             data: node_rep,
                         });
+
+                        drop(g);
+                        */
             
                         let mut temp_data = node_names.lock().expect("Unable to unlock node_names");
             
                         temp_data.push((new_node.node_name, new_node.slug));
             
-                        drop(g);
                         drop(temp_data);
             
                         new_node.id
@@ -263,6 +255,8 @@ pub async fn handle_experience_form_input(
                 );
             
                 let new_experience = Experiences::create(&l).expect("Unable to create experience.");
+                
+                /*
                 let experience_rep = GEdge::from_experience(&new_experience);
                 
                 let mut g = graph.lock().expect("Unable to unlock graph");
@@ -276,9 +270,9 @@ pub async fn handle_experience_form_input(
                 println!("Post-experience length: {}", &g.edges.len());
             
                 drop(g);
+                */
 
                 // update the community based on new data
-
                 let comm_data: CommunityData = serde_json::from_value(community.data).unwrap();
 
                 let mut comm_data = comm_data.to_owned();
@@ -354,7 +348,7 @@ pub async fn add_experience_form_handler(
 pub async fn add_handle_experience_form_input(
     web::Path(code): web::Path<String>,
     _data: web::Data<AppData>,
-    graph: web::Data<Mutex<CytoGraph>>,
+    _graph: web::Data<Mutex<CytoGraph>>,
     node_names: web::Data<Mutex<Vec<(String, String)>>>,
     _req: HttpRequest, 
     form: web::Form<AddExperienceForm>,
@@ -406,6 +400,7 @@ pub async fn add_handle_experience_form_input(
             // no target
             let new_node = Nodes::create(&node).expect("Unable to create node.");
 
+            /*
             let node_rep = GNode::from_node(&new_node, &None);
 
             let mut g = graph.lock().expect("Unable to unlock graph");
@@ -413,6 +408,8 @@ pub async fn add_handle_experience_form_input(
             g.nodes.push(CytoNode {
                 data: node_rep,
             });
+
+            */
 
             // add node_names to appData
             let mut nn = node_names.lock().expect("Unable to unlock");
@@ -433,6 +430,8 @@ pub async fn add_handle_experience_form_input(
     );
 
     let new_experience = Experiences::create(&l).expect("Unable to create experience.");
+    
+    /*
     let experience_rep = GEdge::from_experience(&new_experience);
     
     let mut g = graph.lock().expect("Unable to unlock graph");
@@ -446,6 +445,7 @@ pub async fn add_handle_experience_form_input(
     println!("Post-experience length: {}", &g.edges.len());
 
     drop(g);
+    */
 
     // update the community based on new data
     let mut community = Communities::find(p.community_id).expect("Unable to load community");

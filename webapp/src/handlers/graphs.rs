@@ -10,8 +10,10 @@ use std::collections::HashMap;
 use crate::models::{Experiences, Communities, People, User};
 use crate::models::{CytoGraph, generate_node_cyto_graph};
 
-#[get("/full_person_graph")]
-pub async fn full_person_graph(
+#[get("/data_global_graph")]
+pub async fn data_global_graph(
+    // no longer using appdata to hold graph
+    // this function is a placeholder in case we go back here
     data: web::Data<AppData>,
     graph: web::Data<Mutex<CytoGraph>>,
     node_names: web::Data<Mutex<Vec<(String, String)>>>,
@@ -38,18 +40,18 @@ pub async fn full_person_graph(
     // add node_names for navbar drop down
     ctx.insert("node_names", &node_names.lock().expect("Unable to unlock").clone());
     
-    let rendered = data.tmpl.render("graphs/network_graph.html", &ctx).unwrap();
+    let rendered = data.tmpl.render("graphs/node_network_graph.html", &ctx).unwrap();
     HttpResponse::Ok().body(rendered)
 }
 
-#[get("/full_node_graph")]
-pub async fn full_node_graph(
+#[get("/global_graph")]
+pub async fn global_graph(
     data: web::Data<AppData>,
     node_names: web::Data<Mutex<Vec<(String, String)>>>,
     id:Identity,
 ) -> impl Responder {
         
-    let experience_vec = Experiences::find_all_real().expect("Unable to load experiences");
+    let experience_vec = Experiences::find_all().expect("Unable to load experiences");
 
     // create vec of bridge connections from people
     let mut people_connections: HashMap<i32, Vec<String>> = HashMap::new();

@@ -6,8 +6,6 @@ use crate::{AppData, extract_identity_data};
 use tera::{Context};
 use diesel::prelude::*;
 use diesel::{QueryDsl, BelongingToDsl};
-use bigdecimal::{BigDecimal, ToPrimitive};
-use num_bigint::{ToBigInt};
 
 use crate::models::{Experiences, Nodes, People, Communities, CommunityData, generate_cyto_graph};
 use database;

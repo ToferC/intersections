@@ -30,7 +30,7 @@ pub use self::survey_handlers::{
     RenderPerson,
 };
 pub use self::routes::init_routes;
-pub use self::graphs::{full_person_graph, full_node_graph, full_community_node_graph};
+pub use self::graphs::{global_graph, full_community_node_graph};
 pub use self::people_handlers::{person_graph, person_page, delete_person, delete_person_post};
 pub use self::node_handlers::{node_graph, node_page, community_node_page, community_node_graph};
 pub use self::user_handlers::{user_index, user_page_handler, delete_user, delete_user_handler, edit_user, edit_user_post};

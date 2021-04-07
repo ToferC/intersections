@@ -337,7 +337,5 @@ pub fn generate_node_cyto_graph(
         edges: cyto_edge_array,
     };
 
-    println!("{:?}", &graph);
-
     graph
 }

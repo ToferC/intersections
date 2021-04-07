@@ -8,7 +8,7 @@
     <div class="col-md m-md-2 m-1">
         <br>
         <h1>{{ node.node_name | title }} - {{ node.domain_token | title }}</h1>
-        <p><a href="/full_person_graph">View full graph</a> | <a href="/full_node_graph">View global graph</a> | <a href="/">Return to Index</a></p>
+        <p><a href="/global_graph">View global graph</a> | <a href="/">Return to Index</a></p>
         <p><a href="/node_graph/{{ node.slug }}">View graph for {{ node.node_name }}</a></p>
 
         <hr>
@@ -86,7 +86,7 @@
             They are presented here to show how the nodes relate and how by looking at more than one facet of a person's experience, 
             we can better understand our people's needs.</p>
         <hr>
-                {% for experience in other_experience %}
+                {% for experience in other_experiences %}
                     <table>
                         <tr>
                             <th style="text-align: center;">Experience</th>

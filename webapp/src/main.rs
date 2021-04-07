@@ -47,18 +47,26 @@ async fn main() -> std::io::Result<()> {
     };
 
     // to prepopulate database for test instance run databaseutils
+
+    /*
     println!("Loading data for graph");
-    let people_vec = models::People::find_all_real().expect("Unable to load people");
-    let node_vec = models::Nodes::find_all().expect("Unable to load nodes");
     let experience_vec = models::Experiences::find_all_real().expect("Unable to load experience");
+    
+    // create vec of bridge connections from people
+    let mut people_connections: HashMap<i32, Vec<String>> = HashMap::new();
+
+    for l in &experience_vec {
+        people_connections.entry(l.person_id).or_insert(Vec::new()).push(l.node_name.to_owned()); 
+    };
 
     // load master graph into app data
     println!("Generate graph representation");
-    let graph: models::CytoGraph = models::generate_cyto_graph(people_vec, node_vec, experience_vec, None);
+    let graph: models::CytoGraph = models::generate_node_cyto_graph(experience_vec, people_connections, None);
+    let x = Arc::new(Mutex::new(graph));
+    */
 
     let node_names = models::Nodes::find_all_linked_names_slugs().expect("Unable to load names");
     
-    let x = Arc::new(Mutex::new(graph));
     let y = Arc::new(Mutex::new(node_names));
     
     println!("Serving on: {}:{}", &host, &port);
@@ -75,7 +83,7 @@ async fn main() -> std::io::Result<()> {
         // mail client
         let sg = SGClient::new(sendgrid_key.clone());
             
-        let x = Arc::clone(&x);
+        // let graph = Arc::clone(&x);
         let node_names = Arc::clone(&y);
         
         // load node_names for navbar population
@@ -92,7 +100,7 @@ async fn main() -> std::io::Result<()> {
                 tmpl: tera,
                 mail_client: sg,
             })
-            .app_data(web::Data::from(x))
+            // .app_data(web::Data::from(graph))
             .app_data(web::Data::from(node_names))
             .wrap(IdentityService::new(
                 CookieIdentityPolicy::new(&cookie_secret_key.as_bytes())

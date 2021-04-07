@@ -17,10 +17,9 @@
 {% block content %}
 <div class="col m-md-2 m-1">
   <h1>{{ title }}</h1>
-  <p><a href="/full_person_graph">View person graph</a> | <a href="/full_node_graph">View global graph</a> | <a href="/">Return to Index</a></p>
+  <p><a href="/global_graph">View global graph</a> | <a href="/">Return to Index</a></p>
   <hr>
   <div id="cy"></div>
-  <hr>
 </div>
 <!-- Load application code at the end to ensure DOM is loaded -->
 {% endblock content %}
@@ -67,8 +66,8 @@
   
           layout: {
             name: 'fcose',
-            nodeSeparation: 500,
-            nodeRepulsion: 4000,
+            nodeSeparation: 750,
+            nodeRepulsion: 5000,
             idealEdgeLength: 170
           }
   
