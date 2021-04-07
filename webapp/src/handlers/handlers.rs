@@ -33,6 +33,27 @@ pub async fn index(
     HttpResponse::Ok().body(rendered)
 }
 
+pub async fn f404(
+    data: web::Data<AppData>,
+    node_names: web::Data<Mutex<Vec<(String, String)>>>, 
+    _req:HttpRequest,
+    id: Identity,
+) -> impl Responder {
+
+    let mut ctx = Context::new();
+
+    // Get session data and add to context
+    let (session_user, role) = extract_identity_data(&id);
+    ctx.insert("session_user", &session_user);
+    ctx.insert("role", &role);
+
+    // add node_names for navbar drop down
+    ctx.insert("node_names", &node_names.lock().expect("Unable to unlock").clone());
+
+    let rendered = data.tmpl.render("404.html", &ctx).unwrap();
+    HttpResponse::Ok().body(rendered)
+}
+
 #[get("/api")]
 pub async fn api_base() -> impl Responder {
 

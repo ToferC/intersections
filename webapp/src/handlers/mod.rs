@@ -19,7 +19,7 @@ mod utility {
 }
 
 pub use self::handlers::{api_base, index,
-    find_experience, person_api};
+    find_experience, person_api, f404};
     
 pub use self::survey_handlers::{
     survey_intro,
