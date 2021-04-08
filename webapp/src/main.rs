@@ -1,6 +1,6 @@
 use std::env;
 use std::sync::{Mutex, Arc};
-use actix_web::{App, HttpServer, middleware, web, guard, HttpResponse};
+use actix_web::{App, HttpServer, middleware, web, guard};
 use actix_identity::{CookieIdentityPolicy, IdentityService};
 use actix_web_static_files;
 use tera::Tera;

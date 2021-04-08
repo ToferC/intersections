@@ -1,4 +1,4 @@
-use std::sync::Mutex;
+use std::sync::{Mutex, MutexGuard};
 use actix_web::{web, HttpRequest, HttpResponse, Responder, post, get};
 use bigdecimal::{BigDecimal, ToPrimitive};
 use actix_identity::Identity;
@@ -156,7 +156,6 @@ pub async fn experience_form_handler(
 #[post("/first_experience_form/{community_code}")]
 pub async fn handle_experience_form_input(
     _data: web::Data<AppData>,
-    _graph: web::Data<Mutex<CytoGraph>>,
     node_names: web::Data<Mutex<Vec<(String, String)>>>,
     web::Path(community_code): web::Path<String>, 
     req: HttpRequest, 
@@ -234,7 +233,7 @@ pub async fn handle_experience_form_input(
                         drop(g);
                         */
             
-                        let mut temp_data = node_names.lock().expect("Unable to unlock node_names");
+                        let mut temp_data: MutexGuard<Vec<(String, String)>> = node_names.lock().expect("Unable to unlock node_names");
             
                         temp_data.push((new_node.node_name, new_node.slug));
             
@@ -348,7 +347,6 @@ pub async fn add_experience_form_handler(
 pub async fn add_handle_experience_form_input(
     web::Path(code): web::Path<String>,
     _data: web::Data<AppData>,
-    _graph: web::Data<Mutex<CytoGraph>>,
     node_names: web::Data<Mutex<Vec<(String, String)>>>,
     _req: HttpRequest, 
     form: web::Form<AddExperienceForm>,
