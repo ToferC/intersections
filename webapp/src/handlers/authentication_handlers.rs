@@ -123,6 +123,28 @@ pub async fn register_handler(
     HttpResponse::Ok().body(rendered)
 }
 
+#[get("/registration_error")]
+pub async fn registration_error(
+    data: web::Data<AppData>,
+    node_names: web::Data<Mutex<Vec<(String, String)>>>,
+    _req:HttpRequest,
+    id: Identity,
+) -> impl Responder {
+    
+    let mut ctx = Context::new();
+
+    // Get session data and add to context
+    let (session_user, role) = extract_identity_data(&id);
+    ctx.insert("session_user", &session_user);
+    ctx.insert("role", &role);
+
+    // add node_names for navbar drop down
+    ctx.insert("node_names", &node_names.lock().expect("Unable to unlock").clone());
+
+    let rendered = data.tmpl.render("authentication/registration_error.html", &ctx).unwrap();
+    HttpResponse::Ok().body(rendered)
+}
+
 #[post("/register")]
 pub async fn register_form_input(
     _data: web::Data<AppData>,
@@ -147,17 +169,26 @@ pub async fn register_form_input(
         validated: false,
     };
 
-    let user = User::create(user_data).expect("Unable to load user.");
-    println!("User {} created", &user.user_name);
+    let insert_user = User::create(user_data);
 
-    let session = req.get_session();
-
-    session.set("role", user.role.to_owned()).expect("Unable to set role cookie");
-    session.set("session_user", user.slug.to_owned()).expect("Unable to set user name");
-
-    id.remember(user.slug.to_owned());
-    
-    HttpResponse::Found().header("Location", String::from("/email_verification")).finish()
+    match insert_user {
+        Ok(user) => {
+            println!("User {} created", &user.user_name);
+        
+            let session = req.get_session();
+        
+            session.set("role", user.role.to_owned()).expect("Unable to set role cookie");
+            session.set("session_user", user.slug.to_owned()).expect("Unable to set user name");
+        
+            id.remember(user.slug.to_owned());
+            
+            return HttpResponse::Found().header("Location", String::from("/email_verification")).finish()
+        },
+        Err(err) => {
+            println!("Error: {}", err);
+            return HttpResponse::Found().header("Location", String::from("/registration_error")).finish()
+        },
+    };
 }
 
 #[get("/email_verification")]

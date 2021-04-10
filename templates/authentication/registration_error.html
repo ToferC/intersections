@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+
+{% block title %}
+    <title>Registration Error</title>
+{% endblock title %}
+
+{% block content %}
+    <div class="col m-md-2 m-1">
+        <br>
+        <h1>Registration Error</h1>
+        <p>There was a problem with your registration. You may have already registered with this email address or there may be a problem with the information you entered. You can <a href="log_in">log in</a> or try to register again.</p>
+
+
+        <form name="RegisterForm" id="registerForm" action=/register method=POST>
+        
+        <label>
+            <strong>Email address</strong>
+            <input class="form-control form-control-lg" type="email" name="email" placeholder="yourname@domain.com" required>
+            <small id="code_help" class="form-text text-muted">You will use this to log in.</small>
+        </label>
+        <br>
+
+        <label>
+            <strong>User name</strong>
+            <input class="form-control form-control-lg" type="text" name="user_name" placeholder="Firstname Lastname..." required>
+            <small id="code_help" class="form-text text-muted">The name you'd like to be called when using intersections.</small>
+        </label>
+        <br>
+
+        <label>
+            <strong>Password</strong>
+            <input 
+                class="form-control form-control-lg" 
+                type="password" 
+                name="password" 
+                placeholder="Your password..."
+                minlength=12
+                required
+            >
+            <small id="code_help" class="form-text text-muted">A password of your choice at least 12 characters long.</small>
+        </label>
+
+        <br>
+        <p><strong>After registering you will receive a code by email to verify your email address. Check your email and then enter the code on the next page.</strong></p>
+
+        <hr>
+        <button 
+            class="btn g-recaptcha btn-dark" 
+            data-sitekey="6LfAltkZAAAAAN7rJGBvRUPm36M1aiL7q2a8SznA" 
+            data-callback='onSubmit' 
+            data-action='submit'
+            type=submit
+            >Register</button>
+        <hr>
+    </form>
+                
+    </div>
+{% endblock content %}
+
+{% block scripts %}
+<script>
+
+    window.onSubmit = onSubmit;
+
+    function onSubmit(token) {
+     document.getElementById("registerForm").submit();
+   };
+
+</script>
+{% endblock scripts %}

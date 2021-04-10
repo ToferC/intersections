@@ -38,6 +38,7 @@ use crate::handlers::{
     // registration
     register_form_input,
     register_handler,
+    registration_error,
 
     // email validation
     email_verification,
@@ -118,6 +119,7 @@ pub fn init_routes(config: &mut web::ServiceConfig) {
     // registration and validation
     config.service(register_handler);
     config.service(register_form_input);
+    config.service(registration_error);
     config.service(email_verification);
     config.service(verify_code);
 
