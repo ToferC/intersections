@@ -215,7 +215,7 @@ pub fn import_demo_data(community_id: i32) {
                     Ok(n) => n,
                     Err(e) => {
                         println!("{}", e);
-                        models::Nodes::find_by_name(name.to_owned()).expect("Unable to load node")
+                        models::Nodes::find_by_name(&name).expect("Unable to load node")
                     }
                 };
 

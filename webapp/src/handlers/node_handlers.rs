@@ -1,6 +1,6 @@
 use std::sync::Mutex;
 
-use actix_web::{web, get, HttpResponse, HttpRequest, Responder};
+use actix_web::{web, get, HttpResponse, HttpRequest, Responder, ResponseError};
 use actix_identity::Identity;
 use inflector::Inflector;
 use crate::{AppData, extract_identity_data};
@@ -13,6 +13,7 @@ use std::collections::HashMap;
 use crate::models::{Experiences, Nodes, Communities, User, People};
 use database;
 use crate::models::{AggregateExperience, generate_node_cyto_graph};
+use error_handler::error_handler::CustomError;
 
 use crate::schema::{nodes, experiences};
 
@@ -33,83 +34,90 @@ pub async fn node_page(
 
     let conn = database::connection().expect("Unable to connect to db");
     
-    let node: Nodes = nodes::table.filter(nodes::slug.eq(node_slug))
-        .first(&conn)
-        .expect("Unable to load node");
-    
-    // get connected nodes via people with experiencee connections to our prime node
+    let node_select = Nodes::find_by_slug(&node_slug);
 
-    let experience_vec: Vec<Experiences> = Experiences::belonging_to(&node)
-        .load::<Experiences>(&conn)
-        .expect("Error leading connected experiences");
+    match node_select {
+        Ok(node) => {
 
-    let mut people_id_vec: Vec<i32> = Vec::new();
-    let mut node_id_vec: Vec<i32> = Vec::new();
-
-    for l in &experience_vec {
-        people_id_vec.push(l.person_id);
-        node_id_vec.push(l.node_id);
+            // get connected nodes via people with experiencee connections to our prime node
+            let experience_vec: Vec<Experiences> = Experiences::belonging_to(&node)
+                .load::<Experiences>(&conn)
+                .expect("Error leading connected experiences");
+        
+            let mut people_id_vec: Vec<i32> = Vec::new();
+            let mut node_id_vec: Vec<i32> = Vec::new();
+        
+            for l in &experience_vec {
+                people_id_vec.push(l.person_id);
+                node_id_vec.push(l.node_id);
+            };
+        
+            people_id_vec.sort();
+            people_id_vec.dedup();
+        
+        
+            // add experiences for the people connected by node
+            let connected_experiences = experiences::table.filter(experiences::person_id.eq_any(&people_id_vec))
+                .load::<Experiences>(&conn)
+                .expect("Unable to load experiences");
+            
+            for l in &connected_experiences {
+                node_id_vec.push(l.node_id);
+            };
+        
+            node_id_vec.sort();
+            node_id_vec.dedup();
+            
+            println!("nodes: {:?}, people: {:?}", &node_id_vec, &people_id_vec);
+            
+            let mut aggregate_experiences: Vec<AggregateExperience> = Vec::new();
+        
+            for i in node_id_vec {
+                let mut temp_experience_vec: Vec<Experiences> = Vec::new();
+        
+                for l in &connected_experiences {
+        
+                    if i == l.node_id && i != node.id {
+                        temp_experience_vec.push(l.clone());
+                    }
+                    // count people associated to multiple similar nodes
+                    // show connections across the nodes and experiences
+                };
+        
+                if temp_experience_vec.len() > 0 {
+                    let agg_experiences = AggregateExperience::from(temp_experience_vec);
+                    aggregate_experiences.push(agg_experiences);
+                }
+            };
+        
+            aggregate_experiences.sort_by(|a, b|b.count.partial_cmp(&a.count).unwrap());
+            aggregate_experiences.dedup();
+        
+            // Aggregate info from experiences related to the prime node
+            let node_experience = AggregateExperience::from(experience_vec);
+        
+            ctx.insert("title", &format!("{} node", &node.node_name));
+        
+            ctx.insert("community_slug", "");
+        
+            ctx.insert("node", &node);
+            
+            ctx.insert("node_experience", &node_experience);
+        
+            ctx.insert("other_experiences", &aggregate_experiences);
+        
+            // add node_names for navbar drop down
+            ctx.insert("node_names", &node_names.lock().expect("Unable to unlock").clone());
+        
+            let rendered = data.tmpl.render("nodes/node.html", &ctx).unwrap();
+            return HttpResponse::Ok().body(rendered)
+        },
+        Err(err) => {
+            println!("Error: {}", err);
+            return err.error_response();
+        },
     };
-
-    people_id_vec.sort();
-    people_id_vec.dedup();
-
-
-    // add experiences for the people connected by node
-    let connected_experiences = experiences::table.filter(experiences::person_id.eq_any(&people_id_vec))
-        .load::<Experiences>(&conn)
-        .expect("Unable to load experiences");
     
-    for l in &connected_experiences {
-        node_id_vec.push(l.node_id);
-    };
-
-    node_id_vec.sort();
-    node_id_vec.dedup();
-    
-    println!("nodes: {:?}, people: {:?}", &node_id_vec, &people_id_vec);
-    
-    let mut aggregate_experiences: Vec<AggregateExperience> = Vec::new();
-
-    for i in node_id_vec {
-        let mut temp_experience_vec: Vec<Experiences> = Vec::new();
-
-        for l in &connected_experiences {
-
-            if i == l.node_id && i != node.id {
-                temp_experience_vec.push(l.clone());
-            }
-            // count people associated to multiple similar nodes
-            // show connections across the nodes and experiences
-        };
-
-        if temp_experience_vec.len() > 0 {
-            let agg_experiences = AggregateExperience::from(temp_experience_vec);
-            aggregate_experiences.push(agg_experiences);
-        }
-    };
-
-    aggregate_experiences.sort_by(|a, b|b.count.partial_cmp(&a.count).unwrap());
-    aggregate_experiences.dedup();
-
-    // Aggregate info from experiences related to the prime node
-    let node_experience = AggregateExperience::from(experience_vec);
-
-    ctx.insert("title", &format!("{} node", &node.node_name));
-
-    ctx.insert("community_slug", "");
-
-    ctx.insert("node", &node);
-    
-    ctx.insert("node_experience", &node_experience);
-
-    ctx.insert("other_experiences", &aggregate_experiences);
-
-    // add node_names for navbar drop down
-    ctx.insert("node_names", &node_names.lock().expect("Unable to unlock").clone());
-
-    let rendered = data.tmpl.render("nodes/node.html", &ctx).unwrap();
-    HttpResponse::Ok().body(rendered)
 }
 
 #[get("/community_node/{community_slug}/{node_slug}")]

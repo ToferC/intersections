@@ -47,12 +47,12 @@ pub mod error_handler {
                 Err(_) => StatusCode::INTERNAL_SERVER_ERROR,
             };
     
-            let error_message = match status_code.as_u16() < 500 {
-                true => self.error_message.clone(),
-                false => "Internal server error".to_string(),
+            match status_code.as_u16() {
+                404 => {
+                    return HttpResponse::Found().header("Location","/404").finish()
+                }
+                _ => return HttpResponse::Found().header("Location","/internal_server_error").finish()
             };
-    
-            HttpResponse::build(status_code).json(json!({ "message": error_message}))
         }
     }
 }

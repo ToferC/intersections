@@ -95,9 +95,15 @@ impl Nodes {
         Ok(node)
     }
 
-    pub fn find_by_name(node_name: String) -> Result<Self, CustomError> {
+    pub fn find_by_name(node_name: &String) -> Result<Self, CustomError> {
         let conn = database::connection()?;
         let node = nodes::table.filter(nodes::node_name.eq(node_name)).first(&conn)?;
+        Ok(node)
+    }
+
+    pub fn find_by_slug(node_slug: &String) -> Result<Self, CustomError> {
+        let conn = database::connection()?;
+        let node = nodes::table.filter(nodes::slug.eq(node_slug)).first(&conn)?;
         Ok(node)
     }
 
