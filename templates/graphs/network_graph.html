@@ -61,7 +61,26 @@
                 'content': 'data(id)',
                 'label': 'data(weight)'
               }
-            }
+            },
+            {
+                selector: 'node.highlight',
+                style: {
+                    'border-color': 'black',
+                    'border-width': '4px'
+                }
+              },
+              {
+                  selector: 'node.semitransp',
+                  style:{ 'opacity': '0.05' }
+              },
+              {
+                  selector: 'edge.highlight',
+                  style: { 'mid-target-arrow-color': '#FFF' }
+              },
+              {
+                  selector: 'edge.semitransp',
+                  style:{ 'opacity': '0.05' }
+              }
           ],
   
           layout: {
@@ -129,13 +148,35 @@
           } catch(e){ // fall back on url change
             window.location.href = this.data('href');
           }
-        });    
+        });
 
-        cy.elements().unbind('mouseover');
-        cy.elements().bind('mouseover', (event) => event.target.tippy.show());
+        // select neighbours and highlight
+        cy.on('mouseover', 'node', function(e) {
+        var sel = e.target;
+        cy.elements()
+            .difference(sel.outgoers()
+                .union(sel.incomers()))
+            .not(sel)
+            .addClass('semitransp')
+            // show tooltip for selected node
+            sel.addClass('highlight')
+            .outgoers()
+            .union(sel.incomers())
+            .addClass('highlight')
+            .bind('mouseover', (event) => event.target.tippy.show());
+        });
 
-        cy.elements().unbind('mouseout');
-        cy.elements().bind('mouseout', (event) => event.target.tippy.hide());
+        // remove highlight
+        cy.on('mouseout', 'node', function(e) {
+            var sel = e.target;
+            cy.elements()
+                .removeClass('semitransp')
+                sel.removeClass('highlight')
+                .outgoers()
+                .union(sel.incomers())
+                .removeClass('highlight')
+                .bind('mouseout', (event) => event.target.tippy.hide());
+        });
     });
 
     </script>

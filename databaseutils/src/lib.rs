@@ -202,11 +202,11 @@ pub fn import_demo_data(community_id: i32) {
         for i in e[1].as_array() { // experience Array
             
             for n in i {
-                let name = n[1]["node_name"].as_str().unwrap().to_owned();
+                let name = n[1]["node_name"].as_str().unwrap().trim().to_owned();
 
                 let node_data = models::Node::new(
                     name.to_owned(),
-                    n[1]["domain_token"].as_str().unwrap().to_owned(),
+                    n[1]["domain_token"].as_str().unwrap().trim().to_owned(),
                 );
 
                 let node = models::Nodes::create(&node_data);
@@ -222,7 +222,7 @@ pub fn import_demo_data(community_id: i32) {
                 let mut statements: Vec<String> = Vec::new();
 
                 for s in n[0]["statements"].as_array().unwrap() {
-                    statements.push(s.as_str().unwrap().to_owned());
+                    statements.push(s.as_str().unwrap().trim().to_owned());
                 };
 
                 let raw_num: f64 = n[0]["inclusivity"].as_str().unwrap().to_owned().parse().unwrap();

@@ -8,7 +8,6 @@ use serde::{Deserialize, Serialize};
 
 use crate::{AppData, extract_identity_data};
 use crate::models::{Experience, Experiences, NewPerson, People, Node, Nodes, Communities, CommunityData};
-use crate::models::{CytoGraph};
 use error_handler::error_handler::CustomError;
 
 #[derive(Deserialize, Debug)]

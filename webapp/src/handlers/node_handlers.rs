@@ -158,9 +158,9 @@ pub async fn community_node_page(
     // get ids of people in the community
     let community_people_ids = People::find_ids_from_community(community.id).expect("Unable to find community members");
     
-    let node: Nodes = nodes::table.filter(nodes::slug.eq(node_slug))
+    let node: Nodes = nodes::table.filter(nodes::slug.eq(node_slug.clone()))
         .first(&conn)
-        .expect("Unable to load node");
+        .expect(&format!("Unable to load node: {}", &node_slug));
     
     // get connected nodes via people with experiencee connections to our prime node and community
     let experience_vec: Vec<Experiences> = experiences::table
@@ -247,7 +247,7 @@ pub async fn community_node_page(
     // add node_names for navbar drop down
     ctx.insert("node_names", &node_names.lock().expect("Unable to unlock").clone());
 
-    let rendered = data.tmpl.render("graphs/community_node.html", &ctx).unwrap();
+    let rendered = data.tmpl.render("nodes/community_node.html", &ctx).unwrap();
     HttpResponse::Ok().body(rendered)
 }
 

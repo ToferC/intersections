@@ -32,6 +32,7 @@
   
           container: document.getElementById('cy'), // container to render in
   
+          // load data from handler
           elements: JSON.parse({{ graph_data | json_encode | safe }}),
   
           style: [ // the stylesheet for the graph
@@ -61,7 +62,27 @@
                 'content': 'data(id)',
                 'label': ''
               }
-            }
+            },
+
+              {
+                selector: 'node.highlight',
+                style: {
+                    'border-color': 'black',
+                    'border-width': '4px'
+                }
+              },
+              {
+                  selector: 'node.semitransp',
+                  style:{ 'opacity': '0.05' }
+              },
+              {
+                  selector: 'edge.highlight',
+                  style: { 'mid-target-arrow-color': '#FFF' }
+              },
+              {
+                  selector: 'edge.semitransp',
+                  style:{ 'opacity': '0.05' }
+              }
           ],
   
           layout: {
@@ -104,12 +125,12 @@
               return edges.data('weight');
           }});
           
+          /*
           cy.nodes().forEach( n => {
             
             // let bn = bc.degree( n ).toFixed(2);
 
             // use this to set inclusivity
-            /*
             n.data({
               inclusivity: bn,
             });
@@ -120,8 +141,9 @@
               'height': bn * 30.0,
               'width': bn * 30.0,
             });
-            */
-          } );
+          } 
+          );
+          */
         });
 
         // Allow link open page on click
@@ -133,10 +155,36 @@
           }
         });    
 
-        cy.elements().unbind('mouseover');
+        // select neighbours and highlight
+        cy.on('mouseover', 'node', function(e) {
+        var sel = e.target;
+        cy.elements()
+            .difference(sel.outgoers()
+                .union(sel.incomers()))
+            .not(sel)
+            .addClass('semitransp')
+            // show tooltip for selected node
+            sel.addClass('highlight')
+            .outgoers()
+            .union(sel.incomers())
+            .addClass('highlight');
+        });
+
+        // remove highlight
+        cy.on('mouseout', 'node', function(e) {
+            var sel = e.target;
+            cy.elements()
+                .removeClass('semitransp')
+                sel.removeClass('highlight')
+                .outgoers()
+                .union(sel.incomers())
+                .removeClass('highlight');
+        });
+
+        //cy.elements().unbind('mouseover');
         cy.elements().bind('mouseover', (event) => event.target.tippy.show());
 
-        cy.elements().unbind('mouseout');
+        //cy.elements().unbind('mouseout');
         cy.elements().bind('mouseout', (event) => event.target.tippy.hide());
     });
 
