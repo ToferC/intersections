@@ -35,15 +35,24 @@
                 <br>
                 <form action="/add_experience_form/{{ user_code }}" method=POST id="experienceForm" name="experienceForm">
                 
-                    <h2>1. Name your experience</h2>
-    
-                        <label>
-
-                            <input class="form-control form-control-lg mdb-autocomplete" id="node_name_autocomplete" name="name" placeholder="Your experience name..." required
-                                maxlength="32" autocomplete=="off">
-                            <small id="experience_help" class="form-text text-muted">Enter a few words to name your experience here.</small>
-                        </label>
-
+                    <div class="row">
+                        <div class="col m-md-2 m-1">
+                            <h2>1. Name your experience</h2>
+                            
+                
+                            <label>
+                                <input class="form-control form-control-lg mdb-autocomplete" id="node_name_autocomplete" name="name" placeholder="Experience name..." required
+                                maxlength="32" autocomplete="off">
+                                <small id="experience_help" class="form-text text-muted">Enter a few words to name your experience here.</small>
+                            </label>
+                        </div>
+                        <div class="col m-md-2 m-1">
+                            <div class="card card-body">
+                                <p><strong>Tip: </strong>{{ helper_text }}</p>
+                                <p>[Placeholder for learning moment.]</p>
+                            </div>
+                        </div>
+                    </div>
                     <hr>
 
                         <h2>2. Is this experience part of you as a person or is it a role related to your work?</h2>

@@ -39,6 +39,9 @@ pub mod error_handler {
             }
         }
     }
+
+    // Custom Error Codes
+    // 404 page not found
     
     impl ResponseError for CustomError {
         fn error_response(&self) -> HttpResponse {
@@ -51,6 +54,9 @@ pub mod error_handler {
                 404 => {
                     return HttpResponse::Found().header("Location","/404").finish()
                 }
+                i if i > 500 => {
+                    return HttpResponse::Found().header("Location","/internal_server_error").finish()
+                },
                 _ => return HttpResponse::Found().header("Location","/internal_server_error").finish()
             };
         }

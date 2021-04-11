@@ -335,8 +335,21 @@ pub async fn add_experience_form_handler(
 
     // add pull for experience data
     let people_with_experiences = RenderPerson::from(&p, true).expect("Unable to load experiences");
-
     ctx.insert("people_experiences", &people_with_experiences);
+
+    let helper_options = vec![
+        "You may wish to add an experience related to your gender identity or sexuality.", 
+        "You are doing great! You may wish to add an experience related to your socio-economic background or language.", 
+        "You may wish to add an experience related to your religion or level of education.", 
+        "You may wish to add an experience related to your ability or a permanent or temporary disability.", 
+        "You are creating a true intersectional profile. You may wish to add an experience related to your current state of mental health or age.",
+        "You may wish to add an experience related to your body perception, personality type or caregiving responsibilities.",
+        "You may wish to add an experience related to a life experience or stress that you going through.",
+        "Amazing. You’ve got the hang of this. Add as many additional experiences as you like.",
+    ];
+
+    let helper_text = helper_options[(people_with_experiences.last().unwrap().experiences.len() -1).min(7)];
+    ctx.insert("helper_text", &helper_text);
 
     let rendered = data.tmpl.render("survey/add_experience_form.html", &ctx).unwrap();
     HttpResponse::Ok().body(rendered)

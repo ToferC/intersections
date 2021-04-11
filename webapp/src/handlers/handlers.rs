@@ -53,7 +53,7 @@ pub async fn f404(
     // add node_names for navbar drop down
     ctx.insert("node_names", &node_names.lock().expect("Unable to unlock").clone());
 
-    let rendered = data.tmpl.render("404.html", &ctx).unwrap();
+    let rendered = data.tmpl.render("errors/404.html", &ctx).unwrap();
     HttpResponse::Ok().body(rendered)
 }
 
