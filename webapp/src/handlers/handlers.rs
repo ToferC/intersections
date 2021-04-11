@@ -36,11 +36,14 @@ pub async fn index(
 pub async fn f404(
     data: web::Data<AppData>,
     node_names: web::Data<Mutex<Vec<(String, String)>>>, 
-    _req:HttpRequest,
+    req:HttpRequest,
     id: Identity,
 ) -> impl Responder {
 
     let mut ctx = Context::new();
+
+    let uri_path = req.uri().path();
+    ctx.insert("path", &uri_path);
 
     // Get session data and add to context
     let (session_user, role) = extract_identity_data(&id);
