@@ -1345,11 +1345,13 @@ dependencies = [
 name = "error_handler"
 version = "0.1.0"
 dependencies = [
+ "actix-identity",
  "actix-web 3.3.2",
  "diesel",
  "serde",
  "serde_derive",
  "serde_json",
+ "tera",
 ]
 
 [[package]]

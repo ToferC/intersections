@@ -9,7 +9,7 @@ use actix_identity::{Identity};
 use tera::Context;
 use serde::{Deserialize};
 
-use crate::{AppData, extract_identity_data};
+use crate::{AppData, generate_basic_context, extract_identity_data};
 use crate::models::{User, verify, UserData, EmailVerification, 
     InsertableVerification, Email, PasswordResetToken, 
     InsertablePasswordResetToken};
@@ -45,15 +45,8 @@ pub async fn login_handler(
     _req:HttpRequest,
     id: Identity,
 ) -> impl Responder {
-    let mut ctx = Context::new();
 
-    // Get session data and add to context
-    let (session_user, role) = extract_identity_data(&id);
-    ctx.insert("session_user", &session_user);
-    ctx.insert("role", &role);
-
-    // add node_names for navbar drop down
-    ctx.insert("node_names", &node_names.lock().expect("Unable to unlock").clone());
+    let (ctx, session_user, _role) = generate_basic_context(id, node_names);
 
     let rendered = data.tmpl.render("authentication/log_in.html", &ctx).unwrap();
     HttpResponse::Ok().body(rendered)
@@ -109,15 +102,7 @@ pub async fn register_handler(
     id: Identity,
 ) -> impl Responder {
     
-    let mut ctx = Context::new();
-
-    // Get session data and add to context
-    let (session_user, role) = extract_identity_data(&id);
-    ctx.insert("session_user", &session_user);
-    ctx.insert("role", &role);
-
-    // add node_names for navbar drop down
-    ctx.insert("node_names", &node_names.lock().expect("Unable to unlock").clone());
+    let (ctx, session_user, _role) = generate_basic_context(id, node_names);
 
     let rendered = data.tmpl.render("authentication/register.html", &ctx).unwrap();
     HttpResponse::Ok().body(rendered)
@@ -131,15 +116,7 @@ pub async fn registration_error(
     id: Identity,
 ) -> impl Responder {
     
-    let mut ctx = Context::new();
-
-    // Get session data and add to context
-    let (session_user, role) = extract_identity_data(&id);
-    ctx.insert("session_user", &session_user);
-    ctx.insert("role", &role);
-
-    // add node_names for navbar drop down
-    ctx.insert("node_names", &node_names.lock().expect("Unable to unlock").clone());
+    let (ctx, _session_user, _role) = generate_basic_context(id, node_names);
 
     let rendered = data.tmpl.render("authentication/registration_error.html", &ctx).unwrap();
     HttpResponse::Ok().body(rendered)
@@ -199,12 +176,7 @@ pub async fn email_verification(
     id: Identity,
 ) -> impl Responder {
     
-    let mut ctx = Context::new();
-
-    // Get session data and add to context
-    let (session_user, role) = extract_identity_data(&id);
-    ctx.insert("session_user", &session_user);
-    ctx.insert("role", &role);
+    let (mut ctx, session_user, role) = generate_basic_context(id, node_names);
 
     if session_user == "".to_string() && role != "admin".to_string() {
         // person signed in shouldn't be here
@@ -241,9 +213,6 @@ pub async fn email_verification(
                 Ok(()) => println!("Email sent"),
                 Err(err) => println!("Error {}", err),
             };
-
-            // add node_names for navbar drop down
-            ctx.insert("node_names", &node_names.lock().expect("Unable to unlock").clone());
         
             let rendered = data.tmpl.render("authentication/email_verification.html", &ctx).unwrap();
             HttpResponse::Ok().body(rendered)

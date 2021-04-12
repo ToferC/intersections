@@ -3,15 +3,14 @@
 use std::sync::Mutex;
 use std::env;
 
-use actix_web::{HttpRequest, HttpResponse, Responder, get, post, web};
+use actix_web::{HttpRequest, HttpResponse, Responder, get, post, web, ResponseError};
 use actix_identity::{Identity};
 use inflector::Inflector;
-use tera::Context;
 use serde::{Deserialize};
 
 use qrcode_generator::QrCodeEcc;
 
-use crate::{AppData, extract_identity_data};
+use crate::{AppData, extract_identity_data, generate_basic_context};
 use crate::models::{Communities, NewCommunity, User};
 
 #[derive(Deserialize, Debug)]
@@ -33,22 +32,13 @@ pub async fn community_index(
     node_names: web::Data<Mutex<Vec<(String, String)>>>,
     id: Identity,
     _req:HttpRequest) -> impl Responder {
-    let mut ctx = Context::new();
-
-    // validate if user is admin else redirect
-    let (session_user, role) = extract_identity_data(&id);
+    
+    let (mut ctx, _session_user, role) = generate_basic_context(id, node_names);
     
     if role != "admin".to_string() {
         println!("User not admin");
         HttpResponse::Found().header("Location", "/log_in").finish()
     } else {
-
-        ctx.insert("session_user", &session_user);
-        ctx.insert("role", &role);
-
-        // add node_names for navbar drop down
-        ctx.insert("node_names", &node_names.lock().expect("Unable to unlock").clone());
-
         let communities_data = Communities::find_all();
 
         let communities = match communities_data {
@@ -72,16 +62,8 @@ pub async fn open_community_index(
     node_names: web::Data<Mutex<Vec<(String, String)>>>,
     id: Identity,
     _req:HttpRequest) -> impl Responder {
-    let mut ctx = Context::new();
-
-    // validate if user is admin else redirect
-    let (session_user, role) = extract_identity_data(&id);
     
-    ctx.insert("session_user", &session_user);
-    ctx.insert("role", &role);
-
-    // add node_names for navbar drop down
-    ctx.insert("node_names", &node_names.lock().expect("Unable to unlock").clone());
+    let (mut ctx, _session_user, _role) = generate_basic_context(id, node_names);
 
     let communities_data = Communities::find_all_open();
 
@@ -108,61 +90,64 @@ pub async fn view_community(
     _req:HttpRequest,
     id: Identity,
 ) -> impl Responder {
-    let mut ctx = Context::new();
-
-    // validate if user == user_name  or admin else redirect
-    let (session_user, role) = extract_identity_data(&id);
-    ctx.insert("session_user", &session_user);
-    ctx.insert("role", &role);
     
-    let community = Communities::find_from_slug(&community_slug).expect("Could not load community");
+    let (mut ctx, session_user, _role) = generate_basic_context(id, node_names);
+    
+    let community_select = Communities::find_from_slug(&community_slug);
 
-    let mut owner = false;
+    match community_select {
+        Ok(community) => {
 
-    if &session_user != "" {
-        let user = User::find_from_slug(&session_user).expect("Unable to load user");
-
-        ctx.insert("user", &user);
+            let mut owner = false;
         
-        if community.user_id == user.id {
-            owner = true;
-        }
-    
-        // Redirect if community is closed and user isn't community owner
-        if !community.open && !owner {
-            return HttpResponse::Found().header("Location", String::from("/")).finish()
-        };
-    } else {
-        if !community.open {
-            return HttpResponse::Found().header("Location", String::from("/")).finish()
-        }
+            if &session_user != "" {
+                let user = User::find_from_slug(&session_user).expect("Unable to load user");
+        
+                ctx.insert("user", &user);
+                
+                if community.user_id == user.id {
+                    owner = true;
+                }
+            
+                // Redirect if community is closed and user isn't community owner
+                if !community.open && !owner {
+                    return HttpResponse::Found().header("Location", String::from("/")).finish()
+                };
+            } else {
+                if !community.open {
+                    return HttpResponse::Found().header("Location", String::from("/")).finish()
+                }
+            };
+        
+            ctx.insert("community", &community);
+            ctx.insert("owner", &owner);
+            
+            
+            let community_add_profile_url = format!("/survey_intro/{}", &community.code);
+            ctx.insert("add_community_profile_url", &community_add_profile_url);
+        
+            // add qr code to add profile
+            let application_url: String;
+            let environment = env::var("ENVIRONMENT").unwrap();
+        
+            if environment == "production" {
+                application_url = "https://www.intersectional-data.ca".to_string();
+            } else {
+                application_url = "http://localhost:8088".to_string();
+            };
+        
+            let qr = qrcode_generator::to_svg_to_string(format!("{}{}", application_url, community_add_profile_url), QrCodeEcc::Low, 245, Some("Invitation link for intersections")).unwrap();
+            ctx.insert("qrcode", &qr);
+        
+            let rendered = data.tmpl.render("communities/view_community.html", &ctx).unwrap();
+            return HttpResponse::Ok().body(rendered)
+        },
+        Err(err) => {
+            println!("Error: {}", err);
+            return err.error_response();
+        },
     };
 
-    ctx.insert("community", &community);
-    ctx.insert("owner", &owner);
-    
-    // add node_names for navbar drop down
-    ctx.insert("node_names", &node_names.lock().expect("Unable to unlock").clone());
-    
-    
-    let community_add_profile_url = format!("/survey_intro/{}", &community.code);
-    ctx.insert("add_community_profile_url", &community_add_profile_url);
-
-    // add qr code to add profile
-    let application_url: String;
-    let environment = env::var("ENVIRONMENT").unwrap();
-
-    if environment == "production" {
-        application_url = "https://www.intersectional-data.ca".to_string();
-    } else {
-        application_url = "http://localhost:8088".to_string();
-    };
-
-    let qr = qrcode_generator::to_svg_to_string(format!("{}{}", application_url, community_add_profile_url), QrCodeEcc::Low, 245, Some("Invitation link for intersections")).unwrap();
-    ctx.insert("qrcode", &qr);
-
-    let rendered = data.tmpl.render("communities/view_community.html", &ctx).unwrap();
-    HttpResponse::Ok().body(rendered)
 }
 
 #[get("/add_community")]
@@ -173,15 +158,7 @@ pub async fn add_community(
     id: Identity,
 ) -> impl Responder {
     
-    let mut ctx = Context::new();
-
-    // Get session data and add to context
-    let (session_user, role) = extract_identity_data(&id);
-    ctx.insert("session_user", &session_user);
-    ctx.insert("role", &role);
-
-    // add node_names for navbar drop down
-    ctx.insert("node_names", &node_names.lock().expect("Unable to unlock").clone());
+    let (ctx, _session_user, _role) = generate_basic_context(id, node_names);
 
     let rendered = data.tmpl.render("communities/add_community.html", &ctx).unwrap();
     HttpResponse::Ok().body(rendered)
@@ -251,16 +228,10 @@ pub async fn edit_community(
     _req:HttpRequest,
     id: Identity,
 ) -> impl Responder {
-    
-    let mut ctx = Context::new();
-
-    // Get session data and add to context
-    let (session_user, role) = extract_identity_data(&id);
-    ctx.insert("session_user", &session_user);
-    ctx.insert("role", &role);
+    let (mut ctx, session_user, _role) = generate_basic_context(id, node_names);
 
     // validate user
-    let user = User::find_from_slug(&id.identity().unwrap());
+    let user = User::find_from_slug(&session_user);
     
     match user {
         Ok(u) => {
@@ -274,9 +245,6 @@ pub async fn edit_community(
                     if community.user_id == u.id {
                         
                         ctx.insert("community", &community);
-                    
-                        // add node_names for navbar drop down
-                        ctx.insert("node_names", &node_names.lock().expect("Unable to unlock").clone());
                     
                     } else {
                         // user does not own community - redirect
@@ -382,7 +350,7 @@ pub async fn delete_community(
     id: Identity,
 ) -> impl Responder {
 
-    let (session_user, role) = extract_identity_data(&id);
+    let (mut ctx, session_user, role) = generate_basic_context(id, node_names);
     
     let user = match User::find_from_slug(&session_user){
         Ok(u) => u,
@@ -401,16 +369,8 @@ pub async fn delete_community(
                 println!("User not community owner - access denied");
                 HttpResponse::Found().header("Location", "/community_index").finish()
             } else {
-        
-                let mut ctx = Context::new();
 
                 ctx.insert("community", &community);
-            
-                ctx.insert("session_user", &session_user);
-                ctx.insert("role", &role);
-
-                // add node_names for navbar drop down
-                ctx.insert("node_names", &node_names.lock().expect("Unable to unlock").clone());
 
                 let rendered = data.tmpl.render("delete_community.html", &ctx).unwrap();
                 return HttpResponse::Ok().body(rendered)

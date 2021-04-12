@@ -18,8 +18,15 @@ mod utility {
     }
 }
 
-pub use self::handlers::{api_base, index,
-    find_experience, person_api, f404};
+pub use self::handlers::{
+    api_base, 
+    index,
+    find_experience, 
+    person_api, 
+    f404,
+    not_found,
+    internal_server_error,
+};
     
 pub use self::survey_handlers::{
     survey_intro,

@@ -4,7 +4,6 @@ pub mod error_handler {
     use actix_web::{HttpResponse, ResponseError};
     use diesel::result::Error as DieselError;
     use serde::Deserialize;
-    use serde_json::json;
     use std::fmt;
 
     #[derive(Debug, Deserialize)]
@@ -24,16 +23,18 @@ pub mod error_handler {
     
     impl fmt::Display for CustomError {
         fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-            f.write_str(self.error_message.as_str())
+            f.write_str(&format!("{} = {}", self.error_message, self.error_status_code))
         }
     }
     
     impl From<DieselError> for CustomError {
         fn from(error: DieselError) -> CustomError {
             match error {
-                DieselError::DatabaseError(_, err) => CustomError::new(409, err.message().to_string()),
+                DieselError::DatabaseError(_, err) => {
+                    CustomError::new(409, err.message().to_string())
+                },
                 DieselError::NotFound => {
-                    CustomError::new(404, "Record not found".to_string())
+                    CustomError::new(408, "Record not found".to_string())
                 }
                 err => CustomError::new(500, format!("Unknown Diesel Error: {}", err)),
             }
@@ -51,9 +52,12 @@ pub mod error_handler {
             };
     
             match status_code.as_u16() {
-                404 => {
-                    return HttpResponse::Found().header("Location","/404").finish()
-                }
+                408 => {
+                    return HttpResponse::Found().header("Location","/not_found").finish()
+                },
+                409 => {
+                    return HttpResponse::Found().header("Location","/database_error").finish()
+                },
                 i if i > 500 => {
                     return HttpResponse::Found().header("Location","/internal_server_error").finish()
                 },

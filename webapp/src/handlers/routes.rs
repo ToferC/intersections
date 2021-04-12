@@ -3,6 +3,10 @@ use actix_web::{web};
 use crate::handlers::{
     // base
     index,
+
+    // errors
+    internal_server_error,
+    not_found,
     
     // survey
     survey_intro,
@@ -80,6 +84,10 @@ pub fn init_routes(config: &mut web::ServiceConfig) {
     // base
     config.service(index);
     config.service(find_experience);
+
+    // errors
+    config.service(internal_server_error);
+    config.service(not_found);
     
     // survey
     config.service(survey_intro);

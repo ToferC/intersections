@@ -1,7 +1,9 @@
 #[macro_use]
 extern crate diesel;
+use std::sync::Mutex;
 
-use tera::Tera;
+use actix_web::web;
+use tera::{Tera, Context};
 use actix_session::Session;
 use actix_identity::Identity;
 
@@ -59,6 +61,21 @@ pub fn extract_identity_data(id: &Identity) -> (String, String) {
     println!("{}-{}", &session_user, &role);
 
     (session_user, role)
+}
+
+pub fn generate_basic_context(id: Identity, node_names: web::Data<Mutex<Vec<(String, String)>>>) -> (Context, String, String) {
+    
+    let mut ctx = Context::new();
+
+    // Get session data and add to context
+    let (session_user, role) = extract_identity_data(&id);
+    ctx.insert("session_user", &session_user);
+    ctx.insert("role", &role);
+
+    // add node_names for navbar drop down
+    ctx.insert("node_names", &node_names.lock().expect("Unable to unlock").clone());
+
+    (ctx, session_user, role)
 }
 
 pub fn generate_unique_code(mut characters: usize, dashes: bool) -> String {
