@@ -3,10 +3,9 @@ use actix_web::{web, HttpRequest, HttpResponse, Responder, post, get};
 use bigdecimal::{BigDecimal, ToPrimitive};
 use actix_identity::Identity;
 use num_bigint::{ToBigInt};
-use tera::Context;
 use serde::{Deserialize, Serialize};
 
-use crate::{AppData, extract_identity_data};
+use crate::{AppData, generate_basic_context};
 use crate::models::{Experience, Experiences, NewPerson, People, Node, Nodes, Communities, CommunityData};
 use error_handler::error_handler::CustomError;
 
@@ -85,14 +84,7 @@ pub async fn survey_intro(
     
     match community_result {
         Ok(community) => {
-            let mut ctx = Context::new();
-        
-            // Get session data and add to context
-            let (session_user, role) = extract_identity_data(&id);
-            ctx.insert("session_user", &session_user);
-            ctx.insert("role", &role);
-
-            ctx.insert("node_names", &node_names.lock().expect("Unable to unlock").clone());
+            let (mut ctx, _session_user, _role) = generate_basic_context(id, node_names);
         
             // all names for form autocomplete
             let all_node_names = Nodes::find_all_names().expect("Unable to load node names");
@@ -125,14 +117,7 @@ pub async fn experience_form_handler(
     
     match community_result {
         Ok(community) => {
-            let mut ctx = Context::new();
-        
-            // Get session data and add to context
-            let (session_user, role) = extract_identity_data(&id);
-            ctx.insert("session_user", &session_user);
-            ctx.insert("role", &role);
-
-            ctx.insert("node_names", &node_names.lock().expect("Unable to unlock").clone());
+            let (mut ctx, _session_user, _role) = generate_basic_context(id, node_names);
         
             // all names for form autocomplete
             let all_node_names = Nodes::find_all_names().expect("Unable to load node names");
@@ -140,7 +125,6 @@ pub async fn experience_form_handler(
 
             ctx.insert("community", &community);
             
-        
             let rendered = data.tmpl.render("survey/first_experience_form.html", &ctx).unwrap();
             HttpResponse::Ok().body(rendered)
         },
@@ -314,12 +298,7 @@ pub async fn add_experience_form_handler(
     _req:HttpRequest,
     id: Identity,
 ) -> impl Responder {
-    let mut ctx = Context::new();
-
-    // Get session data and add to context
-    let (session_user, role) = extract_identity_data(&id);
-    ctx.insert("session_user", &session_user);
-    ctx.insert("role", &role);
+    let (mut ctx, _session_user, _role) = generate_basic_context(id, node_names);
 
     let p = People::find_from_code(&code).unwrap();
 
@@ -329,9 +308,6 @@ pub async fn add_experience_form_handler(
     // all names for form autocomplete
     let all_node_names = Nodes::find_all_names().expect("Unable to load names");
     ctx.insert("all_node_names", &all_node_names);
-
-    // add node_names for navbar drop down
-    ctx.insert("node_names", &node_names.lock().expect("Unable to unlock").clone());
 
     // add pull for experience data
     let people_with_experiences = RenderPerson::from(&p, true).expect("Unable to load experiences");

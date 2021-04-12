@@ -5,10 +5,9 @@ use std::sync::Mutex;
 use actix_web::{HttpRequest, HttpResponse, Responder, get, post, web};
 use actix_identity::{Identity};
 use inflector::Inflector;
-use tera::Context;
 use serde::{Deserialize};
 
-use crate::{AppData, extract_identity_data};
+use crate::{AppData, extract_identity_data, generate_basic_context};
 use crate::models::{User, Communities};
 use crate::handlers::DeleteForm;
 
@@ -24,21 +23,13 @@ pub async fn user_index(
     node_names: web::Data<Mutex<Vec<(String, String)>>>,
     id: Identity,
     _req:HttpRequest) -> impl Responder {
-    let mut ctx = Context::new();
 
-    // validate if user is admin else redirect
-    let (session_user, role) = extract_identity_data(&id);
-    
+    let (mut ctx, _session_user, role) = generate_basic_context(id, node_names);
+
     if role != "admin".to_string() {
         println!("User not admin");
         HttpResponse::Found().header("Location", "/log_in").finish()
     } else {
-
-        ctx.insert("session_user", &session_user);
-        ctx.insert("role", &role);
-
-        // add node_names for navbar drop down
-        ctx.insert("node_names", &node_names.lock().expect("Unable to unlock").clone());
 
         let user_data = User::find_all();
 
@@ -65,20 +56,12 @@ pub async fn user_page_handler(
     _req:HttpRequest,
     id: Identity,
 ) -> impl Responder {
-    let mut ctx = Context::new();
-
-    // validate if user == user_name  or admin else redirect
-    let (session_user, role) = extract_identity_data(&id);
+    
+    let (mut ctx, session_user, role) = generate_basic_context(id, node_names);
     
     if session_user.to_lowercase() != slug.to_lowercase() && role != "admin".to_string() {
         HttpResponse::Found().header("Location", "/log_in").finish()
     } else {
-
-        ctx.insert("session_user", &session_user);
-        ctx.insert("role", &role);
-
-        // add node_names for navbar drop down
-        ctx.insert("node_names", &node_names.lock().expect("Unable to unlock").clone());
     
         let user = User::find_from_slug(&slug).expect("Could not load user");
     
@@ -110,12 +93,7 @@ pub async fn edit_user(
     id: Identity,
 ) -> impl Responder {
     
-    let mut ctx = Context::new();
-
-    // Get session data and add to context
-    let (session_user, role) = extract_identity_data(&id);
-    ctx.insert("session_user", &session_user);
-    ctx.insert("role", &role);
+    let (mut ctx, session_user, role) = generate_basic_context(id, node_names);
 
     let user = User::find_from_slug(&slug);
 
@@ -128,9 +106,6 @@ pub async fn edit_user(
             };
 
             ctx.insert("user", &user);
-
-            // add node_names for navbar drop down
-            ctx.insert("node_names", &node_names.lock().expect("Unable to unlock").clone());
         
             let rendered = data.tmpl.render("users/edit_user.html", &ctx).unwrap();
             return HttpResponse::Ok().body(rendered)
@@ -227,7 +202,7 @@ pub async fn delete_user_handler(
     id: Identity,
 ) -> impl Responder {
 
-    let (session_user, role) = extract_identity_data(&id);
+    let (mut ctx, session_user, role) = generate_basic_context(id, node_names);
     
     if role != "admin".to_string() && &session_user != &slug {
         println!("User not admin");
@@ -238,16 +213,9 @@ pub async fn delete_user_handler(
         
         match user {
             Ok(u) => {
-                let mut ctx = Context::new();
 
                 ctx.insert("user", &u);
             
-                ctx.insert("session_user", &session_user);
-                ctx.insert("role", &role);
-
-                // add node_names for navbar drop down
-                ctx.insert("node_names", &node_names.lock().expect("Unable to unlock").clone());
-
                 let rendered = data.tmpl.render("users/delete_user.html", &ctx).unwrap();
                 return HttpResponse::Ok().body(rendered)
             },

@@ -2,8 +2,7 @@ use std::sync::Mutex;
 
 use actix_web::{web, get, post, HttpResponse, HttpRequest, Responder};
 use actix_identity::Identity;
-use crate::{AppData, extract_identity_data};
-use tera::{Context};
+use crate::{AppData, generate_basic_context};
 use diesel::prelude::*;
 use diesel::{QueryDsl, BelongingToDsl};
 
@@ -22,12 +21,8 @@ pub async fn person_page(
     _req:HttpRequest,
     id: Identity,
 ) -> impl Responder {
-    let mut ctx = Context::new();
-
-    // Get session data and add to context
-    let (session_user, role) = extract_identity_data(&id);
-    ctx.insert("session_user", &session_user);
-    ctx.insert("role", &role);
+    
+    let (mut ctx, _session_user, _role) = generate_basic_context(id, node_names);
 
     let p = People::find_from_code(&code).unwrap();
 
@@ -60,9 +55,6 @@ pub async fn person_page(
 
     ctx.insert("other_experiences", &aggregate_experiences);
 
-    // add node_names for navbar drop down
-    ctx.insert("node_names", &node_names.lock().expect("Unable to unlock").clone());
-
     let rendered = data.tmpl.render("people/person.html", &ctx).unwrap();
     HttpResponse::Ok().body(rendered)
 }
@@ -76,12 +68,7 @@ pub async fn person_graph(
     id: Identity,
 ) -> impl Responder {
 
-    let mut ctx = Context::new();
-
-    // Get session data and add to context
-    let (session_user, role) = extract_identity_data(&id);
-    ctx.insert("session_user", &session_user);
-    ctx.insert("role", &role);
+    let (mut ctx, _session_user, _role) = generate_basic_context(id, node_names);
     
     let conn = database::connection().expect("Unable to connect to db");
     
@@ -131,9 +118,6 @@ pub async fn person_graph(
 
     let title = "Person Network Graph";
     ctx.insert("title", title);
-
-    // add node_names for navbar drop down
-    ctx.insert("node_names", &node_names.lock().expect("Unable to unlock").clone());
     
     let rendered = data.tmpl.render("graphs/network_graph.html", &ctx).unwrap();
     HttpResponse::Ok().body(rendered)
@@ -148,21 +132,14 @@ pub async fn delete_person(
     id: Identity,
 ) -> impl Responder {
 
-    let (session_user, role) = extract_identity_data(&id);
+    let (mut ctx, _session_user, _role) = generate_basic_context(id, node_names);
 
     let person = People::find_from_code(&code);
         
     match person {
         Ok(person) => {
-            let mut ctx = Context::new();
 
             ctx.insert("person", &person);
-        
-            ctx.insert("session_user", &session_user);
-            ctx.insert("role", &role);
-
-            // add node_names for navbar drop down
-            ctx.insert("node_names", &node_names.lock().expect("Unable to unlock").clone());
 
             let rendered = data.tmpl.render("people/delete_person.html", &ctx).unwrap();
             return HttpResponse::Ok().body(rendered)

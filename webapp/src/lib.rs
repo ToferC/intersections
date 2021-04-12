@@ -63,6 +63,7 @@ pub fn extract_identity_data(id: &Identity) -> (String, String) {
     (session_user, role)
 }
 
+/// Generate context, session_user and role from id and node_names
 pub fn generate_basic_context(id: Identity, node_names: web::Data<Mutex<Vec<(String, String)>>>) -> (Context, String, String) {
     
     let mut ctx = Context::new();

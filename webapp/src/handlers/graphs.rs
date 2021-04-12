@@ -2,8 +2,7 @@ use std::{sync::Mutex};
 
 use actix_web::{web, get, HttpResponse, Responder};
 use actix_identity::Identity;
-use crate::{AppData, extract_identity_data};
-use tera::{Context};
+use crate::{AppData, generate_basic_context};
 
 use std::collections::HashMap;
 
@@ -26,19 +25,12 @@ pub async fn data_global_graph(
 
     drop(graph);
     
-    let mut ctx = Context::new();
-
-    let (session_user, role) = extract_identity_data(&id);
-    ctx.insert("session_user", &session_user);
-    ctx.insert("role", &role);
+    let (mut ctx, _session_user, _role) = generate_basic_context(id, node_names);
 
     ctx.insert("graph_data", &j);
 
     let title = "Full Network Graph";
     ctx.insert("title", title);
-
-    // add node_names for navbar drop down
-    ctx.insert("node_names", &node_names.lock().expect("Unable to unlock").clone());
     
     let rendered = data.tmpl.render("graphs/node_network_graph.html", &ctx).unwrap();
     HttpResponse::Ok().body(rendered)
@@ -65,19 +57,12 @@ pub async fn global_graph(
 
     let j = serde_json::to_string_pretty(&graph).unwrap();
     
-    let mut ctx = Context::new();
-
-    let (session_user, role) = extract_identity_data(&id);
-    ctx.insert("session_user", &session_user);
-    ctx.insert("role", &role);
+    let (mut ctx, _session_user, _role) = generate_basic_context(id, node_names);
 
     ctx.insert("graph_data", &j);
 
     let title = "Global Network Graph";
     ctx.insert("title", title);
-
-    // add node_names for navbar drop down
-    ctx.insert("node_names", &node_names.lock().expect("Unable to unlock").clone());
     
     let rendered = data.tmpl.render("graphs/node_network_graph.html", &ctx).unwrap();
     HttpResponse::Ok().body(rendered)
@@ -96,9 +81,8 @@ pub async fn full_community_node_graph(
 
     match community_result {
         Ok(community) => {
-
-            // identify user
-            let (session_user, role) = extract_identity_data(&id);
+            
+            let (mut ctx, session_user, _role) = generate_basic_context(id, node_names);
 
             let session_user_id = match User::find_id_from_slug(&session_user) {
                 Ok(id) => id,
@@ -125,19 +109,11 @@ pub async fn full_community_node_graph(
                 let graph = generate_node_cyto_graph(experience_vec, people_connections, Some(community.slug));
             
                 let j = serde_json::to_string_pretty(&graph).unwrap();
-                
-                let mut ctx = Context::new();
-            
-                ctx.insert("session_user", &session_user);
-                ctx.insert("role", &role);
             
                 ctx.insert("graph_data", &j);
             
                 let title = format!("{} Community Node Graph", &community.tag);
                 ctx.insert("title", &title);
-            
-                // add node_names for navbar drop down
-                ctx.insert("node_names", &node_names.lock().expect("Unable to unlock").clone());
                 
                 let rendered = data.tmpl.render("graphs/node_network_graph.html", &ctx).unwrap();
                 HttpResponse::Ok().body(rendered)

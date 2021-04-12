@@ -3,13 +3,12 @@ use std::sync::Mutex;
 use actix_web::{web, get, HttpResponse, HttpRequest, Responder, ResponseError};
 use actix_identity::Identity;
 use inflector::Inflector;
-use tera::{Context};
 use diesel::prelude::*;
 use diesel::{QueryDsl, BelongingToDsl};
 
 use std::collections::HashMap;
 
-use crate::{AppData, extract_identity_data, generate_basic_context};
+use crate::{AppData, generate_basic_context};
 use crate::models::{Experiences, Nodes, Communities, User, People};
 use database;
 use crate::models::{AggregateExperience, generate_node_cyto_graph};
@@ -24,12 +23,8 @@ pub async fn node_page(
     _req:HttpRequest,
     id: Identity,
 ) -> impl Responder {
-    let mut ctx = Context::new();
-
-    // Get session data and add to context
-    let (session_user, role) = extract_identity_data(&id);
-    ctx.insert("session_user", &session_user);
-    ctx.insert("role", &role);
+    
+    let (mut ctx, _session_user, _role) = generate_basic_context(id, node_names);
 
     let conn = database::connection().expect("Unable to connect to db");
     
@@ -104,9 +99,6 @@ pub async fn node_page(
             ctx.insert("node_experience", &node_experience);
         
             ctx.insert("other_experiences", &aggregate_experiences);
-        
-            // add node_names for navbar drop down
-            ctx.insert("node_names", &node_names.lock().expect("Unable to unlock").clone());
         
             let rendered = data.tmpl.render("nodes/node.html", &ctx).unwrap();
             return HttpResponse::Ok().body(rendered)

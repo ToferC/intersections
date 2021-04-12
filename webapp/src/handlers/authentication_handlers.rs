@@ -46,7 +46,7 @@ pub async fn login_handler(
     id: Identity,
 ) -> impl Responder {
 
-    let (ctx, session_user, _role) = generate_basic_context(id, node_names);
+    let (ctx, _session_user, _role) = generate_basic_context(id, node_names);
 
     let rendered = data.tmpl.render("authentication/log_in.html", &ctx).unwrap();
     HttpResponse::Ok().body(rendered)
@@ -102,7 +102,7 @@ pub async fn register_handler(
     id: Identity,
 ) -> impl Responder {
     
-    let (ctx, session_user, _role) = generate_basic_context(id, node_names);
+    let (ctx, _session_user, _role) = generate_basic_context(id, node_names);
 
     let rendered = data.tmpl.render("authentication/register.html", &ctx).unwrap();
     HttpResponse::Ok().body(rendered)
@@ -383,15 +383,7 @@ pub async fn password_email_sent(
     id: Identity,
 ) -> impl Responder {
     
-    let mut ctx = Context::new();
-
-    // Get session data and add to context
-    let (session_user, role) = extract_identity_data(&id);
-    ctx.insert("session_user", &session_user);
-    ctx.insert("role", &role);
-
-    // add node_names for navbar drop down
-    ctx.insert("node_names", &node_names.lock().expect("Unable to unlock").clone());
+    let (ctx, _session_user, _role) = generate_basic_context(id, node_names);
 
     let rendered = data.tmpl.render("authentication/password_email_sent.html", &ctx).unwrap();
     HttpResponse::Ok().body(rendered)
@@ -412,15 +404,7 @@ pub async fn password_reset(
         Ok(verified_token) => {
             let user = User::find_from_email(&verified_token.email_address).expect("Unable to load user from email");
 
-            let mut ctx = Context::new();
-
-            // Get session data and add to context
-            let (session_user, role) = extract_identity_data(&id);
-            ctx.insert("session_user", &session_user);
-            ctx.insert("role", &role);
-
-            // add node_names for navbar drop down
-            ctx.insert("node_names", &node_names.lock().expect("Unable to unlock").clone());
+            let (mut ctx, _session_user, _role) = generate_basic_context(id, node_names);
 
             ctx.insert("user", &user);
             ctx.insert("token", &token);
