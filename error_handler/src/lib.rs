@@ -52,6 +52,9 @@ pub mod error_handler {
             };
     
             match status_code.as_u16() {
+                406 => {
+                    return HttpResponse::Found().header("Location","/not_authorized").finish()
+                },
                 408 => {
                     return HttpResponse::Found().header("Location","/not_found").finish()
                 },

@@ -2,7 +2,7 @@
 
 use std::sync::Mutex;
 
-use actix_web::{HttpRequest, HttpResponse, Responder, get, post, web};
+use actix_web::{HttpRequest, HttpResponse, Responder, get, post, web, ResponseError};
 use actix_identity::{Identity};
 use inflector::Inflector;
 use serde::{Deserialize};
@@ -10,6 +10,7 @@ use serde::{Deserialize};
 use crate::{AppData, extract_identity_data, generate_basic_context};
 use crate::models::{User, Communities};
 use crate::handlers::DeleteForm;
+use error_handler::error_handler::CustomError;
 
 #[derive(Deserialize, Debug)]
 pub struct UserForm {
@@ -27,8 +28,12 @@ pub async fn user_index(
     let (mut ctx, _session_user, role) = generate_basic_context(id, node_names);
 
     if role != "admin".to_string() {
-        println!("User not admin");
-        HttpResponse::Found().header("Location", "/log_in").finish()
+        let err = CustomError::new(
+            406,
+            "Not authorized".to_string(),
+        );
+        println!("{}", &err);
+        return err.error_response()
     } else {
 
         let user_data = User::find_all();
@@ -60,27 +65,42 @@ pub async fn user_page_handler(
     let (mut ctx, session_user, role) = generate_basic_context(id, node_names);
     
     if session_user.to_lowercase() != slug.to_lowercase() && role != "admin".to_string() {
-        HttpResponse::Found().header("Location", "/log_in").finish()
+        let err = CustomError::new(
+            406,
+            "Not authorized".to_string(),
+        );
+        println!("{}", &err);
+        return err.error_response()
+
     } else {
     
-        let user = User::find_from_slug(&slug).expect("Could not load user");
+        let user_select = User::find_from_slug(&slug);
+
+        match user_select {
+            Ok(user) => {
+                ctx.insert("user", &user);
+        
+                let c = Communities::find_by_owner_user_id(&user.id);
+        
+                let communities = match c {
+                    Ok(c) => c,
+                    Err(e) => {
+                        println!("Error - {}", e);
+                        Vec::new()
+                    }
+                };
+        
+                ctx.insert("communities", &communities);
+            
+                let rendered = data.tmpl.render("users/user_page.html", &ctx).unwrap();
+                HttpResponse::Ok().body(rendered)
+            },
+            Err(err) => {
+                println!("{}", &err);
+                return err.error_response()
+            },
+        }
     
-        ctx.insert("user", &user);
-
-        let c = Communities::find_by_owner_user_id(&user.id);
-
-        let communities = match c {
-            Ok(c) => c,
-            Err(e) => {
-                println!("Error - {}", e);
-                Vec::new()
-            }
-        };
-
-        ctx.insert("communities", &communities);
-    
-        let rendered = data.tmpl.render("users/user_page.html", &ctx).unwrap();
-        HttpResponse::Ok().body(rendered)
     }
 }
 
@@ -101,8 +121,12 @@ pub async fn edit_user(
         Ok(user) => {
 
             if &user.slug != &session_user && role != "admin" {
-                // action not allowed
-                return HttpResponse::Found().header("Location", "/log_in").finish()
+                let err = CustomError::new(
+                    406,
+                    "Not authorized".to_string(),
+                );
+                println!("{}", &err);
+                return err.error_response()
             };
 
             ctx.insert("user", &user);
@@ -111,8 +135,8 @@ pub async fn edit_user(
             return HttpResponse::Ok().body(rendered)
         },
         Err(err) => {
-            println!("Error: No user found - {}", err);
-            return HttpResponse::Found().header("Location", "/log_in").finish()
+            println!("{}", &err);
+            return err.error_response()
         },
     };
 }
@@ -187,8 +211,8 @@ pub async fn edit_user_post(
             };
         },
         Err(err) => {
-            println!("Error - user not found{}", err);
-            return HttpResponse::Found().header("Location", "/user_index").finish()
+            println!("Error - {}", err);
+            return err.error_response()
         },
     };
 }
@@ -219,10 +243,10 @@ pub async fn delete_user_handler(
                 let rendered = data.tmpl.render("users/delete_user.html", &ctx).unwrap();
                 return HttpResponse::Ok().body(rendered)
             },
-            Err(c) => {
+            Err(err) => {
                 // no user returned for ID
-                println!("{}", c);
-                return HttpResponse::Found().header("Location", "/user_index").finish()
+                println!("{}", err);
+                return err.error_response()
             },
         }
     }
@@ -240,8 +264,12 @@ pub async fn delete_user(
     let (session_user, role) = extract_identity_data(&id);
     
     if role != "admin".to_string() {
-        println!("User not admin");
-        HttpResponse::Found().header("Location", "/").finish()
+        let err = CustomError::new(
+            406,
+            "Not authorized".to_string(),
+        );
+        println!("{}", &err);
+        return err.error_response()
     } else {
 
         let user = User::find(target_id);
@@ -270,10 +298,10 @@ pub async fn delete_user(
                     return HttpResponse::Found().header("Location", format!("/delete_user/{}", u.id)).finish()
                 };
             },
-            Err(c) => {
+            Err(err) => {
                 // no user returned for ID
-                println!("{}", c);
-                return HttpResponse::Found().header("Location", "/user_index").finish()
+                println!("{}", err);
+                return err.error_response()
             },
         }
     }

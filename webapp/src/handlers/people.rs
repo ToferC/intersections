@@ -1,6 +1,6 @@
 use std::sync::Mutex;
 
-use actix_web::{web, get, post, HttpResponse, HttpRequest, Responder};
+use actix_web::{web, get, post, HttpResponse, HttpRequest, Responder, ResponseError};
 use actix_identity::Identity;
 use crate::{AppData, generate_basic_context};
 use diesel::prelude::*;
@@ -24,39 +24,49 @@ pub async fn person_page(
     
     let (mut ctx, _session_user, _role) = generate_basic_context(id, node_names);
 
-    let p = People::find_from_code(&code).unwrap();
+    let person_select = People::find_from_code(&code);
 
-    ctx.insert("person", &p);
+    match person_select {
+        Ok(p) => {
 
-    let community = Communities::find(p.community_id).expect("Unable to find community");
-    ctx.insert("community", &community);
-
-    let title = "Profile Page";
-    ctx.insert("title", &title);
-    
-    // add pull for experience data
-    let people_with_experiences = RenderPerson::from(&p, true).expect("Unable to load experiences");
-
-    ctx.insert("people_experiences", &people_with_experiences);
-
-    let mut aggregate_experiences: Vec<AggregateExperience> = Vec::new();
-
-    for p in people_with_experiences.into_iter() {
-        for l in p.experiences {
-            let node = Nodes::find(l.node_id).expect("Unable to load experiences");
-            let experiences = Experiences::find_from_node_id(node.id).expect("Unable to load experiences");
-            let agg_experiences = AggregateExperience::from(experiences);
-            aggregate_experiences.push(agg_experiences);
-        }
+            ctx.insert("person", &p);
+        
+            let community = Communities::find(p.community_id).expect("Unable to find community");
+            ctx.insert("community", &community);
+        
+            let title = "Profile Page";
+            ctx.insert("title", &title);
+            
+            // add pull for experience data
+            let people_with_experiences = RenderPerson::from(&p, true).expect("Unable to load experiences");
+        
+            ctx.insert("people_experiences", &people_with_experiences);
+        
+            let mut aggregate_experiences: Vec<AggregateExperience> = Vec::new();
+        
+            for p in people_with_experiences.into_iter() {
+                for l in p.experiences {
+                    let node = Nodes::find(l.node_id).expect("Unable to load experiences");
+                    let experiences = Experiences::find_from_node_id(node.id).expect("Unable to load experiences");
+                    let agg_experiences = AggregateExperience::from(experiences);
+                    aggregate_experiences.push(agg_experiences);
+                }
+            };
+        
+            aggregate_experiences.sort_by(|a, b|b.count.partial_cmp(&a.count).unwrap());
+            aggregate_experiences.dedup();
+        
+            ctx.insert("other_experiences", &aggregate_experiences);
+        
+            let rendered = data.tmpl.render("people/person.html", &ctx).unwrap();
+            return HttpResponse::Ok().body(rendered)
+        },
+        Err(err) => {
+            println!("Error: {}", err);
+            return err.error_response();
+        },
     };
 
-    aggregate_experiences.sort_by(|a, b|b.count.partial_cmp(&a.count).unwrap());
-    aggregate_experiences.dedup();
-
-    ctx.insert("other_experiences", &aggregate_experiences);
-
-    let rendered = data.tmpl.render("people/person.html", &ctx).unwrap();
-    HttpResponse::Ok().body(rendered)
 }
 
 #[get("/person_network_graph/{person_id}")]
@@ -144,10 +154,10 @@ pub async fn delete_person(
             let rendered = data.tmpl.render("people/delete_person.html", &ctx).unwrap();
             return HttpResponse::Ok().body(rendered)
         },
-        Err(c) => {
+        Err(err) => {
             // no user returned for ID
-            println!("{}", c);
-            return HttpResponse::Found().header("Location", "/").finish()
+            println!("{}", err);
+            return err.error_response()
         },
     }
 }
@@ -213,7 +223,7 @@ pub async fn delete_person_post(
         Err(err) => {
             // no user returned for ID
             println!("{}", err);
-            return HttpResponse::Found().header("Location", "/").finish()
+            return err.error_response()
         },
     };
 }

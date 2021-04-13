@@ -12,6 +12,7 @@ use qrcode_generator::QrCodeEcc;
 
 use crate::{AppData, extract_identity_data, generate_basic_context};
 use crate::models::{Communities, NewCommunity, User};
+use error_handler::error_handler::CustomError;
 
 #[derive(Deserialize, Debug)]
 pub struct CommunityForm {
@@ -36,8 +37,12 @@ pub async fn community_index(
     let (mut ctx, _session_user, role) = generate_basic_context(id, node_names);
     
     if role != "admin".to_string() {
-        println!("User not admin");
-        HttpResponse::Found().header("Location", "/log_in").finish()
+        let err = CustomError::new(
+            406,
+            "Not authorized".to_string(),
+        );
+        println!("{}", &err);
+        return err.error_response()
     } else {
         let communities_data = Communities::find_all();
 
@@ -101,21 +106,35 @@ pub async fn view_community(
             let mut owner = false;
         
             if &session_user != "" {
-                let user = User::find_from_slug(&session_user).expect("Unable to load user");
-        
-                ctx.insert("user", &user);
-                
-                if community.user_id == user.id {
-                    owner = true;
-                }
-            
-                // Redirect if community is closed and user isn't community owner
-                if !community.open && !owner {
-                    return HttpResponse::Found().header("Location", String::from("/")).finish()
+                let user_select = User::find_from_slug(&session_user);
+
+                match user_select {
+                    Ok(user) => {
+                        ctx.insert("user", &user);
+                        
+                        if community.user_id == user.id {
+                            owner = true;
+                        }
+                    
+                        // Redirect if community is closed and user isn't community owner
+                        if !community.open && !owner {
+                            return HttpResponse::Found().header("Location", String::from("/")).finish()
+                        };
+                    },
+                    Err(err) => {
+                        println!("Error - {}", &err);
+                        return err.error_response()
+                    },
                 };
+        
             } else {
                 if !community.open {
-                    return HttpResponse::Found().header("Location", String::from("/")).finish()
+                    let err = CustomError::new(
+                        406,
+                        "Not authorized".to_string(),
+                    );
+                    println!("{}", &err);
+                    return err.error_response()
                 }
             };
         
@@ -158,10 +177,19 @@ pub async fn add_community(
     id: Identity,
 ) -> impl Responder {
     
-    let (ctx, _session_user, _role) = generate_basic_context(id, node_names);
+    let (ctx, session_user, _role) = generate_basic_context(id, node_names);
 
-    let rendered = data.tmpl.render("communities/add_community.html", &ctx).unwrap();
-    HttpResponse::Ok().body(rendered)
+    if session_user != "" {
+        let rendered = data.tmpl.render("communities/add_community.html", &ctx).unwrap();
+        return HttpResponse::Ok().body(rendered)
+    } else {
+        let err = CustomError::new(
+            406,
+            "Not authorized".to_string(),
+        );
+        println!("{}", &err);
+        return err.error_response()
+    };
 }
 
 #[post("/add_community")]
@@ -209,13 +237,13 @@ pub async fn add_community_form_input(
                 },
                 Err(e) => {
                     println!("{}", e);
-                    return HttpResponse::Found().header("Location", String::from("/add_community")).finish()
+                    return e.error_response()
                 }
             };
         },
-        _ => {
-            println!("User not verified");
-            return HttpResponse::Found().header("Location", String::from("/log_in")).finish()
+        Err(err) => {
+            println!("{}", &err);
+            return err.error_response()
         },
     };
 }
@@ -258,10 +286,9 @@ pub async fn edit_community(
             };
         },
 
-        _ => {
-            // user not found
-            println!("User not verified");
-            return HttpResponse::Found().header("Location", String::from("/log_in")).finish()
+        Err(err) => {
+            println!("Error {}", &err);
+            return err.error_response()
         },
     };
 
@@ -334,9 +361,9 @@ pub async fn edit_community_form_input(
                 }
             }
         },
-        _ => {
-            println!("User not verified");
-            return HttpResponse::Found().header("Location", String::from("/log_in")).finish()
+        Err(err) => {
+            println!("Error - {}", &err);
+            return err.error_response()
         },
     };
 }
@@ -356,7 +383,7 @@ pub async fn delete_community(
         Ok(u) => u,
         Err(e) => {
             println!("{}", e);
-            User::dummy()
+            return e.error_response()
         },
     };
 
@@ -379,7 +406,7 @@ pub async fn delete_community(
         Err(e) => {
             // no community found
             println!("{}", e);
-            return HttpResponse::Found().header("Location", "/").finish();
+            return e.error_response()
         }
     }
 }
@@ -399,7 +426,7 @@ pub async fn delete_community_form(
         Ok(u) => u,
         Err(e) => {
             println!("{}", e);
-            User::dummy()
+            return e.error_response()
         },
     };
 
@@ -409,8 +436,12 @@ pub async fn delete_community_form(
         Ok(community) => {
             if role != "admin".to_string() && community.user_id != user.id && community.slug != "global".to_string() {
                 // user isn't admin or the community owner and we're not trying to delete the global community
-                println!("User not community owner - access denied");
-                HttpResponse::Found().header("Location", "/community_index").finish()
+                let err = CustomError::new(
+                    406,
+                    "Not authorized".to_string(),
+                );
+                println!("{}", &err);
+                return err.error_response()
             } else {
         
                 if form.user_verify.trim().to_string() == community.tag {
@@ -428,8 +459,7 @@ pub async fn delete_community_form(
                         },
                         Err(e) => {
                             println!("Community update failed: {}", e);
-                            return HttpResponse::Found().header("Location", 
-                            format!("/delete_community/{}", community.code)).finish()
+                            return e.error_response()
                         }
                     };
                     
@@ -442,7 +472,7 @@ pub async fn delete_community_form(
         Err(e) => {
             // no community found
             println!("{}", e);
-            return HttpResponse::Found().header("Location", "/").finish();
+            return e.error_response()
         }
     }
 }
