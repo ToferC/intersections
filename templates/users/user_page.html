@@ -16,50 +16,58 @@
                 <p>{{ user.email }}</p>
 
                 <h2>Account Options</h2>
-                <p><a style="color:red" href="/delete_user/{{ user.slug }}">Delete User</a></p>
-                {% if role == "admin" %}
-                    <p><a href="/admin_edit_user/{{ user.slug }}">Edit User as Admin</a></p>
-                {% else %}
-                    <p><a href="/edit_user/{{ user.slug }}">Change username or email address</a></p>
-                {% endif %}
-                <p><a href="/request_password_reset">Reset Password</a></p>
+                <p>
+                    {% if role == "admin" %}
+                    <a class="btn btn-dark" href="/admin_edit_user/{{ user.slug }}">Edit User as Admin</a>
+                    {% else %}
+                    <a class="btn btn-dark" href="/edit_user/{{ user.slug }}">Change username or email address</a>
+                    {% endif %}
+                    <a class="btn btn-dark" href="/request_password_reset">Reset Password</a>
+                    <a class="btn btn-danger" href="/delete_user/{{ user.slug }}">Delete User</a>
+                </p>
 
         </div>
         <br>
 
         <h2>Communities</h2>
-        <p>Communities and organizations on intersections</p>
+        <p>Your managed communities</p>
 
-        <table>
-            <tr>
-                <th style="text-align: center;">Community</th>
-                <th style="text-align: center;">Created</th>
-                <th style="text-align: center;">Open</th>
-                <th style="text-align: center;">Contact</th>
-                <th style="text-align: center;">Delete</th>
-            </tr>
-            {% if communities %}
-                {% for community in communities %} 
-                
-                <tr>
-                    <td><a href="/community/{{ community.slug }}">{{ community.tag | title }}</a></td>
-                    <td>{{ community.date_created | date(format="%Y-%m-%d") }}</td>
-                    <td>{{ community.open }}</td>
-                    <td>{{ community.contact_email }}</td>
-                    <td><a style="color:red" href="/delete_community/{{ community.id }}">Delete</a></td>
-                </tr>
-                        
-                {% endfor %}
-            {% else %}
-            <tr>
-                <td>N/A</td>
-                <td>N/A</td>
-                <td>N/A</td>
-                <td>N/A</td>
-                <td>N/A</td>
-            </tr>
-            {% endif %}
-        </table>
+        {% if communities %}
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+
+            {% for community in communities %} 
+            <div class="col">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        {{ community.tag | title }}{% if community.test %} (Demo){% endif %}
+                    </h5>
+                    <p class="card-text"><small class="text-muted">{{ community.contact_email }} | {% if community.open %}Open{% else %}Private{% endif %} Community | Created: {{ community.date_created | date(format="%Y-%m-%d") }}</small></p>
+                    <p class="card-text">{{ community.description }}</p>
+                    <p class="card-text">Data Use: {{ community.data_use_case }}</p>
+                    <table>
+                        <tr>
+                            <th style="text-align: center;">Members</th>
+                            <th style="text-align: center;">Experiences</th>
+                            <th style="text-align: center;">Avg. Inclusvity</th>
+                        </tr>
+                        <tr>
+                            <td style="text-align: center;">{{ community.data.members }}</td>
+                            <td style="text-align: center;">{{ community.data.experiences }}</td>
+                            <td style="text-align: center;">{{ community.data.mean_inclusivity | round(method="ceil", precision=3) }}</td>
+                        </tr>
+                    </table>
+                    <br>
+                    <a class="btn btn-dark" href="/community/{{ community.slug }}">Details</a>
+                    <a class="btn btn-dark" href="/full_community_graph/{{ community.slug }}">Graph</a>
+                    <a class="btn btn-dark" href="/edit_community/{{ community.slug }}">Edit</a>
+                    <a class="btn btn-danger" href="/delete_community/{{ community.id }}">Delete</a>
+                </div>
+            </div>
+        </div>
+            {% endfor %}
+        </div>
+        {% endif %}
 
         <br>
         {% if user.validated %}
