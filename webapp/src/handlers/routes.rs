@@ -4,6 +4,10 @@ use crate::handlers::{
     // base
     index,
 
+    // admin
+    admin_edit_user,
+    admin_edit_user_post,
+
     // errors
     internal_server_error,
     not_found,
@@ -84,6 +88,10 @@ pub fn init_routes(config: &mut web::ServiceConfig) {
     // base
     config.service(index);
     config.service(find_experience);
+
+    // admin
+    config.service(admin_edit_user);
+    config.service(admin_edit_user_post);
 
     // errors
     config.service(internal_server_error);

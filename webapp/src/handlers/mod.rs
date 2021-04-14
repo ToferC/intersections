@@ -49,7 +49,8 @@ pub use self::people::{person_graph, person_page, delete_person, delete_person_p
 
 pub use self::nodes::{node_graph, node_page, community_node_page, community_node_graph};
 
-pub use self::users::{user_index, user_page_handler, delete_user, delete_user_handler, edit_user, edit_user_post};
+pub use self::users::{user_index, user_page_handler, delete_user, delete_user_handler, edit_user, edit_user_post,
+    admin_edit_user, admin_edit_user_post};
 
 pub use self::community::{add_community, add_community_form_input, delete_community_form, delete_community,
     view_community, community_index, edit_community, edit_community_form_input, open_community_index};

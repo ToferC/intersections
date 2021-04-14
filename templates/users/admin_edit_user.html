@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+
+{% block title %}
+    <title>Edit User: {{ user.user_name }} as Admin</title>
+{% endblock title %}
+
+{% block content %}
+    <div class="col m-md-2 m-1">
+        <br>
+        <h1>Edit User: {{ user.user_name }} as Admin</h1>
+        <p>Update and edit the user's account details here.</p>
+
+
+        <form name="AdminUserForm" id="adminUserForm" action=/admin_edit_user/{{ user.slug }} method=POST>
+        
+        <label>
+            <strong>Email address</strong>
+            <input class="form-control form-control-lg" type="email" name="email" value="{{ user.email }}" required>
+            <small id="code_help" class="form-text text-muted">You will use this to log in.</small>
+        </label>
+        <br>
+
+        <label>
+            <strong>User name</strong>
+            <input class="form-control form-control-lg" type="text" name="user_name" value="{{ user.user_name }}" required>
+            <small id="code_help" class="form-text text-muted">The name you'd like to be called when using intersections.</small>
+        </label>
+        <br>
+
+        <label>
+            <strong>Role</strong>
+            <select name="role">
+                <option value="user" {% if user.role == "user" %}selected{% endif %}>User</option>
+                <option value="admin" {% if user.role == "admin" %}selected{% endif %}>Admin</option>
+              </select>
+            <small id="code_help" class="form-text text-muted">Choose role and privileges for this user.</small>
+        </label>
+        <br>
+
+        <label>
+            <strong>Validated</strong>
+            <select name="validated">
+                <option value="true" {% if user.validated %}selected{% endif %}>True</option>
+                <option value="false" {% if not user.validated %}selected{% endif %}>False</option>
+              </select>
+            <small id="code_help" class="form-text text-muted">Choose to validate or invalidate the user.</small>
+        </label>
+
+        <hr>
+        <button 
+            class="btn g-recaptcha btn-dark" 
+            data-sitekey="6LfAltkZAAAAAN7rJGBvRUPm36M1aiL7q2a8SznA" 
+            data-callback='onSubmit' 
+            data-action='submit'
+            type=submit
+            >Update</button>
+    </form>
+                
+    </div>
+{% endblock content %}
+
+{% block scripts %}
+<script>
+
+    window.onSubmit = onSubmit;
+
+    function onSubmit(token) {
+     document.getElementById("adminUserForm").submit();
+   };
+
+</script>
+{% endblock scripts %}

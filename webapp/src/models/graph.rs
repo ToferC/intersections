@@ -82,9 +82,9 @@ impl GNode {
 
     pub fn from_node(n : &Nodes, community: &Option<String>) -> GNode {
         let (colour, shape): (String, String) = if n.domain_token == "person" {
-            (String::from("green"), String::from("rectangle"))
+            (String::from("green"), String::from("ellipse"))
         } else {
-            (String::from("blue"), String::from("triangle"))
+            (String::from("blue"), String::from("rectangle"))
         };
 
         let href = match community {
@@ -109,9 +109,9 @@ impl GNode {
     pub fn from_experience(l: &Experiences, community: &Option<String>) -> GNode {
 
         let (colour, shape): (String, String) = if l.node_domain == "person" {
-            (String::from("green"), String::from("rectangle"))
+            (String::from("green"), String::from("ellipse"))
         } else {
-            (String::from("blue"), String::from("triangle"))
+            (String::from("blue"), String::from("rectangle"))
         };
 
         let slug = l.node_name.trim().to_string().to_snake_case();
@@ -138,9 +138,9 @@ impl GNode {
     pub fn from_agg_experience(a: &AggregateExperience, community: &Option<String>) -> GNode {
 
         let (colour, shape): (String, String) = if a.domain == "person" {
-            (String::from("green"), String::from("rectangle"))
+            (String::from("green"), String::from("ellipse"))
         } else {
-            (String::from("blue"), String::from("ellipse"))
+            (String::from("blue"), String::from("rectangle"))
         };
 
         let slug = a.name.trim().to_string().to_snake_case();

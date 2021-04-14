@@ -17,7 +17,11 @@
 
                 <h2>Account Options</h2>
                 <p><a style="color:red" href="/delete_user/{{ user.slug }}">Delete User</a></p>
-                <p><a href="/edit_user/{{ user.slug }}">Change username or email address</a></p>
+                {% if role == "admin" %}
+                    <p><a href="/admin_edit_user/{{ user.slug }}">Edit User as Admin</a></p>
+                {% else %}
+                    <p><a href="/edit_user/{{ user.slug }}">Change username or email address</a></p>
+                {% endif %}
                 <p><a href="/request_password_reset">Reset Password</a></p>
 
         </div>

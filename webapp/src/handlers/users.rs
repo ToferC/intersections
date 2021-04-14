@@ -18,6 +18,14 @@ pub struct UserForm {
     email: String,
 }
 
+#[derive(Deserialize, Debug)]
+pub struct AdminUserForm {
+    user_name: String,
+    email: String,
+    role: String,
+    validated: String,
+}
+
 #[get("/user_index")]
 pub async fn user_index(
     data: web::Data<AppData>,
@@ -141,7 +149,7 @@ pub async fn edit_user(
     };
 }
 
-#[post("/edit_user/{slug}")]
+#[post("/edit_user_post/{slug}")]
 pub async fn edit_user_post(
     _data: web::Data<AppData>,
     web::Path(slug): web::Path<String>,
@@ -195,19 +203,141 @@ pub async fn edit_user_post(
 
             if email_changed || user_name_changed {
                 // changes registered, update user
-                let user = User::update(user).expect("Unable to update user.");
-                println!("User {} updated", &user.user_name);
+                // changes registered, update user
+                let user_update = User::update(user);
 
-                if email_changed {
-                    // validate email
-                    return HttpResponse::Found().header("Location", "/email_verification").finish()
-                } else {
-                    // return to user page
-                    return HttpResponse::Found().header("Location", format!("/user/{}", &user.slug)).finish()
-                }
+                match user_update {
+                    Ok(user) => {
+                        println!("User {} updated", &user.user_name);
+        
+                        if email_changed {
+                            // validate email
+                            return HttpResponse::Found().header("Location", "/email_verification").finish()
+                        } else {
+                            // return to user page
+                            return HttpResponse::Found().header("Location", format!("/user/{}", &user.slug)).finish()
+                        }
+                    },
+                    Err(err) => {
+                        println!("{}", err);
+                        return err.error_response()
+                    },
+                };
             } else {
                 // no change
                 return HttpResponse::Found().header("Location", format!("/user/{}", &user.slug)).finish()
+            };
+        },
+        Err(err) => {
+            println!("Error - {}", err);
+            return err.error_response()
+        },
+    };
+}
+
+#[get("/admin_edit_user/{slug}")]
+pub async fn admin_edit_user(
+    data: web::Data<AppData>,
+    web::Path(slug): web::Path<String>,
+    node_names: web::Data<Mutex<Vec<(String, String)>>>,
+    _req:HttpRequest,
+    id: Identity,
+) -> impl Responder {
+    
+    let (mut ctx, _session_user, role) = generate_basic_context(id, node_names);
+
+    if &role != &"admin".to_string() {
+        let err = CustomError::new(
+            406,
+            "Not authorized".to_string(),
+        );
+        println!("{}", &err);
+        return err.error_response()
+    };
+
+    let user = User::find_from_slug(&slug);
+
+    match user {
+        Ok(user) => {
+
+            ctx.insert("user", &user);
+        
+            let rendered = data.tmpl.render("users/admin_edit_user.html", &ctx).unwrap();
+            return HttpResponse::Ok().body(rendered)
+        },
+        Err(err) => {
+            println!("{}", &err);
+            return err.error_response()
+        },
+    };
+}
+
+#[post("/admin_edit_user/{slug}")]
+pub async fn admin_edit_user_post(
+    _data: web::Data<AppData>,
+    web::Path(slug): web::Path<String>,
+    _req: HttpRequest, 
+    form: web::Form<AdminUserForm>,
+    id: Identity,
+) -> impl Responder {
+
+    let (_session_user, role) = extract_identity_data(&id);
+
+    if form.email.is_empty() || 
+    form.user_name.is_empty() ||
+    &role != "admin" {
+        // validate form has data or and permissions exist
+        return HttpResponse::Found().header("Location", format!("/admin_edit_user/{}", &slug)).finish()
+    };
+
+    // update user
+    let user = User::find_from_slug(&slug);
+
+    match user {
+        Ok(mut user) => {
+
+            let mut validated: bool = false;
+
+            if form.validated == "true" {
+                validated = true;
+            };
+
+            user.validated = validated;
+            user.role = form.role.to_lower_case().trim().to_owned();
+
+            // update user email
+            if &form.email.to_lower_case().trim() != &user.email {
+                user.email = form.email.to_lowercase().trim().to_owned();
+
+                // update contact email in owned communities
+                let communities = Communities::find_by_owner_user_id(&user.id).expect("Unable to load communities");
+
+                for mut c in communities {
+                    c.contact_email = user.email.to_owned();
+                    Communities::update(&c).expect("Unable to update community");
+                };
+            };
+
+            if &form.user_name.trim() != &user.user_name {
+                user.user_name = form.user_name.trim().to_owned();
+                user.slug = user.user_name.clone().to_snake_case();
+            };
+
+            
+            // changes registered, update user
+            let user_update = User::update(user);
+
+            match user_update {
+                Ok(user) => {
+                    println!("User {} updated", &user.user_name);
+    
+                    // return to user page
+                    return HttpResponse::Found().header("Location", format!("/user/{}", &user.slug)).finish()
+                },
+                Err(err) => {
+                    println!("{}", err);
+                    return err.error_response()
+                },
             };
         },
         Err(err) => {
