@@ -155,7 +155,7 @@ impl GNode {
             node_type: String::from("Node"),
             text: vec![a.domain.to_owned()],
             shape: shape,
-            size: 25,
+            size: a.count as i32,
             color: colour,
             inclusivity: a.mean_inclusivity.to_f32().expect("Unable to convert BigDecimal"),
             href,

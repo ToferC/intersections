@@ -100,8 +100,10 @@
         <li><span style='background: #ffffe0;'></span>Positive Inclusivity</li>
         <li>-------</li>
         <li>Zoom and drag to see data.</li>
-        <li>Hover to see connections.</li>
-        <li>Click to explore node data.</li>
+        <li>Hover to see inclusivity.</li>
+        <li>Click node to see links.</li>
+        <li>Click again to view node.</li>
+        <li>Click elsewhere to unselect</li>
       </ul>
     </div>
   </div>
@@ -132,8 +134,8 @@
                 'background-color': 'mapData(inclusivity, -1.00, 1.00, #00429d, #ffffe0)',
                 'border-color': 'black',
                 'border-width': 0.5,
-                'width': 'data(size)',
-                'height': 'data(size)',
+                'width': 25,
+                'height': 25,
                 'shape': 'data(shape)',
                 'content': 'data(id)'
               }
@@ -175,9 +177,9 @@
   
           layout: {
             name: 'fcose',
-            nodeSeparation: 750,
+            nodeSeparation: 1000,
             nodeRepulsion: 5000,
-            idealEdgeLength: 170
+            idealEdgeLength: 200
           }
   
           });
@@ -190,7 +192,7 @@
               let content = document.createElement('div');
 
               if (ele.data("node_type") == "Node") {
-                content.innerHTML = ele.data("inclusivity");
+                content.innerHTML = "Inclusivity: " + ele.data("inclusivity").toFixed(2) +", \n" + "Count: " + ele.data("size");
               } else {
                 content.innerHTML = ele.data("weight");
               };
@@ -233,33 +235,34 @@
           );
           */
         });
-
-        // Allow link open page on click
-        cy.on('tap', 'node', function(){
-          try { // your browser may block popups
-            window.open( this.data('href') );
-          } catch(e){ // fall back on url change
-            window.location.href = this.data('href');
-          }
-        });    
-
-        // select neighbours and highlight
-        cy.on('mouseover', 'node', function(e) {
-        var sel = e.target;
-        cy.elements()
-            .difference(sel.outgoers()
-                .union(sel.incomers()))
-            .not(sel)
+        
+        cy.unbind('tap');
+        cy.on('tap', 'node', function(evt){
+          let node = evt.target;
+          cy.elements()
+            .difference(node.outgoers()
+                .union(node.incomers()))
+            .not(node)
             .addClass('semitransp')
             // show tooltip for selected node
-            sel.addClass('highlight')
+            node.addClass('highlight')
             .outgoers()
-            .union(sel.incomers())
+            .union(node.incomers())
             .addClass('highlight');
-        });
+          console.log('tapped ' + node.id());
+          if (node.selected()) {
+            // Allow link open page on double tap
+            try { // your browser may block popups
+              window.open( this.data('href') );
+            } catch(e){ // fall back on url change
+              window.location.href = this.data('href');
+            }
+          }
+        }); 
 
         // remove highlight
-        cy.on('mouseout', 'node', function(e) {
+        cy.unbind('unselect');
+        cy.on('unselect', 'node', function(e) {
             var sel = e.target;
             cy.elements()
                 .removeClass('semitransp')
@@ -269,10 +272,12 @@
                 .removeClass('highlight');
         });
 
-        //cy.elements().unbind('mouseover');
+        
+
+        cy.elements().unbind('mouseover');
         cy.elements().bind('mouseover', (event) => event.target.tippy.show());
 
-        //cy.elements().unbind('mouseout');
+        cy.elements().unbind('mouseout');
         cy.elements().bind('mouseout', (event) => event.target.tippy.hide());
     });
 
