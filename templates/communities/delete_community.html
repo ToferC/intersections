@@ -27,7 +27,7 @@
             </tr>
             <tr>
                 <td style="text-align: center;">{{ community.data.members }}</td>
-                <td style="text-align: center;">{{ community.data.experience }}</td>
+                <td style="text-align: center;">{{ community.data.experiences }}</td>
                 <td style="text-align: center;">{{ community.data.mean_inclusivity | round(method="ceil", precision=3) }}</td>
             </tr>
         </table>
@@ -38,7 +38,7 @@
             <form name="DeleteCommunityForm" id="deleteCommunityForm" action=/delete_community/{{ community.code }} method=POST>
     
                 <label>
-                    <strong>Delete Community: {{ community.tag }}</strong>
+                    <strong>Enter the community's name to Delete: {{ community.tag }}</strong>
                     <input class="form-control form-control-lg" type="text" name="user_verify" placeholder="Community to delete..." required>
                     <small id="code_help" class="form-text text-muted">Enter the community name to delete. This action is permanent.
                     </small>

@@ -399,7 +399,7 @@ pub async fn delete_community(
 
                 ctx.insert("community", &community);
 
-                let rendered = data.tmpl.render("delete_community.html", &ctx).unwrap();
+                let rendered = data.tmpl.render("communities/delete_community.html", &ctx).unwrap();
                 return HttpResponse::Ok().body(rendered)
             }
         },
