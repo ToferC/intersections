@@ -40,6 +40,40 @@
         </table>
 
         <hr>
+        <!-- Keep for potential move -- will allow users to self-register for now.
+            <h2>Invite User</h2>
+    
+            <form name="UserInviteForm" id="userInviteForm" action=/invite_user method=POST>
+            
+                <label>
+                    <strong>Email address</strong>
+                    <input class="form-control form-control-lg" type="email" name="email" placeholder="user_email@domain.com" required>
+                    <small id="code_help" class="form-text text-muted">Enter the email address for the user you would like to invite.</small>
+                </label>
+                <br>
+        
+                <button 
+                    class="btn g-recaptcha btn-dark" 
+                    data-sitekey="6LfAltkZAAAAAN7rJGBvRUPm36M1aiL7q2a8SznA" 
+                    data-callback='onSubmit' 
+                    data-action='submit'
+                    type=submit
+                    >Send Password Reset Email</button>
+                <hr>
+            </form>
+        -->
 
     </div>
 {% endblock content %}
+
+{% block scripts %}
+<script>
+
+    window.onSubmit = onSubmit;
+
+    function onSubmit(token) {
+     document.getElementById("userInviteForm").submit();
+   };
+
+</script>
+{% endblock scripts %}

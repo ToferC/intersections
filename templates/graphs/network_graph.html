@@ -27,7 +27,7 @@
   
       .my-legend .legend-title {
         position:absolute;
-        top: 80px;
+        top: 90px;
         right: 20px;
         margin-bottom: 5px;
         margin-right: 5px;
@@ -39,7 +39,7 @@
         margin-right: 10px;
         padding: 0;
         position:absolute;
-        top: 110px;
+        top: 120px;
         right: 10px;
         list-style: none;
       }
@@ -80,9 +80,11 @@
 
 {% block content %}
 <div class="col m-md-2 m-1">
-  <h1>{{ title }}</h1>
-  <p>Zoom and drag to see data. Hover over node to see connected nodes. Click to explore node data.</p>
+  <h1>{{ title }} <button class="btn btn-dark btn-sm" style="float: right;" type="button" data-toggle="collapse" data-target="#collapseLegend" aria-expanded="true" aria-controls="collapseLegend">
+    Toggle Legend
+  </button></h1>
   <hr>
+  <div class="collapse show" id="collapseLegend">
   <div class='my-legend'>
     <div class='legend-title'>Legend</div>
     <div class='legend-scale'>
@@ -95,9 +97,14 @@
         <li><span style='background: #999ac0;'></span>Neutral Inclusivity</li>
         <li><span style='background: #cccbd0;'></span>Positive Inclusivity</li>
         <li><span style='background: #ffffe0;'></span>Positive Inclusivity</li>
+        <li>-------</li>
+        <li>Zoom and drag to see data.</li>
+        <li>Hover to see connections.</li>
+        <li>Click to explore node data.</li>
         <!-- Color palette from: https://gka.github.io/palettes/#/5|s|00429d,ffffe0|ffffe0,ff005e,93003a|1|1 -->
       </ul>
     </div>
+  </div>
   </div>
 
   <div id="cy"></div>

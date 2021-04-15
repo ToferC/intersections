@@ -35,7 +35,7 @@
         {% if communities %}
         <div class="row row-cols-1 row-cols-md-3 g-4">
 
-            {% for community in communities %} 
+            {% for community in communities | sort(attribute="data.experiences") | reverse %} 
             <div class="col">
             <div class="card">
                 <div class="card-body">
