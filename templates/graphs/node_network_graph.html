@@ -142,6 +142,15 @@
             },
 
             {
+              selector: 'node:selected',
+              style: {
+                'shape': 'diamond',
+                'background-color': '#33ff00',
+                'border-color': '#22ee00'
+              }
+            },
+
+            {
               selector: 'edge',
               style: {
                 'width': 0.75,
@@ -238,18 +247,27 @@
         
         cy.unbind('tap');
         cy.on('tap', 'node', function(evt){
+
+          cy.elements()
+            .removeClass('semitransp')
+            .removeClass('highlight');
+          
           let node = evt.target;
+
           cy.elements()
             .difference(node.outgoers()
                 .union(node.incomers()))
             .not(node)
-            .addClass('semitransp')
+            .addClass('semitransp');
+
             // show tooltip for selected node
             node.addClass('highlight')
-            .outgoers()
-            .union(node.incomers())
-            .addClass('highlight');
+              .outgoers()
+              .union(node.incomers())
+              .addClass('highlight');
+
           console.log('tapped ' + node.id());
+
           if (node.selected()) {
             // Allow link open page on double tap
             try { // your browser may block popups
@@ -260,20 +278,7 @@
           }
         }); 
 
-        // remove highlight
-        cy.unbind('unselect');
-        cy.on('unselect', 'node', function(e) {
-            var sel = e.target;
-            cy.elements()
-                .removeClass('semitransp')
-                sel.removeClass('highlight')
-                .outgoers()
-                .union(sel.incomers())
-                .removeClass('highlight');
-        });
-
         
-
         cy.elements().unbind('mouseover');
         cy.elements().bind('mouseover', (event) => event.target.tippy.show());
 
