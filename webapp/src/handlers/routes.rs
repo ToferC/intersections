@@ -3,6 +3,7 @@ use actix_web::{web};
 use crate::handlers::{
     // base
     index,
+    about,
 
     // admin
     admin_edit_user,
@@ -87,6 +88,7 @@ use crate::handlers::{
 pub fn init_routes(config: &mut web::ServiceConfig) {
     // base
     config.service(index);
+    config.service(about);
     config.service(find_experience);
 
     // admin

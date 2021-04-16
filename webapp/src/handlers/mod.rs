@@ -22,6 +22,7 @@ mod utility {
 pub use self::base::{
     api_base, 
     index,
+    about,
     find_experience, 
     person_api, 
 };

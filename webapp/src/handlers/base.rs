@@ -24,6 +24,20 @@ pub async fn index(
     HttpResponse::Ok().body(rendered)
 }
 
+#[get("/about")]
+pub async fn about(
+    data: web::Data<AppData>,
+    node_names: web::Data<Mutex<Vec<(String, String)>>>, 
+    _req:HttpRequest,
+    id: Identity,
+) -> impl Responder {
+
+    let (ctx, _, _) = generate_basic_context(id, node_names);
+
+    let rendered = data.tmpl.render("about.html", &ctx).unwrap();
+    HttpResponse::Ok().body(rendered)
+}
+
 #[get("/api")]
 pub async fn api_base() -> impl Responder {
 
