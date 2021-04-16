@@ -250,7 +250,8 @@
 
           cy.elements()
             .removeClass('semitransp')
-            .removeClass('highlight');
+            .removeClass('highlight')
+            .removeClass('selected');
           
           let node = evt.target;
 
@@ -276,7 +277,19 @@
               window.location.href = this.data('href');
             }
           }
-        }); 
+        });
+
+        cy.on('tap', function(evt){
+
+          if (evt.target === cy) {
+            cy.elements()
+              .removeClass('semitransp')
+              .removeClass('highlight')
+              .removeClass('selected');
+          };
+          
+
+        });
 
         
         cy.elements().unbind('mouseover');
