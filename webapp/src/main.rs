@@ -12,19 +12,17 @@ use webapp::handlers;
 use webapp::models;
 use webapp::AppData;
 
-use i18n_embed::{
-    fluent::{fluent_language_loader, FluentLanguageLoader},
-    DefaultLocalizer, LanguageLoader, Localizer,
-};
-use i18n_embed_fl::fl;
-use rust_embed::RustEmbed;
+use fluent_templates::{FluentLoader, static_loader};
 
 include!(concat!(env!("OUT_DIR"), "/generated.rs"));
 
-// Localization
-#[derive(RustEmbed)]
-#[folder = "i18n/"]
-struct Localizations;
+static_loader! {
+    static LOCALES = {
+        locales: "./i18n/",
+        fallback_language: "en-CA",
+        customise: |bundle| bundle.set_use_isolating(false),
+    };
+}
 
 #[actix_rt::main] 
 async fn main() -> std::io::Result<()> {
@@ -77,11 +75,13 @@ async fn main() -> std::io::Result<()> {
     let x = Arc::new(Mutex::new(graph));
     */
 
-    // Localization
+    /*
+    Localization
     let loader: FluentLanguageLoader = fluent_language_loader!();
     loader
         .load_languages(&Localizations, &[loader.fallback_language()])
         .unwrap();
+     */ 
 
 
     let node_names = models::Nodes::find_all_linked_names_slugs().expect("Unable to load names");
@@ -98,6 +98,7 @@ async fn main() -> std::io::Result<()> {
         
         tera.register_filter("snake_case", snake_case);
         tera.full_reload().expect("Error running auto reload with Tera");
+        tera.register_function("fluent", FluentLoader::new(&*LOCALES));
 
         // mail client
         let sg = SGClient::new(sendgrid_key.clone());
