@@ -12,7 +12,19 @@ use webapp::handlers;
 use webapp::models;
 use webapp::AppData;
 
+use i18n_embed::{
+    fluent::{fluent_language_loader, FluentLanguageLoader},
+    DefaultLocalizer, LanguageLoader, Localizer,
+};
+use i18n_embed_fl::fl;
+use rust_embed::RustEmbed;
+
 include!(concat!(env!("OUT_DIR"), "/generated.rs"));
+
+// Localization
+#[derive(RustEmbed)]
+#[folder = "i18n/"]
+struct Localizations;
 
 #[actix_rt::main] 
 async fn main() -> std::io::Result<()> {
@@ -64,6 +76,13 @@ async fn main() -> std::io::Result<()> {
     let graph: models::CytoGraph = models::generate_node_cyto_graph(experience_vec, people_connections, None);
     let x = Arc::new(Mutex::new(graph));
     */
+
+    // Localization
+    let loader: FluentLanguageLoader = fluent_language_loader!();
+    loader
+        .load_languages(&Localizations, &[loader.fallback_language()])
+        .unwrap();
+
 
     let node_names = models::Nodes::find_all_linked_names_slugs().expect("Unable to load names");
     
