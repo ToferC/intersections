@@ -56,10 +56,6 @@ rand = "0.7.3"
 
 # localization
 fluent-templates = { version = "*", features = ["tera"] }
-i18n-embed = { version = "0.11", features = ["fluent-system", "desktop-requester"]}
-rust-embed = "5"
-unic-langid = "0.9"
-i18n-embed-fl = "0.5.0"
 
 # graph crates
 petgraph = { version = "0.5.1", features = ["serde-1"] }

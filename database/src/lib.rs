@@ -1,4 +1,3 @@
-#[macro_use]
 extern crate diesel;
 
 #[macro_use]
@@ -14,6 +13,7 @@ use std::env;
 type Pool = r2d2::Pool<ConnectionManager<PgConnection>>;
 pub type DbConnection = r2d2::PooledConnection<ConnectionManager<PgConnection>>;
 
+#[macro_use]
 embed_migrations!();
 
 lazy_static! {

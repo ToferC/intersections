@@ -13,13 +13,14 @@ use webapp::models;
 use webapp::AppData;
 
 use fluent_templates::{FluentLoader, static_loader};
+// https://lib.rs/crates/fluent-templates
 
 include!(concat!(env!("OUT_DIR"), "/generated.rs"));
 
 static_loader! {
     static LOCALES = {
         locales: "./i18n/",
-        fallback_language: "en-CA",
+        fallback_language: "en",
         customise: |bundle| bundle.set_use_isolating(false),
     };
 }

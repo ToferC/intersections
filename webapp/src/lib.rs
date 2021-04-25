@@ -3,7 +3,6 @@ extern crate diesel;
 use std::sync::Mutex;
 
 use actix_web::web;
-use diesel::query_dsl::LoadQuery;
 use tera::{Tera, Context};
 use actix_session::Session;
 use actix_identity::Identity;
