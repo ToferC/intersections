@@ -2,25 +2,24 @@
 
 {% block content %}
         <div class="col m-md-2 m-1">
-            <h1>{{ fluent(key="welcome-to", lang="en") }}</h1>
-            <h1>{{ fluent(key="welcome-to", lang="fr") }}</h1>
+            <h1>{{ fluent(key="welcome-to", lang=lang) }}</h1>
 
-            <p>This is a learning project and experiment in collecting, connecting, and gaining insight from the lived experience of participants while protecting their privacy.</p>
+            <p>{{ fluent(key="overview", lang=lang) }}</p>
 
             <div class="callout callout-dark">
-                <strong>Important:</strong> All data currently in the application is for demonstration purposes only. Feel free to play with and test the application and survey. All data will be deleted prior to an actual application launch.
+                <strong>{{ fluent(key="important", lang=lang) }}</strong> {{ fluent(key="data-for-demonstration", lang=lang) }}
             </div>
             
             <hr>
 
-                <h2>How can I participate?</h2>
-                <p>In its pilot stage, Intersections works though invitations to specific communities and organizations. Please contact us at <a href="mailto:usersupport@intersectional-data.ca">usersupport@intersectional-data.ca</a> if you're interested in creating a community and testing the application.</p>
-                <p>If you like, you can <a class="btn btn-dark" href="/full_community_graph/demo_community">Explore the demonstration data</a></p>
+                <h2>{{ fluent(key="how-participate-subtitle", lang=lang) }}</h2>
+                <p>{{ fluent(key="pilot-invitations", lang=lang) }} {{ fluent(key="please-contact-create-community", lang=lang) }} <a href="mailto:usersupport@intersectional-data.ca">usersupport@intersectional-data.ca</a></p>
+                <p>{{ fluent(key="if-you-like", lang=lang) }} <a class="btn btn-dark" href="/full_community_graph/demo_community">{{ fluent(key="button-explore-demo-data", lang=lang)}}</a></p>
             
             <hr>
 
-            <h2>I have something to say</h2>
-            <p><a href="https://docs.google.com/forms/d/e/1FAIpQLScwQNxUi1UTKMyLcltWJwC_vI1zGSkv-2JpBPwkufdGsFMHxg/viewform?usp=sf_link">Fill out the feedback form.</a></p>
+            <h2>{{ fluent(key="something-to-say-header", lang=lang) }}</h2>
+            <p><a href="https://docs.google.com/forms/d/e/1FAIpQLScwQNxUi1UTKMyLcltWJwC_vI1zGSkv-2JpBPwkufdGsFMHxg/viewform?usp=sf_link">{{ fluent(key="fill-feedback", lang=lang) }}</a></p>
 
         </div>
 {% endblock content %}

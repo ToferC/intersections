@@ -17,10 +17,16 @@ mod utility {
     pub struct DeleteForm {
         pub verify: String,
     }
+
+    #[derive(Deserialize, Debug)]
+    pub struct UrlParams {
+        pub lang: Option<String>,
+    }
 }
 
 pub use self::base::{
     api_base, 
+    raw_index,
     index,
     about,
     find_experience, 
@@ -62,4 +68,4 @@ pub use self::authentication_handlers::{register_handler, register_form_input, r
     email_verification, verify_code, password_reset, password_reset_post, request_password_reset_post,
     password_email_sent, request_password_reset};
     
-pub use self::utility::{DeleteForm};
+pub use self::utility::{DeleteForm, UrlParams};
