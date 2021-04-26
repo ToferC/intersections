@@ -12,6 +12,10 @@ mod errors;
 
 mod utility {
     use serde::Deserialize;
+    use actix_web::{http, dev, Error, HttpResponse, FromRequest, HttpRequest};
+    use actix_web::http::header::{AcceptLanguage, LanguageTag, qitem};
+    use futures::future::{ok, Either, Ready};
+
 
     #[derive(Deserialize, Debug)]
     pub struct DeleteForm {
@@ -21,6 +25,24 @@ mod utility {
     #[derive(Deserialize, Debug)]
     pub struct UrlParams {
         pub lang: Option<String>,
+    }
+
+    pub struct I18n {
+        pub lang: &'static str
+    }
+
+    impl FromRequest for I18n {
+        type Config = ();
+        type Error = actix_web::Error;
+        type Future = Ready<Result<Self, Self::Error>>;
+
+        fn from_request(req: &HttpRequest, payload: &mut dev::Payload) -> Self::Future {
+            if req.headers().get("Accept-Language").unwrap() == "fr" {
+                ok(I18n { lang: "fn" })
+            } else {
+                ok(I18n { lang: "fr" })
+            }
+        }
     }
 }
 
@@ -68,4 +90,4 @@ pub use self::authentication_handlers::{register_handler, register_form_input, r
     email_verification, verify_code, password_reset, password_reset_post, request_password_reset_post,
     password_email_sent, request_password_reset};
     
-pub use self::utility::{DeleteForm, UrlParams};
+pub use self::utility::{DeleteForm, UrlParams, I18n};

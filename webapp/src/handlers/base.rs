@@ -6,33 +6,34 @@ use diesel::prelude::*;
 use diesel::{QueryDsl, BelongingToDsl};
 
 use crate::models::{Experiences, Nodes, People};
-use crate::handlers::UrlParams;
+use crate::handlers::{UrlParams, I18n};
 use database;
 
 use crate::schema::{nodes};
 
-#[get("/")]
+#[get("/xxx/")]
 pub async fn raw_index(
     _data: web::Data<AppData>,
     _req:HttpRequest,
 ) -> impl Responder {
 
     // Redirect if somone is getting the index with no language param
-    return HttpResponse::Found().header("Location", "/en").finish()
+    return HttpResponse::Found().header("Location", "/en/").finish()
 }
 
-#[get("/{lang}")]
+#[get("/")]
 pub async fn index(
     data: web::Data<AppData>,
+    i18n: Option<I18n>,
     web::Path(params): web::Path<UrlParams>,
     node_names: web::Data<Mutex<Vec<(String, String)>>>, 
     _req:HttpRequest,
     id: Identity,
 ) -> impl Responder {
 
-    let lang = match params.lang {
+    let lang = match i18n {
         Some(s) => {
-            if s.as_str() == "fr" {
+            if s.lang == "fr" {
                 "fr"
             } else {
                 "en"
