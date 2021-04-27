@@ -22,7 +22,7 @@
                 {% endif %}
             </ul>
 
-            <form name="DeleteForm" id="deleteForm" action=/delete_user/{{ user.id }} method=POST>
+            <form name="DeleteForm" id="deleteForm" action=/{{ lang }}/delete_user/{{ user.id }} method=POST>
 
                 <label>
                     <strong>Delete User: {{ user.user_name }}</strong>
@@ -40,7 +40,7 @@
                     type=submit
                     >Delete</button>
 
-                <button class="btn btn-dark" href="/user_index">Return</button>
+                <button class="btn btn-dark" href="/{{ lang }}/user_index">Return</button>
                 <hr>
             
             </form>

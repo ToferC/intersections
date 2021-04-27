@@ -11,7 +11,7 @@
         <p>Delete your profile on Intersectional-Data.ca.</p>
         <p>Date Created: {{ person.date_created }}</p>
 
-        <form name="DeleteForm" id="deleteForm" action=/delete_person/{{ person.code }} method=POST>
+        <form name="DeleteForm" id="deleteForm" action=/{{ lang }}/delete_person/{{ person.code }} method=POST>
 
             <label>
                 <strong>To delete your profile, enter: "Delete my profile" with no quotations in the field below.</strong>
@@ -29,7 +29,7 @@
                 type=submit
                 >Delete</button>
 
-            <button class="btn btn-dark" href="/">Cancel</button>
+            <button class="btn btn-dark" href="/{{ lang }}">Cancel</button>
             <hr>
         
         </form>

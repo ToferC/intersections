@@ -41,13 +41,13 @@
                 
                 <h2>Actions</h2>
                 
-                <a class="btn btn-dark" href="/full_community_graph/{{ community.slug }}">View Community Graph</a>
+                <a class="btn btn-dark" href="/{{ lang }}/full_community_graph/{{ community.slug }}">View Community Graph</a>
                 <br>
                 {% if owner and user.validated %}
                 <a class="btn btn-dark" href="{{ add_community_profile_url }}">Link to Add Profile to Community</a>
                 <br>
-                <a class="btn btn-dark" href="/edit_community/{{ community.slug }}">Edit Community</a>
-                <a class="btn btn-danger" href="/delete_community/{{ community.code }}">Delete Community</a>
+                <a class="btn btn-dark" href="/{{ lang }}/edit_community/{{ community.slug }}">Edit Community</a>
+                <a class="btn btn-danger" href="/{{ lang }}/delete_community/{{ community.code }}">Delete Community</a>
                 {% endif %}
                 <br> 
         </div>

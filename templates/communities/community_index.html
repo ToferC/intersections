@@ -36,11 +36,11 @@
                         </tr>
                     </table>
                     <br>
-                    <a class="btn btn-dark" href="/community/{{ community.slug }}">Details</a>
-                    <a class="btn btn-dark" href="/full_community_graph/{{ community.slug }}">Graph</a>
+                    <a class="btn btn-dark" href="/{{ lang }}/community/{{ community.slug }}">Details</a>
+                    <a class="btn btn-dark" href="/{{ lang }}/full_community_graph/{{ community.slug }}">Graph</a>
                     {% if role == "admin" %}
-                    <a class="btn btn-dark" href="/edit_community/{{ community.slug }}">Edit</a>
-                    <a class="btn btn-danger" href="/delete_community/{{ community.code }}">Delete</a>
+                    <a class="btn btn-dark" href="/{{ lang }}/edit_community/{{ community.slug }}">Edit</a>
+                    <a class="btn btn-danger" href="/{{ lang }}/delete_community/{{ community.code }}">Delete</a>
                     {% endif %}
                 </div>
             </div>
@@ -51,7 +51,7 @@
                 
         <hr>
         {% if session_user != "" and user.validated %}
-            <p><a class="btn btn-dark" href="/add_community">Add Community</a></p>
+            <p><a class="btn btn-dark" href="/{{ lang }}/add_community">Add Community</a></p>
         {% endif %}
 
     </div>

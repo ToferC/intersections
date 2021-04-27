@@ -11,7 +11,6 @@ use crate::{AppData, extract_identity_data, generate_basic_context};
 use crate::models::{User, Communities};
 use crate::handlers::DeleteForm;
 use error_handler::error_handler::CustomError;
-use crate::handlers::{I18n};
 
 #[derive(Deserialize, Debug)]
 pub struct UserForm {
@@ -27,14 +26,15 @@ pub struct AdminUserForm {
     validated: String,
 }
 
-#[get("/user_index")]
+#[get("/{lang}/user_index")]
 pub async fn user_index(
     data: web::Data<AppData>,
+    web::Path(lang): web::Path<String>,
     node_names: web::Data<Mutex<Vec<(String, String)>>>,
-    id: Identity,  i18n: Option<I18n>,
+    id: Identity,
     req:HttpRequest) -> impl Responder {
 
-    let (mut ctx, _session_user, role, _lang) = generate_basic_context(id, i18n.unwrap().lang, req.uri().path(), node_names);
+    let (mut ctx, _session_user, role, _lang) = generate_basic_context(id, &lang, req.uri().path(), node_names);
 
     if role != "admin".to_string() {
         let err = CustomError::new(
@@ -62,16 +62,16 @@ pub async fn user_index(
     }
 }
 
-#[get("/user/{slug}")]
+#[get("/{lang}/user/{slug}")]
 pub async fn user_page_handler(
-    web::Path(slug): web::Path<String>,
+    web::Path((lang, slug)): web::Path<(String, String)>,
     data: web::Data<AppData>,
     node_names: web::Data<Mutex<Vec<(String, String)>>>,
     req:HttpRequest,
-    id: Identity,  i18n: Option<I18n>,
+    id: Identity,
 ) -> impl Responder {
     
-    let (mut ctx, session_user, role, _lang) = generate_basic_context(id, i18n.unwrap().lang, req.uri().path(), node_names);
+    let (mut ctx, session_user, role, _lang) = generate_basic_context(id, &lang, req.uri().path(), node_names);
     
     if session_user.to_lowercase() != slug.to_lowercase() && role != "admin".to_string() {
         let err = CustomError::new(
@@ -113,16 +113,16 @@ pub async fn user_page_handler(
     }
 }
 
-#[get("/edit_user/{slug}")]
+#[get("/{lang}/edit_user/{slug}")]
 pub async fn edit_user(
     data: web::Data<AppData>,
-    web::Path(slug): web::Path<String>,
+    web::Path((lang, slug)): web::Path<(String, String)>,
     node_names: web::Data<Mutex<Vec<(String, String)>>>,
     req:HttpRequest,
-    id: Identity,  i18n: Option<I18n>,
+    id: Identity,
 ) -> impl Responder {
     
-    let (mut ctx, session_user, role, _lang) = generate_basic_context(id, i18n.unwrap().lang, req.uri().path(), node_names);
+    let (mut ctx, session_user, role, _lang) = generate_basic_context(id, &lang, req.uri().path(), node_names);
 
     let user = User::find_from_slug(&slug);
 
@@ -150,13 +150,13 @@ pub async fn edit_user(
     };
 }
 
-#[post("/edit_user_post/{slug}")]
+#[post("/{lang}/edit_user_post/{slug}")]
 pub async fn edit_user_post(
     _data: web::Data<AppData>,
-    web::Path(slug): web::Path<String>,
+    web::Path((lang, slug)): web::Path<(String, String)>,
     req: HttpRequest, 
     form: web::Form<UserForm>,
-    id: Identity,  i18n: Option<I18n>,
+    id: Identity,
 ) -> impl Responder {
 
     let (session_user, role) = extract_identity_data(&id);
@@ -166,7 +166,7 @@ pub async fn edit_user_post(
     &session_user != &slug ||
     &role != "admin" {
         // validate form has data or and permissions exist
-        return HttpResponse::Found().header("Location", format!("/edit_user/{}", &slug)).finish()
+        return HttpResponse::Found().header("Location", format!("/{}/edit_user/{}", &lang, &slug)).finish()
     };
 
     // update user
@@ -216,7 +216,7 @@ pub async fn edit_user_post(
                             return HttpResponse::Found().header("Location", "/email_verification").finish()
                         } else {
                             // return to user page
-                            return HttpResponse::Found().header("Location", format!("/user/{}", &user.slug)).finish()
+                            return HttpResponse::Found().header("Location", format!("/{}/user/{}", &lang, &user.slug)).finish()
                         }
                     },
                     Err(err) => {
@@ -226,7 +226,7 @@ pub async fn edit_user_post(
                 };
             } else {
                 // no change
-                return HttpResponse::Found().header("Location", format!("/user/{}", &user.slug)).finish()
+                return HttpResponse::Found().header("Location", format!("/{}/user/{}", &lang, &user.slug)).finish()
             };
         },
         Err(err) => {
@@ -236,16 +236,16 @@ pub async fn edit_user_post(
     };
 }
 
-#[get("/admin_edit_user/{slug}")]
+#[get("/{lang}/admin_edit_user/{slug}")]
 pub async fn admin_edit_user(
     data: web::Data<AppData>,
-    web::Path(slug): web::Path<String>,
+    web::Path((lang, slug)): web::Path<(String, String)>,
     node_names: web::Data<Mutex<Vec<(String, String)>>>,
     req:HttpRequest,
-    id: Identity,  i18n: Option<I18n>,
+    id: Identity,
 ) -> impl Responder {
     
-    let (mut ctx, _session_user, role, _lang) = generate_basic_context(id, i18n.unwrap().lang, req.uri().path(), node_names);
+    let (mut ctx, _session_user, role, _lang) = generate_basic_context(id, &lang, req.uri().path(), node_names);
 
     if &role != &"admin".to_string() {
         let err = CustomError::new(
@@ -273,13 +273,13 @@ pub async fn admin_edit_user(
     };
 }
 
-#[post("/admin_edit_user/{slug}")]
+#[post("/{lang}/admin_edit_user/{slug}")]
 pub async fn admin_edit_user_post(
     _data: web::Data<AppData>,
-    web::Path(slug): web::Path<String>,
+    web::Path((lang, slug)): web::Path<(String, String)>,
     req: HttpRequest, 
     form: web::Form<AdminUserForm>,
-    id: Identity,  i18n: Option<I18n>,
+    id: Identity,
 ) -> impl Responder {
 
     let (_session_user, role) = extract_identity_data(&id);
@@ -288,7 +288,7 @@ pub async fn admin_edit_user_post(
     form.user_name.is_empty() ||
     &role != "admin" {
         // validate form has data or and permissions exist
-        return HttpResponse::Found().header("Location", format!("/admin_edit_user/{}", &slug)).finish()
+        return HttpResponse::Found().header("Location", format!("/{}/admin_edit_user/{}", &lang, &slug)).finish()
     };
 
     // update user
@@ -333,7 +333,7 @@ pub async fn admin_edit_user_post(
                     println!("User {} updated", &user.user_name);
     
                     // return to user page
-                    return HttpResponse::Found().header("Location", format!("/user/{}", &user.slug)).finish()
+                    return HttpResponse::Found().header("Location", format!("/{}/user/{}", &lang, &user.slug)).finish()
                 },
                 Err(err) => {
                     println!("{}", err);
@@ -348,16 +348,16 @@ pub async fn admin_edit_user_post(
     };
 }
 
-#[get("/delete_user/{slug}")]
+#[get("/{lang}/delete_user/{slug}")]
 pub async fn delete_user_handler(
-    web::Path(slug): web::Path<String>,
+    web::Path((lang, slug)): web::Path<(String, String)>,
     data: web::Data<AppData>,
     node_names: web::Data<Mutex<Vec<(String, String)>>>,
     req: HttpRequest,
-    id: Identity,  i18n: Option<I18n>,
+    id: Identity,
 ) -> impl Responder {
 
-    let (mut ctx, session_user, role, _lang) = generate_basic_context(id, i18n.unwrap().lang, req.uri().path(), node_names);
+    let (mut ctx, session_user, role, _lang) = generate_basic_context(id, &lang, req.uri().path(), node_names);
     
     if role != "admin".to_string() && &session_user != &slug {
         println!("User not admin");
@@ -383,12 +383,12 @@ pub async fn delete_user_handler(
     }
 }
 
-#[post("/delete_user/{target_id}")]
+#[post("/{lang}/delete_user/{target_id}")]
 pub async fn delete_user(
-    web::Path(target_id): web::Path<i32>,
+    web::Path((lang, target_id)): web::Path<(String, i32)>,
     _data: web::Data<AppData>,
     req: HttpRequest,
-    id: Identity,  i18n: Option<I18n>,
+    id: Identity,
     form: web::Form<DeleteForm>,
 ) -> impl Responder {
 
@@ -423,10 +423,10 @@ pub async fn delete_user(
 
                     // delete user
                     User::delete(u.id).expect("Unable to delete user");
-                    return HttpResponse::Found().header("Location", "/user_index").finish()
+                    return HttpResponse::Found().header("Location", format!("/{}/user_index", &lang)).finish()
                 } else {
                     println!("User does not match verify string - return to delete page");
-                    return HttpResponse::Found().header("Location", format!("/delete_user/{}", u.id)).finish()
+                    return HttpResponse::Found().header("Location", format!("/{}/delete_user/{}", &lang, u.id)).finish()
                 };
             },
             Err(err) => {

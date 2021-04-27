@@ -8,8 +8,8 @@
     <div class="col-md m-md-2 m-1">
         <br>
         <h1>{{ node.node_name | title }} - {{ node.domain_token | title }} in {{ community.tag }}</h1>
-        <p><a href="/full_community_graph/{{ community.slug }}">View full community graph</a> | <a href="/">Return to Index</a></p>
-        <p><a href="/community_node_graph/{{ community.slug }}/{{ node.slug }}">View graph for {{ node.node_name }}</a></p>
+        <p><a href="/{{ lang }}/full_community_graph/{{ community.slug }}">View full community graph</a> | <a href="/{{ lang }}">Return to Index</a></p>
+        <p><a href="/{{ lang }}/community_node_graph/{{ community.slug }}/{{ node.slug }}">View graph for {{ node.node_name }}</a></p>
         <hr>
         <p>The table below shows the data from this specific node.</p>
         <button class="btn btn-info" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
@@ -94,7 +94,7 @@
                             <th style="text-align: center;">Mean Inclusivity</th>
                         </tr>
                         <tr>
-                            <td style="text-align: center;"><a href="/community_node/{{ community.slug }}/{{ experience.name | snake_case }}">{{ experience.name | title }}</a></td>
+                            <td style="text-align: center;"><a href="/{{ lang }}/community_node/{{ community.slug }}/{{ experience.name | snake_case }}">{{ experience.name | title }}</a></td>
                             <td style="text-align: center;">{{ experience.domain | title }}</td>
                             <td style="text-align: center;">{{ experience.count }}</td>
                             <td style="text-align: center;">

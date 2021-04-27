@@ -35,7 +35,7 @@
 
         <div class="card-body">
             <p><strong>IMPORTANT: Deleting a community will move all data from community members to the aggregate global community. You will not be able to view this community separately again.</strong></p>
-            <form name="DeleteCommunityForm" id="deleteCommunityForm" action=/delete_community/{{ community.code }} method=POST>
+            <form name="DeleteCommunityForm" id="deleteCommunityForm" action=/{{ lang }}/delete_community/{{ community.code }} method=POST>
     
                 <label>
                     <strong>Enter the community's name to Delete: {{ community.tag }}</strong>
@@ -53,7 +53,7 @@
                     type=submit
                     >Delete</button>
     
-                <button class="btn btn-dark" href="/user/{{ session_user }}">Return to User Profile</button>
+                <button class="btn btn-dark" href="/{{ lang }}/user/{{ session_user }}">Return to User Profile</button>
                 <hr>
             
             </form>

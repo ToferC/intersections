@@ -25,8 +25,8 @@
                     <td>{{ user.user_name }}</td>
                     <td>{{ user.email }}</td>
                     <td>{{ user.role }}</td>
-                    <td><a href="/user/{{ user.slug }}">Link</a></td>
-                    <td><a style="color:red" href="/delete_user/{{ user.id }}">Delete</a></td>
+                    <td><a href="/{{ lang }}/user/{{ user.slug }}">Link</a></td>
+                    <td><a style="color:red" href="/{{ lang }}/delete_user/{{ user.id }}">Delete</a></td>
                 </tr>
                         
                 {% endfor %}

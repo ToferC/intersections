@@ -8,8 +8,8 @@
     <div class="col-md m-md-2 m-1">
         <br>
         <h1>{{ node.node_name | title }} - {{ node.domain_token | title }}</h1>
-        <p><a href="/global_graph">View global graph</a> | <a href="/">Return to Index</a></p>
-        <p><a href="/node_graph/{{ node.slug }}">View graph for {{ node.node_name }}</a></p>
+        <p><a href="/{{ lang }}/global_graph">View global graph</a> | <a href="/{{ lang }}">Return to Index</a></p>
+        <p><a href="/{{ lang }}/node_graph/{{ node.slug }}">View graph for {{ node.node_name }}</a></p>
 
         <hr>
         <p>The table below shows the data from this specific node.</p>
@@ -95,7 +95,7 @@
                             <th style="text-align: center;">Mean Inclusivity</th>
                         </tr>
                         <tr>
-                            <td style="text-align: center;"><a href="/node/{{ experience.name | snake_case }}">{{ experience.name | title }}</a></td>
+                            <td style="text-align: center;"><a href="/{{ lang }}/node/{{ experience.name | snake_case }}">{{ experience.name | title }}</a></td>
                             <td style="text-align: center;">{{ experience.domain | title }}</td>
                             <td style="text-align: center;">{{ experience.count }}</td>
                             <td style="text-align: center;">

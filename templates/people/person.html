@@ -9,13 +9,13 @@
     <div class="col m-md-2 m-1">
         <br>
         <h1>{{ title }}</h1>
-        <p><a href="/person_network_graph/{{ person.id }}">View Person Graph</a> | <a href="/">Return to Index</a></p>
+        <p><a href="/{{ lang }}/person_network_graph/{{ person.id }}">View Person Graph</a> | <a href="/">Return to Index</a></p>
         <hr>
         <h2>Your code is: </h2> <p><strong>{{ person.code }}</strong></p> 
         <p>Please make a copy of your code or request an email that contains links back to this page and to your community.</p>
         <p>The application does not keep any identifying information and the administrators will not be able to provide you with this code once you've finished your survey and closed the window.</p>
 
-        <form name="EmailForm" id="emailForm" action=/person/{{ person.code }} method=POST>
+        <form name="EmailForm" id="emailForm" action=/{{ lang }}/person/{{ person.code }} method=POST>
         
         <label>
             <strong>Send me an email</strong>
@@ -78,7 +78,7 @@
                             <th style="text-align: center;">Inclusivity</th>
                         </tr>
                         <tr>
-                            <td style="text-align: center;"><a href="/node/{{ experience.node_name }}">{{ experience.node_name | title }}</a></td>
+                            <td style="text-align: center;"><a href="/{{ lang }}/node/{{ experience.node_name }}">{{ experience.node_name | title }}</a></td>
                             <td style="text-align: center;">{{ experience.node_domain | title }}</td>
                             <td style="text-align: center;">
                                 {{ experience.inclusivity | float }}
@@ -106,8 +106,8 @@
                     <hr>
                     <br>
                 {% endfor %}
-                <a class="btn btn-dark" href="/add_experience_form/{{ person.person.code }}">Add an experience</a>
-                <a class="btn btn-danger" href="/delete_person/{{ person.person.code }}">Delete Profile</a>
+                <a class="btn btn-dark" href="/{{ lang }}/add_experience_form/{{ person.person.code }}">Add an experience</a>
+                <a class="btn btn-danger" href="/{{ lang }}/delete_person/{{ person.person.code }}">Delete Profile</a>
             {% endfor %}
             <hr>
     </div>
@@ -127,7 +127,7 @@
                             <th style="text-align: center;">Mean Inclusivity</th>
                         </tr>
                         <tr>
-                            <td style="text-align: center;"><a href="/node/{{ experience.name }}">{{ experience.name | title }}</a></td>
+                            <td style="text-align: center;"><a href="/{{ lang }}/node/{{ experience.name }}">{{ experience.name | title }}</a></td>
                             <td style="text-align: center;">{{ experience.domain | title }}</td>
                             <td style="text-align: center;">{{ experience.count }}</td>
                             <td style="text-align: center;">

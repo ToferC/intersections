@@ -18,12 +18,12 @@
                 <h2>Account Options</h2>
                 <p>
                     {% if role == "admin" %}
-                    <a class="btn btn-dark" href="/admin_edit_user/{{ user.slug }}">Edit User as Admin</a>
+                    <a class="btn btn-dark" href="/{{ lang }}/admin_edit_user/{{ user.slug }}">Edit User as Admin</a>
                     {% else %}
-                    <a class="btn btn-dark" href="/edit_user/{{ user.slug }}">Change username or email address</a>
+                    <a class="btn btn-dark" href="/{{ lang }}/edit_user/{{ user.slug }}">Change username or email address</a>
                     {% endif %}
-                    <a class="btn btn-dark" href="/request_password_reset">Reset Password</a>
-                    <a class="btn btn-danger" href="/delete_user/{{ user.slug }}">Delete User</a>
+                    <a class="btn btn-dark" href="/{{ lang }}/request_password_reset">Reset Password</a>
+                    <a class="btn btn-danger" href="/{{ lang }}/delete_user/{{ user.slug }}">Delete User</a>
                 </p>
 
         </div>
@@ -58,10 +58,10 @@
                         </tr>
                     </table>
                     <br>
-                    <a class="btn btn-dark" href="/community/{{ community.slug }}">Details</a>
-                    <a class="btn btn-dark" href="/full_community_graph/{{ community.slug }}">Graph</a>
-                    <a class="btn btn-dark" href="/edit_community/{{ community.slug }}">Edit</a>
-                    <a class="btn btn-danger" href="/delete_community/{{ community.id }}">Delete</a>
+                    <a class="btn btn-dark" href="/{{ lang }}/community/{{ community.slug }}">Details</a>
+                    <a class="btn btn-dark" href="/{{ lang }}/full_community_graph/{{ community.slug }}">Graph</a>
+                    <a class="btn btn-dark" href="/{{ lang }}/edit_community/{{ community.slug }}">Edit</a>
+                    <a class="btn btn-danger" href="/{{ lang }}/delete_community/{{ community.id }}">Delete</a>
                 </div>
             </div>
         </div>
@@ -71,10 +71,10 @@
 
         <br>
         {% if user.validated %}
-            <p><a class="btn btn-dark" href="/add_community">Add Community</a></p>
+            <p><a class="btn btn-dark" href="/{{ lang }}/add_community">Add Community</a></p>
         {% else %}
             <p><strong>You need to verify your account before you can create communities.</strong></p>
-            <a class="btn btn-dark" href="/email_verification">Send email verification</a>
+            <a class="btn btn-dark" href="/{{ lang }}/email_verification">Send email verification</a>
         {% endif %}
 
     </div>

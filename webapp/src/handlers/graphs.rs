@@ -60,7 +60,7 @@ pub async fn global_graph(
     };
 
     // now instead of building AggExperience, we build the graph
-    let graph = generate_node_cyto_graph(experience_vec, people_connections, None);
+    let graph = generate_node_cyto_graph(experience_vec, people_connections, None, &lang);
 
     let j = serde_json::to_string_pretty(&graph).unwrap();
     
@@ -115,7 +115,7 @@ pub async fn full_community_node_graph(
                 };
             
                 // now instead of building AggExperience, we build the graph
-                let graph = generate_node_cyto_graph(experience_vec, people_connections, Some(community.slug));
+                let graph = generate_node_cyto_graph(experience_vec, people_connections, Some(community.slug), &lang);
             
                 let j = serde_json::to_string_pretty(&graph).unwrap();
             

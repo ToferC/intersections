@@ -135,7 +135,7 @@ impl GNode {
         node
     }
 
-    pub fn from_agg_experience(a: &AggregateExperience, community: &Option<String>) -> GNode {
+    pub fn from_agg_experience(a: &AggregateExperience, community: &Option<String>, lang: &str) -> GNode {
 
         let (colour, shape): (String, String) = if a.domain == "person" {
             (String::from("green"), String::from("ellipse"))
@@ -146,8 +146,8 @@ impl GNode {
         let slug = a.name.trim().to_string().to_snake_case();
 
         let href = match community {
-            Some(c) => format!("/community_node/{}/{}", c, slug),
-            None => format!("/node/{}", slug),
+            Some(c) => format!("/{}/community_node/{}/{}", &lang, c, slug),
+            None => format!("/{}/node/{}", &lang, slug),
         };
 
         let node = GNode {
@@ -216,6 +216,7 @@ pub fn generate_node_cyto_graph(
     experience_vec: Vec<Experiences>,
     people_connections: HashMap<i32, Vec<String>>,
     community: Option<String>,
+    lang: &str,
 ) -> CytoGraph {
     // reconfigure this to connect nodes to each other
 
@@ -260,7 +261,7 @@ pub fn generate_node_cyto_graph(
 
     for a in &aggregate_experiences {
 
-        let n = GNode::from_agg_experience(&a, &community);
+        let n = GNode::from_agg_experience(&a, &community, &lang);
 
         cyto_node_array.push(CytoNode {
             data: n,

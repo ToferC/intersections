@@ -12,7 +12,7 @@
         <div class="col-md m-md-2 m-1">
             <br>
             <h1>Add another experience</h1>
-            <p><strong>OR</strong>  <a class="btn btn-dark" href="/person/{{ user_code }}">Take me to my completed profile.</a></p>
+            <p><strong>OR</strong>  <a class="btn btn-dark" href="/{{ lang }}/person/{{ user_code }}">Take me to my completed profile.</a></p>
             <hr>
             <h2>Your unique code is:</h2> <p><strong>{{ user_code }}</strong></p>
             <p>You can make a copy of this code or request an email when you finish your profile. Only someone with this code can see your profile.</p>
@@ -33,7 +33,7 @@
 
             <hr>
                 <br>
-                <form action="/add_experience_form/{{ user_code }}" method=POST id="experienceForm" name="experienceForm">
+                <form action="/{{ lang }}/add_experience_form/{{ user_code }}" method=POST id="experienceForm" name="experienceForm">
                 
                     <div class="row">
                         <div class="col m-md-2 m-1">
