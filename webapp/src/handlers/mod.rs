@@ -12,8 +12,7 @@ mod errors;
 
 mod utility {
     use serde::Deserialize;
-    use actix_web::{web, http, dev, get, HttpResponse, FromRequest, HttpRequest, Responder};
-    use futures::future::{ok, Either, Ready};
+    use actix_web::{web, get, HttpResponse, HttpRequest, Responder};
 
 
     #[derive(Deserialize, Debug)]
@@ -24,31 +23,6 @@ mod utility {
     #[derive(Deserialize, Debug)]
     pub struct UrlParams {
         pub lang: Option<String>,
-    }
-
-    pub struct I18n {
-        pub lang: &'static str
-    }
-
-    impl FromRequest for I18n {
-        type Config = ();
-        type Error = actix_web::Error;
-        type Future = Ready<Result<Self, Self::Error>>;
-
-        fn from_request(req: &HttpRequest, _payload: &mut dev::Payload) -> Self::Future {
-
-            let accept_lang = req.headers().get("Accept-Language").unwrap().to_str().unwrap();
-
-            let parts: Vec<String> = accept_lang.split("-").map(|s| s.to_string()).collect();
-
-            println!("{:?}", &parts);
-
-            if parts[0].contains("fr") {
-                ok(I18n { lang: "fn" })
-            } else {
-                ok(I18n { lang: "en" })
-            }
-        }
     }
 
     #[get("/toggle_language/{lang}")]
@@ -139,4 +113,4 @@ pub use self::authentication_handlers::{register_handler, register_form_input, r
     email_verification, verify_code, password_reset, password_reset_post, request_password_reset_post,
     password_email_sent, request_password_reset};
     
-pub use self::utility::{DeleteForm, UrlParams, I18n, toggle_language, toggle_language_index};
+pub use self::utility::{DeleteForm, UrlParams, toggle_language, toggle_language_index};

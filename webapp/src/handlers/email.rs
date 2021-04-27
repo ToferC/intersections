@@ -9,7 +9,6 @@ use regex::Regex;
 
 use crate::{AppData};
 use crate::models::{Communities, CommunityData, Email, People};
-use crate::handlers::{I18n};
 
 // for for single email address
 #[derive(Debug, Deserialize)]
@@ -26,7 +25,7 @@ pub struct EmailsForm {
 pub async fn email_person_info(
     web::Path((lang, code)): web::Path<(String, String)>,
     data: web::Data<AppData>,
-    req: HttpRequest,
+    _req: HttpRequest,
     _id: Identity,
     form: web::Form<EmailForm>,
 ) -> impl Responder {
@@ -91,7 +90,7 @@ pub async fn email_person_info(
 pub async fn send_community_email(
     web::Path((lang, slug)): web::Path<(String, String)>,
     data: web::Data<AppData>,
-    req: HttpRequest,
+    _req: HttpRequest,
     _id: Identity,
     form: web::Form<EmailsForm>,
 ) -> impl Responder {

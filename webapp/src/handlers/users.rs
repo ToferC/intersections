@@ -154,7 +154,7 @@ pub async fn edit_user(
 pub async fn edit_user_post(
     _data: web::Data<AppData>,
     web::Path((lang, slug)): web::Path<(String, String)>,
-    req: HttpRequest, 
+    _req: HttpRequest, 
     form: web::Form<UserForm>,
     id: Identity,
 ) -> impl Responder {
@@ -277,7 +277,7 @@ pub async fn admin_edit_user(
 pub async fn admin_edit_user_post(
     _data: web::Data<AppData>,
     web::Path((lang, slug)): web::Path<(String, String)>,
-    req: HttpRequest, 
+    _req: HttpRequest, 
     form: web::Form<AdminUserForm>,
     id: Identity,
 ) -> impl Responder {
@@ -387,7 +387,7 @@ pub async fn delete_user_handler(
 pub async fn delete_user(
     web::Path((lang, target_id)): web::Path<(String, i32)>,
     _data: web::Data<AppData>,
-    req: HttpRequest,
+    _req: HttpRequest,
     id: Identity,
     form: web::Form<DeleteForm>,
 ) -> impl Responder {

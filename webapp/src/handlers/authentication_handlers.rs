@@ -13,7 +13,6 @@ use crate::{AppData, generate_basic_context, extract_identity_data};
 use crate::models::{User, verify, UserData, EmailVerification, 
     InsertableVerification, Email, PasswordResetToken, 
     InsertablePasswordResetToken};
-use crate::handlers::{I18n};
 
 use super::EmailForm;
 
@@ -59,7 +58,7 @@ pub async fn login_handler(
 pub async fn login_form_input(
     web::Path(lang): web::Path<String>,
     _data: web::Data<AppData>,
-    req: HttpRequest, 
+    _req: HttpRequest, 
     form: web::Form<LoginForm>,
     _session: Session,
     id: Identity,

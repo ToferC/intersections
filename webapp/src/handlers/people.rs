@@ -166,7 +166,7 @@ pub async fn delete_person(
 pub async fn delete_person_post(
     web::Path((lang, code)): web::Path<(String, String)>,
     _data: web::Data<AppData>,
-    req: HttpRequest,
+    _req: HttpRequest,
     _id: Identity,
     form: web::Form<DeleteForm>,
 ) -> impl Responder {

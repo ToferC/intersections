@@ -419,7 +419,7 @@ pub async fn delete_community(
 pub async fn delete_community_form(
     web::Path((lang, code)): web::Path<(String, String)>,
     _data: web::Data<AppData>,
-    req: HttpRequest,
+    _req: HttpRequest,
     id: Identity,
     form: web::Form<DeleteCommunityForm>,
 ) -> impl Responder {

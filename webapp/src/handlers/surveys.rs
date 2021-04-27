@@ -337,7 +337,7 @@ pub async fn add_handle_experience_form_input(
     web::Path((lang, code)): web::Path<(String, String)>,
     _data: web::Data<AppData>,
     node_names: web::Data<Mutex<Vec<(String, String)>>>,
-    req: HttpRequest, 
+    _req: HttpRequest, 
     form: web::Form<AddExperienceForm>,
 ) -> impl Responder {
 
