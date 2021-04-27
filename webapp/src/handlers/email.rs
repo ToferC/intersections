@@ -9,7 +9,7 @@ use regex::Regex;
 
 use crate::{AppData};
 use crate::models::{Communities, CommunityData, Email, People};
-
+use crate::handlers::{I18n};
 
 // for for single email address
 #[derive(Debug, Deserialize)]
@@ -22,18 +22,18 @@ pub struct EmailsForm {
     pub emails: String,
 }
 
-#[post("/person/{code}")]
+#[post("/{lang}/person/{code}")]
 pub async fn email_person_info(
-    web::Path(code): web::Path<String>,
+    web::Path((lang, code)): web::Path<(String, String)>,
     data: web::Data<AppData>,
-    _req: HttpRequest,
+    req: HttpRequest,
     _id: Identity,
     form: web::Form<EmailForm>,
 ) -> impl Responder {
 
     // validate form has data or re-load form
     if form.email.is_empty() {
-        return HttpResponse::Found().header("Location", format!("/person/{}", code)).finish()
+        return HttpResponse::Found().header("Location", format!("/{}/person/{}", &lang, code)).finish()
     };
 
     let person = People::find_from_code(&code);
@@ -48,9 +48,9 @@ pub async fn email_person_info(
             let environment = env::var("ENVIRONMENT").unwrap();
 
             if environment == "production" {
-                application_url = "https://intersectional-data.ca".to_string();
+                application_url = format!("https://intersectional-data.ca/{}", &lang);
             } else {
-                application_url = "http://localhost:8088".to_string();
+                application_url = format!("http://localhost:8088/{}", &lang);
             };
 
             // add qr code to add profile (prod only)
@@ -78,20 +78,20 @@ pub async fn email_person_info(
                 _ => println!("Message not sent"),
             };
 
-            return HttpResponse::Found().header("Location", format!("/person/{}", code)).finish()
+            return HttpResponse::Found().header("Location", format!("/{}/person/{}", &lang, code)).finish()
         },
         Err(err) => {
             println!("Error: {}", err);
-            return HttpResponse::Found().header("Location", format!("/person/{}", code)).finish()
+            return HttpResponse::Found().header("Location", format!("/{}/person/{}", &lang, code)).finish()
         }
     };
 }
 
 #[post("/send_community_email/{slug}")]
 pub async fn send_community_email(
-    web::Path(slug): web::Path<String>,
+    web::Path((lang, slug)): web::Path<(String, String)>,
     data: web::Data<AppData>,
-    _req: HttpRequest,
+    req: HttpRequest,
     _id: Identity,
     form: web::Form<EmailsForm>,
 ) -> impl Responder {
@@ -107,7 +107,7 @@ pub async fn send_community_email(
     
     // validate form had emails or re-load page
     if emails.is_empty() {
-        return HttpResponse::Found().header("Location", format!("/community/{}", slug)).finish()
+        return HttpResponse::Found().header("Location", format!("/{}/community/{}", &lang, slug)).finish()
     };
 
     let community = Communities::find_from_slug(&slug);
@@ -122,9 +122,9 @@ pub async fn send_community_email(
             let environment = env::var("ENVIRONMENT").unwrap();
 
             if environment == "production" {
-                application_url = "https://intersectional-data.ca".to_string();
+                application_url = format!("https://intersectional-data.ca/{}", &lang);
             } else {
-                application_url = "http://localhost:8088".to_string();
+                application_url = format!("http://localhost:8088/{}", &lang);
             };
 
             let community_add_profile_url = format!("{}/survey_intro/{}", application_url, &community.code);
@@ -181,11 +181,11 @@ pub async fn send_community_email(
             community.data = serde_json::to_value(comm_data).expect("Unable to serialize comm data");
             Communities::update(&community).expect("Unable to update community with invitations");
 
-            return HttpResponse::Found().header("Location", format!("/community/{}", slug)).finish()
+            return HttpResponse::Found().header("Location", format!("/{}/community/{}", &lang, slug)).finish()
         },
         Err(err) => {
             println!("Error: {}", err);
-            return HttpResponse::Found().header("Location", format!("/community/{}", slug)).finish()
+            return HttpResponse::Found().header("Location", format!("/{}/community/{}", &lang, slug)).finish()
         }
     };
 }

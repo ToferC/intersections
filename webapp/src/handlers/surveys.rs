@@ -1,5 +1,5 @@
 use std::sync::{Mutex, MutexGuard};
-use actix_web::{web, HttpRequest, HttpResponse, Responder, post, get};
+use actix_web::{web, HttpRequest, HttpResponse, Responder, post, get, ResponseError};
 use bigdecimal::{BigDecimal, ToPrimitive};
 use actix_identity::Identity;
 use num_bigint::{ToBigInt};
@@ -69,11 +69,11 @@ impl RenderPerson {
     }
 }
 
-#[get("/survey_intro/{community_code}")]
+#[get("/{lang}/survey_intro/{community_code}")]
 pub async fn survey_intro(
     data: web::Data<AppData>,
-    web::Path(community_code): web::Path<String>, 
-    _req:HttpRequest,
+    web::Path((lang, community_code)): web::Path<(String, String)>, 
+    req:HttpRequest,
     node_names: web::Data<Mutex<Vec<(String, String)>>>,
     id: Identity,
 ) -> impl Responder {
@@ -84,7 +84,7 @@ pub async fn survey_intro(
     
     match community_result {
         Ok(community) => {
-            let (mut ctx, _session_user, _role) = generate_basic_context(id, node_names);
+            let (mut ctx, _session_user, _role, _lang) = generate_basic_context(id, &lang, req.uri().path(), node_names);
         
             // all names for form autocomplete
             let all_node_names = Nodes::find_all_names().expect("Unable to load node names");
@@ -97,18 +97,18 @@ pub async fn survey_intro(
         },
         Err(e) => {
             println!("Error: {}", e);
-            return HttpResponse::Found().header("Location","/").finish()
+            return e.error_response()
         }
     }
 
 }
 
-#[get("/first_experience_form/{community_code}")]
+#[get("/{lang}/first_experience_form/{community_code}")]
 pub async fn experience_form_handler(
     data: web::Data<AppData>,
-    web::Path(community_code): web::Path<String>, 
+    web::Path((lang, community_code)): web::Path<(String, String)>, 
     node_names: web::Data<Mutex<Vec<(String, String)>>>,
-    _req:HttpRequest,
+    req:HttpRequest,
     id: Identity,
 ) -> impl Responder {
     
@@ -117,7 +117,7 @@ pub async fn experience_form_handler(
     
     match community_result {
         Ok(community) => {
-            let (mut ctx, _session_user, _role) = generate_basic_context(id, node_names);
+            let (mut ctx, _session_user, _role, _lang) = generate_basic_context(id, &lang, req.uri().path(), node_names);
         
             // all names for form autocomplete
             let all_node_names = Nodes::find_all_names().expect("Unable to load node names");
@@ -130,17 +130,17 @@ pub async fn experience_form_handler(
         },
         Err(e) => {
             println!("Error: {}", e);
-            return HttpResponse::Found().header("Location","/").finish()
+            return e.error_response()
         }
     }
 
 }
 
-#[post("/first_experience_form/{community_code}")]
+#[post("/{lang}/first_experience_form/{community_code}")]
 pub async fn handle_experience_form_input(
     _data: web::Data<AppData>,
     node_names: web::Data<Mutex<Vec<(String, String)>>>,
-    web::Path(community_code): web::Path<String>, 
+    web::Path((lang, community_code)): web::Path<(String, String)>, 
     req: HttpRequest, 
     form: web::Form<FirstExperienceForm>,
 ) -> impl Responder {
@@ -153,7 +153,7 @@ pub async fn handle_experience_form_input(
             
                 // validate form has data or re-load form
                 if form.name.is_empty() || form.response_1.is_empty() {
-                    return HttpResponse::Found().header("Location", String::from("/first_experience_form")).finish()
+                    return HttpResponse::Found().header("Location", format!("/{}/first_experience_form/{}", &lang, &community_code)).finish()
                 };
             
                 // associate person to community
@@ -274,31 +274,31 @@ pub async fn handle_experience_form_input(
                 match update {
                     Ok(c) => {
                         println!("Community {} updated", c.tag);
-                        return HttpResponse::Found().header("Location", format!("/add_experience_form/{}", new_person.code)).finish()
+                        return HttpResponse::Found().header("Location", format!("/{}/add_experience_form/{}", &lang, new_person.code)).finish()
                     },
                     Err(e) => {
                         println!("Community update failed: {}", e);
-                        return HttpResponse::Found().header("Location", String::from("/edit_community")).finish()
+                        return e.error_response()
                     }
                 };
         },
         Err(e) => {
             // invalid code - redirect
             println!("Error: {}", e);
-            return HttpResponse::Found().header("Location","/").finish()
+            return e.error_response()
         }
     }
 }
 
-#[get("/add_experience_form/{code}")]
+#[get("/{lang}/add_experience_form/{code}")]
 pub async fn add_experience_form_handler(
-    web::Path(code): web::Path<String>, 
+    web::Path((lang, code)): web::Path<(String, String)>, 
     data: web::Data<AppData>,
     node_names: web::Data<Mutex<Vec<(String, String)>>>,
-    _req:HttpRequest,
+    req:HttpRequest,
     id: Identity,
 ) -> impl Responder {
-    let (mut ctx, _session_user, _role) = generate_basic_context(id, node_names);
+    let (mut ctx, _session_user, _role, _lang) = generate_basic_context(id, &lang, req.uri().path(), node_names);
 
     let p = People::find_from_code(&code).unwrap();
 
@@ -313,6 +313,7 @@ pub async fn add_experience_form_handler(
     let people_with_experiences = RenderPerson::from(&p, true).expect("Unable to load experiences");
     ctx.insert("people_experiences", &people_with_experiences);
 
+    // translate to fluent keys
     let helper_options = vec![
         "You may wish to add an experience related to your gender identity or sexuality.", 
         "You are doing great! You may wish to add an experience related to your socio-economic background or language.", 
@@ -331,18 +332,18 @@ pub async fn add_experience_form_handler(
     HttpResponse::Ok().body(rendered)
 }
 
-#[post("/add_experience_form/{code}")]
+#[post("/{lang}/add_experience_form/{code}")]
 pub async fn add_handle_experience_form_input(
-    web::Path(code): web::Path<String>,
+    web::Path((lang, code)): web::Path<(String, String)>,
     _data: web::Data<AppData>,
     node_names: web::Data<Mutex<Vec<(String, String)>>>,
-    _req: HttpRequest, 
+    req: HttpRequest, 
     form: web::Form<AddExperienceForm>,
 ) -> impl Responder {
 
     // validate form has data or re-load form
     if form.name.is_empty() || form.response_1.is_empty() {
-        return HttpResponse::Found().header("Location", format!("/add_experience_form/{}", &code)).finish()
+        return HttpResponse::Found().header("Location", format!("/{}/add_experience_form/{}", &lang, &code)).finish()
     };
 
     println!("Find person");
@@ -454,11 +455,11 @@ pub async fn add_handle_experience_form_input(
     match update {
         Ok(c) => {
             println!("Community {} updated", c.tag);
-            return HttpResponse::Found().header("Location", format!("/add_experience_form/{}", code)).finish()
+            return HttpResponse::Found().header("Location", format!("/{}/add_experience_form/{}", &lang, code)).finish()
         },
         Err(e) => {
             println!("Community update failed: {}", e);
-            return HttpResponse::Found().header("Location", String::from("/edit_community")).finish()
+            return e.error_response()
         }
     };
 }

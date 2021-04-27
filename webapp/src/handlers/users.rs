@@ -11,6 +11,7 @@ use crate::{AppData, extract_identity_data, generate_basic_context};
 use crate::models::{User, Communities};
 use crate::handlers::DeleteForm;
 use error_handler::error_handler::CustomError;
+use crate::handlers::{I18n};
 
 #[derive(Deserialize, Debug)]
 pub struct UserForm {
@@ -30,10 +31,10 @@ pub struct AdminUserForm {
 pub async fn user_index(
     data: web::Data<AppData>,
     node_names: web::Data<Mutex<Vec<(String, String)>>>,
-    id: Identity,
-    _req:HttpRequest) -> impl Responder {
+    id: Identity,  i18n: Option<I18n>,
+    req:HttpRequest) -> impl Responder {
 
-    let (mut ctx, _session_user, role) = generate_basic_context(id, node_names);
+    let (mut ctx, _session_user, role, _lang) = generate_basic_context(id, i18n.unwrap().lang, req.uri().path(), node_names);
 
     if role != "admin".to_string() {
         let err = CustomError::new(
@@ -66,11 +67,11 @@ pub async fn user_page_handler(
     web::Path(slug): web::Path<String>,
     data: web::Data<AppData>,
     node_names: web::Data<Mutex<Vec<(String, String)>>>,
-    _req:HttpRequest,
-    id: Identity,
+    req:HttpRequest,
+    id: Identity,  i18n: Option<I18n>,
 ) -> impl Responder {
     
-    let (mut ctx, session_user, role) = generate_basic_context(id, node_names);
+    let (mut ctx, session_user, role, _lang) = generate_basic_context(id, i18n.unwrap().lang, req.uri().path(), node_names);
     
     if session_user.to_lowercase() != slug.to_lowercase() && role != "admin".to_string() {
         let err = CustomError::new(
@@ -117,11 +118,11 @@ pub async fn edit_user(
     data: web::Data<AppData>,
     web::Path(slug): web::Path<String>,
     node_names: web::Data<Mutex<Vec<(String, String)>>>,
-    _req:HttpRequest,
-    id: Identity,
+    req:HttpRequest,
+    id: Identity,  i18n: Option<I18n>,
 ) -> impl Responder {
     
-    let (mut ctx, session_user, role) = generate_basic_context(id, node_names);
+    let (mut ctx, session_user, role, _lang) = generate_basic_context(id, i18n.unwrap().lang, req.uri().path(), node_names);
 
     let user = User::find_from_slug(&slug);
 
@@ -153,9 +154,9 @@ pub async fn edit_user(
 pub async fn edit_user_post(
     _data: web::Data<AppData>,
     web::Path(slug): web::Path<String>,
-    _req: HttpRequest, 
+    req: HttpRequest, 
     form: web::Form<UserForm>,
-    id: Identity,
+    id: Identity,  i18n: Option<I18n>,
 ) -> impl Responder {
 
     let (session_user, role) = extract_identity_data(&id);
@@ -240,11 +241,11 @@ pub async fn admin_edit_user(
     data: web::Data<AppData>,
     web::Path(slug): web::Path<String>,
     node_names: web::Data<Mutex<Vec<(String, String)>>>,
-    _req:HttpRequest,
-    id: Identity,
+    req:HttpRequest,
+    id: Identity,  i18n: Option<I18n>,
 ) -> impl Responder {
     
-    let (mut ctx, _session_user, role) = generate_basic_context(id, node_names);
+    let (mut ctx, _session_user, role, _lang) = generate_basic_context(id, i18n.unwrap().lang, req.uri().path(), node_names);
 
     if &role != &"admin".to_string() {
         let err = CustomError::new(
@@ -276,9 +277,9 @@ pub async fn admin_edit_user(
 pub async fn admin_edit_user_post(
     _data: web::Data<AppData>,
     web::Path(slug): web::Path<String>,
-    _req: HttpRequest, 
+    req: HttpRequest, 
     form: web::Form<AdminUserForm>,
-    id: Identity,
+    id: Identity,  i18n: Option<I18n>,
 ) -> impl Responder {
 
     let (_session_user, role) = extract_identity_data(&id);
@@ -352,11 +353,11 @@ pub async fn delete_user_handler(
     web::Path(slug): web::Path<String>,
     data: web::Data<AppData>,
     node_names: web::Data<Mutex<Vec<(String, String)>>>,
-    _req: HttpRequest,
-    id: Identity,
+    req: HttpRequest,
+    id: Identity,  i18n: Option<I18n>,
 ) -> impl Responder {
 
-    let (mut ctx, session_user, role) = generate_basic_context(id, node_names);
+    let (mut ctx, session_user, role, _lang) = generate_basic_context(id, i18n.unwrap().lang, req.uri().path(), node_names);
     
     if role != "admin".to_string() && &session_user != &slug {
         println!("User not admin");
@@ -386,8 +387,8 @@ pub async fn delete_user_handler(
 pub async fn delete_user(
     web::Path(target_id): web::Path<i32>,
     _data: web::Data<AppData>,
-    _req: HttpRequest,
-    id: Identity,
+    req: HttpRequest,
+    id: Identity,  i18n: Option<I18n>,
     form: web::Form<DeleteForm>,
 ) -> impl Responder {
 

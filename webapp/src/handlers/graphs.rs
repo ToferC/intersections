@@ -1,6 +1,6 @@
 use std::{sync::Mutex};
 
-use actix_web::{web, get, HttpResponse, Responder};
+use actix_web::{web, get, HttpResponse, Responder, HttpRequest, ResponseError};
 use actix_identity::Identity;
 use crate::{AppData, generate_basic_context};
 
@@ -9,13 +9,17 @@ use std::collections::HashMap;
 use crate::models::{Experiences, Communities, People, User};
 use crate::models::{CytoGraph, generate_node_cyto_graph};
 
-#[get("/data_global_graph")]
+
+#[get("/{lang}/data_global_graph")]
 pub async fn data_global_graph(
+    web::Path(lang): web::Path<String>,
     // no longer using appdata to hold graph
     // this function is a placeholder in case we go back here
     data: web::Data<AppData>,
     graph: web::Data<Mutex<CytoGraph>>,
     node_names: web::Data<Mutex<Vec<(String, String)>>>,
+    req: HttpRequest,
+  
     id: Identity,
 ) -> impl Responder {
 
@@ -25,7 +29,7 @@ pub async fn data_global_graph(
 
     drop(graph);
     
-    let (mut ctx, _session_user, _role) = generate_basic_context(id, node_names);
+    let (mut ctx, _session_user, _role, _lang) = generate_basic_context(id, &lang, req.uri().path(), node_names);
 
     ctx.insert("graph_data", &j);
 
@@ -36,11 +40,14 @@ pub async fn data_global_graph(
     HttpResponse::Ok().body(rendered)
 }
 
-#[get("/global_graph")]
+#[get("/{lang}/global_graph")]
 pub async fn global_graph(
+    web::Path(lang): web::Path<String>,
     data: web::Data<AppData>,
     node_names: web::Data<Mutex<Vec<(String, String)>>>,
     id:Identity,
+    req: HttpRequest,
+  
 ) -> impl Responder {
         
     let experience_vec = Experiences::find_all_real().expect("Unable to load experiences");
@@ -57,7 +64,7 @@ pub async fn global_graph(
 
     let j = serde_json::to_string_pretty(&graph).unwrap();
     
-    let (mut ctx, _session_user, _role) = generate_basic_context(id, node_names);
+    let (mut ctx, _session_user, _role, _lang) = generate_basic_context(id, &lang, req.uri().path(), node_names);
 
     ctx.insert("graph_data", &j);
 
@@ -68,12 +75,14 @@ pub async fn global_graph(
     HttpResponse::Ok().body(rendered)
 }
 
-#[get("/full_community_graph/{community_slug}")]
+#[get("/{lang}/full_community_graph/{community_slug}")]
 pub async fn full_community_node_graph(
     data: web::Data<AppData>,
-    web::Path(community_slug): web::Path<String>,
+    web::Path((lang, community_slug)): web::Path<(String, String)>,
     node_names: web::Data<Mutex<Vec<(String, String)>>>,
-    id:Identity,
+    req: HttpRequest,
+    id: Identity,
+  
 ) -> impl Responder {
 
     // Validate community
@@ -82,7 +91,7 @@ pub async fn full_community_node_graph(
     match community_result {
         Ok(community) => {
             
-            let (mut ctx, session_user, _role) = generate_basic_context(id, node_names);
+            let (mut ctx, session_user, _role, _lang) = generate_basic_context(id, &lang, req.uri().path(), node_names);
 
             let session_user_id = match User::find_id_from_slug(&session_user) {
                 Ok(id) => id,
@@ -120,13 +129,13 @@ pub async fn full_community_node_graph(
             } else {
                 // user not validated to see community
                 println!("User not validated to see community");
-                return HttpResponse::Found().header("Location","/").finish()
+                return HttpResponse::Found().header("Location",format!("/{}", &lang)).finish()
 
             }
         },
         Err(e) => {
             println!("Error: {}", e);
-            return HttpResponse::Found().header("Location","/").finish()
+            return e.error_response()
         },
     }      
 }

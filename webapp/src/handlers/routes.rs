@@ -5,6 +5,8 @@ use crate::handlers::{
     index,
     raw_index,
     about,
+    toggle_language,
+    toggle_language_index,
 
     // admin
     admin_edit_user,
@@ -91,6 +93,8 @@ pub fn init_routes(config: &mut web::ServiceConfig) {
     config.service(index);
     config.service(raw_index);
     config.service(about);
+    config.service(toggle_language);
+    config.service(toggle_language_index);
     config.service(find_experience);
 
     // admin

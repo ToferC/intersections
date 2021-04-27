@@ -27,14 +27,15 @@ pub struct DeleteCommunityForm {
     user_verify: String,
 }
 
-#[get("/community_index")]
+#[get("/{lang}/community_index")]
 pub async fn community_index(
+    web::Path(lang): web::Path<String>,
     data: web::Data<AppData>,
     node_names: web::Data<Mutex<Vec<(String, String)>>>,
     id: Identity,
-    _req:HttpRequest) -> impl Responder {
+    req:HttpRequest) -> impl Responder {
     
-    let (mut ctx, _session_user, role) = generate_basic_context(id, node_names);
+    let (mut ctx, _session_user, role, _lang) = generate_basic_context(id, &lang, req.uri().path(), node_names);
     
     if role != "admin".to_string() {
         let err = CustomError::new(
@@ -61,14 +62,15 @@ pub async fn community_index(
     }
 }
 
-#[get("/open_community_index")]
+#[get("/{lang}/open_community_index")]
 pub async fn open_community_index(
+    web::Path(lang): web::Path<String>,
     data: web::Data<AppData>,
     node_names: web::Data<Mutex<Vec<(String, String)>>>,
     id: Identity,
-    _req:HttpRequest) -> impl Responder {
+    req:HttpRequest) -> impl Responder {
     
-    let (mut ctx, _session_user, _role) = generate_basic_context(id, node_names);
+    let (mut ctx, _session_user, _role, _lang) = generate_basic_context(id, &lang, req.uri().path(), node_names);
 
     let communities_data = Communities::find_all_open();
 
@@ -87,16 +89,16 @@ pub async fn open_community_index(
 }
 
 
-#[get("/community/{community_slug}")]
+#[get("/{lang}/community/{community_slug}")]
 pub async fn view_community(
-    web::Path(community_slug): web::Path<String>,
+    web::Path((lang, community_slug)): web::Path<(String, String)>,
     data: web::Data<AppData>,
     node_names: web::Data<Mutex<Vec<(String, String)>>>,
-    _req:HttpRequest,
+    req:HttpRequest,
     id: Identity,
 ) -> impl Responder {
     
-    let (mut ctx, session_user, _role) = generate_basic_context(id, node_names);
+    let (mut ctx, session_user, _role, _lang) = generate_basic_context(id, &lang, req.uri().path(), node_names);
     
     let community_select = Communities::find_from_slug(&community_slug);
 
@@ -118,7 +120,7 @@ pub async fn view_community(
                     
                         // Redirect if community is closed and user isn't community owner
                         if !community.open && !owner {
-                            return HttpResponse::Found().header("Location", String::from("/")).finish()
+                            return HttpResponse::Found().header("Location", format!("/{}", &lang)).finish()
                         };
                     },
                     Err(err) => {
@@ -142,7 +144,7 @@ pub async fn view_community(
             ctx.insert("owner", &owner);
             
             
-            let community_add_profile_url = format!("/survey_intro/{}", &community.code);
+            let community_add_profile_url = format!("/{}/survey_intro/{}", &lang, &community.code);
             ctx.insert("add_community_profile_url", &community_add_profile_url);
         
             // add qr code to add profile
@@ -150,9 +152,9 @@ pub async fn view_community(
             let environment = env::var("ENVIRONMENT").unwrap();
         
             if environment == "production" {
-                application_url = "https://www.intersectional-data.ca".to_string();
+                application_url = format!("https://www.intersectional-data.ca/{}", &lang);
             } else {
-                application_url = "http://localhost:8088".to_string();
+                application_url = format!("http://localhost:8088/{}", &lang);
             };
         
             let qr = qrcode_generator::to_svg_to_string(format!("{}{}", application_url, community_add_profile_url), QrCodeEcc::Low, 245, Some("Invitation link for intersections")).unwrap();
@@ -169,15 +171,16 @@ pub async fn view_community(
 
 }
 
-#[get("/add_community")]
+#[get("/{lang}/add_community")]
 pub async fn add_community(
+    web::Path(lang): web::Path<String>,
     data: web::Data<AppData>,
     node_names: web::Data<Mutex<Vec<(String, String)>>>,
-    _req:HttpRequest,
+    req:HttpRequest,
     id: Identity,
 ) -> impl Responder {
     
-    let (ctx, session_user, _role) = generate_basic_context(id, node_names);
+    let (ctx, session_user, _role, _lang) = generate_basic_context(id, &lang, req.uri().path(), node_names);
 
     if session_user != "" {
         let rendered = data.tmpl.render("communities/add_community.html", &ctx).unwrap();
@@ -192,8 +195,9 @@ pub async fn add_community(
     };
 }
 
-#[post("/add_community")]
+#[post("/{lang}/add_community")]
 pub async fn add_community_form_input(
+    web::Path(lang): web::Path<String>,
     _data: web::Data<AppData>,
     req: HttpRequest, 
     form: web::Form<CommunityForm>,
@@ -203,7 +207,7 @@ pub async fn add_community_form_input(
 
     // validate form has data or re-load form
     if form.community_name.is_empty() || form.description.is_empty() {
-        return HttpResponse::Found().header("Location", String::from("/add_community")).finish()
+        return HttpResponse::Found().header("Location", format!("/{}/add_community", &lang)).finish()
     };
 
     // validate user
@@ -233,7 +237,7 @@ pub async fn add_community_form_input(
             match community {
                 Ok(community) => {
                     println!("Community {} created", &community.tag);
-                    return HttpResponse::Found().header("Location", format!("/community/{}", community.slug)).finish()
+                    return HttpResponse::Found().header("Location", format!("/{}/community/{}", &lang, community.slug)).finish()
                 },
                 Err(e) => {
                     println!("{}", e);
@@ -248,15 +252,15 @@ pub async fn add_community_form_input(
     };
 }
 
-#[get("/edit_community/{community_slug}")]
+#[get("/{lang}/edit_community/{community_slug}")]
 pub async fn edit_community(
-    web::Path(community_slug): web::Path<String>,
+    web::Path((lang, community_slug)): web::Path<(String, String)>,
     data: web::Data<AppData>,
     node_names: web::Data<Mutex<Vec<(String, String)>>>,
-    _req:HttpRequest,
+    req:HttpRequest,
     id: Identity,
 ) -> impl Responder {
-    let (mut ctx, session_user, _role) = generate_basic_context(id, node_names);
+    let (mut ctx, session_user, _role, _lang) = generate_basic_context(id, &lang, req.uri().path(), node_names);
 
     // validate user
     let user = User::find_from_slug(&session_user);
@@ -276,12 +280,12 @@ pub async fn edit_community(
                     
                     } else {
                         // user does not own community - redirect
-                        return HttpResponse::Found().header("Location", format!("/user/{}", u.slug)).finish()
+                        return HttpResponse::Found().header("Location", format!("/{}/user/{}", &lang, u.slug)).finish()
                     };
                 },
                 Err(e) => {
                     println!("Community not found. Redirecting: {}", &e);
-                    return HttpResponse::Found().header("Location", format!("/user/{}", u.slug)).finish()
+                    return HttpResponse::Found().header("Location", format!("/{}/user/{}", &lang, u.slug)).finish()
                 },
             };
         },
@@ -296,9 +300,9 @@ pub async fn edit_community(
     HttpResponse::Ok().body(rendered)
 }
 
-#[post("/edit_community/{community_slug}")]
+#[post("/{lang}/edit_community/{community_slug}")]
 pub async fn edit_community_form_input(
-    web::Path(community_slug): web::Path<String>,
+    web::Path((lang, community_slug)): web::Path<(String, String)>,
     _data: web::Data<AppData>,
     req: HttpRequest, 
     form: web::Form<CommunityForm>,
@@ -308,7 +312,7 @@ pub async fn edit_community_form_input(
 
     // validate form has data or re-load form
     if form.community_name.is_empty() || form.description.is_empty() {
-        return HttpResponse::Found().header("Location", String::from("/add_community")).finish()
+        return HttpResponse::Found().header("Location", format!("/{}/add_community", &lang)).finish()
     };
 
     // validate user
@@ -342,22 +346,22 @@ pub async fn edit_community_form_input(
                         match update {
                             Ok(c) => {
                                 println!("Community {} updated", c.tag);
-                                return HttpResponse::Found().header("Location", format!("/community/{}", c.slug)).finish()
+                                return HttpResponse::Found().header("Location", format!("/{}/community/{}", &lang, c.slug)).finish()
                             },
                             Err(e) => {
                                 println!("Community update failed: {}", e);
-                                return HttpResponse::Found().header("Location", String::from("/edit_community")).finish()
+                                return HttpResponse::Found().header("Location", format!("/{}/edit_community/{}", &lang, &community_slug)).finish()
                             }
                         };
 
                     } else {
                         // redirect
-                        return HttpResponse::Found().header("Location", String::from("/log_in")).finish()
+                        return HttpResponse::Found().header("Location", format!("/{}/log_in", &lang)).finish()
                     }
                 },
                 Err(e) => {
                     println!("Community not found. Redirecting: {}", &e);
-                    return HttpResponse::Found().header("Location", format!("/user/{}", u.slug)).finish()
+                    return HttpResponse::Found().header("Location", format!("/{}/user/{}", &lang, u.slug)).finish()
                 }
             }
         },
@@ -368,16 +372,16 @@ pub async fn edit_community_form_input(
     };
 }
 
-#[get("/delete_community/{code}")]
+#[get("/{lang}/delete_community/{code}")]
 pub async fn delete_community(
-    web::Path(code): web::Path<String>,
+    web::Path((lang, code)): web::Path<(String, String)>,
     data: web::Data<AppData>,
     node_names: web::Data<Mutex<Vec<(String, String)>>>,
-    _req: HttpRequest,
+    req: HttpRequest,
     id: Identity,
 ) -> impl Responder {
 
-    let (mut ctx, session_user, role) = generate_basic_context(id, node_names);
+    let (mut ctx, session_user, role, _lang) = generate_basic_context(id, &lang, req.uri().path(), node_names);
     
     let user = match User::find_from_slug(&session_user){
         Ok(u) => u,
@@ -394,7 +398,7 @@ pub async fn delete_community(
             if role != "admin".to_string() && community.user_id != user.id {
                 // user isn't admin or the community owner
                 println!("User not community owner - access denied");
-                HttpResponse::Found().header("Location", "/community_index").finish()
+                HttpResponse::Found().header("Location", format!("/{}/community_index", &lang)).finish()
             } else {
 
                 ctx.insert("community", &community);
@@ -411,11 +415,11 @@ pub async fn delete_community(
     }
 }
 
-#[post("/delete_community/{code}")]
+#[post("/{lang}/delete_community/{code}")]
 pub async fn delete_community_form(
-    web::Path(code): web::Path<String>,
+    web::Path((lang, code)): web::Path<(String, String)>,
     _data: web::Data<AppData>,
-    _req: HttpRequest,
+    req: HttpRequest,
     id: Identity,
     form: web::Form<DeleteCommunityForm>,
 ) -> impl Responder {
@@ -455,7 +459,7 @@ pub async fn delete_community_form(
 
                             // delete community
                             Communities::delete(community.id).expect("Unable to delete community");
-                            return HttpResponse::Found().header("Location", "/community_index").finish()
+                            return HttpResponse::Found().header("Location", format!("/{}/community_index", &lang)).finish()
                         },
                         Err(e) => {
                             println!("Community update failed: {}", e);
@@ -465,7 +469,7 @@ pub async fn delete_community_form(
                     
                 } else {
                     println!("Community does not match verify string - return to delete page");
-                    return HttpResponse::Found().header("Location", format!("/delete_community/{}", community.code)).finish()
+                    return HttpResponse::Found().header("Location", format!("/{}/delete_community/{}", &lang, community.code)).finish()
                 };
             }
         },

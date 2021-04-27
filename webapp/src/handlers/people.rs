@@ -13,16 +13,16 @@ use crate::models::AggregateExperience;
 
 use crate::schema::{people, nodes};
 
-#[get("/person/{code}")]
+#[get("/{lang}/person/{code}")]
 pub async fn person_page(
-    web::Path(code): web::Path<String>, 
+    web::Path((lang, code)): web::Path<(String, String)>, 
     data: web::Data<AppData>,
     node_names: web::Data<Mutex<Vec<(String, String)>>>,
-    _req:HttpRequest,
+    req:HttpRequest,
     id: Identity,
 ) -> impl Responder {
     
-    let (mut ctx, _session_user, _role) = generate_basic_context(id, node_names);
+    let (mut ctx, _session_user, _role, _lang) = generate_basic_context(id, &lang, req.uri().path(), node_names);
 
     let person_select = People::find_from_code(&code);
 
@@ -69,16 +69,16 @@ pub async fn person_page(
 
 }
 
-#[get("/person_network_graph/{person_id}")]
+#[get("/{lang}/person_network_graph/{person_id}")]
 pub async fn person_graph(
-    web::Path(person_id): web::Path<i32>,
+    web::Path((lang, person_id)): web::Path<(String, i32)>,
     data: web::Data<AppData>,
     node_names: web::Data<Mutex<Vec<(String, String)>>>,
-    _req: HttpRequest,
+    req: HttpRequest,
     id: Identity,
 ) -> impl Responder {
 
-    let (mut ctx, _session_user, _role) = generate_basic_context(id, node_names);
+    let (mut ctx, _session_user, _role, _lang) = generate_basic_context(id, &lang, req.uri().path(), node_names);
     
     let conn = database::connection().expect("Unable to connect to db");
     
@@ -133,16 +133,16 @@ pub async fn person_graph(
     HttpResponse::Ok().body(rendered)
 }
 
-#[get("/delete_person/{code}")]
+#[get("/{lang}/delete_person/{code}")]
 pub async fn delete_person(
-    web::Path(code): web::Path<String>,
+    web::Path((lang, code)): web::Path<(String, String)>,
     data: web::Data<AppData>,
     node_names: web::Data<Mutex<Vec<(String, String)>>>,
-    _req: HttpRequest,
+    req: HttpRequest,
     id: Identity,
 ) -> impl Responder {
 
-    let (mut ctx, _session_user, _role) = generate_basic_context(id, node_names);
+    let (mut ctx, _session_user, _role, _lang) = generate_basic_context(id, &lang, req.uri().path(), node_names);
 
     let person = People::find_from_code(&code);
         
@@ -162,11 +162,11 @@ pub async fn delete_person(
     }
 }
 
-#[post("/delete_person/{code}")]
+#[post("/{lang}/delete_person/{code}")]
 pub async fn delete_person_post(
-    web::Path(code): web::Path<String>,
+    web::Path((lang, code)): web::Path<(String, String)>,
     _data: web::Data<AppData>,
-    _req: HttpRequest,
+    req: HttpRequest,
     _id: Identity,
     form: web::Form<DeleteForm>,
 ) -> impl Responder {
@@ -214,10 +214,10 @@ pub async fn delete_person_post(
 
                 // delete person
                 People::delete(person.id).expect("Unable to delete person");
-                return HttpResponse::Found().header("Location", "/").finish()
+                return HttpResponse::Found().header("Location", format!("/{}", &lang)).finish()
             } else {
                 println!("User does not match verify string - return to delete page");
-                return HttpResponse::Found().header("Location", format!("/delete_person/{}", &person.code)).finish()
+                return HttpResponse::Found().header("Location", format!("/{}/delete_person/{}", &lang, &person.code)).finish()
             };
         },
         Err(err) => {

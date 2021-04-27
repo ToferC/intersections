@@ -16,16 +16,16 @@ use error_handler::error_handler::CustomError;
 
 use crate::schema::{experiences};
 
-#[get("/node/{node_slug}")]
+#[get("/{lang}/node/{node_slug}")]
 pub async fn node_page(
-    web::Path(node_slug): web::Path<String>, 
+    web::Path((lang, node_slug)): web::Path<(String, String)>, 
     data: web::Data<AppData>, 
     node_names: web::Data<Mutex<Vec<(String, String)>>>,
-    _req:HttpRequest,
+    req:HttpRequest,
     id: Identity,
 ) -> impl Responder {
     
-    let (mut ctx, _session_user, _role) = generate_basic_context(id, node_names);
+    let (mut ctx, _session_user, _role, _lang) = generate_basic_context(id, &lang, req.uri().path(), node_names);
 
     let conn = database::connection().expect("Unable to connect to db");
     
@@ -112,16 +112,16 @@ pub async fn node_page(
     
 }
 
-#[get("/community_node/{community_slug}/{node_slug}")]
+#[get("/{lang}/community_node/{community_slug}/{node_slug}")]
 pub async fn community_node_page(
-    web::Path((community_slug, node_slug)): web::Path<(String, String)>, 
+    web::Path((lang, community_slug, node_slug)): web::Path<(String, String, String)>, 
     data: web::Data<AppData>, 
     node_names: web::Data<Mutex<Vec<(String, String)>>>,
-    _req:HttpRequest,
+    req:HttpRequest,
     id: Identity,
 ) -> impl Responder {
 
-    let (mut ctx, session_user, _role) = generate_basic_context(id, node_names);
+    let (mut ctx, session_user, _role, _lang) = generate_basic_context(id, &lang, req.uri().path(), node_names);
 
     // validate user has rights to view
     let community_result = Communities::find_from_slug(&community_slug);
@@ -259,16 +259,16 @@ pub async fn community_node_page(
     }
 }
 
-#[get("/node_graph/{node_slug}")]
+#[get("/{lang}/node_graph/{node_slug}")]
 pub async fn node_graph(
-    web::Path(node_slug): web::Path<String>,
+    web::Path((lang, node_slug)): web::Path<(String, String)>,
     node_names: web::Data<Mutex<Vec<(String, String)>>>,
     data: web::Data<AppData>,
-    _req: HttpRequest,
+    req: HttpRequest,
     id: Identity,
 ) -> impl Responder {
     
-    let (mut ctx, _session_user, _role) = generate_basic_context(id, node_names);
+    let (mut ctx, _session_user, _role, _lang) = generate_basic_context(id, &lang, req.uri().path(), node_names);
 
     let conn = database::connection().expect("Unable to connect to db");
     
@@ -335,17 +335,17 @@ pub async fn node_graph(
     
 }
 
-#[get("/community_node_graph/{community_slug}/{node_slug}")]
+#[get("/{lang}/community_node_graph/{community_slug}/{node_slug}")]
 pub async fn community_node_graph(
     // Rework this as a connected node graph
-    web::Path((community_slug, node_slug)): web::Path<(String, String)>, 
+    web::Path((lang, community_slug, node_slug)): web::Path<(String, String, String)>, 
     data: web::Data<AppData>,
     node_names: web::Data<Mutex<Vec<(String, String)>>>,
-    _req: HttpRequest,
+    req: HttpRequest,
     id: Identity,
 ) -> impl Responder {
     
-    let (mut ctx, session_user, _role) = generate_basic_context(id, node_names);
+    let (mut ctx, session_user, _role, _lang) = generate_basic_context(id, &lang, req.uri().path(), node_names);
 
     let community_select = Communities::find_from_slug(&community_slug);
 

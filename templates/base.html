@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ lang }}">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -255,7 +255,7 @@
     <br>
     <div class="container-fluid">
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-            <a class="navbar-brand" href="/">Intersectional Data MVP</a>
+            <a class="navbar-brand" href="/{{ lang }}">Intersectional Data MVP</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
               <span class="navbar-toggler-icon"></span>
             </button>
@@ -269,15 +269,15 @@
                 -->
                 
                 <li class="nav-item active">
-                    <a class="nav-link" href="/global_graph">View global graph <span class="sr-only">(current)</span></a>
+                    <a class="nav-link" href="/{{ lang }}/global_graph">View global graph <span class="sr-only">(current)</span></a>
                 </li>
 
                 <li class="nav-item active">
-                    <a class="nav-link" href="/about">About the project<span class="sr-only">(current)</span></a>
+                    <a class="nav-link" href="/{{ lang }}/about">About the project<span class="sr-only">(current)</span></a>
                 </li>
                 
                 <li class="nav-item active">
-                    <a class="nav-link" href="/open_community_index">Explore open communities <span class="sr-only">(current)</span></a>
+                    <a class="nav-link" href="/{{ lang }}/open_community_index">Explore open communities <span class="sr-only">(current)</span></a>
                 </li>
 
                 <li class="nav-item dropdown">
@@ -286,7 +286,7 @@
                   </a>
                   <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                     {% for n in node_names %}
-                    <a class="dropdown-item" href="/node/{{ n.1 }}">{{ n.0 | title }}</a>
+                    <a class="dropdown-item" href="/{{ lang }}/node/{{ n.1 }}">{{ n.0 | title }}</a>
                     {% endfor %}
                     <div class="dropdown-divider"></div>
                   </div>
@@ -298,24 +298,25 @@
                       {{ session_user }}
                     </a>
                     <div class="dropdown-menu" aria-labelledby="userNavbarDropdown">
-                      <a class="dropdown-item" href="/user/{{ session_user }}">Profile</a>
-                      <a class="dropdown-item" href="/log_out">Logout</a>
+                      <a class="dropdown-item" href="/{{ lang }}/user/{{ session_user }}">Profile</a>
+                      <a class="dropdown-item" href="/{{ lang }}/log_out">Logout</a>
                       <div class="dropdown-divider"></div>
                       {% if role == "admin" %}
-                      <a class="dropdown-item" href="/user_index">User Index</a>
-                      <a class="dropdown-item" href="/community_index">Community Index</a>
+                      <a class="dropdown-item" href="/{{ lang }}/user_index">User Index</a>
+                      <a class="dropdown-item" href="/{{ lang }}/community_index">Community Index</a>
                       {% endif %}
                     </div>
                 </li>
                 {% else %}
                 <li class="nav-item active">
-                    <a class="nav-link" href="/log_in">Log in<span class="sr-only">(current)</span></a>
+                    <a class="nav-link" href="/{{ lang }}/log_in">Log in<span class="sr-only">(current)</span></a>
                 </li>
                 <li class="nav-item active">
-                    <a class="nav-link" href="/register">Register<span class="sr-only">(current)</span></a>
+                    <a class="nav-link" href="/{{ lang }}/register">Register<span class="sr-only">(current)</span></a>
                 </li>
                 {% endif %}
             </ul>
+            <a class="btn btn-dark" href="/toggle_language{{ path }}">{{ fluent(key="language-toggle", lang=lang ) }}</a>
             <!--
                 <form class="form-inline my-2 my-lg-0">
                     <input class="form-control mr-sm-2" type="search" placeholder="Under Construction" aria-label="Search">

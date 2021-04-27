@@ -4,6 +4,7 @@
 
 ## Buttons
 button-explore-demo-data = Explorer les données de démonstration
+language-toggle = English
 
 ## Index
 welcome-to = Bienvenue a Intersectional-data.ca!

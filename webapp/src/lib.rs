@@ -65,8 +65,13 @@ pub fn extract_identity_data(id: &Identity) -> (String, String) {
 }
 
 /// Generate context, session_user and role from id and node_names
-pub fn generate_basic_context(id: Identity, node_names: web::Data<Mutex<Vec<(String, String)>>>) -> (Context, String, String) {
-    
+pub fn generate_basic_context(
+        id: Identity,
+        lang: &str,
+        path: &str,
+        node_names: web::Data<Mutex<Vec<(String, String)>>>) -> (Context, String, String, String
+    ) 
+{    
     let mut ctx = Context::new();
 
     // Get session data and add to context
@@ -74,10 +79,19 @@ pub fn generate_basic_context(id: Identity, node_names: web::Data<Mutex<Vec<(Str
     ctx.insert("session_user", &session_user);
     ctx.insert("role", &role);
 
+    let validated_lang = match lang {
+        "fr" => "fr",
+        "en" => "en",
+        _ => "en",
+    };
+
+    ctx.insert("lang", &validated_lang);
+    ctx.insert("path", &path);
+
     // add node_names for navbar drop down
     ctx.insert("node_names", &node_names.lock().expect("Unable to unlock").clone());
 
-    (ctx, session_user, role)
+    (ctx, session_user, role, lang.to_owned())
 }
 
 pub fn generate_unique_code(mut characters: usize, dashes: bool) -> String {

@@ -1,4 +1,4 @@
-use std::sync::Mutex;
+use std::{sync::Mutex};
 use actix_web::{web, get, HttpResponse, HttpRequest, Responder};
 use actix_identity::Identity;
 use crate::{AppData, generate_basic_context};
@@ -6,60 +6,45 @@ use diesel::prelude::*;
 use diesel::{QueryDsl, BelongingToDsl};
 
 use crate::models::{Experiences, Nodes, People};
-use crate::handlers::{UrlParams, I18n};
 use database;
 
 use crate::schema::{nodes};
 
-#[get("/xxx/")]
+#[get("/")]
 pub async fn raw_index(
     _data: web::Data<AppData>,
     _req:HttpRequest,
 ) -> impl Responder {
 
     // Redirect if somone is getting the index with no language param
-    return HttpResponse::Found().header("Location", "/en/").finish()
+    return HttpResponse::Found().header("Location", "/en").finish()
 }
 
-#[get("/")]
+#[get("/{lang}")]
 pub async fn index(
     data: web::Data<AppData>,
-    i18n: Option<I18n>,
-    web::Path(params): web::Path<UrlParams>,
+    web::Path(lang): web::Path<String>,
     node_names: web::Data<Mutex<Vec<(String, String)>>>, 
-    _req:HttpRequest,
+    req:HttpRequest,
     id: Identity,
 ) -> impl Responder {
-
-    let lang = match i18n {
-        Some(s) => {
-            if s.lang == "fr" {
-                "fr"
-            } else {
-                "en"
-            }
-        },
-        None => "en",
-    };
-
     
-    let (mut ctx, _, _) = generate_basic_context(id, node_names);
+    let (ctx, _, _, _) = generate_basic_context(id, &lang, req.uri().path(), node_names);
     
-    ctx.insert("lang", &lang);
-
     let rendered = data.tmpl.render("index.html", &ctx).unwrap();
     HttpResponse::Ok().body(rendered)
 }
 
-#[get("/about")]
+#[get("/{lang}/about")]
 pub async fn about(
     data: web::Data<AppData>,
+    web::Path(lang): web::Path<String>,
     node_names: web::Data<Mutex<Vec<(String, String)>>>, 
-    _req:HttpRequest,
+    req:HttpRequest,
     id: Identity,
 ) -> impl Responder {
 
-    let (ctx, _, _) = generate_basic_context(id, node_names);
+    let (ctx, _, _, _) = generate_basic_context(id, &lang, req.uri().path(), node_names);
 
     let rendered = data.tmpl.render("about.html", &ctx).unwrap();
     HttpResponse::Ok().body(rendered)

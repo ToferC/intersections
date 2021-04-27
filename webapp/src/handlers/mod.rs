@@ -12,8 +12,7 @@ mod errors;
 
 mod utility {
     use serde::Deserialize;
-    use actix_web::{http, dev, Error, HttpResponse, FromRequest, HttpRequest};
-    use actix_web::http::header::{AcceptLanguage, LanguageTag, qitem};
+    use actix_web::{web, http, dev, get, HttpResponse, FromRequest, HttpRequest, Responder};
     use futures::future::{ok, Either, Ready};
 
 
@@ -36,13 +35,63 @@ mod utility {
         type Error = actix_web::Error;
         type Future = Ready<Result<Self, Self::Error>>;
 
-        fn from_request(req: &HttpRequest, payload: &mut dev::Payload) -> Self::Future {
-            if req.headers().get("Accept-Language").unwrap() == "fr" {
+        fn from_request(req: &HttpRequest, _payload: &mut dev::Payload) -> Self::Future {
+
+            let accept_lang = req.headers().get("Accept-Language").unwrap().to_str().unwrap();
+
+            let parts: Vec<String> = accept_lang.split("-").map(|s| s.to_string()).collect();
+
+            println!("{:?}", &parts);
+
+            if parts[0].contains("fr") {
                 ok(I18n { lang: "fn" })
             } else {
-                ok(I18n { lang: "fr" })
+                ok(I18n { lang: "en" })
             }
         }
+    }
+
+    #[get("/toggle_language/{lang}")]
+    pub async fn toggle_language_index(
+        web::Path(lang): web::Path<String>,
+    ) -> impl Responder {
+
+        let new_lang = match lang.as_str() {
+            "fr" => "en",
+            "en" => "fr",
+            _ => "en",
+        };
+
+        println!("New lang: {}", &new_lang);
+
+        HttpResponse::Found()
+            .header("Accept-Language", new_lang)
+            .header("Location", format!("/{}", &new_lang))
+            .finish()
+    }
+
+    #[get("/toggle_language/{lang}/{url}")]
+    pub async fn toggle_language(
+        web::Path((lang, url)): web::Path<(String, String)>,
+        _req: HttpRequest,
+    ) -> impl Responder {
+        println!("url: {}", &url);
+
+        let new_lang = if lang.as_str() == "en" {
+            "fr"
+        } else {
+            "en"
+        };
+
+        // Remove leading character "/"
+        let cleaned_url: &str = url.split("/").into_iter().last().expect("Unable to find url");
+
+        println!("New lang: {}", &new_lang);
+
+
+        HttpResponse::Found()
+            .header("Location", format!("/{}/{}", &new_lang, &cleaned_url))
+            .finish()
     }
 }
 
@@ -90,4 +139,4 @@ pub use self::authentication_handlers::{register_handler, register_form_input, r
     email_verification, verify_code, password_reset, password_reset_post, request_password_reset_post,
     password_email_sent, request_password_reset};
     
-pub use self::utility::{DeleteForm, UrlParams, I18n};
+pub use self::utility::{DeleteForm, UrlParams, I18n, toggle_language, toggle_language_index};
