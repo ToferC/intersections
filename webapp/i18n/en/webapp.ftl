@@ -1,7 +1,7 @@
 ## General Section
 
 -app-name = Intersectional-data.ca
--app-description = Intersectional-data.ca is a learning project and experiment in collecting, connecting, and gaining insight from the lived experience of participants while protecting their privacy.
+app-description = { -app-name } is a learning project and experiment in collecting, connecting, and gaining insight from the lived experience of participants while protecting their privacy.
 
 ## Buttons
 
