@@ -1,12 +1,15 @@
 ## General Section
+
 -app-name = Intersectional-data.ca
 -app-description = Intersectional-data.ca is a learning project and experiment in collecting, connecting, and gaining insight from the lived experience of participants while protecting their privacy.
 
 ## Buttons
+
 button-explore-demo-data = Explore demonstration data
-language-toggle = Francais
+language-toggle = Français
 
 ## Index
+
 welcome-to = Welcome to Intersectional-data.ca!
 greeting = Hello { $name }!
 important = Important:
@@ -20,4 +23,5 @@ something-to-say-header = I have something to say
 fill-feedback = Fill out the feedback form.
 
 ## About
+
 about-header = About the Project
