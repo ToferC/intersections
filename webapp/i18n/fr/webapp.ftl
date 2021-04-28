@@ -1,12 +1,35 @@
 ## General Section
 
 -app-name = Intersectional-data.ca
+intersections = Intersections
 app-description = { -app-name } est un projet d'apprentissage et une expérience de collecte, de connexion et de compréhension de l'expérience vécue des participants tout en protégeant leur vie privée.
+app-mvp = MVP d'enquête et d'analyse de données intersectionnelles
 
 ## Buttons
 
+
+## Base & Navbar
+
 button-explore-demo-data = Explorer les données de démonstration
+view-global-graph = Afficher le graph global
+about = À propos du projet
 language-toggle = English
+explore-communities = Explorez les communautés
+explore-experiences = Explorez les Expériences
+profile = Profil
+logout = Déconnexion
+user-index = Utilisateurs
+community-index = Index de la communauté
+login = Connectez-vous
+register = S'inscrire
+
+## Footer
+
+footer-1 = Veuillez noter que ce travail est un projet d'apprentissage et une expérience dans la collecte et l'acquisition d'informations à partir d'informations sensibles ou personnelles tout en protégeant la vie privée des participants.
+available-licence = Le projet est disponible sur GitHub sous une licence MIT ici:
+original-work = Le travail original sur les modèles de données intersectionnels a été effectué:
+learner-models = Modèles
+developed-by = Développé par ToferC 2020-21
 
 ## Index
 
@@ -24,4 +47,44 @@ fill-feedback = Remplissez le formulaire de commentaires.
 
 ## About
 
-about-header = A propos du projet
+who = Qui es-tu?
+chris-description-1 = Je m'appelle Chris Allison. Je suis un cadre au gouvernement fédéral du Canada et un développeur. Je pense que les données sont l'un de nos meilleurs outils pour identifier et éliminer les préjugés dans nos organisations. Je travaille sur ce projet comme un moyen de tester l'hypothèse et de travailler pour un avenir plus équitable et inclusif.
+chris-description-2 = Je suis blanc, homme, hétérosexuel et cisgenre. Mon partenaire est noir et mes enfants sont mixtes. Je travaille là-dessus pour eux et pour aider à briser les structures racistes systémiques dans nos organisations.
+forgive-me = je vais me tromper. J'espère que vous pardonnerez mes erreurs et que vous m'aiderez à reprendre le chemin si je me trompe.
+why-matter = Pourquoi ce projet est-il important?
+reasons-intro = Les enquêtes démographiques actuellement utilisées au gouvernement divisent artificiellement les gens en catégories (souvent binaires):
+reason-1 = Minorité visible (ou non);
+reason-2 = Personne handicapée (ou non);
+reason-3 = Homme, femme ou autre;
+this-practice = Cette pratique:
+practice-1 = Ne représente pas la complexité de l'expérience que chaque personne apporte à la table
+practice-2 = n'explique pas que les expériences des différentes personnes de cette partie de leur vie peuvent différer considérablement
+practice-3 = Ne suit ni ne déduit l'impact de ce qui est supposé être la «norme» - blanc, cis, handicapé, homme
+attempt-to = Ce projet est une tentative de créer un modèle de données et une lentille à travers laquelle:
+attempt-1 = Meilleure expérience vécue de modèle en ce qui concerne notre travail
+attempt-2 = Construire de l'empathie et de la compassion pour nous-mêmes et les autres
+attempt-3 = Rendre le privilège et l'inclusion visibles dans nos organisations afin que nous puissions travailler pour équilibrer les échelles
+how-better = Comment ce projet améliorera-t-il les choses?
+better-1 = Ce MVP est conçu pour donner aux participants le contrôle de définir leurs expériences vécues telles qu'ils les perçoivent, une par une.
+better-2 = En combinant ou en superposant les expériences, nous pouvons fournir une compréhension plus holistique de l’expérience vécue d’une personne dans ses propres mots.
+better-3 = En combinant les expériences vécues dans un graphique qui relie des concepts communs tels que «manager», «femme», «noir», «mère», «père» ou «millénaire», nous pouvons voir comment les expériences interagissent les unes avec les autres et développer une meilleure compréhension de l'impact de nos lieux de travail sur nos employés.
+better-4 = En appelant et en rendant explicite le «normal», nous pouvons identifier les privilèges et les préjugés systémiques dans nos organisations.
+based-on = Sur quoi repose ce travail?
+based-structure = La structure de l'enquête est basée sur
+person-role-system = Système-rôle-personne
+prs-explanation = un cadre pour mieux comprendre les relations dynamiques entre les personnes dans les rôles et les systèmes dans lesquels elles fonctionnent.
+prs-learn-more = Vous pouvez en savoir plus sur ce cadre et comment il peut contribuer au changement de culture requis pour des organisations équitables ci-dessous.
+leading-for-results-prs = Diriger vers les résultats: le cadre personne-rôle-système
+more-info-in-x = Plus d'informations peuvent également être trouvées dans l'excellent
+blog-article = article de blog
+by = par
+is-finished = Est-il fini?
+no = Non.
+finished-1 = Ce travail est un PMV (produit minimal viable) pour tester l'enquête, les données et la méthodologie de conception.
+finished-2 = Il y a beaucoup de tests et de questions à poser avant la fin du projet.
+love-feedback = J'adorerais vos commentaires.
+code-found = Le code et les problèmes peuvent être trouvés sur
+how-protect-info = L'enquête pose des questions personnelles. Comment allez-vous protéger mes informations?
+protect-1 = Intersections a été conçu pour garantir votre confidentialité.
+protect-2 = Aucune information d'identification n'est stockée dans le cadre de l'enquête. Lorsque vous aurez terminé l'enquête, un code vous sera fourni afin que vous puissiez accéder à votre profil.
+protect-3 = Vous êtes la seule personne à recevoir ce code et sans le code, personne ne peut voir votre profil.
