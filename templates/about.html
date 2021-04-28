@@ -6,83 +6,73 @@
 
 {% block content %}
         <div class="col m-md-2 m-1">
-            <h1>{{ fluent(key="about-header", lang=lang) }}</h1>
+            <h1>{{ fluent(key="about", lang=lang) }}</h1>
             <p>{{ fluent(key="app-description", lang=lang) }}</p>
 
             <hr>
-            <h2>Who are you?</h2>
-            <p>My name is Chris Allison. I'm an executive in the federal government of Canada and a developer / data person. I believe data is one of our best tools to identify and eliminate bias in our organizations.
-                I'm working on this project as a way to test the hypothesis and work towards a more equitable and inclusive future.
-            </p>
-            <p>I am white, male, heterosexual and cisgendered. My partner is black and my children are mixed. 
-                I'm working on this for them and to help break down systemic racist structures in our organizations.</p>
-            <p>I'm going to get things wrong. I hope you'll forgive my errors and help me get back on the path when I mis-step.
-            </p>
+            <h2>{{ fluent(key="who", lang=lang) }}</h2>
+            <p>{{ fluent(key="chris-description-1", lang=lang )}}</p>
+            <p>{{ fluent(key="chris-description-2", lang=lang )}}</p>
+            <p>{{ fluent(key="forgive-me", lang=lang )}}</p>
 
             <hr>
-            <h2>Why does this project matter?</h2>
-            <p>The current demographic surveys in use in the Government of Canada artificially divide people into (often binary) categories:</p>
+            <h2>{{ fluent(key="why-matter", lang=lang )}}</h2>
+            <p>{{ fluent(key="reasons-intro", lang=lang )}}</p>
             <ul>
-                <li>Visible Minority (or not)</li>
-                <li>Person with a disability (or not)</li>
-                <li>Male, female or other</li>
+                <li>{{ fluent(key="reason-1", lang=lang )}}</li>
+                <li>{{ fluent(key="reason-2", lang=lang )}}</li>
+                <li>{{ fluent(key="reason-3", lang=lang )}}</li>
             </ul>
-            <p>This practice:</p>
+            <p>{{ fluent(key="this-practice", lang=lang )}}</p>
             <ul>
-                <li>Doesn’t represent the complexity of experience that each person brings to the table</li>
-                <li>Does not explain how different people’s experiences of this part of their lives may differ greatly</li>
-                <li>Does not track or infer the impact of what is assumed to be the “norm” - white, cis, abled, male</li>
+                <li>{{ fluent(key="practice-1", lang=lang )}}</li>
+                <li>{{ fluent(key="practice-2", lang=lang )}}</li>
+                <li>{{ fluent(key="practice-3", lang=lang )}}</li>
             </ul>
 
-            <p>This project is an attempt to build a data model and lens through which to:</p>
+            <p>{{ fluent(key="attempt-to", lang=lang )}}</p>
             <ul>
-                <li>Better model lived experience as it relates to and impacts our work</li>
-                <li>Build empathy and compassion for ourselves and others</li>
-                <li>Make privilege and inclusiveness visible in our organizations so we can work to balance the scales</li>
+                <li>{{ fluent(key="attempt-1", lang=lang )}}</li>
+                <li>{{ fluent(key="attempt-2", lang=lang )}}</li>
+                <li>{{ fluent(key="attempt-3", lang=lang )}}</li>
             </ul>
             <hr>
 
-            <h2>How will this project make things better?</h2>
-            <p>This MVP is designed to give participants the control to define their lived experiences as they perceive them, one by one.</p>
-            <p>By combining, or layering experiences, we can provide a more holistic understanding of a person’s lived experience in their own words.</p>
-            <p>By combining lived experiences into a graph that links common concepts like “manager”, “woman”, “black”, “mother”, “father” or “millennial”, we can see how experiences interact with each other and develop a better understanding of how our workplaces impact our people.</p>
-            <p>By calling out and making explicit the “normal”, we can identify systemic privilege and bias in our organizations.</p>
+            <h2>{{ fluent(key="how-better", lang=lang )}}</h2>
+            <p>{{ fluent(key="better-1", lang=lang )}}</p>
+            <p>{{ fluent(key="better-2", lang=lang )}}</p>
+            <p>{{ fluent(key="better-3", lang=lang )}}</p>
+            <p>{{ fluent(key="better-4", lang=lang )}}</p>
             <hr>
 
-            <h2>What is this work based on?</h2>
-            <p>The structure of the survey is based on the <a href="https://www.aecf.org/m/blogdoc/PersonRoleSystemFramework-2013.pdf">Person-Role-System</a>, a framework for understanding dynamic relationships between people in the roles and systems in which they function.</p>
-            <p>You can learn about this framework and how it can contribute to culture change needed for equitable organizations below.</p>
+            <h2>{{ fluent(key="based-on", lang=lang )}}</h2>
+            <p>{{ fluent(key="based-structure", lang=lang )}} <a href="https://www.aecf.org/m/blogdoc/PersonRoleSystemFramework-2013.pdf">{{ fluent(key="person-role-system", lang=lang )}}</a>, {{ fluent(key="psr-explanation", lang=lang )}}</p>
+            <p>{{ fluent(key="prs-learn-more", lang=lang )}}</p>
             
             <fieldset>
-                <legend>Leading for Results: The Person-Role-System Framework</legend>
+                <legend>{{ fluent(key="leading-for-results-prs", lang=lang )}}</legend>
                 <div class="iframe-container">
-                    <iframe title="Leading for Results: The Person-Role-System Framework" loading="lazy" src="https://www.youtube.com/embed/Q1dUTmdhgss"></iframe>
+                    <iframe title={{ fluent(key="leading-for-results-prs", lang=lang )}} loading="lazy" src="https://www.youtube.com/embed/Q1dUTmdhgss"></iframe>
                 </div>
             </fieldset>
 
             <br>
 
-            <p>More information can also be found in the <a href="https://medium.com/@Living_Cities/your-beginners-guide-to-anti-racist-results-based-accountability-rba-a1e3fae60055">excellent blog article</a> by <a href="https://twitter.com/Living_Cities">@Living_Cities</a>.</p>
+            <p>{{ fluent(key="more-info-in-x", lang=lang )}}<a href="https://medium.com/@Living_Cities/your-beginners-guide-to-anti-racist-results-based-accountability-rba-a1e3fae60055"> {{ fluent(key="blog-article", lang=lang )}}</a> {{ fluent(key="by", lang=lang )}} <a href="https://twitter.com/Living_Cities">@Living_Cities</a>.</p>
             <hr>
 
-            <h2>Is it finished?</h2>
-            <p>No.</p>
-            <p>This work is an MVP (minimal viable product) to test the survey, data and design methodology.</p>
-            <p>There is a great deal of testing and questions to ask before I would put this in front of our employees.</p>
-            <p>But it is a start and <a href="https://docs.google.com/forms/d/e/1FAIpQLScwQNxUi1UTKMyLcltWJwC_vI1zGSkv-2JpBPwkufdGsFMHxg/viewform?usp=sf_link">I’d love your feedback.</a></p>
-            <p>The code and issues can be created on <a href="https://github.com/toferc/intersections">Github</a>.</p>
+            <h2>{{ fluent(key="is-finished", lang=lang )}}</h2>
+            <p>{{ fluent(key="no", lang=lang )}}</p>
+            <p>{{ fluent(key="finished-1", lang=lang )}}</p>
+            <p>{{ fluent(key="finished-2", lang=lang )}}</p>
+            <p><a href="https://docs.google.com/forms/d/e/1FAIpQLScwQNxUi1UTKMyLcltWJwC_vI1zGSkv-2JpBPwkufdGsFMHxg/viewform?usp=sf_link">{{ fluent(key="love-feedback", lang=lang )}}</a></p>
+            <p>{{ fluent(key="code-found", lang=lang )}} <a href="https://github.com/toferc/intersections">Github</a>.</p>
             <hr>
 
-            <h2>The survey asks personal questions. How will you protect my information?</h2>
-            <p>Intersections has been designed to ensure your privacy.</p>
-            <p>No identifying information is stored as part of the survey. When you finish the survey, you will be provided with a code so you can access your profile.</p>
-            <p>You are the only person who will receive this code and without the code, no-one can view your profile.</p>
-
-            <!--
-                <h2>O.k. I'm ready!</h2>
-                <p><a class="btn btn-dark" href="/survey_intro">Take the Survey.</a></p>
-                <hr>
-            -->
+            <h2>{{ fluent(key="how-protect-info", lang=lang )}}</h2>
+            <p>{{ fluent(key="protect-1", lang=lang )}}</p>
+            <p>{{ fluent(key="protect-2", lang=lang )}}</p>
+            <p>{{ fluent(key="protect-3", lang=lang )}}</p>
 
         </div>
 {% endblock content %}

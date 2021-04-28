@@ -3,12 +3,12 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="Intersectional Data Survey & Analysis MVP">
+    <meta name="description" content={{ fluent(key="app-description", lang=lang )}}>
     <meta name="author" content="ToferC">
-    <meta property="og:title" content="Intersectional Data Survey & Analysis MVP">
+    <meta property="og:title" content={{ fluent(key="app-mvp", lang=lang )}}>
     
     {% block title %}
-        <title>Intersections</title>
+        <title>{{ fluent(key="intersections", lang=lang )}}</title>
     {% endblock title %}
 
     {% block preload %}
@@ -255,7 +255,7 @@
     <br>
     <div class="container-fluid">
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-            <a class="navbar-brand" href="/{{ lang }}">Intersectional Data MVP</a>
+            <a class="navbar-brand" href="/{{ lang }}">{{ fluent(key="intersections", lang=lang )}}</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
               <span class="navbar-toggler-icon"></span>
             </button>
@@ -269,20 +269,20 @@
                 -->
                 
                 <li class="nav-item active">
-                    <a class="nav-link" href="/{{ lang }}/global_graph">View global graph <span class="sr-only">(current)</span></a>
+                    <a class="nav-link" href="/{{ lang }}/global_graph">{{ fluent(key="view-global-graph", lang=lang )}}h <span class="sr-only">(current)</span></a>
                 </li>
 
                 <li class="nav-item active">
-                    <a class="nav-link" href="/{{ lang }}/about">About the project<span class="sr-only">(current)</span></a>
+                    <a class="nav-link" href="/{{ lang }}/about">{{ fluent(key="about", lang=lang )}}<span class="sr-only">(current)</span></a>
                 </li>
                 
                 <li class="nav-item active">
-                    <a class="nav-link" href="/{{ lang }}/open_community_index">Explore open communities <span class="sr-only">(current)</span></a>
+                    <a class="nav-link" href="/{{ lang }}/open_community_index">{{ fluent(key="explore-communities", lang=lang )}} <span class="sr-only">(current)</span></a>
                 </li>
 
                 <li class="nav-item dropdown">
                   <a class="nav-link dropdown-toggle active" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Explore Experiences
+                    {{ fluent(key="explore-experiences", lang=lang )}}
                   </a>
                   <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                     {% for n in node_names %}
@@ -298,21 +298,21 @@
                       {{ session_user }}
                     </a>
                     <div class="dropdown-menu" aria-labelledby="userNavbarDropdown">
-                      <a class="dropdown-item" href="/{{ lang }}/user/{{ session_user }}">Profile</a>
-                      <a class="dropdown-item" href="/{{ lang }}/log_out">Logout</a>
+                      <a class="dropdown-item" href="/{{ lang }}/user/{{ session_user }}">{{ fluent(key="profile", lang=lang )}}</a>
+                      <a class="dropdown-item" href="/{{ lang }}/log_out">{{ fluent(key="logout", lang=lang )}}</a>
                       <div class="dropdown-divider"></div>
                       {% if role == "admin" %}
-                      <a class="dropdown-item" href="/{{ lang }}/user_index">User Index</a>
-                      <a class="dropdown-item" href="/{{ lang }}/community_index">Community Index</a>
+                      <a class="dropdown-item" href="/{{ lang }}/user_index">{{ fluent(key="user-index", lang=lang )}}</a>
+                      <a class="dropdown-item" href="/{{ lang }}/community_index">{{ fluent(key="community-index", lang=lang )}}</a>
                       {% endif %}
                     </div>
                 </li>
                 {% else %}
                 <li class="nav-item active">
-                    <a class="nav-link" href="/{{ lang }}/log_in">Log in<span class="sr-only">(current)</span></a>
+                    <a class="nav-link" href="/{{ lang }}/log_in">{{ fluent(key="login", lang=lang )}}<span class="sr-only">(current)</span></a>
                 </li>
                 <li class="nav-item active">
-                    <a class="nav-link" href="/{{ lang }}/register">Register<span class="sr-only">(current)</span></a>
+                    <a class="nav-link" href="/{{ lang }}/register">{{ fluent(key="register", lang=lang )}}<span class="sr-only">(current)</span></a>
                 </li>
                 {% endif %}
             </ul>
@@ -341,11 +341,11 @@
 
                     <hr>
                     
-                    <p>Please note that this work is a learning project and experiment in collecting and and gaining insight from sensitive or personal information while protecting the privacy of participants.</p>
-                    <p>The Intersections project is available on GitHub under an MIT licence here: <a href="https://github.com/ToferC/intersections">Intersections</a></p>
-                    <p>The original work on intersectional data models was done: <a href="https://github.com/ToferC/learner_models">Learner Models</a></p>
+                    <p>{{ fluent(key="footer-1", lang=lang )}}</p>
+                    <p>{{ fluent(key="available-licence", lang=lang )}} <a href="https://github.com/ToferC/intersections">{{ fluent(key="intersections", lang=lang )}}</a></p>
+                    <p>{{ fluent(key="original-work", lang=lang )}} <a href="https://github.com/ToferC/learner_models">{{ fluent(key="learner-models", lang=lang )}}</a></p>
                         
-                        <p>Developed by ToferC 2020</p>
+                        <p>{{ fluent(key="developed-by", lang=lang )}}</p>
                 </div>
 
             </div>
