@@ -31,7 +31,7 @@ developed-by = Developed by ToferC 2020-21
 
 ## Index
 
-welcome-to = Welcome to Intersectional-data.ca!
+welcome-to = Welcome to Intersectional-data.ca
 greeting = Hello { $name }!
 important = Important:
 overview = This is a learning project and experiment in collecting, connecting, and gaining insight from the lived experience of participants while protecting their privacy.
