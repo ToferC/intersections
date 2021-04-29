@@ -152,9 +152,9 @@ pub async fn view_community(
             let environment = env::var("ENVIRONMENT").unwrap();
         
             if environment == "production" {
-                application_url = format!("https://www.intersectional-data.ca/{}", &lang);
+                application_url = "https://www.intersectional-data.ca".to_string();
             } else {
-                application_url = format!("http://localhost:8088/{}", &lang);
+                application_url = "http://localhost:8088".to_string();
             };
         
             let qr = qrcode_generator::to_svg_to_string(format!("{}{}", application_url, community_add_profile_url), QrCodeEcc::Low, 245, Some("Invitation link for intersections")).unwrap();

@@ -86,7 +86,7 @@ pub async fn email_person_info(
     };
 }
 
-#[post("/send_community_email/{slug}")]
+#[post("/{lang}/send_community_email/{slug}")]
 pub async fn send_community_email(
     web::Path((lang, slug)): web::Path<(String, String)>,
     data: web::Data<AppData>,
