@@ -91,21 +91,53 @@ protect-3 = Vous êtes la seule personne à recevoir ce code et sans le code, pe
 
 ## Login Page
 
+login-need-explanation = Il vous suffit de vous connecter pour gérer une organisation.
+email-address = Adresse e-mail
+email-address-helper = Saisissez l'adresse e-mail que vous avez utilisée pour vous inscrire.
+password = Mot de passe
+password-placeholder = Votre_mot_de_passe
+password-helper = Votre mot de passe (au moins 12 caractères).
+forgot-password = J'ai oublié mon mot de passe
 
 ## Register Page
 
+register-to-app = Inscrivez-vous à Intersectional-data.ca
+why-register = Il vous suffit d'enregistrer un compte pour créer et gérer des communautés ou des organisations à utiliser avec les intersections. Vous n'avez pas besoin d'un compte pour créer et afficher des données.
+register-email-helper = Saisissez l'adresse e-mail que vous souhaitez utiliser pour vous connecter.
+user-name = Nom d'utilisateur
+user-name-helper = Le nom que vous souhaitez être appelé lors de l'utilisation d'intersections.
+email-coming-notice = Après votre inscription, vous recevrez un code par e-mail pour vérifier votre adresse e-mail. Vérifiez votre e-mail, puis entrez le code sur la page suivante.
 
 ## Registration Error
 
+registration-error = Erreur d'enregistrement
+problem-with-registration = Un problème est survenu lors de votre inscription. Vous vous êtes peut-être déjà inscrit avec cette adresse e-mail ou il peut y avoir un problème avec les informations que vous avez saisies.
+you-can-login = Vous pouvez vous connecter
+here = ici
+or-try-register = ou essayez de vous réinscrire.
 
 ## Password Reset Sent
 
+password-reset-sent = E-mail de réinitialisation du mot de passe envoyé
+password-reset-details = Un e-mail vous a été envoyé contenant un lien pour réinitialiser votre mot de passe. Cliquez sur le lien pour accéder à une page où vous pouvez réinitialiser votre mot de passe.
 
 ## Change Password
 
+change-password-title = Modifier le mot de passe de { $useremail }
+enter-new-password-below = Entrez votre nouveau mot de passe ci-dessous.
+new-password = Nouveau mot de passe
+update-password = Mettre à jour le mot de passe
 
 ## Email Verification
 
+verify-email = Vérifiez votre email
+enter-key = enter-key = Veuillez entrer le code que vous avez reçu à { $useremail } pour terminer votre inscription.
+code = Code
+code-helper = Entrez le code à cinq chiffres que vous avez reçu dans l'e-mail que vous avez utilisé pour vous inscrire.
+verify = Vérifier
 
 ## Request Password Reset
 
+request-password-reset = Demander la réinitialisation du mot de passe
+reset-instructions = Entrez l'adresse e-mail que vous avez utilisée pour vous inscrire ci-dessous. Si vous avez un compte, nous vous enverrons un e-mail avec un lien pour réinitialiser votre mot de passe.
+send-reset-email = Envoyer un e-mail de réinitialisation du mot de passe
