@@ -3,7 +3,7 @@
 -app-name = Intersectional-data.ca
 intersections = Intersections
 app-description = { -app-name } est un projet d'apprentissage et une expérience de collecte, de connexion et de compréhension de l'expérience vécue des participants tout en protégeant leur vie privée.
-app-mvp = MVP d'enquête et d'analyse de données intersectionnelles
+app-mvp = PVM d'enquête et d'analyse de données intersectionnelles
 
 ## Buttons
 
@@ -65,7 +65,7 @@ attempt-1 = Meilleure expérience vécue de modèle en ce qui concerne notre tra
 attempt-2 = Construire de l'empathie et de la compassion pour nous-mêmes et les autres
 attempt-3 = Rendre le privilège et l'inclusion visibles dans nos organisations afin que nous puissions travailler pour équilibrer les échelles
 how-better = Comment ce projet améliorera-t-il les choses?
-better-1 = Ce MVP est conçu pour donner aux participants le contrôle de définir leurs expériences vécues telles qu'ils les perçoivent, une par une.
+better-1 = Ce PVM est conçu pour donner aux participants le contrôle de définir leurs expériences vécues telles qu'ils les perçoivent, une par une.
 better-2 = En combinant ou en superposant les expériences, nous pouvons fournir une compréhension plus holistique de l’expérience vécue d’une personne dans ses propres mots.
 better-3 = En combinant les expériences vécues dans un graphique qui relie des concepts communs tels que «manager», «femme», «noir», «mère», «père» ou «millénaire», nous pouvons voir comment les expériences interagissent les unes avec les autres et développer une meilleure compréhension de l'impact de nos lieux de travail sur nos employés.
 better-4 = En appelant et en rendant explicite le «normal», nous pouvons identifier les privilèges et les préjugés systémiques dans nos organisations.
@@ -88,3 +88,24 @@ how-protect-info = L'enquête pose des questions personnelles. Comment allez-vou
 protect-1 = Intersections a été conçu pour garantir votre confidentialité.
 protect-2 = Aucune information d'identification n'est stockée dans le cadre de l'enquête. Lorsque vous aurez terminé l'enquête, un code vous sera fourni afin que vous puissiez accéder à votre profil.
 protect-3 = Vous êtes la seule personne à recevoir ce code et sans le code, personne ne peut voir votre profil.
+
+## Login Page
+
+
+## Register Page
+
+
+## Registration Error
+
+
+## Password Reset Sent
+
+
+## Change Password
+
+
+## Email Verification
+
+
+## Request Password Reset
+
