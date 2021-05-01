@@ -86,3 +86,49 @@ how-protect-info = The survey asks personal questions. How will you protect my i
 protect-1 = Intersections has been designed to ensure your privacy.
 protect-2 = No identifying information is stored as part of the survey. When you finish the survey, you will be provided with a code so you can access your profile.
 protect-3 = You are the only person who will receive this code and without the code, no-one can view your profile.
+
+## Login Page
+login-need-explanation = You only need to log in to manage an organization.
+email-address = Email address
+email-address-helper = Enter the email address you used to register.
+password = Password
+password-placeholder = Your_password
+password-helper = Your password (at least 12 characters long).
+forgot-password = I forgot my password
+
+## Register Page
+register-to-app = Register to Intersectional-data.ca
+why-register = You only need to register an account to create and manage communities or organizations for use with intersections. You do not need an account to create and view data.
+register-email-helper = Enter the email address you want to use to log in.
+user-name = User name
+user-name-helper = The name you'd like to be called when using intersections.
+email-coming-notice = After registering you will receive a code by email to verify your email address. Check your email and then enter the code on the next page.
+
+## Registration Error
+registration-error = Registration Error
+problem-with-registration = There was a problem with your registration. You may have already registered with this email address or there may be a problem with the information you entered.
+you-can-login = You can log in
+here = here
+or-try-register = or try to register again.
+
+## Password Reset Sent
+password-reset-sent = Password Reset Email Sent
+password-reset-details = An email has been sent to you containing a link to reset your password. Clicking the link will bring to to a page where you can reset your password.
+
+## Change Password
+change-password-title = Change Password for { $useremail }
+enter-new-password-below = Enter your new password below.
+new-password = New Password
+update-password = Update Password
+
+## Email Verification
+verify-email = Verify your email
+enter-key = Please enter the code you received at { $useremail } to complete your registration.
+code = Code
+code-helper = Enter the five digit code you received at the email you used to register.
+verify = Verify
+
+## Request Password Reset
+request-password-reset = Request password reset
+reset-instructions = Enter the email address you used to register below. If you have an account, we will send you an email with a link to reset your password.
+send-reset-email = Send Password Reset Email

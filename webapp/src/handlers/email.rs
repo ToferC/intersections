@@ -4,10 +4,9 @@ use std::env;
 use actix_web::{HttpRequest, HttpResponse, Responder, post, web};
 use actix_identity::{Identity};
 use serde::{Deserialize};
-use tera::Context;
 use regex::Regex;
 
-use crate::{AppData};
+use crate::{AppData, generate_email_context};
 use crate::models::{Communities, CommunityData, Email, People};
 
 // for for single email address
@@ -25,8 +24,8 @@ pub struct EmailsForm {
 pub async fn email_person_info(
     web::Path((lang, code)): web::Path<(String, String)>,
     data: web::Data<AppData>,
-    _req: HttpRequest,
-    _id: Identity,
+    req: HttpRequest,
+    id: Identity,
     form: web::Form<EmailForm>,
 ) -> impl Responder {
 
@@ -39,7 +38,7 @@ pub async fn email_person_info(
 
     match person {
         Ok(person) => {
-            let mut ctx = Context::new();
+            let (mut ctx, _, _, _) = generate_email_context(id, &lang, req.uri().path());
 
             let community = Communities::find(person.community_id).unwrap();
 
@@ -51,11 +50,6 @@ pub async fn email_person_info(
             } else {
                 application_url = format!("http://localhost:8088/{}", &lang);
             };
-
-            // add qr code to add profile (prod only)
-            // let qr = qrcode_generator::to_svg_to_string(format!("{}/{}", application_url, &person.code), QrCodeEcc::Low, 245, Some("Invitation link for intersections")).unwrap();
-            // ctx.insert("qrcode", &qr);
-
 
             ctx.insert("person", &person);
             ctx.insert("community", &community);
@@ -90,8 +84,8 @@ pub async fn email_person_info(
 pub async fn send_community_email(
     web::Path((lang, slug)): web::Path<(String, String)>,
     data: web::Data<AppData>,
-    _req: HttpRequest,
-    _id: Identity,
+    req: HttpRequest,
+    id: Identity,
     form: web::Form<EmailsForm>,
 ) -> impl Responder {
 
@@ -113,7 +107,7 @@ pub async fn send_community_email(
 
     match community {
         Ok(mut community) => {
-            let mut ctx = Context::new();
+            let (mut ctx, _, _, _) = generate_email_context(id, &lang, req.uri().path());
 
             let mut comm_data: CommunityData = serde_json::from_value(community.data.to_owned()).expect("Unable to retrieve community data");
 

@@ -6,10 +6,9 @@ use std::env;
 use actix_web::{HttpRequest, HttpResponse, Responder, get, post, web};
 use actix_session::{Session, UserSession};
 use actix_identity::{Identity};
-use tera::Context;
 use serde::{Deserialize};
 
-use crate::{AppData, generate_basic_context, extract_identity_data};
+use crate::{AppData, generate_basic_context, generate_email_context, extract_identity_data};
 use crate::models::{User, verify, UserData, EmailVerification, 
     InsertableVerification, Email, PasswordResetToken, 
     InsertablePasswordResetToken};
@@ -183,7 +182,7 @@ pub async fn email_verification(
     id: Identity,
 ) -> impl Responder {
     
-    let (mut ctx, session_user, role, _lang) = generate_basic_context(id, &lang, req.uri().path(), node_names);
+    let (mut ctx, session_user, role, _lang) = generate_basic_context(id.clone(), &lang, req.uri().path(), node_names);
 
     if session_user == "".to_string() && role != "admin".to_string() {
         // person signed in shouldn't be here
@@ -201,7 +200,7 @@ pub async fn email_verification(
                 &InsertableVerification::new(&user.email)
             ).expect("Unable to create verification");
 
-            let mut email_ctx = Context::new();
+            let (mut email_ctx, _, _, _) = generate_email_context(id, &lang, req.uri().path());
             email_ctx.insert("user", &user);
             email_ctx.insert("verification", &verification);
 
@@ -308,6 +307,7 @@ pub async fn request_password_reset_post(
     data: web::Data<AppData>,
     req: HttpRequest, 
     form: web::Form<EmailForm>,
+    node_names: web::Data<Mutex<Vec<(String, String)>>>,
     id: Identity,
 ) -> impl Responder {
     println!("Handling Post Request: {:?}", req);
@@ -332,7 +332,8 @@ pub async fn request_password_reset_post(
             ).expect("Unable to create verification");
 
             // render email
-            let mut email_ctx = Context::new();
+            let (mut email_ctx, _session_user, _role, _lang) = generate_basic_context(id, &lang, req.uri().path(), node_names);
+
             email_ctx.insert("user", &user);
             email_ctx.insert("verification", &token);
 
@@ -395,9 +396,8 @@ pub async fn password_email_sent(
 
 #[get("/{lang}/password_reset/{token}")]
 pub async fn password_reset(
-    web::Path(lang): web::Path<String>,
+    web::Path((lang, token)): web::Path<(String, String)>,
     data: web::Data<AppData>,
-    web::Path(token): web::Path<String>,
     node_names: web::Data<Mutex<Vec<(String, String)>>>,
     req:HttpRequest,
     id: Identity,
@@ -427,9 +427,8 @@ pub async fn password_reset(
 
 #[post("/{lang}/password_reset/{token}")]
 pub async fn password_reset_post(
-    web::Path(lang): web::Path<String>,
+    web::Path((lang, token)): web::Path<(String, String)>,
     _data: web::Data<AppData>,
-    web::Path(token): web::Path<String>,
     _req: HttpRequest, 
     form: web::Form<PasswordForm>,
     id: Identity,

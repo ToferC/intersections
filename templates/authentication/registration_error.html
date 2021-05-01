@@ -1,34 +1,34 @@
 {% extends "base.html" %}
 
 {% block title %}
-    <title>Registration Error</title>
+    <title>{{ fluent(key="registration-error", lang=lang )}}</title>
 {% endblock title %}
 
 {% block content %}
     <div class="col m-md-2 m-1">
         <br>
-        <h1>Registration Error</h1>
-        <p>There was a problem with your registration. You may have already registered with this email address or there may be a problem with the information you entered. You can <a href="log_in">log in</a> or try to register again.</p>
+        <h1>{{ fluent(key="registration-error", lang=lang )}}</h1>
+        <p>{{ fluent(key="problem-with-registration", lang=lang )}} {{ fluent(key="you-can-login", lang=lang )}} <a href="log_in">{{ fluent(key="here", lang=lang )}}</a> {{ fluent(key="or-try-register", lang=lang )}}</p>
 
 
         <form name="RegisterForm" id="registerForm" action=/{{ lang }}/register method=POST>
         
         <label>
-            <strong>Email address</strong>
+            <strong>{{ fluent(key="email-address", lang=lang )}}</strong>
             <input class="form-control form-control-lg" type="email" name="email" placeholder="yourname@domain.com" required>
-            <small id="code_help" class="form-text text-muted">You will use this to log in.</small>
+            <small id="code_help" class="form-text text-muted">{{ fluent(key="email-address-helper", lang=lang )}}</small>
         </label>
         <br>
 
         <label>
-            <strong>User name</strong>
+            <strong>{{ fluent(key="user-name", lang=lang )}}</strong>
             <input class="form-control form-control-lg" type="text" name="user_name" placeholder="Firstname Lastname..." required>
-            <small id="code_help" class="form-text text-muted">The name you'd like to be called when using intersections.</small>
+            <small id="code_help" class="form-text text-muted">{{ fluent(key="user-name-helper", lang=lang )}}</small>
         </label>
         <br>
 
         <label>
-            <strong>Password</strong>
+            <strong>{{ fluent(key="password", lang=lang )}}</strong>
             <input 
                 class="form-control form-control-lg" 
                 type="password" 
@@ -37,11 +37,11 @@
                 minlength=12
                 required
             >
-            <small id="code_help" class="form-text text-muted">A password of your choice at least 12 characters long.</small>
+            <small id="code_help" class="form-text text-muted">{{ fluent(key="password-helper", lang=lang )}}</small>
         </label>
 
         <br>
-        <p><strong>After registering you will receive a code by email to verify your email address. Check your email and then enter the code on the next page.</strong></p>
+        <p><strong>{{ fluent(key="email-coming-notice", lang=lang )}}</strong></p>
 
         <hr>
         <button 
@@ -50,8 +50,7 @@
             data-callback='onSubmit' 
             data-action='submit'
             type=submit
-            >Register</button>
-        <hr>
+            >{{ fluent(key="register", lang=lang )}}</button>
     </form>
                 
     </div>

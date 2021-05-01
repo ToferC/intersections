@@ -19,7 +19,7 @@
 		"scope": "html, javascript, css",
 		"prefix": "flt",
 		"body": [
-			"{{ fluent(key=\"xxxx\", lang=lang )}}"
+			"{{ fluent(key=\"${1:default}\", lang=lang )}}"
 		],
 		"description": "Add fluent tag to HTML"
 	}
