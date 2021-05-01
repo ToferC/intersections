@@ -88,6 +88,7 @@ protect-3 = You are the only person who will receive this code and without the c
 login-need-explanation = You only need to log in to manage an organization.
 email-address = Email address
 email-address-helper = Enter the email address you used to register.
+email-placeholder = yourname@domain.com
 password = Password
 password-placeholder = Your_password
 password-helper = Your password (at least 12 characters long).
@@ -98,6 +99,7 @@ register-to-app = Register to Intersectional-data.ca
 why-register = You only need to register an account to create and manage communities or organizations for use with intersections. You do not need an account to create and view data.
 register-email-helper = Enter the email address you want to use to log in.
 user-name = User name
+user-name-placeholder = Firstname Lastname
 user-name-helper = The name you'd like to be called when using intersections.
 email-coming-notice = After registering you will receive a code by email to verify your email address. Check your email and then enter the code on the next page.
 
