@@ -5,9 +5,6 @@ intersections = Intersections
 app-description = { -app-name } is a learning project and experiment in collecting, connecting, and gaining insight from the lived experience of participants while protecting their privacy.
 app-mvp = Intersectional Data Survey & Analysis MVP
 
-## Buttons
-
-
 ## Base & Navbar
 button-explore-demo-data = Explore demonstration data
 view-global-graph = View global graph
@@ -123,7 +120,7 @@ update-password = Update Password
 
 ## Email Verification
 verify-email = Verify your email
-enter-key = Please enter the code you received at { $useremail } to complete your registration.
+enter-key = Please enter the code you received at <strong>{ $useremail } to complete your registration.
 code = Code
 code-helper = Enter the five digit code you received at the email you used to register.
 verify = Verify

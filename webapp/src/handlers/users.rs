@@ -383,9 +383,9 @@ pub async fn delete_user_handler(
     }
 }
 
-#[post("/{lang}/delete_user/{target_id}")]
+#[post("/{lang}/delete_user/{slug}")]
 pub async fn delete_user(
-    web::Path((lang, target_id)): web::Path<(String, i32)>,
+    web::Path((lang, slug)): web::Path<(String, String)>,
     _data: web::Data<AppData>,
     _req: HttpRequest,
     id: Identity,
@@ -394,7 +394,7 @@ pub async fn delete_user(
 
     let (session_user, role) = extract_identity_data(&id);
     
-    if role != "admin".to_string() {
+    if session_user.to_lowercase() != slug.to_lowercase() && role != "admin".to_string() {
         let err = CustomError::new(
             406,
             "Not authorized".to_string(),
@@ -403,7 +403,7 @@ pub async fn delete_user(
         return err.error_response()
     } else {
 
-        let user = User::find(target_id);
+        let user = User::find_from_slug(&slug);
         
         match user {
             Ok(u) => {

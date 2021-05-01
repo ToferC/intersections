@@ -22,7 +22,7 @@
                 {% endif %}
             </ul>
 
-            <form name="DeleteForm" id="deleteForm" action=/{{ lang }}/delete_user/{{ user.id }} method=POST>
+            <form name="DeleteForm" id="deleteForm" action=/{{ lang }}/delete_user/{{ user.slug }} method=POST>
 
                 <label>
                     <strong>Delete User: {{ user.user_name }}</strong>
@@ -30,7 +30,7 @@
                     <small id="code_help" class="form-text text-muted">Enter the user name of the user you would like to delete. This action is permanent.
                     </small>
                 </label>
-                <hr>
+                <br>
         
                 <button 
                     class="btn g-recaptcha btn-danger" 
@@ -41,7 +41,6 @@
                     >Delete</button>
 
                 <button class="btn btn-dark" href="/{{ lang }}/user_index">Return</button>
-                <hr>
             
             </form>
 
