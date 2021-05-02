@@ -15,7 +15,7 @@
         
         <label>
             <strong>{{ fluent(key="email-address", lang=lang )}}</strong>
-            <input class="form-control form-control-lg" type="email" name="email" placeholder="yourname@domain.com" required>
+            <input class="form-control form-control-lg" type="email" name="email" placeholder="{{ fluent(key="email-placeholder", lang=lang )}}" required>
             <small id="code_help" class="form-text text-muted">{{ fluent(key="email-address-helper", lang=lang )}}</small>
         </label>
         <br>
@@ -26,7 +26,7 @@
                 class="form-control form-control-lg" 
                 type="password" 
                 name="password" 
-                placeholder={{ fluent(key="password-placeholder", lang=lang) }}
+                placeholder="{{ fluent(key="password-placeholder", lang=lang) }}"
                 minlength=12
                 required
             >

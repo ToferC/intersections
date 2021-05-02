@@ -15,14 +15,14 @@
         
         <label>
             <strong>{{ fluent(key="email-address", lang=lang )}}</strong>
-            <input class="form-control form-control-lg" type="email" name="email" placeholder="yourname@domain.com" required>
+            <input class="form-control form-control-lg" type="email" name="email" placeholder="{{ fluent(key="email-placeholder", lang=lang )}}" required>
             <small id="code_help" class="form-text text-muted">{{ fluent(key="email-address-helper", lang=lang )}}</small>
         </label>
         <br>
 
         <label>
             <strong>{{ fluent(key="user-name", lang=lang )}}</strong>
-            <input class="form-control form-control-lg" type="text" name="user_name" placeholder="Firstname Lastname..." required>
+            <input class="form-control form-control-lg" type="text" name="user_name" placeholder="{{ fluent(key="user-name-placeholder", lang=lang )}}" required>
             <small id="code_help" class="form-text text-muted">{{ fluent(key="user-name-helper", lang=lang )}}</small>
         </label>
         <br>
@@ -33,7 +33,7 @@
                 class="form-control form-control-lg" 
                 type="password" 
                 name="password" 
-                placeholder="Your password..."
+                placeholder="{{ fluent(key="password-placeholder", lang=lang )}}"
                 minlength=12
                 required
             >

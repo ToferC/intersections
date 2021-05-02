@@ -188,13 +188,16 @@ question-four = 4. Identify how this experience impacts your sense of inclusion 
 question-four-explanation = How does this experience make you feel included or excluded in the workplace?
 question-four-slider-direction = For this question, you will move the slider below where you think this experience falls on the range of being more or less included in your workplace. It generates a score between -1.0 (most excluded) and +1.0 (most included), with 0 being in the middle.
 drag-slider = Place the slider below where you think this experience falls on the range of being more or less included in your workplace.
+more-excluded = More Excluded
+more-included = More Included
 
 ## Experience Forms
 add-experience = Add an experience
 add-profile-code = If you already have a profile code, you can enter it here to connect your new profile with your existing profiles:
-profile-code-placeholder = "Your previous profile code"
+profile-code-placeholder = Your previous profile code
 profile-code-helper = You only need to do this if you already have a previous profile and you'd like to connect it to a new profile.
 progress-header = Progress ({$counter}/6)
+save-experience-button = Save Experience
 
 question-one-placeholder = Experience name...
 question-one-helper = Enter a few words to name your experience here.
