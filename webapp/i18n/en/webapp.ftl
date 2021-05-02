@@ -131,3 +131,75 @@ verify = Verify
 request-password-reset = Request password reset
 reset-instructions = Enter the email address you used to register below. If you have an account, we will send you an email with a link to reset your password.
 send-reset-email = Send Password Reset Email
+
+## Survey Intro
+survey-introduction = Survey Introduction
+invited-community = You have been invited to add your experiences to the { $community } community.
+community-explanation = Here is an explanation of the community and it's intended use of your data.
+community-contact = If this doesn't make sense, or you have any questions, you can contact the community administrator here: { $contact }.
+survey-overview = Survey Overview
+questions-intro = The Intersectional Data MVP will ask you to answer the same set of questions several times. Each time you will add a experience representing your lived experience. Together, these experience form a representation of your experience at work.
+completed-profile = A completed profile should have five or six experiences.
+start-survey-button = Start the survey
+learn-more-button = Learn more about the survey
+or = OR
+questions-header = The Questions
+question-explanation = This section explains the questions that you will answer and provides some context. If you don't need this context, please click the "Start the Survey" button, above.
+
+### Question One
+question-one = 1. Name your experience
+question-one-explanation = How would you describe this experience in your own words?
+question-one-details = You are more than just your job. Examples are: Mother, Father, Manager, Artist, Millenial, Black, Indigenous, White, Executive, New Employee. Anything that describes an element of who you are and that impacts your experience in the workplace.
+useful-framework = A useful framework for this exercise was developed by Ritu in
+build-cultural-experience = Build Your Cultural Experience
+layers-identity-header = Some Layers of Cultural Identity
+layer-nationality = Nationality
+layer-race = Race/Ethnoculture
+layer-religion = Religion
+layer-gender = Gender Identity
+layer-sexuality = Sexual Orientation
+layer-ability = Dis(Ability)
+layer-age = Age
+layer-education = Education
+layer-socio-econ = Socioeconomic Status/Class
+layer-profession = Profession/Career
+
+### Question Two
+question-two = 2. Is this experience part of you as a person or is it a role related to your work?
+question-two-explanation = Where does this experience come from. Is it a part of your identity, experience or culture? Is it a role that you have been given as part of your work? Is it a function you play within a network or system?
+question-two-shorthand = In shorthand, you can break it down like this:
+personal-experience = Personal Experience = part of your individual experience that exists outside of the workplace.
+organizational-role = Organizational Role = a formal or informal function or work role within the workplace.
+
+experience-is = This experience is...
+personal = A personal experience
+organizational = An organizational role
+
+### Question Three
+question-three = 3. Describe your experience
+question-three-explanation = Each of us experiences things in different ways. Two managers or two parents may have extremely different perspectives of their lived experience. To clarify your experience, complete the phrases below in your own words. You will be asked to provide three responses, but you may use as many or as few as you like.
+through-this = Though this experience, in the workplace
+i-feel = I feel...
+question-three-helper = Enter a few words about how this experience interacts with your work life.
+
+
+### Question Four
+question-four = 4. Identify how this experience impacts your sense of inclusion in the workplace.
+question-four-explanation = How does this experience make you feel included or excluded in the workplace?
+question-four-slider-direction = For this question, you will move the slider below where you think this experience falls on the range of being more or less included in your workplace. It generates a score between -1.0 (most excluded) and +1.0 (most included), with 0 being in the middle.
+drag-slider = Place the slider below where you think this experience falls on the range of being more or less included in your workplace.
+
+## Experience Forms
+add-experience = Add an experience
+add-profile-code = If you already have a profile code, you can enter it here to connect your new profile with your existing profiles:
+profile-code-placeholder = "Your previous profile code"
+profile-code-helper = You only need to do this if you already have a previous profile and you'd like to connect it to a new profile.
+progress-header = Progress ({$counter}/6)
+
+question-one-placeholder = Experience name...
+question-one-helper = Enter a few words to name your experience here.
+tip = Tip:
+tip-one = Add one element of your lived experience at a time. You may wish to add an experience related to your race or ethnic identity.
+
+### Learning Moments
+learning-one = [Placeholder for learning moment.]

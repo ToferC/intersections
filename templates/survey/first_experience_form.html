@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block title %}
-    <title>First Experience Form</title>
+    <title>{{ fluent(key="add-experience", lang=lang )}}</title>
 {% endblock title %}
 
 {% block add_preload %}
@@ -12,19 +12,19 @@
     <div class="col m-md-2 m-1">
         <br>
         
-        <h1>Add an experience</h1>
+        <h1>{{ fluent(key="add-experience", lang=lang )}}e</h1>
         <hr>
 
         <form name="ExperienceForm" id="experienceForm" action=/{{ lang }}/first_experience_form/{{ community.code }} method=POST>
         
         <label>
-            <strong>If you already have a profile code, you can enter it here to connect your new profile with your existing profiles:</strong>
-            <input class="form-control form-control-lg" name="related_code" placeholder="Your previous profile code">
-            <small id="code_help" class="form-text text-muted">You only need to do this if you already have a previous profile and you'd like to connect it to a new profile.</small>
+            <strong>{{ fluent(key="add-profile-code", lang=lang )}}</strong>
+            <input class="form-control form-control-lg" name="related_code" placeholder={{ fluent(key="profile-code-placeholder", lang=lang )}}>
+            <small id="code_help" class="form-text text-muted">{{ fluent(key="profile-code-helper", lang=lang )}}</small>
         </label>
         <hr>
 
-        <strong>Progress (0/6)</strong>
+        <strong>{{ fluent(key="progress-header", counter=0, lang=lang )}}</strong>
         <div class="progress">
             <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
         </div>
@@ -32,86 +32,86 @@
 
         <div class="row">
             <div class="col m-md-2 m-1">
-                <h2>1. Name your experience</h2>
+                <h2>{{ fluent(key="question-one", lang=lang )}}</h2>
                 
                 <label>
-                    <input class="form-control form-control-lg mdb-autocomplete" id="node_name_autocomplete" name="name" placeholder="Experience name..." required
+                    <input class="form-control form-control-lg mdb-autocomplete" id="node_name_autocomplete" name="name" placeholder={{ fluent(key="question-one-placeholder", lang=lang )}} required
                     maxlength="32" autocomplete="off">
-                    <small id="experience_help" class="form-text text-muted">Enter a few words to name your experience here.</small>
+                    <small id="experience_help" class="form-text text-muted">{{ fluent(key="question-one-helper", lang=lang )}}</small>
                 </label>
             </div>
             <div class="col m-md-2 m-1">
                 <div class="card card-body">
-                    <p><strong>Tip: </strong> Add one element of your lived experience at a time. You may wish to add an experience related to your race or ethnic identity.</p>
-                    <p>[Placeholder for learning moment.]</p>
+                    <p><strong>{{ fluent(key="tip", lang=lang )}} </strong> {{ fluent(key="tip-one", lang=lang )}}</p>
+                    <p>{{ fluent(key="learning-one", lang=lang )}}</p>
                 </div>
             </div>
         </div>
 
             <hr>
 
-            <h2>2. Is this experience part of you as a person or is it a role related to your work?</h2>
+            <h2>{{ fluent(key="question-two", lang=lang )}}</h2>
             
             <fieldset>
-                <legend>This experience is...</legend>
+                <legend>{{ fluent(key="experience-is", lang=lang )}}</legend>
                 <div>
                     <input type="radio" id="person" name="domain" value="Person" checked>
-                    <label for="person">A Personal Experience</label>
+                    <label for="person">{{ fluent(key="personal", lang=lang )}}</label>
                 </div>
 
                 <div>
                     <input type="radio" id="role" name="domain" value="Role">
-                    <label for="role">An Organizational Role</label>
+                    <label for="role">{{ fluent(key="organizational", lang=lang )}}</label>
                 </div>
             </fieldset>
 
             <hr>
             
-            <h2>3. Describe your experience</h2>
+            <h2>{{ fluent(key="question-three", lang=lang )}}</h2>
                     
-            <p><strong>Though this experience, in the workplace...</strong></p>
+            <p><strong>{{ fluent(key="through-this", lang=lang )}}</strong></p>
             <div>
                 <label>
-                    <strong>I feel</strong>
+                    <strong>{{ fluent(key="i-feel", lang=lang )}}</strong>
                     <input class="form-control form-control-lg" name="response_1" required>
-                    <small id="response_1_help" class="form-text text-muted">Enter a few words about how this experience interacts with your work life.</small>
+                    <small id="response_1_help" class="form-text text-muted">{{ fluent(key="question-three-helper", lang=lang )}}</small>
                 </label>
             </div>
 
             <div>
                 <label>
-                    <strong>I feel</strong>
+                    <strong>{{ fluent(key="i-feel", lang=lang )}}</strong>
                     <input class="form-control form-control-lg" name="response_2">
-                    <small id="response_2_help" class="form-text text-muted">Enter a few words about how this experience interacts with your work life.</small>
+                    <small id="response_2_help" class="form-text text-muted">{{ fluent(key="questino-three-helper", lang=lang )}}</small>
 
                 </label>
             </div>
 
             <div>
                 <label>
-                    <strong>I feel</strong>
+                    <strong>{{ fluent(key="i-feel", lang=lang )}}</strong>
                     <input class="form-control form-control-lg" name="response_3">
-                    <small id="response_2_help" class="form-text text-muted">Enter a few words about how this experience interacts with your work life.</small>
+                    <small id="response_3_help" class="form-text text-muted">{{ fluent(key="questino-three-helper", lang=lang )}}</small>
 
                 </label>
             </div>
 
             <hr>
-            <h2>4. Identify how this experience impacts your sense of inclusion in the workplace.</h2>
+            <h2>{{ fluent(key="question-four", lang=lang )}}</h2>
 
-                <label for="inclusivity">Place the slider below where you think this experience falls on the range of being more or less included in your workplace.</label>
+                <label for="inclusivity">{{ fluent(key="drag-slider", lang=lang )}}</label>
 
                 <input type="range" id="inclusivity" name="inclusivity"
                 min="-100" max="100" class="slider">
-                <label for="inclusivity_l" style="text-align:left"><strong>More Excluded</strong></label>
-                <label for="inclusivity_r" style="float:right"><strong>More Included</strong></label>
+                <label for="inclusivity_l" style="text-align:left"><strong>{{ fluent(key="more-excluded", lang=lang )}}</strong></label>
+                <label for="inclusivity_r" style="float:right"><strong>{{ fluent(key="more-included", lang=lang )}}</strong></label>
 
                 <hr>
 
                 <button class="btn g-recaptcha btn-dark" 
                 data-sitekey="6LfAltkZAAAAAN7rJGBvRUPm36M1aiL7q2a8SznA" 
                 data-callback='onSubmit' 
-                data-action='submit' type=submit>Save Experience</button>
+                data-action='submit' type=submit>{{ fluent(key="save-experience-button", lang=lang )}}</button>
             </form>
             
             <hr>
