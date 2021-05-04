@@ -78,7 +78,7 @@
                             <th style="text-align: center;">Inclusivity</th>
                         </tr>
                         <tr>
-                            <td style="text-align: center;"><a href="/{{ lang }}/node/{{ experience.node_name }}">{{ experience.node_name | title }}</a></td>
+                            <td style="text-align: center;"><a href="/{{ lang }}/node/{{ experience.node_name | snake_case }}">{{ experience.node_name | title }}</a></td>
                             <td style="text-align: center;">{{ experience.node_domain | title }}</td>
                             <td style="text-align: center;">
                                 {{ experience.inclusivity | float }}
