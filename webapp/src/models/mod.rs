@@ -6,6 +6,7 @@ pub mod user;
 pub mod email;
 pub mod authentication;
 pub mod graph;
+pub mod phrase;
 
 pub use experience::{Experience, Experiences, AggregateExperience};
 pub use person::{NewPerson, People};
@@ -17,3 +18,4 @@ pub use authentication::{EmailVerification, InsertableVerification,
     PasswordResetToken, InsertablePasswordResetToken};
 pub use graph::{generate_cyto_graph, generate_node_cyto_graph,
     GEdge, GNode, CytoEdge, CytoNode, CytoGraph};
+pub use phrase::{InsertablePhrase, Phrases};

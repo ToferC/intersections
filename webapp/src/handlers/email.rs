@@ -46,7 +46,7 @@ pub async fn email_person_info(
             let environment = env::var("ENVIRONMENT").unwrap();
 
             if environment == "production" {
-                application_url = format!("https://intersectional-data.ca/{}", &lang);
+                application_url = format!("https://www.intersectional-data.ca/{}", &lang);
             } else {
                 application_url = format!("http://localhost:8088/{}", &lang);
             };
@@ -115,7 +115,7 @@ pub async fn send_community_email(
             let environment = env::var("ENVIRONMENT").unwrap();
 
             if environment == "production" {
-                application_url = format!("https://intersectional-data.ca/{}", &lang);
+                application_url = format!("https://www.intersectional-data.ca/{}", &lang);
             } else {
                 application_url = format!("http://localhost:8088/{}", &lang);
             };

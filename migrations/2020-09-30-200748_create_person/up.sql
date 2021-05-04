@@ -1,3 +1,10 @@
+CREATE TABLE phrases (
+    id SERIAL NOT NULL,
+    lang VARCHAR(2) NOT NULL,
+    text VARCHAR NOT NULL,
+    PRIMARY KEY(id, lang)
+);
+
 CREATE TABLE users (
     id SERIAL PRIMARY KEY,
     user_uuid UUID NOT NULL,

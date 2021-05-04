@@ -57,6 +57,7 @@ rand = "0.7.3"
 
 # localization
 fluent-templates = { version = "*", features = ["tera"] }
+deepl-api = "*"
 
 # graph crates
 petgraph = { version = "0.5.1", features = ["serde-1"] }

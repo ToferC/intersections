@@ -90,7 +90,7 @@ email-address = Email address
 email-address-helper = Enter the email address you used to register.
 email-placeholder = yourname@domain.com
 password = Password
-password-placeholder = Your_password
+password-placeholder = Your password...
 password-helper = Your password (at least 12 characters long).
 forgot-password = I forgot my password
 

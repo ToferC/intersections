@@ -82,6 +82,16 @@ table! {
 table! {
     use diesel::sql_types::*;
 
+    phrases (id, lang) {
+        id -> Int4,
+        lang -> Varchar,
+        text -> Varchar,
+    }
+}
+
+table! {
+    use diesel::sql_types::*;
+
     users (id) {
         id -> Int4,
         user_uuid -> Uuid,
@@ -108,5 +118,6 @@ allow_tables_to_appear_in_same_query!(
     nodes,
     password_reset_token,
     people,
+    phrases,
     users,
 );

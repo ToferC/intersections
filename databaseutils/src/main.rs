@@ -3,7 +3,8 @@ use std::{io::{stdin}, num::ParseIntError};
 use databaseutils::{create_user, create_test_admin, prepopulate_db};
 use database;
 
-fn main() {
+#[tokio::main]
+async fn main() {
     
     dotenv::dotenv().ok();
     database::init();
@@ -40,8 +41,8 @@ fn main() {
                     3 => {
                         let _ = create_user("user");
                     }
-                    4 => prepopulate_db("test"),
-                    5 => prepopulate_db("demo"),
+                    4 => prepopulate_db("test").await,
+                    5 => prepopulate_db("demo").await,
                     6 => break,
                     _ => {
                         println!("Command not recognized. Please try again.\n");

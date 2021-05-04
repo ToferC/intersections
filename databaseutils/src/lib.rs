@@ -7,6 +7,14 @@ use std::collections::{BTreeMap};
 use std::fs::File;
 use serde_json::Value;
 
+use hyper::{Response, Body};
+use hyper_rustls;
+use yup_oauth2 as oath2;
+
+use translate2::api::{Translate, TranslateTextRequest, TranslationsResource,
+    TranslationsListResponse};
+
+use google_translate2 as translate2;
 use error_handler::error_handler::CustomError; 
 use webapp::models;
 use database;
@@ -67,9 +75,11 @@ pub fn create_test_admin() -> Result<i32, CustomError> {
     Ok(test_admin.id)
 }
 
-pub fn prepopulate_db(mode: &str) {
+pub async fn prepopulate_db(mode: &str) {
 
     // choose admin
+
+    add_base_nodes().await;
 
     let admins = models::User::find_admins();
 
@@ -160,8 +170,8 @@ pub fn prepopulate_db(mode: &str) {
             };
 
             match mode {
-                "demo" => import_demo_data(test_id),
-                _ => generate_dummy_data(test_id),
+                "demo" => import_demo_data(test_id).await,
+                _ => generate_dummy_data(test_id).await,
             };
 
             println!("SUCCESS");
@@ -174,9 +184,9 @@ pub fn prepopulate_db(mode: &str) {
     }
 }
 
-pub fn import_demo_data(community_id: i32) {
+pub async fn import_demo_data(community_id: i32) {
 
-    add_base_nodes();
+    add_base_nodes().await;
     
     let json_path = "test_data.json";
 
@@ -265,14 +275,14 @@ pub fn import_demo_data(community_id: i32) {
     println!("");
 }
 
-pub fn generate_dummy_data(community_id: i32) {
+pub async fn generate_dummy_data(community_id: i32) {
     for _ in 0..4 {
         let _person = models::People::create(
             &models::NewPerson::new(community_id)
         ).expect("Unable to create new person {}");
     };
 
-    add_base_nodes();
+    add_base_nodes().await;
 
     let base_experiences = vec![
         ("father", "person", 1, 1, "tired", "not doing enough", "joyful", -0.18),
@@ -311,7 +321,9 @@ pub fn generate_dummy_data(community_id: i32) {
 }
 
 /// Add base nodes to database for autosuggest
-pub fn add_base_nodes() {
+pub async fn add_base_nodes() {
+
+    println!("************BASE NODES*************");
 
     let current_nodes = models::Nodes::find_all()
         .expect("Unable to load nodes")
@@ -472,7 +484,11 @@ pub fn add_base_nodes() {
             ("policy analyst", "role"),
             ];
             
-            for n in nodes {
+            
+            let copy = nodes.clone();
+
+            for n in copy.iter() {
+                
                 let node = models::Node::new(
                     n.0.to_owned(),
                     n.1.to_owned(),
@@ -480,5 +496,43 @@ pub fn add_base_nodes() {
                 
                 let _ = models::Nodes::create(&node);
             };
+
+            println!("************BASE NODES*************");
+
         };
+    }
+
+    pub async fn build_translator() -> Translate {
+        let key = oath2::read_service_account_key("client_secret.json")
+        .await
+        .expect("Couldn't read client-secret");
+    
+        println!("{:?}", &key);
+
+        let auth = yup_oauth2::ServiceAccountAuthenticator::builder(
+            key)
+                .build()
+                .await
+                .unwrap();
+        
+        let translator = Translate::new(hyper::Client::builder()
+            .build(hyper_rustls::HttpsConnector::with_native_roots()), auth);
+        
+        translator
+    }
+
+    pub async fn send_translation(for_trans: Vec<String>, hub: Translate) -> (Response<Body>, TranslationsListResponse) {
+        let mut req = TranslateTextRequest::default();
+
+        req.target = Some("fr".to_string());
+        req.source = Some("en".to_string());
+        req.q = Some(for_trans);
+
+        hub
+            .translations()
+            .translate(req)
+            .doit()
+            .await
+            .unwrap()
+
     }
