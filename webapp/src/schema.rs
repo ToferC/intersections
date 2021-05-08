@@ -48,7 +48,7 @@ table! {
 
     nodes (id) {
         id -> Int4,
-        node_name -> Varchar,
+        node_name -> Int4,
         domain_token -> Varchar,
         translation -> Varchar,
         synonyms -> Array<Text>,

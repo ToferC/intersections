@@ -1,4 +1,5 @@
 use bigdecimal::{BigDecimal, ToPrimitive};
+use inflector::Inflector;
 use num_bigint::{ToBigInt};
 use std::{io::{stdin}, process::exit};
 use std::{num::ParseIntError};
@@ -7,14 +8,8 @@ use std::collections::{BTreeMap};
 use std::fs::File;
 use serde_json::Value;
 
-use hyper::{Response, Body};
-use hyper_rustls;
-use yup_oauth2 as oath2;
+use libretranslate::{translate, Language};
 
-use translate2::api::{Translate, TranslateTextRequest, TranslationsResource,
-    TranslationsListResponse};
-
-use google_translate2 as translate2;
 use error_handler::error_handler::CustomError; 
 use webapp::models;
 use database;
@@ -347,7 +342,7 @@ pub async fn add_base_nodes() {
             ("african", "person"),
             ("african canadian", "person"),
             ("indigenous", "person"),
-            ("easter european", "person"),
+            ("eastern european", "person"),
             ("western european", "person"),
             ("mixed", "person"),
             ("latino", "person"),
@@ -470,69 +465,69 @@ pub async fn add_base_nodes() {
             ("lawyer", "role"),
             ("auditor", "role"),
             ("procurement officer", "role"),
-            ("hr officer", "role"),
+            ("human resources officer", "role"),
             ("executive", "role"),
             ("finance officer", "role"),
             ("supervisor", "role"),
             ("psychologist", "role"),
             ("teacher", "role"),
             ("educator", "role"),
-            ("it officer", "role"),
+            ("developer", "role"),
             ("leader", "role"),
             ("networker", "role"),
             ("entrepreneur", "role"),
             ("policy analyst", "role"),
-            ];
-            
-            
-            let copy = nodes.clone();
+        ];
 
-            for n in copy.iter() {
-                
-                let node = models::Node::new(
-                    n.0.to_owned(),
-                    n.1.to_owned(),
-                );
-                
-                let _ = models::Nodes::create(&node);
+        let mut translate_strings: Vec<String> = Vec::new();
+        
+        for n in &nodes {
+            translate_strings.push(format!("{}.\n", &n.0));
+        };
+
+        let source = Language::English;
+        let target = Language::French;
+
+        let input = translate_strings.concat();
+
+        let data = translate(source, target, input)
+            .await
+            .unwrap();
+
+        let mut phrases: Vec<(String, String)> = Vec::new();
+
+        //let en = data.input.split(". ").into_iter();
+        let fr = data.output.split(".\n");
+        let en = data.input.split(".\n");
+
+        println!("{:?}", &phrases);
+
+        let copy = nodes.clone();
+
+        for (n, f) in copy.iter().zip(fr) {
+
+            let phrase = models::InsertablePhrase::new("en", n.0.to_owned());
+
+            let phrase = models::Phrases::create(&phrase).expect("Unable to create phrase");
+
+            let trans = models::Phrases {
+                id: phrase.id,
+                lang: "fr".to_string(),
+                text: f.to_lowercase().replace("/",""),
             };
 
-            println!("************BASE NODES*************");
-
+            let translation = models::Phrases::add_translation(trans).expect("Unable to add translation phrase");
+            
+            let node = models::Node::new(
+                phrase.id,
+                &n.0.to_lower_case().trim(),
+                n.1.to_owned(),
+            );
+            
+            let _ = models::Nodes::create(&node);
         };
-    }
 
-    pub async fn build_translator() -> Translate {
-        let key = oath2::read_service_account_key("client_secret.json")
-        .await
-        .expect("Couldn't read client-secret");
-    
-        println!("{:?}", &key);
+        println!("************BASE NODES*************");
 
-        let auth = yup_oauth2::ServiceAccountAuthenticator::builder(
-            key)
-                .build()
-                .await
-                .unwrap();
-        
-        let translator = Translate::new(hyper::Client::builder()
-            .build(hyper_rustls::HttpsConnector::with_native_roots()), auth);
-        
-        translator
-    }
-
-    pub async fn send_translation(for_trans: Vec<String>, hub: Translate) -> (Response<Body>, TranslationsListResponse) {
-        let mut req = TranslateTextRequest::default();
-
-        req.target = Some("fr".to_string());
-        req.source = Some("en".to_string());
-        req.q = Some(for_trans);
-
-        hub
-            .translations()
-            .translate(req)
-            .doit()
-            .await
-            .unwrap()
-
-    }
+    };
+}

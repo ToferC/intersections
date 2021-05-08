@@ -85,7 +85,7 @@ async fn main() -> std::io::Result<()> {
      */ 
 
 
-    let node_names = models::Nodes::find_all_linked_names_slugs().expect("Unable to load names");
+    let node_names = models::Nodes::find_all_linked_names_slugs("en").expect("Unable to load names");
     
     let y = Arc::new(Mutex::new(node_names));
     

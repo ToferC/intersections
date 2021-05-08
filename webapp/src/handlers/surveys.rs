@@ -2,10 +2,11 @@ use std::sync::{Mutex, MutexGuard};
 use actix_web::{web, HttpRequest, HttpResponse, Responder, post, get, ResponseError};
 use bigdecimal::{BigDecimal, ToPrimitive};
 use actix_identity::Identity;
+use inflector::Inflector;
 use num_bigint::{ToBigInt};
 use serde::{Deserialize, Serialize};
 
-use crate::{AppData, generate_basic_context};
+use crate::{AppData, generate_basic_context, handlers::utility::generate_experience_phrases, models::RawExperience};
 use crate::models::{Experience, Experiences, NewPerson, People, Node, Nodes, Communities, CommunityData};
 use error_handler::error_handler::CustomError;
 
@@ -87,7 +88,7 @@ pub async fn survey_intro(
             let (mut ctx, _session_user, _role, _lang) = generate_basic_context(id, &lang, req.uri().path(), node_names);
         
             // all names for form autocomplete
-            let all_node_names = Nodes::find_all_names().expect("Unable to load node names");
+            let all_node_names = Nodes::find_all_names(&lang).expect("Unable to load node names");
             ctx.insert("all_node_names", &all_node_names);
 
             ctx.insert("community", &community);
@@ -120,7 +121,7 @@ pub async fn experience_form_handler(
             let (mut ctx, _session_user, _role, _lang) = generate_basic_context(id, &lang, req.uri().path(), node_names);
         
             // all names for form autocomplete
-            let all_node_names = Nodes::find_all_names().expect("Unable to load node names");
+            let all_node_names = Nodes::find_all_names(&lang).expect("Unable to load node names");
             ctx.insert("all_node_names", &all_node_names);
 
             ctx.insert("community", &community);
@@ -163,26 +164,41 @@ pub async fn handle_experience_form_input(
                 if &form.related_code != "" {
                     person.related_codes.push(form.related_code.trim().to_owned());
                 };
-            
-                let node = Node::new(
-                    form.name.to_lowercase().trim().to_owned(),
-                    form.domain.to_lowercase().trim().to_owned(),
-                );
+
+                let node_name = form.name.to_lowercase().trim().to_owned();
+
+                let mut raw_exp = RawExperience {
+                    node_name: node_name.to_owned(),
+                    statements: Vec::new(),
+                };
             
                 let mut lived_statements = vec!();
             
                 if &form.response_1 != "" {
                     lived_statements.push(form.response_1.to_lowercase().trim().to_owned());
+                    raw_exp.statements.push(form.response_1.to_lowercase().trim().to_owned());
                 };
             
                 if &form.response_2 != "" {
                     lived_statements.push(form.response_2.to_lowercase().trim().to_owned());
+                    raw_exp.statements.push(form.response_2.to_lowercase().trim().to_owned());
                 };
             
                 if &form.response_3 != "" {
                     lived_statements.push(form.response_3.to_lowercase().trim().to_owned());
+                    raw_exp.statements.push(form.response_3.to_lowercase().trim().to_owned());
                 };
-            
+
+                let phrase_ids = generate_experience_phrases(&lang, raw_exp)
+                    .await
+                    .expect("Unable to generate phrases for experience");
+
+                let node = Node::new(
+                    phrase_ids[0],
+                    form.name.to_lower_case().trim().to_owned(),
+                    form.domain.to_lowercase().trim().to_owned(),
+                );
+                
                 let inclusivity = &form.inclusivity;
             
                 let inclusivity = BigDecimal::new(inclusivity.to_bigint().unwrap(), 2);
@@ -218,7 +234,7 @@ pub async fn handle_experience_form_input(
             
                         let mut temp_data: MutexGuard<Vec<(String, String)>> = node_names.lock().expect("Unable to unlock node_names");
             
-                        temp_data.push((new_node.node_name, new_node.slug));
+                        temp_data.push((node_name.clone(), new_node.slug));
             
                         drop(temp_data);
             
@@ -228,7 +244,7 @@ pub async fn handle_experience_form_input(
                 
                 // Insert experience to db
                 let l = Experience::new(
-                    node.node_name.clone(),
+                    node_name.clone(),
                     node.domain_token.clone(),
                     new_person.id,
                     node_id,
@@ -306,7 +322,7 @@ pub async fn add_experience_form_handler(
     ctx.insert("user_id", &p.id);
 
     // all names for form autocomplete
-    let all_node_names = Nodes::find_all_names().expect("Unable to load names");
+    let all_node_names = Nodes::find_all_names(&lang).expect("Unable to load names");
     ctx.insert("all_node_names", &all_node_names);
 
     // add pull for experience data
@@ -349,26 +365,39 @@ pub async fn add_handle_experience_form_input(
     println!("Find person");
     let p = People::find_from_code(&code).unwrap();
 
-    println!("Create Node");
-    let node = Node::new(
-        form.name.to_lowercase().trim().to_owned(),
-        form.domain.to_lowercase().trim().to_owned(),
-    );
+    let node_name = form.name.to_lowercase().trim().to_owned();
 
-    println!("Get statements");
+    let mut raw_exp = RawExperience {
+        node_name: node_name.to_owned(),
+        statements: Vec::new(),
+    };
+
     let mut lived_statements = vec!();
 
     if &form.response_1 != "" {
         lived_statements.push(form.response_1.to_lowercase().trim().to_owned());
+        raw_exp.statements.push(form.response_1.to_lowercase().trim().to_owned());
     };
 
     if &form.response_2 != "" {
         lived_statements.push(form.response_2.to_lowercase().trim().to_owned());
+        raw_exp.statements.push(form.response_2.to_lowercase().trim().to_owned());
     };
 
     if &form.response_3 != "" {
         lived_statements.push(form.response_3.to_lowercase().trim().to_owned());
+        raw_exp.statements.push(form.response_3.to_lowercase().trim().to_owned());
     };
+
+    let phrase_ids = generate_experience_phrases(&lang, raw_exp)
+        .await
+        .expect("Unable to generate phrases for experience");
+
+    let node = Node::new(
+        phrase_ids[0],
+        form.name.to_lower_case().trim().to_owned(),
+        form.domain.to_lowercase().trim().to_owned(),
+    );
 
     let inclusivity = &form.inclusivity;
 
@@ -400,7 +429,7 @@ pub async fn add_handle_experience_form_input(
 
             // add node_names to appData
             let mut nn = node_names.lock().expect("Unable to unlock");
-            nn.push((new_node.node_name, new_node.slug));
+            nn.push((node_name.clone(), new_node.slug));
             drop(nn);
 
             new_node.id
@@ -408,7 +437,7 @@ pub async fn add_handle_experience_form_input(
     };
     
     let l = Experience::new(
-        node.node_name.clone(),
+        node_name.clone(),
         node.domain_token.clone(),
         p.id,
         node_id,

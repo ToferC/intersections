@@ -49,7 +49,7 @@ CREATE TABLE people (
 
 CREATE TABLE nodes (
     id SERIAL PRIMARY KEY,
-    node_name VARCHAR(32) UNIQUE NOT NULL,
+    node_name INT UNIQUE NOT NULL,
     domain_token VARCHAR(10) NOT NULL CHECK (domain_token IN ('person', 'role', 'system')),
     translation varchar(32) NOT NULL default '',
     synonyms text[] NOT NULL default '{""}',

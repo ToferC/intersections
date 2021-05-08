@@ -29,10 +29,10 @@ pub async fn node_page(
 
     let conn = database::connection().expect("Unable to connect to db");
     
-    let node_select = Nodes::find_by_slug(&node_slug);
+    let node_select = Nodes::find_by_slug(&node_slug, &lang);
 
     match node_select {
-        Ok(node) => {
+        Ok((node, node_name)) => {
 
             // get connected nodes via people with experiencee connections to our prime node
             let experience_vec: Vec<Experiences> = Experiences::belonging_to(&node)
@@ -91,7 +91,7 @@ pub async fn node_page(
             // Aggregate info from experiences related to the prime node
             let node_experience = AggregateExperience::from(experience_vec);
         
-            ctx.insert("title", &format!("{} node", &node.node_name));
+            ctx.insert("title", &format!("{} node", &node_name.text));
         
             ctx.insert("community_slug", "");
         
@@ -156,15 +156,15 @@ pub async fn community_node_page(
             // get ids of people in the community
             let community_people_ids = People::find_ids_from_community(community.id).expect("Unable to find community members");
             
-            let node_select = Nodes::find_by_slug(&node_slug);
+            let node_select = Nodes::find_by_slug(&node_slug, &lang);
 
             match node_select {
-                Ok(node) => {
+                Ok((node, node_name)) => {
 
                     // get connected nodes via people with experiencee connections to our prime node and community
                     let experience_vec: Vec<Experiences> = experiences::table
                         .filter(experiences::person_id.eq_any(&community_people_ids)
-                            .and(experiences::node_name.like(&node.node_name)))
+                            .and(experiences::node_name.like(&node_name.text)))
                         .load::<Experiences>(&conn)
                         .expect("Error loading connected experiences");
                 
@@ -233,7 +233,7 @@ pub async fn community_node_page(
                     // Aggregate info from experiences related to the prime node
                     let node_experience = AggregateExperience::from(experience_vec);
                 
-                    ctx.insert("title", &format!("{} node in {} community", &node.node_name, &community.tag));
+                    ctx.insert("title", &format!("{} node in {} community", &node_name.text, &community.tag));
                 
                     ctx.insert("node", &node);
                     
@@ -272,10 +272,10 @@ pub async fn node_graph(
 
     let conn = database::connection().expect("Unable to connect to db");
     
-    let node_select = Nodes::find_by_slug(&node_slug);
+    let node_select = Nodes::find_by_slug(&node_slug, &lang);
 
     match node_select {
-        Ok(node) => {
+        Ok((node, node_name)) => {
 
             // get connected nodes via people with experiencee connections to our prime node
             let mut experience_vec: Vec<Experiences> = Experiences::belonging_to(&node)
@@ -320,6 +320,7 @@ pub async fn node_graph(
             let j = serde_json::to_string_pretty(&graph).unwrap();
             
             ctx.insert("graph_data", &j);
+            ctx.insert("node_name", &node_name.text);
         
             let title = "Node Network Graph";
             ctx.insert("title", title);
@@ -385,10 +386,10 @@ pub async fn community_node_graph(
         
             let conn = database::connection().expect("Unable to connect to db");
             
-            let node_select = Nodes::find_by_slug(&node_slug);
+            let node_select = Nodes::find_by_slug(&node_slug, &lang);
 
             match node_select {
-                Ok(node) => {
+                Ok((node, node_name)) => {
 
                     // get connected nodes via people with experiencee connections to our prime node
                     let mut experience_vec: Vec<Experiences> = Experiences::belonging_to(&node)
@@ -439,10 +440,11 @@ pub async fn community_node_graph(
                     let j = serde_json::to_string_pretty(&graph).unwrap();
                     
                     ctx.insert("graph_data", &j);
+                    ctx.insert("node_name", &node_name.to_owned());
                 
                     ctx.insert("community", &community);
                 
-                    let title = format!("Graph - {} - {}", &node.node_name.to_title_case(), &community.tag);
+                    let title = format!("Graph - {} - {}", &node_name.text.to_title_case(), &community.tag);
                     ctx.insert("title", &title);
                 
                     let rendered = data.tmpl.render("graphs/node_network_graph.html", &ctx).unwrap();

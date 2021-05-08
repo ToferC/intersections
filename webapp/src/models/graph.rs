@@ -93,7 +93,7 @@ impl GNode {
         };
 
         let node = GNode {
-            id: format!("{}", &n.node_name.trim()),
+            id: format!("{}", &n.node_name),
             node_type: String::from("Node"),
             text: vec![n.domain_token.to_owned()],
             shape: shape,

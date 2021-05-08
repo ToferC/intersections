@@ -32,6 +32,14 @@ pub struct Experience {
     pub inclusivity: BigDecimal,
 }
 
+#[derive(Debug, Serialize, Deserialize)]
+pub struct RawExperience {
+    // Represents raw user entered data that will be used to construct an experience and nodes
+    // with translations
+    pub node_name: String,
+    pub statements: Vec<String>,
+}
+
 impl Experience {
     pub fn new(node_name: String, node_domain: String, person_id: i32, node_id: i32, statements: Vec<String>, inclusivity: BigDecimal) -> Self {
         Experience {

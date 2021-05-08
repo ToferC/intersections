@@ -46,7 +46,7 @@ pub async fn person_page(
         
             for p in people_with_experiences.into_iter() {
                 for l in p.experiences {
-                    let node = Nodes::find(l.node_id).expect("Unable to load experiences");
+                    let (node, node_name) = Nodes::find(l.node_id, &lang).expect("Unable to load experiences");
                     let experiences = Experiences::find_from_node_id(node.id).expect("Unable to load experiences");
                     let agg_experiences = AggregateExperience::from(experiences);
                     aggregate_experiences.push(agg_experiences);

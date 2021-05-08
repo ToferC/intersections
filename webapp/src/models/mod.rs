@@ -8,7 +8,7 @@ pub mod authentication;
 pub mod graph;
 pub mod phrase;
 
-pub use experience::{Experience, Experiences, AggregateExperience};
+pub use experience::{Experience, Experiences, AggregateExperience, RawExperience};
 pub use person::{NewPerson, People};
 pub use node::{Node, Nodes};
 pub use user::{User, InsertableUser, SlimUser, LoggedUser, UserData, verify, make_salt, make_hash};

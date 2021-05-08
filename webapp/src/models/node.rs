@@ -4,30 +4,30 @@ use inflector::Inflector;
 
 use error_handler::error_handler::CustomError;
 use database;
-use crate::models::Experiences;
+use crate::models::{Experiences, Phrases};
 
-use crate::schema::nodes;
+use crate::schema::{nodes, phrases};
 
 #[derive(Debug, Serialize, Deserialize, AsChangeset, Insertable)]
 #[table_name = "nodes"]
 pub struct Node {
-    pub node_name: String,
+    pub node_name: i32,
     pub domain_token: String,
     pub slug: String,
 }
 
 impl Node {
-    pub fn new(name: String, domain: String) -> Self {
+    pub fn new(node_name: i32, entry_name: String, domain: String) -> Self {
         Node {
-            node_name: name.to_owned(),
+            node_name,
             domain_token: domain,
-            slug: name.to_snake_case(),
+            slug: entry_name.to_snake_case(),
         }
     }
 
     pub fn from(node: &Node) -> Node {
         Node {
-            node_name: node.node_name.to_owned(),
+            node_name: node.node_name,
             domain_token: node.domain_token.to_owned(),
             slug: node.slug.to_owned(),
         }
@@ -38,7 +38,7 @@ impl Node {
 #[table_name = "nodes"]
 pub struct Nodes {
     pub id: i32,
-    pub node_name: String,
+    pub node_name: i32,
     pub domain_token: String,
     pub translation: String,
     pub synonyms: Vec<String>,
@@ -69,41 +69,56 @@ impl Nodes {
         Ok(nodes)
     }
 
-    pub fn find_all_names() -> Result<Vec<String>, CustomError> {
+    pub fn find_all_names(lang: &str) -> Result<Vec<String>, CustomError> {
         let conn = database::connection()?;
-        let names = nodes::table.select(nodes::node_name).load::<String>(&conn)?;
+        let names = nodes::table.inner_join(phrases::table
+            .on(nodes::node_name.eq(phrases::id)
+            .and(phrases::lang.eq(lang))))
+            .select(phrases::text)
+            .load::<String>(&conn)?;
 
         Ok(names)
     }
 
-    pub fn find_all_linked_names_slugs() -> Result<Vec<(String, String)>, CustomError> {
+    /*
+        experience::tables.inner_join(phrases::table
+        .on(experience::node_name.eq(phrases::id)
+        .and(phrases::language.eq("foo"))
+        .select((all, the, columns))
+    */
+
+    pub fn find_all_linked_names_slugs(lang: &str) -> Result<Vec<(String, String)>, CustomError> {
         let conn = database::connection()?;
 
         let node_ids = Experiences::find_real_node_ids().expect("Unable to load experiences");
 
-        let node_names = nodes::table
-            .select((nodes::node_name, nodes::slug))
+        let names = nodes::table.inner_join(phrases::table
+            .on(nodes::node_name.eq(phrases::id)
+            .and(phrases::lang.eq(lang))))
             .filter(nodes::id.eq_any(node_ids))
+            .select((phrases::text, nodes::slug))
             .load::<(String, String)>(&conn)?;
 
-        Ok(node_names)
+        Ok(names)
     }
 
-    pub fn find(id: i32) -> Result<Self, CustomError> {
+    pub fn find(id: i32, lang: &str) -> Result<(Self, Phrases), CustomError> {
         let conn = database::connection()?;
-        let node = nodes::table.filter(nodes::id.eq(id)).first(&conn)?;
+        let node = nodes::table.inner_join(phrases::table
+            .on(nodes::node_name.eq(phrases::id)
+            .and(phrases::lang.eq(lang))))
+            .filter(nodes::id.eq(id))
+            .first::<(Nodes, Phrases)>(&conn)?;
         Ok(node)
     }
 
-    pub fn find_by_name(node_name: &String) -> Result<Self, CustomError> {
+    pub fn find_by_slug(node_slug: &String, lang: &str) -> Result<(Self, Phrases), CustomError> {
         let conn = database::connection()?;
-        let node = nodes::table.filter(nodes::node_name.eq(node_name)).first(&conn)?;
-        Ok(node)
-    }
-
-    pub fn find_by_slug(node_slug: &String) -> Result<Self, CustomError> {
-        let conn = database::connection()?;
-        let node = nodes::table.filter(nodes::slug.eq(node_slug)).first(&conn)?;
+        let node = nodes::table.inner_join(phrases::table
+            .on(nodes::node_name.eq(phrases::id)
+            .and(phrases::lang.eq(lang))))
+            .filter(nodes::slug.eq(node_slug))
+            .first::<(Nodes, Phrases)>(&conn)?;
         Ok(node)
     }
 
