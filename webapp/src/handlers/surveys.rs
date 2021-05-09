@@ -6,7 +6,7 @@ use inflector::Inflector;
 use num_bigint::{ToBigInt};
 use serde::{Deserialize, Serialize};
 
-use crate::{AppData, generate_basic_context, handlers::utility::generate_experience_phrases, models::RawExperience};
+use crate::{AppData, generate_basic_context, models::generate_experience_phrases, models::RawExperience};
 use crate::models::{Experience, Experiences, NewPerson, People, Node, Nodes, Communities, CommunityData};
 use error_handler::error_handler::CustomError;
 
@@ -241,14 +241,17 @@ pub async fn handle_experience_form_input(
                         new_node.id
                     }
                 };
+
+                let name_id = phrase_ids.first().unwrap();
+                let statement_phrase_ids = phrase_ids.clone().into_iter().skip(1).collect();
                 
                 // Insert experience to db
                 let l = Experience::new(
-                    node_name.clone(),
+                    *name_id,
                     node.domain_token.clone(),
                     new_person.id,
                     node_id,
-                    lived_statements,
+                    statement_phrase_ids,
                     inclusivity.to_owned(),
                 );
             
@@ -435,13 +438,16 @@ pub async fn add_handle_experience_form_input(
             new_node.id
         }
     };
+
+    let name_id = phrase_ids.first().unwrap();
+    let statement_phrase_ids = phrase_ids.clone().into_iter().skip(1).collect();
     
     let l = Experience::new(
-        node_name.clone(),
+        *name_id,
         node.domain_token.clone(),
         p.id,
         node_id,
-        lived_statements,
+        statement_phrase_ids,
         inclusivity.to_owned(),
     );
 

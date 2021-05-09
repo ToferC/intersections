@@ -11,14 +11,8 @@ mod authentication_handlers;
 mod errors;
 
 mod utility {
-    use error_handler::error_handler;
     use serde::Deserialize;
     use actix_web::{web, get, HttpResponse, HttpRequest, Responder};
-
-    use crate::models::{Phrases, InsertablePhrase, RawExperience};
-
-    use libretranslate::{translate, Language};
-
 
     #[derive(Deserialize, Debug)]
     pub struct DeleteForm {
@@ -111,72 +105,6 @@ mod utility {
             .header("Location", format!("/{}/{}/{}/{}", &new_lang, &url, &url2, &url3))
             .finish()
     }
-
-    pub async fn generate_experience_phrases(lang: &str, ex: RawExperience) -> Result<Vec<i32>, error_handler::CustomError> {
-        // Translates a complete experience including node name and statements
-        // Returns a String that is meant to be split on "\n."
-
-        let mut translate_strings: Vec<String> = Vec::new();
-
-        translate_strings.push(ex.node_name);
-        
-        for s in &ex.statements {
-            translate_strings.push(format!("{}.\n", &s));
-        };
-
-        let mut source: Language = Language::English;
-        let mut target = Language::French;
-
-        let translate_lang = match &lang {
-            &"en" => {
-                source = Language::English;
-                target = Language::French;
-                "fr".to_string()
-            },
-            &"fr" => {
-                source = Language::French;
-                target = Language::English;
-                "en".to_string()
-            },
-            _ => {
-                source = Language::English;
-                target = Language::French;
-                "fr".to_string()
-            },
-        };
-
-        let source = Language::English;
-
-        let input = translate_strings.concat();
-
-        let data = translate(source, target, input)
-            .await
-            .unwrap();
-
-        let input = data.input.split(".\n");
-        let output = data.output.split(".\n");
-
-        let mut phrase_ids = Vec::new();
-
-        for (i, o) in input.into_iter().zip(output) {
-
-            let phrase = InsertablePhrase::new(lang, i.to_lowercase().trim().replace("/",""));
-
-            let phrase = Phrases::create(&phrase).expect("Unable to create phrase");
-
-            let trans = Phrases {
-                id: phrase.id,
-                lang: translate_lang.to_owned(),
-                text: o.to_lowercase().trim().replace("/",""),
-            };
-
-            let translation = Phrases::add_translation(trans).expect("Unable to add translation phrase");
-            
-            phrase_ids.push(phrase.id);
-        };
-
-        Ok(phrase_ids)
-    }
 }
 
 pub use self::base::{
@@ -207,7 +135,7 @@ pub use self::routes::init_routes;
 
 pub use self::graphs::{global_graph, full_community_node_graph};
 
-pub use self::people::{person_graph, person_page, delete_person, delete_person_post};
+pub use self::people::{person_page, delete_person, delete_person_post};
 
 pub use self::nodes::{node_graph, node_page, community_node_page, community_node_graph};
 

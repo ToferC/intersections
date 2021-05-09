@@ -46,7 +46,7 @@ use crate::handlers::{
     person_api,
     // graphs
     global_graph,
-    person_graph,
+    //person_graph,
     full_community_node_graph,
 
     // registration
@@ -141,7 +141,7 @@ pub fn init_routes(config: &mut web::ServiceConfig) {
     config.service(person_api);
     // graphs
     config.service(global_graph);
-    config.service(person_graph);
+    //config.service(person_graph);
     config.service(full_community_node_graph);
 
     // registration and validation

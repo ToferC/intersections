@@ -58,7 +58,7 @@ CREATE TABLE nodes (
 
 CREATE TABLE experiences (
     id SERIAL PRIMARY KEY,
-    node_name VARCHAR(32) NOT NULL,
+    node_name INT NOT NULL,
     node_domain VARCHAR(10) NOT NULL CHECK (node_domain IN ('person', 'role', 'system')),
     person_id INT NOT NULL,
     FOREIGN KEY(person_id)
@@ -67,6 +67,6 @@ CREATE TABLE experiences (
     FOREIGN KEY(node_id)
         REFERENCES nodes(id),
     date_created TIMESTAMP NOT NULL default CURRENT_DATE,
-    statements TEXT[] NOT NULL,
+    statements INT[] NOT NULL,
     inclusivity NUMERIC NOT NULL
 );

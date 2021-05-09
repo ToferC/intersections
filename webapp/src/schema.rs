@@ -33,12 +33,12 @@ table! {
 
     experiences (id) {
         id -> Int4,
-        node_name -> Varchar,
+        node_name -> Int4,
         node_domain -> Varchar,
         person_id -> Int4,
         node_id -> Int4,
         date_created -> Timestamp,
-        statements -> Array<Text>,
+        statements -> Array<Int4>,
         inclusivity -> Numeric,
     }
 }

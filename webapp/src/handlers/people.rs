@@ -6,7 +6,7 @@ use crate::{AppData, generate_basic_context};
 use diesel::prelude::*;
 use diesel::{QueryDsl, BelongingToDsl};
 
-use crate::models::{Experiences, Nodes, People, Communities, CommunityData, generate_cyto_graph};
+use crate::models::{Experiences, Nodes, People, Communities, CommunityData};
 use database;
 use crate::handlers::{RenderPerson, DeleteForm};
 use crate::models::AggregateExperience;
@@ -47,8 +47,15 @@ pub async fn person_page(
             for p in people_with_experiences.into_iter() {
                 for l in p.experiences {
                     let (node, node_name) = Nodes::find(l.node_id, &lang).expect("Unable to load experiences");
-                    let experiences = Experiences::find_from_node_id(node.id).expect("Unable to load experiences");
-                    let agg_experiences = AggregateExperience::from(experiences);
+                    let experiences = Experiences::find_from_node_id(node.id, &lang).expect("Unable to load experiences");
+
+                    let mut xp = Vec::new();
+
+                    for (x, p) in experiences {
+                        xp.push(x);
+                    };
+
+                    let agg_experiences = AggregateExperience::from(xp, &lang);
                     aggregate_experiences.push(agg_experiences);
                 }
             };
@@ -69,6 +76,7 @@ pub async fn person_page(
 
 }
 
+/*
 #[get("/{lang}/person_network_graph/{person_id}")]
 pub async fn person_graph(
     web::Path((lang, person_id)): web::Path<(String, i32)>,
@@ -132,6 +140,7 @@ pub async fn person_graph(
     let rendered = data.tmpl.render("graphs/network_graph.html", &ctx).unwrap();
     HttpResponse::Ok().body(rendered)
 }
+*/
 
 #[get("/{lang}/delete_person/{code}")]
 pub async fn delete_person(

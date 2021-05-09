@@ -80,7 +80,7 @@ pub async fn node_page(
                 };
         
                 if temp_experience_vec.len() > 0 {
-                    let agg_experiences = AggregateExperience::from(temp_experience_vec);
+                    let agg_experiences = AggregateExperience::from(temp_experience_vec, &lang);
                     aggregate_experiences.push(agg_experiences);
                 }
             };
@@ -89,7 +89,7 @@ pub async fn node_page(
             aggregate_experiences.dedup();
         
             // Aggregate info from experiences related to the prime node
-            let node_experience = AggregateExperience::from(experience_vec);
+            let node_experience = AggregateExperience::from(experience_vec, &lang);
         
             ctx.insert("title", &format!("{} node", &node_name.text));
         
@@ -164,7 +164,7 @@ pub async fn community_node_page(
                     // get connected nodes via people with experiencee connections to our prime node and community
                     let experience_vec: Vec<Experiences> = experiences::table
                         .filter(experiences::person_id.eq_any(&community_people_ids)
-                            .and(experiences::node_name.like(&node_name.text)))
+                            .and(experiences::node_name.eq(&node_name.id)))
                         .load::<Experiences>(&conn)
                         .expect("Error loading connected experiences");
                 
@@ -222,7 +222,7 @@ pub async fn community_node_page(
                         };
                 
                         if temp_experience_vec.len() > 0 {
-                            let agg_experiences = AggregateExperience::from(temp_experience_vec);
+                            let agg_experiences = AggregateExperience::from(temp_experience_vec, &lang);
                             aggregate_experiences.push(agg_experiences);
                         }
                     };
@@ -231,7 +231,7 @@ pub async fn community_node_page(
                     aggregate_experiences.dedup();
                 
                     // Aggregate info from experiences related to the prime node
-                    let node_experience = AggregateExperience::from(experience_vec);
+                    let node_experience = AggregateExperience::from(experience_vec, &lang);
                 
                     ctx.insert("title", &format!("{} node in {} community", &node_name.text, &community.tag));
                 
@@ -305,7 +305,7 @@ pub async fn node_graph(
             experience_vec.append(&mut connected_experiences);
         
             for l in &experience_vec {
-                people_connections.entry(l.person_id).or_insert(Vec::new()).push(l.node_name.to_owned()); 
+                people_connections.entry(l.person_id).or_insert(Vec::new()).push(node_name.text.to_owned()); 
             };
         
             println!("{:?}", &people_connections);
@@ -424,7 +424,7 @@ pub async fn community_node_graph(
                     // add people connections from the community only
                     for l in &experience_vec {
                         if community_people_ids.contains(&l.person_id) {
-                            people_connections.entry(l.person_id).or_insert(Vec::new()).push(l.node_name.to_owned()); 
+                            people_connections.entry(l.person_id).or_insert(Vec::new()).push(node_name.text.to_owned()); 
                         }
                     };
                     

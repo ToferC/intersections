@@ -16,6 +16,6 @@ pub use community::{Communities, NewCommunity, CommunityData};
 pub use email::Email;
 pub use authentication::{EmailVerification, InsertableVerification,
     PasswordResetToken, InsertablePasswordResetToken};
-pub use graph::{generate_cyto_graph, generate_node_cyto_graph,
+pub use graph::{generate_node_cyto_graph,
     GEdge, GNode, CytoEdge, CytoNode, CytoGraph};
-pub use phrase::{InsertablePhrase, Phrases};
+pub use phrase::{InsertablePhrase, Phrases, generate_experience_phrases};

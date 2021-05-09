@@ -11,7 +11,7 @@ use serde_json::Value;
 use libretranslate::{translate, Language};
 
 use error_handler::error_handler::CustomError; 
-use webapp::models;
+use webapp::models::{self, RawExperience, Phrases};
 use database;
 
 pub fn create_user(role: &str) -> Result<i32, CustomError> {
@@ -209,26 +209,20 @@ pub async fn import_demo_data(community_id: i32) {
             for n in i {
                 let name = n[1]["node_name"].as_str().unwrap().trim().to_owned();
 
-                let node_data = models::Node::new(
-                    name.to_owned(),
-                    n[1]["domain_token"].as_str().unwrap().trim().to_owned(),
-                );
-
-                let node = models::Nodes::create(&node_data);
-
-                let node = match node {
-                    Ok(n) => n,
-                    Err(e) => {
-                        println!("{}", e);
-                        models::Nodes::find_by_name(&name).expect("Unable to load node")
-                    }
-                };
-
                 let mut statements: Vec<String> = Vec::new();
 
                 for s in n[0]["statements"].as_array().unwrap() {
                     statements.push(s.as_str().unwrap().trim().to_owned());
                 };
+
+                let raw_exp = RawExperience {
+                    node_name: name.to_owned(),
+                    statements: statements.clone(),
+                };
+
+                let phrase_ids = models::generate_experience_phrases("en", raw_exp)
+                    .await
+                    .expect("Unable to generate phrases for experience.");
 
                 let raw_num: f64 = n[0]["inclusivity"].as_str().unwrap().to_owned().parse().unwrap();
 
@@ -236,8 +230,24 @@ pub async fn import_demo_data(community_id: i32) {
                     .to_bigint()
                     .unwrap(), 3);
 
+                let node_data = models::Node::new(
+                    phrase_ids[0],
+                    name.to_owned(),
+                    n[1]["domain_token"].as_str().unwrap().trim().to_owned(),
+                );
+    
+                let node = models::Nodes::create(&node_data);
+
+                let (node, node_name) = match node {
+                    Ok(n) => (n, Phrases { id: phrase_ids[0], lang: "en".to_string(), text: name.to_owned()}),
+                    Err(e) => {
+                        println!("{}", e);
+                        models::Nodes::find_by_slug(&name.trim().to_snake_case(), "en").expect("Unable to load node")
+                    }
+                };
+
                 let l = models::Experience::new(
-                    node.node_name.to_owned(),
+                    node_name.text.to_owned(),
                     node.domain_token.to_owned(),
                     person.id,
                     node.id, 
@@ -520,9 +530,11 @@ pub async fn add_base_nodes() {
             
             let node = models::Node::new(
                 phrase.id,
-                &n.0.to_lower_case().trim(),
+                n.0.to_lower_case().trim().to_string(),
                 n.1.to_owned(),
             );
+
+            println!("Success: {} ({}) -> {} ({})", &phrase.text, phrase.id, &translation.text, translation.id);
             
             let _ = models::Nodes::create(&node);
         };

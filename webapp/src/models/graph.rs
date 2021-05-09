@@ -33,13 +33,21 @@ pub struct GEdge {
 }
 
 impl GEdge {
-    pub fn from_experience(l: &Experiences) -> GEdge {
+    pub fn from_experience(e: &Experiences, lang: &str) -> GEdge {
+
+        let p = e.get_phrases(lang);
+        let mut statements = Vec::new();
+
+        for s in p.iter().skip(1) {
+            statements.push(s.text.clone());
+        };
+
         let edge = GEdge {
-            id: format!("P{}-{}", &l.person_id, &l.node_name.trim()),
-            source: format!("P-{}", &l.person_id),
-            target: format!("{}", &l.node_name.trim()),
-            text: l.statements.to_owned(),
-            weight: l.inclusivity.to_f32().expect("unable to convert decimal"),
+            id: format!("P{}-{}", &e.person_id, &p[0].text),
+            source: format!("P-{}", &e.person_id),
+            target: format!("{}", &p[0].text.trim()),
+            text: statements,
+            weight: e.inclusivity.to_f32().expect("unable to convert decimal"),
         };
 
         edge
@@ -65,6 +73,7 @@ impl fmt::Display for GNode {
 }
 
 impl GNode {
+    /*
     pub fn from_person(p: &People) -> GNode {
         let person_node = GNode {
             id: format!("P-{}", p.id),
@@ -134,6 +143,7 @@ impl GNode {
 
         node
     }
+    */
 
     pub fn from_agg_experience(a: &AggregateExperience, community: &Option<String>, lang: &str) -> GNode {
 
@@ -165,6 +175,7 @@ impl GNode {
     }
 }
 
+/*
 /// Accepts vectors of people, nodes and experiences and formats the data into
 /// JSON acceptable to Cytoscape.js
 pub fn generate_cyto_graph(
@@ -212,6 +223,8 @@ pub fn generate_cyto_graph(
     graph
 }
 
+*/
+
 pub fn generate_node_cyto_graph(
     experience_vec: Vec<Experiences>,
     people_connections: HashMap<i32, Vec<String>>,
@@ -251,7 +264,7 @@ pub fn generate_node_cyto_graph(
         };
 
         if temp_experience_vec.len() > 0 {
-            let agg_experiences = AggregateExperience::from(temp_experience_vec);
+            let agg_experiences = AggregateExperience::from(temp_experience_vec, &lang);
             aggregate_experiences.push(agg_experiences);
         }
     };

@@ -2,6 +2,7 @@ use serde::{Serialize, Deserialize};
 use diesel::prelude::*;
 use diesel::{QueryDsl, BelongingToDsl};
 use bigdecimal::BigDecimal;
+use std::collections::HashMap;
 
 use bigdecimal::{ToPrimitive};
 use std::collections::BTreeMap;
@@ -10,8 +11,10 @@ use std::iter::FromIterator;
 use error_handler::error_handler::CustomError;
 use database;
 
-use crate::models::{People, Nodes};
-use crate::schema::{experiences, nodes};
+use crate::models::{People, Nodes, Phrases};
+use crate::schema::{experiences, nodes, phrases};
+
+use super::phrase;
 
 #[derive(Debug, Serialize, Deserialize, AsChangeset, Insertable)]
 #[table_name = "experiences"]
@@ -21,14 +24,14 @@ use crate::schema::{experiences, nodes};
 /// Based off the experience-Role-System framework found here: 
 /// https://www.aecf.org/m/blogdoc/experienceRoleSystemFramework-2013.pdf
 pub struct Experience {
-    pub node_name: String,
+    pub node_name: i32,
     pub node_domain: String,
     pub person_id: i32,
     pub node_id: i32,
     pub date_created: chrono::NaiveDateTime,
     // A lived statement of experience based on the experience.
     // Expressed as "In the workplace, this experience makes me feel {adjective}."
-    pub statements: Vec<String>,
+    pub statements: Vec<i32>,
     pub inclusivity: BigDecimal,
 }
 
@@ -41,7 +44,7 @@ pub struct RawExperience {
 }
 
 impl Experience {
-    pub fn new(node_name: String, node_domain: String, person_id: i32, node_id: i32, statements: Vec<String>, inclusivity: BigDecimal) -> Self {
+    pub fn new(node_name: i32, node_domain: String, person_id: i32, node_id: i32, statements: Vec<i32>, inclusivity: BigDecimal) -> Self {
         Experience {
             node_name: node_name,
             node_domain: node_domain,
@@ -55,7 +58,7 @@ impl Experience {
 
     pub fn from(experience: &Experience) -> Experience {
         Experience {
-            node_name: experience.node_name.clone(),
+            node_name: experience.node_name,
             node_domain: experience.node_domain.clone(),
             person_id: experience.person_id,
             node_id: experience.node_id, 
@@ -72,14 +75,14 @@ impl Experience {
 #[table_name = "experiences"]
 pub struct Experiences {
     pub id: i32,
-    pub node_name: String,
+    pub node_name: i32,
     pub node_domain: String,
     pub person_id: i32,
     pub node_id: i32,
     pub date_created: chrono::NaiveDateTime,
     // A lived statement of experience based on the experience.
     // Expressed as "In the workplace, this experience makes me feel {adjective}."
-    pub statements: Vec<String>,
+    pub statements: Vec<i32>,
     pub inclusivity: BigDecimal,
 }
 
@@ -167,11 +170,46 @@ impl Experiences {
         Ok(experience)
     }
 
-    pub fn find_from_node_id(id: i32) -> Result<Vec<Self>, CustomError> {
+    /*
+    pub fn find_from_node_id(id: i32, lang: &str) -> Result<(Vec<(Self, Phrases)>, Vec<Phrases>), CustomError> {
         let conn = database::connection()?;
+        /*
         let experience_vec = experiences::table.filter(experiences::node_id.eq(id))
             .load::<Experiences>(&conn)?;
+        */
+        let experience_vec = experiences::table.
+            inner_join(phrases::table
+            .on(phrases::id.eq(experiences::node_name)
+            .and(phrases::lang.eq(lang))))
+            .filter(experiences::node_id.eq(id))
+            .load::<(Experiences, Phrases)>(&conn)?;
+
+        let mut phrase_ids = Vec::new();
+
+        // get all statement localizations
+        for v in experience_vec {
+            phrase_ids.extend(v.0.statements.clone());
+        };
+
+        let statement_phrases: Vec<Phrases> = Phrases::get_phrases_from_ids(phrase_ids, lang)?;
         
+        Ok((experience_vec, statement_phrases))
+    }
+    */
+
+    pub fn find_from_node_id(id: i32, lang: &str) -> Result<Vec<(Self, Phrases)>, CustomError> {
+        let conn = database::connection()?;
+        /*
+        let experience_vec = experiences::table.filter(experiences::node_id.eq(id))
+            .load::<Experiences>(&conn)?;
+        */
+        let experience_vec = experiences::table.
+            inner_join(phrases::table
+            .on(phrases::id.eq(experiences::node_name)
+            .and(phrases::lang.eq(lang))))
+            .filter(experiences::node_id.eq(id))
+            .load::<(Experiences, Phrases)>(&conn)?;
+
         Ok(experience_vec)
     }
 
@@ -197,6 +235,18 @@ impl Experiences {
         let res = diesel::delete(experiences::table.filter(experiences::id.eq(id))).execute(&conn)?;
         Ok(res)
     }
+
+    pub fn get_phrases(&self, lang: &str) -> Vec<Phrases> {
+        let mut phrase_ids = Vec::new();
+        phrase_ids.push(self.node_name);
+
+        phrase_ids.extend(&self.statements);
+
+        let p = Phrases::get_phrases_from_ids(phrase_ids, &lang)
+            .expect("Unable to load localizations from experience");
+
+        p
+    }
 }
 
 #[derive(Serialize, Debug, PartialEq, PartialOrd)]
@@ -209,25 +259,41 @@ pub struct AggregateExperience {
 }
 
 impl AggregateExperience {
-    pub fn from(experiences: Vec<Experiences>) -> AggregateExperience {
-        let name = &experiences[0].node_name;
-        let domain = &experiences[0].node_domain;
-
+    pub fn from(experience_vec: Vec<Experiences>, lang: &str) -> AggregateExperience {
+        
+        
+        
+        let domain = &experience_vec[0].node_domain;
+        
         let mut inclusivity: f32 = 0.0;
         let mut counts = BTreeMap::new();
-
-        for l in &experiences {
-            inclusivity += l.inclusivity.to_f32().expect("Unable to convert bigdecimal");
-
-            for s in &l.statements {
-                *counts.entry(s.to_owned()).or_insert(0) += 1;
-            };
+        
+        let mut phrase_ids = Vec::new();
+        
+        phrase_ids.push(experience_vec[0].node_name);
+        
+        for e in &experience_vec {
+            
+            phrase_ids.extend(&e.statements);
+            
+            inclusivity += e.inclusivity.to_f32().expect("Unable to convert bigdecimal");
+            
         };
+        
+        let statement_phrases = Phrases::get_phrases_from_ids(phrase_ids, &lang)
+        .expect("Unable to load phrases from experience");
+        
+        let name = &statement_phrases[0].text;
+
+        for s in statement_phrases.iter().skip(1) {
+            *counts.entry(s.text.clone()).or_insert(0) += 1;
+        };
+
 
         let mut v = Vec::from_iter(counts);
         v.sort_by(|&(_, a), &(_, b)|b.cmp(&a));
 
-        let count = experiences.len() as u32;
+        let count = experience_vec.len() as u32;
 
         AggregateExperience {
             name: name.to_owned(),
