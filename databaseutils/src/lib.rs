@@ -215,12 +215,12 @@ pub async fn import_demo_data(community_id: i32) {
                     statements.push(s.as_str().unwrap().trim().to_owned());
                 };
 
-                let raw_exp = RawExperience {
-                    node_name: name.to_owned(),
-                    statements: statements.clone(),
-                };
+                let mut raw_exp = RawExperience::new(
+                    name.to_owned(),
+                    statements,
+                );
 
-                let phrase_ids = models::generate_experience_phrases("en", raw_exp)
+                let _result = raw_exp.generate_experience_phrases("en")
                     .await
                     .expect("Unable to generate phrases for experience.");
 
@@ -231,15 +231,15 @@ pub async fn import_demo_data(community_id: i32) {
                     .unwrap(), 3);
 
                 let node_data = models::Node::new(
-                    phrase_ids[0],
+                    raw_exp.name_id,
                     name.to_owned(),
                     n[1]["domain_token"].as_str().unwrap().trim().to_owned(),
                 );
     
                 let node = models::Nodes::create(&node_data);
 
-                let (node, node_name) = match node {
-                    Ok(n) => (n, Phrases { id: phrase_ids[0], lang: "en".to_string(), text: name.to_owned()}),
+                let (node, _node_name) = match node {
+                    Ok(n) => (n, Phrases { id: raw_exp.name_id, lang: "en".to_string(), text: name.to_owned()}),
                     Err(e) => {
                         println!("{}", e);
                         models::Nodes::find_by_slug(&name.trim().to_snake_case(), "en").expect("Unable to load node")
@@ -247,12 +247,13 @@ pub async fn import_demo_data(community_id: i32) {
                 };
 
                 let l = models::Experience::new(
-                    node_name.text.to_owned(),
+                    raw_exp.name_id,
                     node.domain_token.to_owned(),
                     person.id,
                     node.id, 
-                    statements,
+                    raw_exp.phrase_ids,
                     inclusivity.to_owned(),
+                    node.slug,
                 );
 
                 let ex = models::Experiences::create(&l).expect("Unable to create experience");
@@ -294,7 +295,7 @@ pub async fn generate_dummy_data(community_id: i32) {
         ("manager", "role", 1, 2, "pulled many directions", "influential", "stressed", -0.25),
         ("gen x", "person", 1, 3, "experienced", "overlooked", "depended upon", 0.23),
         ("mother", "person", 2, 4, "tired", "guilty", "excluded", -0.45),
-        ("white", "person", 2, 5, "normal", "", "", 0.30),
+        ("white", "person", 2, 5, "normal", "just a person", "listened to", 0.30),
         ("black", "person", 3, 6, "ignored", "suffer microagressions", "proud", -0.30),
         ("mother", "person", 3, 4, "balanced", "responsible", "capable", 0.29),
         ("executive", "role",3, 7, "powerful", "overwhelmed", "stifled", -0.10),
@@ -307,28 +308,113 @@ pub async fn generate_dummy_data(community_id: i32) {
 
     println!("{}", &data);
 
+    let mut raw_exp_vec = Vec::new();
+
     for l in base_experiences.iter() {
 
+        let mut raw_exp = RawExperience::new( 
+            l.0.to_string(), 
+            vec![l.4.to_string(), l.5.to_string(), l.6.to_string()],
+        );
+
+        raw_exp_vec.push(raw_exp.clone());
+
+    };
+
+    let mut translate_strings: Vec<String> = Vec::new();
+        
+    for e in &raw_exp_vec {
+        translate_strings.push(format!("{}.\n", &e.node_name));
+
+        for s in e.statements.clone() {
+            translate_strings.push(format!("{}.\n", &s));
+        }
+    };
+
+    let source = Language::English;
+    let target = Language::French;
+
+    let input = translate_strings.concat();
+
+    let data = translate(source, target, input)
+        .await
+        .unwrap();
+
+    //let en = data.input.split(". ").into_iter();
+    let fr: Vec<String> = data.output.split(".\n").map(|s| s.to_string()).collect();
+    //let en = data.input.split(".\n");
+    
+    for (i, l) in base_experiences.iter().enumerate() {
+        
+        let mut exp = raw_exp_vec[i].clone();
+
+        // 4 strings per experience in translation (0, 1, 2, 3), (4, 5, 6, 7), (8, 9, 10, 11)
+        // pull node_name and 3 statement ids from each l and raw_exp_vec and fr
+
+        for s in 0+i*4..4+i*4 {
+            if s == 0+i*4 {
+                // node_name
+                let phrase = models::InsertablePhrase::new("en", exp.node_name.to_owned());
+    
+                let phrase = models::Phrases::create(&phrase).expect("Unable to create phrase");
+    
+                let trans = models::Phrases {
+                    id: phrase.id,
+                    lang: "fr".to_string(),
+                    text: fr[s].to_lowercase().replace("/",""),
+                };
+    
+                let translation = models::Phrases::add_translation(trans).expect("Unable to add translation phrase");
+
+                println!("Success - node name: {} ({}) -> {} ({})", &phrase.text, phrase.id, &translation.text, translation.id);
+
+                // update raw_experience
+                exp.name_id = phrase.id;
+                
+            } else {
+
+                //statement
+                let phrase = models::InsertablePhrase::new("en", exp.statements[s-1-i*4].clone());
+    
+                let phrase = models::Phrases::create(&phrase).expect("Unable to create phrase");
+    
+                let trans = models::Phrases {
+                    id: phrase.id,
+                    lang: "fr".to_string(),
+                    text: fr[s].to_lowercase().replace("/",""),
+                };
+    
+                let translation = models::Phrases::add_translation(trans).expect("Unable to add translation phrase");
+
+                // update raw_experience
+                println!("Success - statement: {} ({}) -> {} ({})", &phrase.text, phrase.id, &translation.text, translation.id);
+
+                exp.phrase_ids.push(phrase.id);
+            };
+        };
+    
         let i = l.7 as f32;
         let inclusivity = BigDecimal::new(i.to_bigint().unwrap(), 2);
-
+        
         models::Experiences::create(
             &models::Experience::new(
-                l.0.to_string(), 
+                exp.name_id, 
                 l.1.to_string(), 
                 l.2, 
                 l.3, 
-                vec![l.4.to_string(), l.5.to_string(), l.6.to_string()], 
+                exp.phrase_ids, 
                 inclusivity,
+                exp.node_name.trim().to_snake_case().to_string(),
             )
         ).expect("Unable to create experience");
     }
+    println!("************ADDED DEMO EXPERIENCES*************");
 }
 
 /// Add base nodes to database for autosuggest
 pub async fn add_base_nodes() {
 
-    println!("************BASE NODES*************");
+    println!("************ADDING BASE NODES*************");
 
     let current_nodes = models::Nodes::find_all()
         .expect("Unable to load nodes")
@@ -500,17 +586,15 @@ pub async fn add_base_nodes() {
 
         let input = translate_strings.concat();
 
+        println!("Sending Translation to LibreTranslate");
+
         let data = translate(source, target, input)
             .await
             .unwrap();
 
-        let mut phrases: Vec<(String, String)> = Vec::new();
-
         //let en = data.input.split(". ").into_iter();
         let fr = data.output.split(".\n");
         let en = data.input.split(".\n");
-
-        println!("{:?}", &phrases);
 
         let copy = nodes.clone();
 
@@ -539,7 +623,7 @@ pub async fn add_base_nodes() {
             let _ = models::Nodes::create(&node);
         };
 
-        println!("************BASE NODES*************");
+        println!("************ADDED BASE NODES*************");
 
     };
 }

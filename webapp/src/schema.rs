@@ -40,6 +40,7 @@ table! {
         date_created -> Timestamp,
         statements -> Array<Int4>,
         inclusivity -> Numeric,
+        slug -> Varchar,
     }
 }
 

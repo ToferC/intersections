@@ -18,4 +18,4 @@ pub use authentication::{EmailVerification, InsertableVerification,
     PasswordResetToken, InsertablePasswordResetToken};
 pub use graph::{generate_node_cyto_graph,
     GEdge, GNode, CytoEdge, CytoNode, CytoGraph};
-pub use phrase::{InsertablePhrase, Phrases, generate_experience_phrases};
+pub use phrase::{InsertablePhrase, Phrases};

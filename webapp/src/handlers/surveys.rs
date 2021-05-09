@@ -1,4 +1,4 @@
-use std::sync::{Mutex, MutexGuard};
+use std::{sync::{Mutex, MutexGuard}};
 use actix_web::{web, HttpRequest, HttpResponse, Responder, post, get, ResponseError};
 use bigdecimal::{BigDecimal, ToPrimitive};
 use actix_identity::Identity;
@@ -6,8 +6,8 @@ use inflector::Inflector;
 use num_bigint::{ToBigInt};
 use serde::{Deserialize, Serialize};
 
-use crate::{AppData, generate_basic_context, models::generate_experience_phrases, models::RawExperience};
-use crate::models::{Experience, Experiences, NewPerson, People, Node, Nodes, Communities, CommunityData};
+use crate::{AppData, generate_basic_context};
+use crate::models::{Experience, Experiences, RawExperience, NewPerson, People, Node, Nodes, Communities, CommunityData};
 use error_handler::error_handler::CustomError;
 
 #[derive(Deserialize, Debug)]
@@ -167,10 +167,10 @@ pub async fn handle_experience_form_input(
 
                 let node_name = form.name.to_lowercase().trim().to_owned();
 
-                let mut raw_exp = RawExperience {
-                    node_name: node_name.to_owned(),
-                    statements: Vec::new(),
-                };
+                let mut raw_exp = RawExperience::new(
+                    node_name.to_owned(),
+                    Vec::new(),
+                );
             
                 let mut lived_statements = vec!();
             
@@ -189,12 +189,12 @@ pub async fn handle_experience_form_input(
                     raw_exp.statements.push(form.response_3.to_lowercase().trim().to_owned());
                 };
 
-                let phrase_ids = generate_experience_phrases(&lang, raw_exp)
+                let phrase_ids = raw_exp.generate_experience_phrases(&lang)
                     .await
                     .expect("Unable to generate phrases for experience");
 
                 let node = Node::new(
-                    phrase_ids[0],
+                    raw_exp.name_id,
                     form.name.to_lower_case().trim().to_owned(),
                     form.domain.to_lowercase().trim().to_owned(),
                 );
@@ -241,18 +241,16 @@ pub async fn handle_experience_form_input(
                         new_node.id
                     }
                 };
-
-                let name_id = phrase_ids.first().unwrap();
-                let statement_phrase_ids = phrase_ids.clone().into_iter().skip(1).collect();
                 
                 // Insert experience to db
                 let l = Experience::new(
-                    *name_id,
+                    raw_exp.name_id,
                     node.domain_token.clone(),
                     new_person.id,
                     node_id,
-                    statement_phrase_ids,
+                    raw_exp.phrase_ids,
                     inclusivity.to_owned(),
+                    node.slug.to_owned(),
                 );
             
                 let new_experience = Experiences::create(&l).expect("Unable to create experience.");
@@ -370,10 +368,7 @@ pub async fn add_handle_experience_form_input(
 
     let node_name = form.name.to_lowercase().trim().to_owned();
 
-    let mut raw_exp = RawExperience {
-        node_name: node_name.to_owned(),
-        statements: Vec::new(),
-    };
+    let mut raw_exp = RawExperience::new(node_name.to_owned(), Vec::new());
 
     let mut lived_statements = vec!();
 
@@ -392,12 +387,12 @@ pub async fn add_handle_experience_form_input(
         raw_exp.statements.push(form.response_3.to_lowercase().trim().to_owned());
     };
 
-    let phrase_ids = generate_experience_phrases(&lang, raw_exp)
+    let result = raw_exp.generate_experience_phrases(&lang)
         .await
         .expect("Unable to generate phrases for experience");
 
     let node = Node::new(
-        phrase_ids[0],
+        raw_exp.name_id,
         form.name.to_lower_case().trim().to_owned(),
         form.domain.to_lowercase().trim().to_owned(),
     );
@@ -438,17 +433,15 @@ pub async fn add_handle_experience_form_input(
             new_node.id
         }
     };
-
-    let name_id = phrase_ids.first().unwrap();
-    let statement_phrase_ids = phrase_ids.clone().into_iter().skip(1).collect();
     
     let l = Experience::new(
-        *name_id,
+        raw_exp.name_id,
         node.domain_token.clone(),
         p.id,
         node_id,
-        statement_phrase_ids,
+        raw_exp.phrase_ids,
         inclusivity.to_owned(),
+        node.slug.to_owned(),
     );
 
     let new_experience = Experiences::create(&l).expect("Unable to create experience.");

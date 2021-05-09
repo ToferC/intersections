@@ -7,9 +7,9 @@
 {% block content %}
     <div class="col-md m-md-2 m-1">
         <br>
-        <h1>{{ node.node_name | title }} - {{ node.domain_token | title }} in {{ community.tag }}</h1>
+        <h1>{{ node_name | title }} - {{ node.domain_token | title }} in {{ community.tag }}</h1>
         <p><a href="/{{ lang }}/full_community_graph/{{ community.slug }}">View full community graph</a> | <a href="/{{ lang }}">Return to Index</a></p>
-        <p><a href="/{{ lang }}/community_node_graph/{{ community.slug }}/{{ node.slug }}">View graph for {{ node.node_name }}</a></p>
+        <p><a href="/{{ lang }}/community_node_graph/{{ community.slug }}/{{ node.slug }}">View graph for {{ node_name }}</a></p>
         <hr>
         <p>The table below shows the data from this specific node.</p>
         <button class="btn btn-info" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
@@ -81,7 +81,7 @@
     <div class="col-md m-md-2 m-1">
         <br>
         <h1>Associated Experiences</h1>
-        <p>These are experiences from other nodes that have been linked to the {{ node.domain_token }} trait of {{ node.node_name }}. 
+        <p>These are experiences from other nodes that have been linked to the {{ node.domain_token }} trait of {{ node_name }}. 
             They are presented here to show how the nodes relate and how by looking at more than one facet of a person's experience, 
             we can better understand our people's needs.</p>
         <hr>

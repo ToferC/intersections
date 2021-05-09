@@ -96,6 +96,7 @@ pub async fn node_page(
             ctx.insert("community_slug", "");
         
             ctx.insert("node", &node);
+            ctx.insert("node_name", &node_name.text);
             
             ctx.insert("node_experience", &node_experience);
         
@@ -161,10 +162,10 @@ pub async fn community_node_page(
             match node_select {
                 Ok((node, node_name)) => {
 
-                    // get connected nodes via people with experiencee connections to our prime node and community
+                    // get connected nodes via people with experience connections to our prime node and community
                     let experience_vec: Vec<Experiences> = experiences::table
                         .filter(experiences::person_id.eq_any(&community_people_ids)
-                            .and(experiences::node_name.eq(&node_name.id)))
+                            .and(experiences::node_id.eq(&node.id)))
                         .load::<Experiences>(&conn)
                         .expect("Error loading connected experiences");
                 
@@ -213,8 +214,9 @@ pub async fn community_node_page(
                                     person_id: l.person_id,
                                     node_id: l.node_id,
                                     date_created: l.date_created,
-                                    statements: l.statements.to_owned(),
+                                    statements: l.statements.clone(),
                                     inclusivity: l.inclusivity.clone(),
+                                    slug: node.slug.clone(),
                                 });
                             }
                             // count people associated to multiple similar nodes
@@ -233,9 +235,11 @@ pub async fn community_node_page(
                     // Aggregate info from experiences related to the prime node
                     let node_experience = AggregateExperience::from(experience_vec, &lang);
                 
-                    ctx.insert("title", &format!("{} node in {} community", &node_name.text, &community.tag));
+                    ctx.insert("title", &format!("{} node in {} community", &node_experience.name, &community.tag));
                 
                     ctx.insert("node", &node);
+
+                    ctx.insert("node_name", &node_name.text);
                     
                     ctx.insert("node_experience", &node_experience);
                 

@@ -11,10 +11,10 @@ use std::iter::FromIterator;
 use error_handler::error_handler::CustomError;
 use database;
 
-use crate::models::{People, Nodes, Phrases};
+use crate::models::{People, Nodes, Phrases, InsertablePhrase};
 use crate::schema::{experiences, nodes, phrases};
 
-use super::phrase;
+use libretranslate::{translate, Language};
 
 #[derive(Debug, Serialize, Deserialize, AsChangeset, Insertable)]
 #[table_name = "experiences"]
@@ -33,26 +33,20 @@ pub struct Experience {
     // Expressed as "In the workplace, this experience makes me feel {adjective}."
     pub statements: Vec<i32>,
     pub inclusivity: BigDecimal,
-}
-
-#[derive(Debug, Serialize, Deserialize)]
-pub struct RawExperience {
-    // Represents raw user entered data that will be used to construct an experience and nodes
-    // with translations
-    pub node_name: String,
-    pub statements: Vec<String>,
+    pub slug: String,
 }
 
 impl Experience {
-    pub fn new(node_name: i32, node_domain: String, person_id: i32, node_id: i32, statements: Vec<i32>, inclusivity: BigDecimal) -> Self {
+    pub fn new(node_name: i32, node_domain: String, person_id: i32, node_id: i32, statements: Vec<i32>, inclusivity: BigDecimal, slug: String) -> Self {
         Experience {
-            node_name: node_name,
-            node_domain: node_domain,
-            person_id: person_id,
-            node_id: node_id, 
+            node_name,
+            node_domain,
+            person_id,
+            node_id, 
             date_created: chrono::Utc::now().naive_utc(),
-            statements: statements,
-            inclusivity: inclusivity,
+            statements,
+            inclusivity,
+            slug,
         }
     }
 
@@ -65,6 +59,7 @@ impl Experience {
             date_created: experience.date_created,
             statements: experience.statements.clone(),
             inclusivity: experience.inclusivity.clone(),
+            slug: experience.slug.clone(),
         }
     }
 }
@@ -84,6 +79,7 @@ pub struct Experiences {
     // Expressed as "In the workplace, this experience makes me feel {adjective}."
     pub statements: Vec<i32>,
     pub inclusivity: BigDecimal,
+    pub slug: String,
 }
 
 impl Experiences {
@@ -260,8 +256,7 @@ pub struct AggregateExperience {
 
 impl AggregateExperience {
     pub fn from(experience_vec: Vec<Experiences>, lang: &str) -> AggregateExperience {
-        
-        
+        // returns an aggregate experience in the language requested
         
         let domain = &experience_vec[0].node_domain;
         
@@ -281,7 +276,7 @@ impl AggregateExperience {
         };
         
         let statement_phrases = Phrases::get_phrases_from_ids(phrase_ids, &lang)
-        .expect("Unable to load phrases from experience");
+            .expect("Unable to load phrases from experience");
         
         let name = &statement_phrases[0].text;
 
@@ -302,5 +297,96 @@ impl AggregateExperience {
             mean_inclusivity: inclusivity / count as f32,
             frequency_distribution: v,
         }
+    }
+}
+
+#[derive(Debug, Serialize, Deserialize, Clone)]
+pub struct RawExperience {
+    // Represents raw user entered data that will be used to construct an experience and nodes
+    // with translations
+    pub node_name: String,
+    pub name_id: i32,
+    pub statements: Vec<String>,
+    pub phrase_ids: Vec<i32>,
+}
+
+impl RawExperience {
+
+    pub fn new(node_name: String, statements: Vec<String>) -> Self {
+        RawExperience {
+            node_name,
+            name_id: 0,
+            statements,
+            phrase_ids: Vec::new(),
+        }
+    }
+
+    pub async fn generate_experience_phrases(&mut self, lang: &str) -> Result<bool, CustomError> {
+        // Translates a complete experience including node name and statements
+        // Returns a String that is meant to be split on "\n."
+        
+        let mut translate_strings: Vec<String> = Vec::new();
+        
+        translate_strings.push(self.node_name.clone());
+        
+        for s in &self.statements {
+            translate_strings.push(format!("{}.\n", &s));
+        };
+        
+        let mut source = Language::English;
+        let mut target = Language::French;
+        
+        let translate_lang = match &lang {
+            &"en" => {
+                "fr".to_string()
+            },
+            &"fr" => {
+                source = Language::French;
+                target = Language::English;
+                "en".to_string()
+            },
+            _ => {
+                "fr".to_string()
+            },
+        };
+        
+        println!("Translating experience: {}", &self.node_name);
+        
+        let source = Language::English;
+        
+        let input = translate_strings.concat();
+        
+        let data = translate(source, target, input)
+        .await
+        .unwrap();
+        
+        let input = data.input.split(".\n");
+        let output = data.output.split(".\n");
+                
+        for (n,(i, o)) in input.into_iter().zip(output).enumerate() {
+
+            
+            let phrase = InsertablePhrase::new(lang, i.to_lowercase().trim().replace("/",""));
+            
+            let phrase = Phrases::create(&phrase).expect("Unable to create phrase");
+            
+            let trans = Phrases {
+                id: phrase.id,
+                lang: translate_lang.to_owned(),
+                text: o.to_lowercase().trim().replace("/",""),
+            };
+            
+            let translation = Phrases::add_translation(trans).expect("Unable to add translation phrase");
+            
+            if n == 0 {
+                self.name_id = phrase.id;
+                println!("Success - Name: {} ({}) -> {} ({})", &self.node_name, phrase.id, &translation.text, translation.id);
+            } else {
+                self.phrase_ids.push(phrase.id);
+                println!("Success: {} ({}) -> {} ({})", &self.node_name, phrase.id, &translation.text, translation.id);
+            };   
+        };
+        
+        Ok(true)
     }
 }
