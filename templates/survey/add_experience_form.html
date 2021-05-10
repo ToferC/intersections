@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block title %}
-    <title>Add an experience</title>
+    <title>{{ fluent(key="add-experience", lang=lang )}}</title>
 {% endblock title %}
 
 {% block add_preload %}
@@ -11,111 +11,112 @@
 {% block content %}
         <div class="col-md m-md-2 m-1">
             <br>
-            <h1>Add another experience</h1>
-            <p><strong>OR</strong>  <a class="btn btn-dark" href="/{{ lang }}/person/{{ user_code }}">Take me to my completed profile.</a></p>
+            <h1>{{ fluent(key="add-experience", lang=lang )}}</h1>
+            <p><strong>{{ fluent(key="or", lang=lang )}}</strong>  <a class="btn btn-dark" href="/{{ lang }}/person/{{ user_code }}">{{ fluent(key="take-to-profile", lang=lang )}}.</a></p>
             <hr>
-            <h2>Your unique code is:</h2> <p><strong>{{ user_code }}</strong></p>
-            <p>You can make a copy of this code or request an email when you finish your profile. Only someone with this code can see your profile.</p>
+            <h2>{{ fluent(key="unique-code", lang=lang )}}:</h2> <p><strong>{{ user_code }}</strong></p>
+            <p>{{ fluent(key="unique-code-explanation", lang=lang )}}</p>
             <hr>
 
             {% set experience_len = people_experiences | last %}
             {% set prog_bar = experience_len.experiences | length %}
             {% set progbar_width = prog_bar / 6 * 100 %}
 
-            <strong>Progress ({{ prog_bar }}/6)</strong>
+            <strong>{{ fluent(key="progress", lang=lang )}} ({{ prog_bar }}/6)</strong>
 
             <div class="progress">
                 <div class="progress-bar bg-success" style="width: {{progbar_width}}%" role="progressbar" aria-valuenow="prog_bar" aria-valuemin="0" aria-valuemax="100"></div>
             </div>
             {% if prog_bar > 5 %}
-            <p>*You can add more if you like, though.</p>
+            <p>*{{ fluent(key="may-add-more", lang=lang )}}</p>
             {% endif %}
 
             <hr>
-                <br>
-                <form action="/{{ lang }}/add_experience_form/{{ user_code }}" method=POST id="experienceForm" name="experienceForm">
+            <br>
+            <form action="/{{ lang }}/add_experience_form/{{ user_code }}" method=POST id="experienceForm" name="experienceForm">
                 
-                    <div class="row">
-                        <div class="col m-md-2 m-1">
-                            <h2>1. Name your experience</h2>
-                            
+            <div class="row">
+                <div class="col m-md-2 m-1">
+                    <h2>{{ fluent(key="question-one", lang=lang )}}</h2>
+                    
+                    <label>
+                        <input class="form-control form-control-lg mdb-autocomplete" id="node_name_autocomplete" name="name" placeholder="{{ fluent(key="question-one-placeholder", lang=lang )}}" required
+                        maxlength="32" autocomplete="off">
+                        <small id="experience_help" class="form-text text-muted">{{ fluent(key="question-one-helper", lang=lang )}}</small>
+                    </label>
+                </div>
+                <div class="col m-md-2 m-1">
+                    <div class="card card-body">
+                        <p><strong>{{ fluent(key="tip", lang=lang )}} </strong> {{ fluent(key="tip-string", number=prog_bar, lang=lang )}}</p>
+                        <p>{{ fluent(key="learning-one", lang=lang )}}</p>
+                    </div>
+                </div>
+            </div>
+    
+                <hr>
+    
+                <h2>{{ fluent(key="question-two", lang=lang )}}</h2>
                 
-                            <label>
-                                <input class="form-control form-control-lg mdb-autocomplete" id="node_name_autocomplete" name="name" placeholder="Experience name..." required
-                                maxlength="32" autocomplete="off">
-                                <small id="experience_help" class="form-text text-muted">Enter a few words to name your experience here.</small>
-                            </label>
-                        </div>
-                        <div class="col m-md-2 m-1">
-                            <div class="card card-body">
-                                <p><strong>Tip: </strong>{{ helper_text }}</p>
-                                <p>[Placeholder for learning moment.]</p>
-                            </div>
-                        </div>
-                    </div>
-                    <hr>
-
-                        <h2>2. Is this experience part of you as a person or is it a role related to your work?</h2>
-                    
-                        <fieldset>
-                            <legend>This experience is...</legend>
-                            <div>
-                                <input type="radio" id="person" name="domain" value="Person" checked>
-                                <label for="person">A Personal Experience</label>
-                            </div>
-            
-                            <div>
-                                <input type="radio" id="role" name="domain" value="Role">
-                                <label for="role">An Organizational Role</label>
-                            </div>
-                        </fieldset>
-
-                    <hr>
-                    <h2>3. Describe your experience</h2>
-                    
-                    <p><strong>Though this experience, in the workplace...</strong></p>
+                <fieldset>
+                    <legend>{{ fluent(key="experience-is", lang=lang )}}</legend>
                     <div>
-                        <label>
-                            <strong>I feel</strong>
-                            <input class="form-control form-control-lg" name="response_1" required>
-                            <small id="response_1_help" class="form-text text-muted">Enter a few words about how this experience interacts with your work life.</small>
-
-                        </label>
+                        <input type="radio" id="person" name="domain" value="Person" checked>
+                        <label for="person">{{ fluent(key="personal", lang=lang )}}</label>
                     </div>
-
+    
                     <div>
-                        <label>
-                            <strong>I feel</strong>
-                            <input class="form-control form-control-lg" name="response_2">
-                            <small id="response_2_help" class="form-text text-muted">Enter a few words about how this experience interacts with your work life.</small>
-
-                        </label>
+                        <input type="radio" id="role" name="domain" value="Role">
+                        <label for="role">{{ fluent(key="organizational", lang=lang )}}</label>
                     </div>
-
-                    <div>
-                        <label>
-                            <strong>I feel</strong>
-                            <input class="form-control form-control-lg" name="response_3">
-                            <small id="response_3_help" class="form-text text-muted">Enter a few words about how this experience interacts with your work life.</small>
-
-                        </label>
-                    </div>
-
-                    <hr>
-                    <h2>4. Identify how this experience impacts your sense of inclusion in the workplace.</h2>
-
-                    <label for="inclusivity">Place the slider below where you think this experience falls on the range of being more or less included in your workplace.</label>
+                </fieldset>
+    
+                <hr>
+                
+                <h2>{{ fluent(key="question-three", lang=lang )}}</h2>
+                        
+                <p><strong>{{ fluent(key="through-this", lang=lang )}}</strong></p>
+                <div>
+                    <label>
+                        <strong>{{ fluent(key="i-feel", lang=lang )}}</strong>
+                        <input class="form-control form-control-lg" name="response_1" required>
+                        <small id="response_1_help" class="form-text text-muted">{{ fluent(key="question-three-helper", lang=lang )}}</small>
+                    </label>
+                </div>
+    
+                <div>
+                    <label>
+                        <strong>{{ fluent(key="i-feel", lang=lang )}}</strong>
+                        <input class="form-control form-control-lg" name="response_2">
+                        <small id="response_2_help" class="form-text text-muted">{{ fluent(key="question-three-helper", lang=lang )}}</small>
+    
+                    </label>
+                </div>
+    
+                <div>
+                    <label>
+                        <strong>{{ fluent(key="i-feel", lang=lang )}}</strong>
+                        <input class="form-control form-control-lg" name="response_3">
+                        <small id="response_3_help" class="form-text text-muted">{{ fluent(key="question-three-helper", lang=lang )}}</small>
+    
+                    </label>
+                </div>
+    
+                <hr>
+                <h2>{{ fluent(key="question-four", lang=lang )}}</h2>
+    
+                    <label for="inclusivity">{{ fluent(key="drag-slider", lang=lang )}}</label>
     
                     <input type="range" id="inclusivity" name="inclusivity"
                     min="-100" max="100" class="slider">
-                    <label for="inclusivity_l" style="text-align:left"><strong>More Excluded</strong></label>
-                    <label for="inclusivity_r" style="float:right"><strong>More Included</strong></label>
+                    <label for="inclusivity_l" style="text-align:left"><strong>{{ fluent(key="more-excluded", lang=lang )}}</strong></label>
+                    <label for="inclusivity_r" style="float:right"><strong>{{ fluent(key="more-included", lang=lang )}}</strong></label>
     
                     <hr>
+    
                     <button class="btn g-recaptcha btn-dark" 
                     data-sitekey="6LfAltkZAAAAAN7rJGBvRUPm36M1aiL7q2a8SznA" 
                     data-callback='onSubmit' 
-                    data-action='submit' type=submit>Save Experience</button>
+                    data-action='submit' type=submit>{{ fluent(key="save-experience-button", lang=lang )}}</button>
                 </form>
                 
         </div>

@@ -12,7 +12,7 @@
     <div class="col m-md-2 m-1">
         <br>
         
-        <h1>{{ fluent(key="add-experience", lang=lang )}}e</h1>
+        <h1>{{ fluent(key="add-experience", lang=lang )}}</h1>
         <hr>
 
         <form name="ExperienceForm" id="experienceForm" action=/{{ lang }}/first_experience_form/{{ community.code }} method=POST>
@@ -42,7 +42,7 @@
             </div>
             <div class="col m-md-2 m-1">
                 <div class="card card-body">
-                    <p><strong>{{ fluent(key="tip", lang=lang )}} </strong> {{ fluent(key="tip-one", lang=lang )}}</p>
+                    <p><strong>{{ fluent(key="tip", lang=lang )}} </strong> {{ fluent(key="tip-string", number=0, lang=lang )}}</p>
                     <p>{{ fluent(key="learning-one", lang=lang )}}</p>
                 </div>
             </div>
@@ -113,9 +113,7 @@
                 data-callback='onSubmit' 
                 data-action='submit' type=submit>{{ fluent(key="save-experience-button", lang=lang )}}</button>
             </form>
-            
-            <hr>
-        
+                    
     </div>
 {% endblock content %}
 

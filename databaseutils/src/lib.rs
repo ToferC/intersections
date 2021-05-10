@@ -323,7 +323,7 @@ pub async fn generate_dummy_data(community_id: i32) {
 
     for l in base_experiences.iter() {
 
-        let mut raw_exp = RawExperience::new( 
+        let raw_exp = RawExperience::new( 
             l.0.to_string(), 
             vec![l.4.to_string(), l.5.to_string(), l.6.to_string()],
         );
@@ -699,7 +699,7 @@ pub async fn batch_translate(raw_experience_vec: Vec<RawExperience>, lang: &str)
     let fr: Vec<String> = data.output.split(".\n").map(|s| s.to_string()).collect();
 
     let mut row_counter: usize = 0;
-    for (i, e) in raw_experience_vec.iter().enumerate() {
+    for e in raw_experience_vec.iter() {
         
         // node_name
         let trans = models::Phrases {
@@ -714,7 +714,6 @@ pub async fn batch_translate(raw_experience_vec: Vec<RawExperience>, lang: &str)
         println!("Success - node name: {} ({}) -> {} ({})", &e.node_name, e.name_id, &translation.text, translation.id);
 
         row_counter += 1;
-        println!("{}", &row_counter);
 
         // statements
         for phrase_id in e.phrase_ids.clone() {
@@ -726,7 +725,6 @@ pub async fn batch_translate(raw_experience_vec: Vec<RawExperience>, lang: &str)
             };
 
             row_counter += 1;
-            println!("{}", &row_counter);
 
             let translation = models::Phrases::add_translation(trans).expect("Unable to add translation phrase");
 

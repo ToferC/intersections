@@ -201,8 +201,27 @@ save-experience-button = Save Experience
 
 question-one-placeholder = Experience name...
 question-one-helper = Enter a few words to name your experience here.
+
+### Tips
 tip = Tip:
-tip-one = Add one element of your lived experience at a time. You may wish to add an experience related to your race or ethnic identity.
+tip-string = { $number  ->
+    [0] Add one element of your lived experience at a time. You may wish to add an experience related to your race or ethnic identity.
+    [1] You may wish to add an experience related to your gender or sexual identity.
+    [2] You are doing great! You may wish to add an experience related to your socio-economic background or language.
+    [3] You may wish to add an experience related to your religion or level of education.
+    [4] You may wish to add an experience related to your ability or a permanent or temporary disability.
+    [5] You are creating a true intersectional profile. You may wish to add an experience related to your current state of mental health or age.
+    [6] You may wish to add an experience related to your body perception, personality type or caregiving responsibilities.
+    [7] You may wish to add an experience related to a life experience or stress that you going through.
+    *[other] Amazing. You’ve got the hang of this. Add as many additional experiences as you like.
+}
 
 ### Learning Moments
 learning-one = [Placeholder for learning moment.]
+
+## Add Experience Form
+take-to-profile = Take me to my completed profile
+unique-code = Your unique code is:
+unique-code-explanation = You can make a copy of this code or request an email when you finish your profile. Only someone with this code can see your profile.
+progress = Progress
+may-add-more = You can add more, if you like.

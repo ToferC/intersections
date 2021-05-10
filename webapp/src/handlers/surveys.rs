@@ -337,9 +337,9 @@ pub async fn add_experience_form_handler(
 
     // translate to fluent keys
     let helper_options = vec![
-        "You may wish to add an experience related to your gender identity or sexuality.", 
-        "You are doing great! You may wish to add an experience related to your socio-economic background or language.", 
-        "You may wish to add an experience related to your religion or level of education.", 
+        "two", 
+        "three", 
+        "four", 
         "You may wish to add an experience related to your ability or a permanent or temporary disability.", 
         "You are creating a true intersectional profile. You may wish to add an experience related to your current state of mental health or age.",
         "You may wish to add an experience related to your body perception, personality type or caregiving responsibilities.",

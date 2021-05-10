@@ -40,7 +40,7 @@ pub async fn person_page(
             let mut aggregate_experiences: Vec<AggregateExperience> = Vec::new();
         
             for p in people_with_experiences.into_iter() {
-                for (l, phrases) in p.experiences {
+                for (l, _phrases) in p.experiences {
                     let (node, _node_name) = Nodes::find(l.node_id, &lang).expect("Unable to load experiences");
                     let experiences = Experiences::find_from_node_id(node.id, &lang).expect("Unable to load experiences");
 

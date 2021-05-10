@@ -3,9 +3,8 @@ use std::fmt;
 
 use bigdecimal::{ToPrimitive};
 use std::collections::{BTreeMap, HashMap};
-use inflector::Inflector;
 
-use crate::models::{Experiences, Nodes, People};
+use crate::models::{Experiences, Nodes};
 
 use super::AggregateExperience;
 

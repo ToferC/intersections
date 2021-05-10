@@ -1,6 +1,6 @@
 [package]
 name = "webapp"
-version = "0.1.0"
+version = "0.3.0"
 authors = ["ToferC <cgeist7@gmail.com>"]
 edition = "2018"
 build = "build.rs"

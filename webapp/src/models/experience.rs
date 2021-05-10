@@ -2,7 +2,6 @@ use serde::{Serialize, Deserialize};
 use diesel::prelude::*;
 use diesel::{QueryDsl, BelongingToDsl};
 use bigdecimal::BigDecimal;
-use std::collections::HashMap;
 
 use bigdecimal::{ToPrimitive};
 use std::collections::BTreeMap;

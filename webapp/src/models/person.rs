@@ -5,7 +5,7 @@ use diesel::RunQueryDsl;
 use diesel::dsl::any;
 use diesel::{QueryDsl, BelongingToDsl};
 
-use crate::schema::{people, phrases, experiences};
+use crate::schema::{people};
 use crate::models::{Experiences, Communities, Phrases};
 use crate::generate_unique_code;
 use error_handler::error_handler::CustomError;
