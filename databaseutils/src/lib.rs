@@ -195,8 +195,12 @@ pub async fn import_demo_data(community_id: i32) {
     let mut comm_data = comm_data.to_owned();
     let mut temp_incl_map: BTreeMap<i32, f32> = comm_data.inclusivity_map.clone();
 
+    let mut raw_experience_vec: Vec<RawExperience> = Vec::new();
+
+    // enter base data and prepare raw experience vecs for translation
     for e in &data {
 
+        // create people
         let p = models::NewPerson::new(community_id);
 
         let person = models::People::create(&p).expect("Unable to insert person.");
@@ -204,7 +208,7 @@ pub async fn import_demo_data(community_id: i32) {
         comm_data.members += 1;
 
 
-        for i in e[1].as_array() { // experience Array
+        for i in e[1].as_array() { // experience Array per each person
             
             for n in i {
                 let name = n[1]["node_name"].as_str().unwrap().trim().to_owned();
@@ -247,11 +251,11 @@ pub async fn import_demo_data(community_id: i32) {
                 };
 
                 let l = models::Experience::new(
-                    raw_exp.name_id,
+                    raw_exp.name_id.clone(),
                     node.domain_token.to_owned(),
                     person.id,
                     node.id, 
-                    raw_exp.phrase_ids,
+                    raw_exp.phrase_ids.clone(),
                     inclusivity.to_owned(),
                     node.slug,
                 );
@@ -264,10 +268,79 @@ pub async fn import_demo_data(community_id: i32) {
                 let total: f32 = temp_incl_map.values().sum();
 
                 comm_data.mean_inclusivity = total / temp_incl_map.len() as f32;
+
+                raw_experience_vec.push(raw_exp);
             };
         };
     };
-    
+
+    // send text to Libretranslate
+    let mut translate_strings: Vec<String> = Vec::new();
+        
+    for e in &raw_experience_vec {
+        translate_strings.push(format!("{}.\n", &e.node_name));
+
+        for (i, s) in e.statements.clone().iter().enumerate() {
+            if s != "" {
+                if i+1 == e.statements.len() {
+                    translate_strings.push(format!("{}", &s));
+                } else {
+                    translate_strings.push(format!("{}.\n", &s));
+                }
+            };
+        };
+    };
+
+    // Prepare translation
+    let source = Language::English;
+    let target = Language::French;
+
+    let input = translate_strings.concat();
+
+    // Send translation
+    println!("Sending translation to Libretranslate");
+
+    let data = translate(source, target, input)
+        .await
+        .unwrap();
+
+    //let en = data.input.split(". ").into_iter();
+    let fr: Vec<String> = data.output.split(".\n").map(|s| s.to_string()).collect();
+
+    let mut row_counter: usize = 0;
+    for (i, e) in raw_experience_vec.iter().enumerate() {
+        
+        // node_name
+        let trans = models::Phrases {
+            id: e.name_id,
+            lang: "fr".to_string(),
+            text: fr[row_counter].to_lowercase().replace("/",""),
+        };
+
+        row_counter += 1;
+
+        let translation = models::Phrases::add_translation(trans).expect("Unable to add translation phrase");
+
+        println!("Success - node name: {} ({}) -> {} ({})", &e.node_name, e.name_id, &translation.text, translation.id);
+
+        // statements
+        for phrase_id in e.phrase_ids.clone() {
+            // node_name
+            let trans = models::Phrases {
+                id: phrase_id,
+                lang: "fr".to_string(),
+                text: fr[row_counter].to_lowercase().replace("/",""),
+            };
+
+            row_counter += 1;
+
+            let translation = models::Phrases::add_translation(trans).expect("Unable to add translation phrase");
+
+            println!("Success - node name: {} ({}) -> {} ({})", &e.node_name, e.name_id, &translation.text, translation.id);
+
+        };
+    };
+
     comm_data.inclusivity_map = temp_incl_map;
     community.data = serde_json::to_value(comm_data).unwrap();
 
@@ -326,9 +399,15 @@ pub async fn generate_dummy_data(community_id: i32) {
     for e in &raw_exp_vec {
         translate_strings.push(format!("{}.\n", &e.node_name));
 
-        for s in e.statements.clone() {
-            translate_strings.push(format!("{}.\n", &s));
-        }
+        for (i, s) in e.statements.clone().iter().enumerate() {
+            if s != "" {
+                if i+1 == e.statements.len() {
+                    translate_strings.push(format!("{}", &s));
+                } else {
+                    translate_strings.push(format!("{}.\n", &s));
+                }
+            };
+        };
     };
 
     let source = Language::English;
@@ -596,7 +675,6 @@ pub async fn add_base_nodes() {
 
                 //let en = data.input.split(". ").into_iter();
                 let fr = data.output.split(".\n");
-                let en = data.input.split(".\n");
         
                 let copy = nodes.clone();
         

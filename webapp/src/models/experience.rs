@@ -325,15 +325,41 @@ impl RawExperience {
     }
 
     pub async fn generate_experience_phrases(&mut self, lang: &str) -> Result<bool, CustomError> {
+        // Saves experience phrases in language of origin
+
+        let phrase = InsertablePhrase::new(lang, self.node_name.to_lowercase().trim().replace("/",""));
+        
+        let phrase = Phrases::create(&phrase).expect("Unable to create phrase");
+
+        self.name_id = phrase.id;
+
+        for s in &self.statements {
+            let phrase = InsertablePhrase::new(lang, s.to_lowercase().trim().replace("/",""));
+        
+            let phrase = Phrases::create(&phrase).expect("Unable to create phrase");
+
+            self.phrase_ids.push(phrase.id);
+        }
+        
+        Ok(true)
+    }
+
+    pub async fn translate_experience_phrases(&mut self, lang: &str) -> Result<bool, CustomError> {
         // Translates a complete experience including node name and statements
         // Returns a String that is meant to be split on "\n."
         
         let mut translate_strings: Vec<String> = Vec::new();
         
-        translate_strings.push(self.node_name.clone());
+        translate_strings.push(format!("{}.\n", &self.node_name.clone()));
         
-        for s in &self.statements {
-            translate_strings.push(format!("{}.\n", &s));
+        for (i,s) in self.statements.iter().enumerate() {
+            if s != "" {
+                if i+1 == self.statements.len() {
+                    translate_strings.push(format!("{}", &s));
+                } else {
+                    translate_strings.push(format!("{}.\n", &s));
+                }
+            }
         };
         
         let mut source = Language::English;
@@ -363,31 +389,29 @@ impl RawExperience {
         .await
         .unwrap();
         
-        let input = data.input.split(".\n");
-        let output = data.output.split(".\n");
-                
-        for (n,(i, o)) in input.into_iter().zip(output).enumerate() {
+        // let input = data.input.split(".\n");
+        let output: Vec<String> = data.output.split(".\n").map(|s| s.to_string()).collect();
 
-            
-            let phrase = InsertablePhrase::new(lang, i.to_lowercase().trim().replace("/",""));
-            
-            let phrase = Phrases::create(&phrase).expect("Unable to create phrase");
-            
+        let name_trans = output.first().unwrap();
+
+        let trans = Phrases {
+            id: self.name_id,
+            lang: translate_lang.to_owned(),
+            text: name_trans.replace("/",""),
+        };
+        
+        let translation = Phrases::add_translation(trans).expect("Unable to add translation phrase");
+        println!("Success - Name: {} ({}) -> {} ({})", &self.node_name, self.name_id, &translation.text, translation.id);
+
+        for (id, s) in self.phrase_ids.clone().into_iter().zip(output.into_iter().skip(1)) {
             let trans = Phrases {
-                id: phrase.id,
+                id,
                 lang: translate_lang.to_owned(),
-                text: o.to_lowercase().trim().replace("/",""),
+                text: s.replace("/",""),
             };
             
             let translation = Phrases::add_translation(trans).expect("Unable to add translation phrase");
-            
-            if n == 0 {
-                self.name_id = phrase.id;
-                println!("Success - Name: {} ({}) -> {} ({})", &self.node_name, phrase.id, &translation.text, translation.id);
-            } else {
-                self.phrase_ids.push(phrase.id);
-                println!("Success: {} ({}) -> {} ({})", &self.node_name, phrase.id, &translation.text, translation.id);
-            };   
+            println!("Success - Name: {} ({}) -> {} ({})", &self.node_name, id, &translation.text, translation.id);    
         };
         
         Ok(true)

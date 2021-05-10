@@ -7,7 +7,7 @@ use num_bigint::{ToBigInt};
 use serde::{Deserialize, Serialize};
 
 use crate::{AppData, generate_basic_context};
-use crate::models::{Experience, Experiences, RawExperience, NewPerson, People, Node, Nodes, Communities, CommunityData};
+use crate::models::{Experience, Experiences, RawExperience, NewPerson, People, Node, Nodes, Communities, CommunityData, Phrases};
 use error_handler::error_handler::CustomError;
 
 #[derive(Deserialize, Debug)]
@@ -34,14 +34,14 @@ pub struct AddExperienceForm {
 #[derive(Deserialize, Serialize, Debug)]
 pub struct RenderPerson {
     pub person: People,
-    pub experiences: Vec<Experiences>,
+    pub experiences: Vec<(Experiences, Vec<Phrases>)>,
     pub total_inclusivity: f32,
 }
 
 impl RenderPerson {
-    pub fn from(person: &People, related: bool) -> Result<Vec<Self>, CustomError> {
+    pub fn from(person: &People, related: bool, lang: &str) -> Result<Vec<Self>, CustomError> {
 
-        let result = People::get_experiences(&person, related)?;
+        let result = People::get_experiences(&person, related, &lang)?;
 
         let mut result_vec: Vec<RenderPerson> = Vec::new();
 
@@ -49,7 +49,7 @@ impl RenderPerson {
 
             let mut total_inclusivity: BigDecimal = BigDecimal::new(0.to_bigint().unwrap(), 0);
 
-            for l in &r.1 {
+            for (l, _p) in &r.1 {
                 total_inclusivity = total_inclusivity + &l.inclusivity;
             };
 
@@ -59,7 +59,7 @@ impl RenderPerson {
         
             let p = RenderPerson {
                 person: r.0,
-                experiences: r.1,
+                experiences: r.1.clone(),
                 total_inclusivity: total_inclusivity,
             };
 
@@ -189,9 +189,13 @@ pub async fn handle_experience_form_input(
                     raw_exp.statements.push(form.response_3.to_lowercase().trim().to_owned());
                 };
 
-                let phrase_ids = raw_exp.generate_experience_phrases(&lang)
+                let _phrase_ids = raw_exp.generate_experience_phrases(&lang)
                     .await
                     .expect("Unable to generate phrases for experience");
+
+                let _translations = raw_exp.translate_experience_phrases(&lang)
+                    .await
+                    .expect("Unable to translate phrases");
 
                 let node = Node::new(
                     raw_exp.name_id,
@@ -207,17 +211,16 @@ pub async fn handle_experience_form_input(
                 let new_person = People::create(&person.clone()).expect("Unable to add person to DB");
                 
                 // Check if node exists, if not create it
-                let nodes = Nodes::find_all().unwrap();
-            
-                let tn = nodes.iter().find(|n| n.node_name == node.node_name);
-                
-                let node_id: i32 = match &tn {
+                let result = Nodes::find_by_slug(&node.slug, &lang);
+                            
+                let node= match result {
                     // target exists
-                    Some(target) => {
-                        target.id
+                    Ok((target, _p)) => {
+                        target
                     }
-                    None => {
+                    Err(e) => {
                         // no target
+                        println!("{}", e);
                         let new_node = Nodes::create(&node).expect("Unable to create node.");
                         
                         /*
@@ -234,20 +237,20 @@ pub async fn handle_experience_form_input(
             
                         let mut temp_data: MutexGuard<Vec<(String, String)>> = node_names.lock().expect("Unable to unlock node_names");
             
-                        temp_data.push((node_name.clone(), new_node.slug));
+                        temp_data.push((node_name.clone(), new_node.slug.clone()));
             
                         drop(temp_data);
             
-                        new_node.id
+                        new_node
                     }
                 };
                 
                 // Insert experience to db
                 let l = Experience::new(
-                    raw_exp.name_id,
+                    node.node_name,
                     node.domain_token.clone(),
                     new_person.id,
-                    node_id,
+                    node.id,
                     raw_exp.phrase_ids,
                     inclusivity.to_owned(),
                     node.slug.to_owned(),
@@ -327,7 +330,7 @@ pub async fn add_experience_form_handler(
     ctx.insert("all_node_names", &all_node_names);
 
     // add pull for experience data
-    let people_with_experiences = RenderPerson::from(&p, true).expect("Unable to load experiences");
+    let people_with_experiences = RenderPerson::from(&p, true, &lang).expect("Unable to load experiences");
     ctx.insert("people_experiences", &people_with_experiences);
 
     // translate to fluent keys
@@ -387,9 +390,13 @@ pub async fn add_handle_experience_form_input(
         raw_exp.statements.push(form.response_3.to_lowercase().trim().to_owned());
     };
 
-    let result = raw_exp.generate_experience_phrases(&lang)
+    let _phrase_ids = raw_exp.generate_experience_phrases(&lang)
         .await
         .expect("Unable to generate phrases for experience");
+
+    let _translations = raw_exp.translate_experience_phrases(&lang)
+        .await
+        .expect("Unable to translate phrases");
 
     let node = Node::new(
         raw_exp.name_id,
@@ -402,15 +409,15 @@ pub async fn add_handle_experience_form_input(
     let inclusivity = BigDecimal::new(inclusivity.to_bigint().unwrap(), 2);
     
     // Check if node exists, if not create it
-    let nodes = Nodes::find_all().unwrap();
-
-    let tn = nodes.iter().find(|n| n.node_name == node.node_name);
+    let result = Nodes::find_by_slug(&node.slug, &lang);
     
-    let node_id: i32 = match &tn {
-        Some(target) => {
-            target.id
+    let node = match result {
+        Ok((target, _p)) => {
+            target
         }
-        None => {
+        Err(e) => {
+            println!("{}", e);
+
             // no target
             let new_node = Nodes::create(&node).expect("Unable to create node.");
 
@@ -427,18 +434,18 @@ pub async fn add_handle_experience_form_input(
 
             // add node_names to appData
             let mut nn = node_names.lock().expect("Unable to unlock");
-            nn.push((node_name.clone(), new_node.slug));
+            nn.push((node_name.clone(), new_node.slug.clone()));
             drop(nn);
 
-            new_node.id
+            new_node
         }
     };
     
     let l = Experience::new(
-        raw_exp.name_id,
+        node.node_name,
         node.domain_token.clone(),
         p.id,
-        node_id,
+        node.id,
         raw_exp.phrase_ids,
         inclusivity.to_owned(),
         node.slug.to_owned(),

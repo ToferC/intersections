@@ -5,8 +5,8 @@ use diesel::RunQueryDsl;
 use diesel::dsl::any;
 use diesel::{QueryDsl, BelongingToDsl};
 
-use crate::schema::{people};
-use crate::models::{Experiences, Communities};
+use crate::schema::{people, phrases, experiences};
+use crate::models::{Experiences, Communities, Phrases};
 use crate::generate_unique_code;
 use error_handler::error_handler::CustomError;
 use database;
@@ -143,7 +143,7 @@ impl People {
         Ok(person)
     }
 
-    pub fn get_experiences(&self, related: bool) -> Result<Vec<(People, Vec<Experiences>)>, CustomError> {
+    pub fn get_experiences(&self, related: bool, lang: &str) -> Result<Vec<(People, Vec<(Experiences, Vec<Phrases>)>)>, CustomError> {
 
         let conn = database::connection()?;
 
@@ -169,11 +169,18 @@ impl People {
         let experiences = Experiences::belonging_to(&people_vec)
             .load::<Experiences>(&conn).expect("Unable to load experiences");
 
+        let mut xp = Vec::new();
+
+        for x in experiences {
+            let p = x.get_phrases(&lang);
+            xp.push((x, p));
+        }
+
         // group node_experiences by people
-        let grouped = experiences.grouped_by(&people_vec);
+        let grouped = xp.grouped_by(&people_vec);
 
         // structure result
-        let result: Vec<(People, Vec<Experiences>)> = people_vec
+        let result: Vec<(People, Vec<(Experiences, Vec<Phrases>)>)> = people_vec
             .into_iter()
             .zip(grouped)
             .collect();

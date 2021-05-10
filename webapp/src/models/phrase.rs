@@ -1,13 +1,10 @@
 use serde::{Serialize, Deserialize};
 use diesel::prelude::*;
-use diesel::{QueryDsl, BelongingToDsl};
+use diesel::{QueryDsl};
 
 use error_handler::error_handler::CustomError;
 use crate::schema::phrases;
 use database;
-
-use crate::models::RawExperience;
-use libretranslate::{translate, Language};
 
 /* Query suggestion
     experience::tables.inner_join(phrases::table

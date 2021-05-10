@@ -2,7 +2,7 @@ use std::{sync::Mutex};
 
 use actix_web::{web, get, HttpResponse, Responder, HttpRequest, ResponseError};
 use actix_identity::Identity;
-use crate::{AppData, generate_basic_context, models::Phrases};
+use crate::{AppData, generate_basic_context};
 
 use std::collections::HashMap;
 

@@ -3,15 +3,10 @@ use std::sync::Mutex;
 use actix_web::{web, get, post, HttpResponse, HttpRequest, Responder, ResponseError};
 use actix_identity::Identity;
 use crate::{AppData, generate_basic_context};
-use diesel::prelude::*;
-use diesel::{QueryDsl, BelongingToDsl};
 
 use crate::models::{Experiences, Nodes, People, Communities, CommunityData};
-use database;
 use crate::handlers::{RenderPerson, DeleteForm};
 use crate::models::AggregateExperience;
-
-use crate::schema::{people, nodes};
 
 #[get("/{lang}/person/{code}")]
 pub async fn person_page(
@@ -38,20 +33,20 @@ pub async fn person_page(
             ctx.insert("title", &title);
             
             // add pull for experience data
-            let people_with_experiences = RenderPerson::from(&p, true).expect("Unable to load experiences");
+            let people_with_experiences = RenderPerson::from(&p, true, &lang).expect("Unable to load experiences");
         
             ctx.insert("people_experiences", &people_with_experiences);
         
             let mut aggregate_experiences: Vec<AggregateExperience> = Vec::new();
         
             for p in people_with_experiences.into_iter() {
-                for l in p.experiences {
-                    let (node, node_name) = Nodes::find(l.node_id, &lang).expect("Unable to load experiences");
+                for (l, phrases) in p.experiences {
+                    let (node, _node_name) = Nodes::find(l.node_id, &lang).expect("Unable to load experiences");
                     let experiences = Experiences::find_from_node_id(node.id, &lang).expect("Unable to load experiences");
 
                     let mut xp = Vec::new();
 
-                    for (x, p) in experiences {
+                    for (x, _p) in experiences {
                         xp.push(x);
                     };
 
@@ -191,7 +186,7 @@ pub async fn delete_person_post(
                 let mut community = Communities::find(person.community_id).expect("Unable to load community");
 
                 // get the data specific to this profile
-                let person_with_experiences = RenderPerson::from(&person, false).expect("Unable to load experiences");
+                let person_with_experiences = RenderPerson::from(&person, false, &lang).expect("Unable to load experiences");
 
                 let comm_data: CommunityData = serde_json::from_value(community.data).unwrap();
 
@@ -199,7 +194,7 @@ pub async fn delete_person_post(
 
                 comm_data.members -= 1;
                 
-                for experience in &person_with_experiences[0].experiences {
+                for (experience, _phrases) in &person_with_experiences[0].experiences {
                     comm_data.experiences -= 1;
                     comm_data.inclusivity_map.remove(&experience.id);
                 };
