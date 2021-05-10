@@ -189,10 +189,12 @@ pub async fn handle_experience_form_input(
                     raw_exp.statements.push(form.response_3.to_lowercase().trim().to_owned());
                 };
 
+                // generate phrases for experience and node
                 let _phrase_ids = raw_exp.generate_experience_phrases(&lang)
                     .await
                     .expect("Unable to generate phrases for experience");
 
+                // translate user strings and map to existing phrases
                 let _translations = raw_exp.translate_experience_phrases(&lang)
                     .await
                     .expect("Unable to translate phrases");
