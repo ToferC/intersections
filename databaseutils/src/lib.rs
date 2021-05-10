@@ -274,71 +274,9 @@ pub async fn import_demo_data(community_id: i32) {
         };
     };
 
-    // send text to Libretranslate
-    let mut translate_strings: Vec<String> = Vec::new();
-        
-    for e in &raw_experience_vec {
-        translate_strings.push(format!("{}.\n", &e.node_name));
-
-        for (i, s) in e.statements.clone().iter().enumerate() {
-            if s != "" {
-                if i+1 == e.statements.len() {
-                    translate_strings.push(format!("{}", &s));
-                } else {
-                    translate_strings.push(format!("{}.\n", &s));
-                }
-            };
-        };
-    };
-
-    // Prepare translation
-    let source = Language::English;
-    let target = Language::French;
-
-    let input = translate_strings.concat();
-
-    // Send translation
-    println!("Sending translation to Libretranslate");
-
-    let data = translate(source, target, input)
-        .await
-        .unwrap();
-
-    //let en = data.input.split(". ").into_iter();
-    let fr: Vec<String> = data.output.split(".\n").map(|s| s.to_string()).collect();
-
-    let mut row_counter: usize = 0;
-    for (i, e) in raw_experience_vec.iter().enumerate() {
-        
-        // node_name
-        let trans = models::Phrases {
-            id: e.name_id,
-            lang: "fr".to_string(),
-            text: fr[row_counter].to_lowercase().replace("/",""),
-        };
-
-        row_counter += 1;
-
-        let translation = models::Phrases::add_translation(trans).expect("Unable to add translation phrase");
-
-        println!("Success - node name: {} ({}) -> {} ({})", &e.node_name, e.name_id, &translation.text, translation.id);
-
-        // statements
-        for phrase_id in e.phrase_ids.clone() {
-            // node_name
-            let trans = models::Phrases {
-                id: phrase_id,
-                lang: "fr".to_string(),
-                text: fr[row_counter].to_lowercase().replace("/",""),
-            };
-
-            row_counter += 1;
-
-            let translation = models::Phrases::add_translation(trans).expect("Unable to add translation phrase");
-
-            println!("Success - node name: {} ({}) -> {} ({})", &e.node_name, e.name_id, &translation.text, translation.id);
-
-        };
+    // Break vec into chunks and process
+    for e in raw_experience_vec.chunks(10) {
+        batch_translate(e.to_vec(), "en").await;
     };
 
     comm_data.inclusivity_map = temp_incl_map;
@@ -708,6 +646,92 @@ pub async fn add_base_nodes() {
             Err(e) => {
                 println!("{}", e);
             }
+        };
+    };
+}
+
+pub async fn batch_translate(raw_experience_vec: Vec<RawExperience>, lang: &str) {
+    // send text to Libretranslate
+    let mut translate_strings: Vec<String> = Vec::new();
+        
+    for e in &raw_experience_vec {
+        translate_strings.push(format!("{}.\n", &e.node_name));
+
+        for (i, s) in e.statements.clone().iter().enumerate() {
+            if s != "" {
+                if i+1 == e.statements.len() {
+                    translate_strings.push(format!("{}.\n", &s));
+                } else {
+                    translate_strings.push(format!("{}.\n", &s));
+                }
+            };
+        };
+    };
+
+    // Prepare translation
+    let mut source = Language::English;
+    let mut target = Language::French;
+    
+    let translate_lang = match &lang {
+        &"en" => {
+            "fr".to_string()
+        },
+        &"fr" => {
+            source = Language::French;
+            target = Language::English;
+            "en".to_string()
+        },
+        _ => {
+            "fr".to_string()
+        },
+    };
+
+    let input = translate_strings.concat();
+
+    // Send translation
+    println!("Sending translation to Libretranslate");
+
+    let data = translate(source, target, input)
+        .await
+        .unwrap();
+
+    //let en = data.input.split(". ").into_iter();
+    let fr: Vec<String> = data.output.split(".\n").map(|s| s.to_string()).collect();
+
+    let mut row_counter: usize = 0;
+    for (i, e) in raw_experience_vec.iter().enumerate() {
+        
+        // node_name
+        let trans = models::Phrases {
+            id: e.name_id,
+            lang: translate_lang.to_string(),
+            text: fr[row_counter].to_lowercase().replace("/",""),
+        };
+
+        
+        let translation = models::Phrases::add_translation(trans).expect("Unable to add translation phrase");
+        
+        println!("Success - node name: {} ({}) -> {} ({})", &e.node_name, e.name_id, &translation.text, translation.id);
+
+        row_counter += 1;
+        println!("{}", &row_counter);
+
+        // statements
+        for phrase_id in e.phrase_ids.clone() {
+            // node_name
+            let trans = models::Phrases {
+                id: phrase_id,
+                lang: "fr".to_string(),
+                text: fr[row_counter].to_lowercase().replace("/",""),
+            };
+
+            row_counter += 1;
+            println!("{}", &row_counter);
+
+            let translation = models::Phrases::add_translation(trans).expect("Unable to add translation phrase");
+
+            println!("Success - statement: {} ({}) -> {} ({})", &e.node_name, e.name_id, &translation.text, translation.id);
+
         };
     };
 }

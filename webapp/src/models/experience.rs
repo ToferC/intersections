@@ -380,9 +380,7 @@ impl RawExperience {
         };
         
         println!("Translating experience: {}", &self.node_name);
-        
-        let source = Language::English;
-        
+                
         let input = translate_strings.concat();
         
         let data = translate(source, target, input)
