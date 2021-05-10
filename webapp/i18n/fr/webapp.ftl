@@ -5,9 +5,6 @@ intersections = Intersections
 app-description = { -app-name } est un projet d'apprentissage et une expérience de collecte, de connexion et de compréhension de l'expérience vécue des participants tout en protégeant leur vie privée.
 app-mvp = PVM d'enquête et d'analyse de données intersectionnelles
 
-## Buttons
-
-
 ## Base & Navbar
 
 button-explore-demo-data = Explorer les données de démonstration
@@ -94,6 +91,7 @@ protect-3 = Vous êtes la seule personne à recevoir ce code et sans le code, pe
 login-need-explanation = Il vous suffit de vous connecter pour gérer une organisation.
 email-address = Adresse e-mail
 email-address-helper = Saisissez l'adresse e-mail que vous avez utilisée pour vous inscrire.
+email-placeholder = votre_nom@domain.com
 password = Mot de passe
 password-placeholder = Votre_mot_de_passe
 password-helper = Votre mot de passe (au moins 12 caractères).
@@ -141,3 +139,30 @@ verify = Vérifier
 request-password-reset = Demander la réinitialisation du mot de passe
 reset-instructions = Entrez l'adresse e-mail que vous avez utilisée pour vous inscrire ci-dessous. Si vous avez un compte, nous vous enverrons un e-mail avec un lien pour réinitialiser votre mot de passe.
 send-reset-email = Envoyer un e-mail de réinitialisation du mot de passe
+
+## Survey Intro
+
+
+### Question One
+
+
+### Question Two
+
+
+### Question Three
+
+
+### Question Four
+
+
+## Experience Forms
+
+
+### Tips
+
+
+### Learning Moments
+
+
+## Add Experience Form
+
