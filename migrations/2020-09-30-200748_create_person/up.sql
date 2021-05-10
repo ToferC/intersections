@@ -69,5 +69,5 @@ CREATE TABLE experiences (
     date_created TIMESTAMP NOT NULL default CURRENT_DATE,
     statements INT[] NOT NULL,
     inclusivity NUMERIC NOT NULL,
-    slug VARCHAR(48) UNIQUE NOT NULL
+    slug VARCHAR(48) NOT NULL
 );

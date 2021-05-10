@@ -589,41 +589,47 @@ pub async fn add_base_nodes() {
         println!("Sending Translation to LibreTranslate");
 
         let data = translate(source, target, input)
-            .await
-            .unwrap();
+            .await;
 
-        //let en = data.input.split(". ").into_iter();
-        let fr = data.output.split(".\n");
-        let en = data.input.split(".\n");
+        match data {
+            Ok(data) => {
 
-        let copy = nodes.clone();
-
-        for (n, f) in copy.iter().zip(fr) {
-
-            let phrase = models::InsertablePhrase::new("en", n.0.to_owned());
-
-            let phrase = models::Phrases::create(&phrase).expect("Unable to create phrase");
-
-            let trans = models::Phrases {
-                id: phrase.id,
-                lang: "fr".to_string(),
-                text: f.to_lowercase().replace("/",""),
-            };
-
-            let translation = models::Phrases::add_translation(trans).expect("Unable to add translation phrase");
-            
-            let node = models::Node::new(
-                phrase.id,
-                n.0.to_lower_case().trim().to_string(),
-                n.1.to_owned(),
-            );
-
-            println!("Success: {} ({}) -> {} ({})", &phrase.text, phrase.id, &translation.text, translation.id);
-            
-            let _ = models::Nodes::create(&node);
+                //let en = data.input.split(". ").into_iter();
+                let fr = data.output.split(".\n");
+                let en = data.input.split(".\n");
+        
+                let copy = nodes.clone();
+        
+                for (n, f) in copy.iter().zip(fr) {
+        
+                    let phrase = models::InsertablePhrase::new("en", n.0.to_owned());
+        
+                    let phrase = models::Phrases::create(&phrase).expect("Unable to create phrase");
+        
+                    let trans = models::Phrases {
+                        id: phrase.id,
+                        lang: "fr".to_string(),
+                        text: f.to_lowercase().replace("/",""),
+                    };
+        
+                    let translation = models::Phrases::add_translation(trans).expect("Unable to add translation phrase");
+                    
+                    let node = models::Node::new(
+                        phrase.id,
+                        n.0.to_lower_case().trim().to_string(),
+                        n.1.to_owned(),
+                    );
+        
+                    println!("Success: {} ({}) -> {} ({})", &phrase.text, phrase.id, &translation.text, translation.id);
+                    
+                    let _ = models::Nodes::create(&node);
+                };
+        
+                println!("************ADDED BASE NODES*************");
+            },
+            Err(e) => {
+                println!("{}", e);
+            }
         };
-
-        println!("************ADDED BASE NODES*************");
-
     };
 }

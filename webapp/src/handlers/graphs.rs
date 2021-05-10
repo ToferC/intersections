@@ -56,9 +56,7 @@ pub async fn global_graph(
     let mut people_connections: HashMap<i32, Vec<String>> = HashMap::new();
 
     for l in &experience_vec {
-        let p = Phrases::find(l.node_name, &lang).expect("Unable to load phrases");
-
-        people_connections.entry(l.person_id).or_insert(Vec::new()).push(p.text.to_owned()); 
+        people_connections.entry(l.person_id).or_insert(Vec::new()).push(l.slug.to_owned()); 
     };
 
     // now instead of building AggExperience, we build the graph
@@ -112,10 +110,8 @@ pub async fn full_community_node_graph(
             
                 for l in &experience_vec {
 
-                    let p = Phrases::find(l.node_name, &lang).expect("Unable to load phrases");
-
                     if community_people_ids.contains(&l.person_id) {
-                        people_connections.entry(l.person_id).or_insert(Vec::new()).push(p.text.to_owned()); 
+                        people_connections.entry(l.person_id).or_insert(Vec::new()).push(l.slug.to_owned()); 
                     }
                 };
             

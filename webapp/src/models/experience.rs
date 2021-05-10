@@ -252,6 +252,7 @@ pub struct AggregateExperience {
     pub count: u32,
     pub mean_inclusivity: f32,
     pub frequency_distribution: Vec<(String, u32)>,
+    pub slug: String,
 }
 
 impl AggregateExperience {
@@ -259,6 +260,7 @@ impl AggregateExperience {
         // returns an aggregate experience in the language requested
         
         let domain = &experience_vec[0].node_domain;
+        let slug = &experience_vec[0].slug;
         
         let mut inclusivity: f32 = 0.0;
         let mut counts = BTreeMap::new();
@@ -296,6 +298,7 @@ impl AggregateExperience {
             count: count,
             mean_inclusivity: inclusivity / count as f32,
             frequency_distribution: v,
+            slug: slug.to_owned(),
         }
     }
 }

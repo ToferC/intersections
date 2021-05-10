@@ -57,6 +57,7 @@ impl GEdge {
 #[derive(Debug, Serialize, Deserialize, PartialEq, PartialOrd, Clone)]
 pub struct GNode {
     pub id: String,
+    pub title: String,
     pub node_type: String,
     pub text: Vec<String>,
     pub shape: String,
@@ -68,7 +69,7 @@ pub struct GNode {
 
 impl fmt::Display for GNode {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "{} - {} ({})", self.id, self.node_type, self.inclusivity)
+        write!(f, "{} - {} ({})", self.title, self.node_type, self.inclusivity)
     }
 }
 
@@ -153,15 +154,16 @@ impl GNode {
             (String::from("blue"), String::from("rectangle"))
         };
 
-        let slug = a.name.trim().to_string().to_snake_case();
-
         let href = match community {
-            Some(c) => format!("/{}/community_node/{}/{}", &lang, c, slug),
-            None => format!("/{}/node/{}", &lang, slug),
+            Some(c) => format!("/{}/community_node/{}/{}", &lang, c, a.slug),
+            None => format!("/{}/node/{}", &lang, a.slug),
         };
 
+        let (_n, node_name) = Nodes::find_by_slug(&a.slug, &lang).expect("Unable to load node from slug");
+
         let node = GNode {
-            id: format!("{}", &a.name.trim()),
+            id: format!("{}", &a.slug),
+            title: format!("{}", &node_name.text),
             node_type: String::from("Node"),
             text: vec![a.domain.to_owned()],
             shape: shape,

@@ -216,7 +216,7 @@ pub async fn community_node_page(
                                     date_created: l.date_created,
                                     statements: l.statements.clone(),
                                     inclusivity: l.inclusivity.clone(),
-                                    slug: node.slug.clone(),
+                                    slug: l.slug.clone(),
                                 });
                             }
                             // count people associated to multiple similar nodes
@@ -309,7 +309,7 @@ pub async fn node_graph(
             experience_vec.append(&mut connected_experiences);
         
             for l in &experience_vec {
-                people_connections.entry(l.person_id).or_insert(Vec::new()).push(node_name.text.to_owned()); 
+                people_connections.entry(l.person_id).or_insert(Vec::new()).push(l.slug.to_owned()); 
             };
         
             println!("{:?}", &people_connections);
@@ -428,7 +428,7 @@ pub async fn community_node_graph(
                     // add people connections from the community only
                     for l in &experience_vec {
                         if community_people_ids.contains(&l.person_id) {
-                            people_connections.entry(l.person_id).or_insert(Vec::new()).push(node_name.text.to_owned()); 
+                            people_connections.entry(l.person_id).or_insert(Vec::new()).push(l.slug.to_owned()); 
                         }
                     };
                     
