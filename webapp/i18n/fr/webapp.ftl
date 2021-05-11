@@ -218,7 +218,7 @@ question-one-helper = Entrez quelques mots pour nommer votre expérience ici.
 
 tip = Conseil:
 tip-string =
-    { $nombre ->
+    { $number ->
         [0] Ajoutez un élément de votre expérience vécue à la fois. Vous souhaiterez peut-être ajouter une expérience liée à votre race ou à votre identité ethnique.
         [1] Vous souhaiterez peut-être ajouter une expérience liée à votre sexe ou à votre identité sexuelle.
         [2] Vous allez très bien! Vous souhaiterez peut-être ajouter une expérience liée à votre milieu socio-économique ou à votre langue.
@@ -227,7 +227,7 @@ tip-string =
         [5] Vous créez un véritable profil intersectionnel. Vous souhaiterez peut-être ajouter une expérience liée à votre état actuel de santé mentale ou à votre âge.
         [6] Vous voudrez peut-être ajouter une expérience liée à votre perception corporelle, à votre type de personnalité ou à vos responsabilités en matière de soins.
         [7] Vous voudrez peut-être ajouter une expérience liée à une expérience de vie ou à un stress que vous traversez.
-       *[autre] Incroyable. Vous avez compris cela. Ajoutez autant d'expériences supplémentaires que vous le souhaitez.
+       *[other] Incroyable. Vous avez compris cela. Ajoutez autant d'expériences supplémentaires que vous le souhaitez.
     }
 
 ### Learning Moments
