@@ -103,6 +103,7 @@ register-to-app = Inscrivez-vous à Intersectional-data.ca
 why-register = Il vous suffit d'enregistrer un compte pour créer et gérer des communautés ou des organisations à utiliser avec les intersections. Vous n'avez pas besoin d'un compte pour créer et afficher des données.
 register-email-helper = Saisissez l'adresse e-mail que vous souhaitez utiliser pour vous connecter.
 user-name = Nom d'utilisateur
+user-name-placeholder = Prénom nom de famille
 user-name-helper = Le nom que vous souhaitez être appelé lors de l'utilisation d'intersections.
 email-coming-notice = Après votre inscription, vous recevrez un code par e-mail pour vérifier votre adresse e-mail. Vérifiez votre e-mail, puis entrez le code sur la page suivante.
 
@@ -142,27 +143,101 @@ send-reset-email = Envoyer un e-mail de réinitialisation du mot de passe
 
 ## Survey Intro
 
+survey-introduction = Introduction du sondage
+invited-community = Vous avez été invité à ajouter vos expériences à la communauté { $community }.
+community-explanation = Voici une explication de la communauté et de l'utilisation prévue de vos données.
+community-contact = Si cela n'a pas de sens, ou si vous avez des questions, vous pouvez contacter l'administrateur de la communauté ici: { $contact }.
+survey-overview = Aperçu de sondage
+questions-intro = Le PVM Intersectional Data vous demandera de répondre plusieurs fois au même ensemble de questions. À chaque fois, vous ajouterez une expérience représentant votre expérience vécue. Ensemble, ces expériences forment une représentation de votre expérience au travail.
+completed-profile = Un profil complété devrait avoir cinq ou six expériences.
+start-survey-button = Démarrer le sondage
+learn-more-button = En savoir plus sur le sondage
+or = OU
+questions-header = Les questions
+question-explanation = Cette section explique les questions auxquelles vous répondrez et fournit un contexte. Si vous n'avez pas besoin de ce contexte, veuillez cliquer sur le bouton "Démarrer le sondage" ci-dessus.
 
 ### Question One
 
+question-one = 1. Nommez votre expérience
+question-one-explanation = Comment décririez-vous cette expérience dans vos propres mots?
+question-one-details = Vous êtes plus que votre travail. Exemples: mère, père, gestionnaire, artiste, millénaire, noir, autochtone, blanc, cadre, nouvel employé. Tout ce qui décrit un élément de qui vous êtes et qui a un impact sur votre expérience sur le lieu de travail.
+useful-framework = Un cadre utile pour cet exercice a été développé par Ritu en
+build-cultural-experience = Construisez votre expérience culturelle
+layers-identity-header = Quelques couches d'identité culturelle
+layer-nationality = Nationalité
+layer-race = Race / Ethnoculture
+layer-religion = Religion
+layer-gender = Identité de genre
+layer-sexuality = Orientation sexuelle
+layer-ability = Dis (capacité)
+layer-age = Âge
+layer-education = Éducation
+layer-socio-econ = Statut / Classe socio-économique
+layer-profession = Profession / Carrière
 
 ### Question Two
 
+question-two = 2. Cette expérience fait-elle partie de vous en tant que personne ou est-ce un rôle lié à votre travail?
+question-two-explanation = D'où vient cette expérience. Cela fait-il partie de votre identité, de votre expérience ou de votre culture? Est-ce un rôle qui vous a été confié dans le cadre de votre travail? Est-ce une fonction que vous jouez au sein d'un réseau ou d'un système?
+question-two-shorthand = En bref, vous pouvez le décomposer comme ceci:
+personal-experience = Expérience personnelle = partie de votre expérience individuelle qui existe en dehors du lieu de travail.
+organizational-role = Rôle organisationnel = fonction ou rôle de travail formel ou informel sur le lieu de travail.
+experience-is = Cette expérience est ...
+personal = Une expérience personnelle
+organizational = Un rôle organisationnel
 
 ### Question Three
 
+question-three = 3. Décrivez votre expérience
+question-three-explanation = Chacun de nous vit les choses de différentes manières. Deux gestionnaires ou deux parents peuvent avoir des perspectives extrêmement différentes de leur expérience vécue. Pour clarifier votre expérience, complétez les phrases ci-dessous dans vos propres mots. Il vous sera demandé de fournir trois réponses, mais vous pouvez en utiliser autant ou aussi peu que vous le souhaitez.
+through-this = Bien que cette expérience, sur le lieu de travail
+i-feel = je me sens ...
+question-three-helper = Entrez quelques mots sur la manière dont cette expérience interagit avec votre vie professionnelle.
 
 ### Question Four
 
+question-four = 4. Identifiez comment cette expérience influe sur votre sentiment d'inclusion dans le milieu de travail.
+question-four-explanation = Comment cette expérience vous fait-elle vous sentir inclus ou exclu sur le lieu de travail?
+question-four-slider-direction = Pour cette question, vous déplacerez le curseur ci-dessous à l'endroit où vous pensez que cette expérience se situe dans le sens d'être plus ou moins incluse dans votre lieu de travail. Il génère un score compris entre -1,0 (le plus exclu) et +1,0 (le plus inclus), 0 étant au milieu.
+drag-slider = Placez le curseur ci-dessous à l'endroit où vous pensez que cette expérience se situe dans la plage d'être plus ou moins incluse dans votre lieu de travail.
+more-excluded = Plus exclu
+more-included = Plus inclus
 
 ## Experience Forms
 
+add-experience = Ajouter une expérience
+add-profile-code = Si vous possédez déjà un code de profil, vous pouvez le saisir ici pour connecter votre nouveau profil à vos profils existants:
+profile-code-placeholder = Votre code de profil précédent
+profile-code-helper = Vous ne devez le faire que si vous avez déjà un profil précédent et que vous souhaitez le connecter à un nouveau profil.
+progress-header = Progression ({ $counter } / 6)
+save-experience-button = Enregistrer l'expérience
+question-one-placeholder = Nom de l'expérience ...
+question-one-helper = Entrez quelques mots pour nommer votre expérience ici.
 
 ### Tips
 
+tip = Conseil:
+tip-string =
+    { $nombre ->
+        [0] Ajoutez un élément de votre expérience vécue à la fois. Vous souhaiterez peut-être ajouter une expérience liée à votre race ou à votre identité ethnique.
+        [1] Vous souhaiterez peut-être ajouter une expérience liée à votre sexe ou à votre identité sexuelle.
+        [2] Vous allez très bien! Vous souhaiterez peut-être ajouter une expérience liée à votre milieu socio-économique ou à votre langue.
+        [3] Vous souhaiterez peut-être ajouter une expérience liée à votre religion ou à votre niveau d'éducation.
+        [4] Vous souhaiterez peut-être ajouter une expérience liée à votre capacité ou à une invalidité permanente ou temporaire.
+        [5] Vous créez un véritable profil intersectionnel. Vous souhaiterez peut-être ajouter une expérience liée à votre état actuel de santé mentale ou à votre âge.
+        [6] Vous voudrez peut-être ajouter une expérience liée à votre perception corporelle, à votre type de personnalité ou à vos responsabilités en matière de soins.
+        [7] Vous voudrez peut-être ajouter une expérience liée à une expérience de vie ou à un stress que vous traversez.
+       *[autre] Incroyable. Vous avez compris cela. Ajoutez autant d'expériences supplémentaires que vous le souhaitez.
+    }
 
 ### Learning Moments
 
+learning-one = [Espace réservé pour le moment d'apprentissage.]
 
 ## Add Experience Form
 
+take-to-profile = Emmenez-moi à mon profil complété
+unique-code = Votre code unique est:
+unique-code-explanation = Vous pouvez faire une copie de ce code ou demander un e-mail lorsque vous avez terminé votre profil. Seule une personne disposant de ce code peut voir votre profil.
+progress = Le progrès
+may-add-more = Vous pouvez en ajouter si vous le souhaitez.
