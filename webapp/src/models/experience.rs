@@ -343,7 +343,7 @@ impl RawExperience {
         Ok(true)
     }
 
-    pub async fn translate_experience_phrases(&mut self, lang: &str) -> Result<bool, CustomError> {
+    pub async fn translate_experience_phrases(&mut self, lang: &str) -> Result<(), CustomError> {
         // Translates a complete experience including node name and statements
         // Returns a String that is meant to be split on "\n."
         
@@ -411,6 +411,6 @@ impl RawExperience {
             println!("Success - Name: {} ({}) -> {} ({})", &self.node_name, id, &translation.text, translation.id);    
         };
         
-        Ok(true)
+        Ok(())
     }
 }

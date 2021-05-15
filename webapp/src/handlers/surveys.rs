@@ -1,12 +1,13 @@
 use std::{sync::{Mutex, MutexGuard}};
 use actix_web::{web, HttpRequest, HttpResponse, Responder, post, get, ResponseError};
+use background_jobs::QueueHandle;
 use bigdecimal::{BigDecimal, ToPrimitive};
 use actix_identity::Identity;
 use inflector::Inflector;
 use num_bigint::{ToBigInt};
 use serde::{Deserialize, Serialize};
 
-use crate::{AppData, generate_basic_context};
+use crate::{AppData, generate_basic_context, TranslateJob};
 use crate::models::{Experience, Experiences, RawExperience, NewPerson, People, Node, Nodes, Communities, CommunityData, Phrases};
 use error_handler::error_handler::CustomError;
 
@@ -360,6 +361,7 @@ pub async fn add_handle_experience_form_input(
     _data: web::Data<AppData>,
     node_names: web::Data<Mutex<Vec<(String, String)>>>,
     _req: HttpRequest, 
+    queue_handle: web::Data<Mutex<QueueHandle>>,
     form: web::Form<AddExperienceForm>,
 ) -> impl Responder {
 
@@ -396,9 +398,21 @@ pub async fn add_handle_experience_form_input(
         .await
         .expect("Unable to generate phrases for experience");
 
+    let q = queue_handle.lock().expect("Unable to secure TranslateQueue");
+    let r = q.queue(TranslateJob::new(&raw_exp, &lang));
+
+    /*
+    let c = lang.clone();
+    let mut r = raw_exp.clone();
+
+    let _translation = actix_rt::spawn(async move {
+        r.translate_experience_phrases(&c).await;
+    });
+
     let _translations = raw_exp.translate_experience_phrases(&lang)
         .await
         .expect("Unable to translate phrases");
+    */
 
     let node = Node::new(
         raw_exp.name_id,

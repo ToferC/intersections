@@ -2,7 +2,7 @@
 extern crate diesel;
 use std::sync::Mutex;
 
-use actix_web::web;
+use actix_web::{App, web};
 use tera::{Tera, Context};
 use actix_session::Session;
 use actix_identity::Identity;
@@ -16,7 +16,7 @@ pub mod models;
 pub mod handlers;
 pub mod schema;
 
-
+#[derive(Clone, Debug)]
 pub struct AppData {
     pub tmpl: Tera,
     pub mail_client: SGClient,
@@ -139,4 +139,55 @@ pub fn generate_unique_code(mut characters: usize, dashes: bool) -> String {
     };
 
     rand_string
+}
+
+use background_jobs::{Backoff, Job, MaxRetries};
+use futures::future::{ok, Ready};
+use serde::{Serialize, Deserialize};
+use models::{RawExperience};
+
+#[derive(Clone, Debug)]
+pub struct AppState {
+    pub app_name: String,
+}
+
+impl AppState {
+    pub fn new(app_name: &str) -> Self {
+        AppState {
+            app_name: app_name.to_owned(),
+        }
+    }
+}
+
+#[derive(Clone, Debug, Deserialize, Serialize)]
+pub struct TranslateJob {
+    pub experience: RawExperience,
+    pub lang: String,
+}
+
+impl TranslateJob {
+    pub fn new(experience: &RawExperience, lang: &str) -> Self {
+        TranslateJob {
+            experience: experience.clone(),
+            lang: lang.to_owned(),
+        }
+    }
+}
+
+impl Job for TranslateJob {
+    type State = AppState;
+    type Future = Ready<Result<(), anyhow::Error>>;
+    const NAME: &'static str = "TranslateJob";
+    const QUEUE: &'static str = "JobQueue";
+    const MAX_RETRIES: MaxRetries = MaxRetries::Count(5);
+    const BACKOFF: Backoff = Backoff::Exponential(3);
+
+    fn run(mut self, _: Self::State, ) -> Self::Future {
+
+        let _result = self.experience.translate_experience_phrases(self.lang.as_str());
+
+        ok(())    
+}
+
+    const TIMEOUT: i64 = 15_000;
 }
