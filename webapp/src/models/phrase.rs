@@ -74,6 +74,16 @@ impl Phrases {
             Ok(phrases)
     }
 
+    pub fn find_from_text(text: &str, lang: &str) -> Result<Self, CustomError> {
+        let conn = database::connection()?;
+        let phrases = phrases::table
+            .filter(phrases::text.eq(text)
+            .and(phrases::lang.eq(lang)))
+            .first(&conn)?;
+
+            Ok(phrases)
+    }
+
     pub fn find(id: i32, lang: &str) -> Result<Self, CustomError> {
         let conn = database::connection()?;
         let phrase = phrases::table.filter(phrases::id.eq(id)

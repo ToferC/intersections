@@ -328,18 +328,42 @@ impl RawExperience {
     pub async fn generate_experience_phrases(&mut self, lang: &str) -> Result<bool, CustomError> {
         // Saves experience phrases in language of origin
 
-        let phrase = InsertablePhrase::new(lang, self.node_name.to_lowercase().trim().replace("/",""));
+        let prep_phrase = InsertablePhrase::new(lang, self.node_name.to_lowercase().trim().replace("/",""));
 
         // check to see if phrase already exists, return phrase if it does
-        
-        let phrase = Phrases::create(&phrase).expect("Unable to create phrase");
+        let p = Phrases::find_from_text(&prep_phrase.text, &prep_phrase.lang);
+
+        println!("Checking to see if phrase: {} exists", &prep_phrase.text);
+        let phrase = match p {
+            Ok(p) => {
+                println!("Exists");
+                p
+            },
+            Err(e) => {
+                println!("Does not exist - creating{}", e);
+                Phrases::create(&prep_phrase).expect("Unable to create phrase")
+            }
+        };
 
         self.name_id = phrase.id;
 
         for s in &self.statements {
-            let phrase = InsertablePhrase::new(lang, s.to_lowercase().trim().replace("/",""));
+            let prep_phrase = InsertablePhrase::new(lang, s.to_lowercase().trim().replace("/",""));
         
-            let phrase = Phrases::create(&phrase).expect("Unable to create phrase");
+            // check to see if phrase already exists, return phrase if it does
+            let p = Phrases::find_from_text(&prep_phrase.text, &prep_phrase.lang);
+
+            println!("Checking to see if phrase: {} exists", &prep_phrase.text);
+            let phrase = match p {
+                Ok(p) => {
+                    println!("Exists");
+                    p
+                },
+                Err(e) => {
+                    println!("Does not exist - creating{}", e);
+                    Phrases::create(&prep_phrase).expect("Unable to create phrase")
+                }
+            };
 
             self.phrase_ids.push(phrase.id);
         }
@@ -468,24 +492,53 @@ pub async fn translate_experience_phrases<'a>(exp: Arc<RawExperience>, lang: Arc
 
     let name_trans = output.first().unwrap();
 
+    
+    
     let trans = Phrases {
         id: exp.name_id,
         lang: translate_lang.to_owned(),
         text: name_trans.replace("/",""),
     };
     
-    let translation = Phrases::add_translation(trans).expect("Unable to add translation phrase");
+    // see if translation exists
+    let p = Phrases::find_from_text(&trans.text, &trans.lang);
+    
+    println!("Checking to see if phrase: {} exists", &trans.text);
+    let translation = match p {
+        Ok(p) => {
+            println!("Translation exists");
+            p
+        },
+        Err(e) => {
+            println!("Does not exist - creating{}", e);
+            Phrases::add_translation(trans).expect("unable to add translation")
+        }
+    };
+    
     println!("Success - Name: {} ({}) -> {} ({})", &exp.node_name, exp.name_id, &translation.text, translation.id);
 
     for (id, s) in exp.phrase_ids.clone().into_iter().zip(output.into_iter().skip(1)) {
+        
         let trans = Phrases {
             id,
             lang: translate_lang.to_owned(),
             text: s.replace("/",""),
         };
         
-        let translation = Phrases::add_translation(trans).expect("Unable to add translation phrase");
-        println!("Success - Name: {} ({}) -> {} ({})", &exp.node_name, id, &translation.text, translation.id);    
+        let p = Phrases::find_from_text(&trans.text, &trans.lang);
+
+        println!("Checking to see if phrase: {} exists", &trans.text);
+        let translation = match p {
+            Ok(p) => {
+                println!("Translation exists");
+                p
+            },
+            Err(e) => {
+                println!("Does not exist - creating{}", e);
+                Phrases::add_translation(trans).expect("unable to add translation")
+            }
+        };
+        
+        println!("Success - Name: {} ({}) -> {} ({})", &exp.node_name, exp.name_id, &translation.text, translation.id);
     };
-    
 }
