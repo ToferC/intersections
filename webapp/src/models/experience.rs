@@ -327,6 +327,7 @@ impl RawExperience {
 
     pub async fn generate_experience_phrases(&mut self, lang: &str) -> Result<bool, CustomError> {
         // Saves experience phrases in language of origin
+        // Note that this also generates the node name for any new nodes
 
         let prep_phrase = InsertablePhrase::new(lang, self.node_name.to_lowercase().trim().replace("/",""));
 
@@ -518,7 +519,7 @@ pub async fn translate_experience_phrases<'a>(exp: Arc<RawExperience>, lang: Arc
     println!("Success - Name: {} ({}) -> {} ({})", &exp.node_name, exp.name_id, &translation.text, translation.id);
 
     for (id, s) in exp.phrase_ids.clone().into_iter().zip(output.into_iter().skip(1)) {
-        
+
         let trans = Phrases {
             id,
             lang: translate_lang.to_owned(),

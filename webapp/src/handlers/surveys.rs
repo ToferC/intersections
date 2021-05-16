@@ -232,18 +232,6 @@ pub async fn handle_experience_form_input(
                         // no target
                         println!("{}", e);
                         let new_node = Nodes::create(&node).expect("Unable to create node.");
-                        
-                        /*
-                        let node_rep = GNode::from_node(&new_node, &Some(community.slug.to_owned()));
-            
-                        let mut g = graph.lock().expect("Unable to unlock graph");
-            
-                        g.nodes.push(CytoNode {
-                            data: node_rep,
-                        });
-
-                        drop(g);
-                        */
             
                         let mut temp_data: MutexGuard<Vec<(String, String)>> = node_names.lock().expect("Unable to unlock node_names");
             
