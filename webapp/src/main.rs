@@ -6,10 +6,9 @@ use actix_web_static_files;
 use tera::Tera;
 use tera_text_filters::snake_case;
 use sendgrid::SGClient;
-use background_jobs::{create_server, memory_storage::Storage, WorkerConfig};
 
 use database;
-use webapp::{AppState, TranslateJob, handlers}; 
+use webapp::handlers; 
 use webapp::models;
 use webapp::AppData;
 
@@ -26,7 +25,7 @@ static_loader! {
     };
 }
 
-#[actix_rt::main] 
+#[actix_web::main] 
 async fn main() -> std::io::Result<()> {
     
     dotenv::dotenv().ok();
@@ -93,18 +92,6 @@ async fn main() -> std::io::Result<()> {
     println!("Serving on: {}:{}", &host, &port);
     
     HttpServer::new(move || {
-
-        // Set up jobs for TranslateJob
-        let storage = Storage::new();
-
-        let queue_handle = create_server(storage);
-
-        WorkerConfig::new(move || AppState::new("intersectional-data.ca"))
-            .register::<TranslateJob>()
-            .set_worker_count("JobQueue", 16)
-            .start(queue_handle.clone());
-
-        let q = Arc::new(queue_handle);
         
         // templating
         let mut tera = Tera::new(
@@ -119,11 +106,9 @@ async fn main() -> std::io::Result<()> {
             
         // let graph = Arc::clone(&x);
         let node_names = Arc::clone(&y);
-
-        // prepare queue_handle for app_data
-        let queue_handle = Arc::clone(&q);
         
         // load node_names for navbar population
+            
         let generated = generate();
 
         App::new()
@@ -143,7 +128,6 @@ async fn main() -> std::io::Result<()> {
             })
             // .app_data(web::Data::from(graph))
             .app_data(web::Data::from(node_names))
-            .app_data(web::Data::from(queue_handle))
             .wrap(IdentityService::new(
                 CookieIdentityPolicy::new(&cookie_secret_key.as_bytes())
             .name("user-auth")

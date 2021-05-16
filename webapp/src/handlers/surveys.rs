@@ -1,14 +1,16 @@
-use std::{sync::{Mutex, MutexGuard}};
+use std::{sync::{Mutex, MutexGuard, Arc}};
 use actix_web::{web, HttpRequest, HttpResponse, Responder, post, get, ResponseError};
-use background_jobs::QueueHandle;
 use bigdecimal::{BigDecimal, ToPrimitive};
 use actix_identity::Identity;
+use actix_rt::spawn;
 use inflector::Inflector;
 use num_bigint::{ToBigInt};
 use serde::{Deserialize, Serialize};
 
-use crate::{AppData, generate_basic_context, TranslateJob};
-use crate::models::{Experience, Experiences, RawExperience, NewPerson, People, Node, Nodes, Communities, CommunityData, Phrases};
+use crate::{AppData, generate_basic_context};
+use crate::models::{Experience, Experiences, RawExperience,
+    NewPerson, People, Node, Nodes, Communities, CommunityData, 
+    Phrases, translate_experience_phrases};
 use error_handler::error_handler::CustomError;
 
 #[derive(Deserialize, Debug)]
@@ -196,9 +198,14 @@ pub async fn handle_experience_form_input(
                     .expect("Unable to generate phrases for experience");
 
                 // translate user strings and map to existing phrases
-                let _translations = raw_exp.translate_experience_phrases(&lang)
-                    .await
-                    .expect("Unable to translate phrases");
+                // async translation thread
+                let copy_raw_exp = raw_exp.clone();
+                let c = Arc::new(copy_raw_exp);
+                
+                let l = Arc::new(lang.clone());
+
+                println!("Sending experience to translation");
+                let _translations = spawn(translate_experience_phrases(c, l));
 
                 let node = Node::new(
                     raw_exp.name_id,
@@ -361,7 +368,6 @@ pub async fn add_handle_experience_form_input(
     _data: web::Data<AppData>,
     node_names: web::Data<Mutex<Vec<(String, String)>>>,
     _req: HttpRequest, 
-    queue_handle: web::Data<Mutex<QueueHandle>>,
     form: web::Form<AddExperienceForm>,
 ) -> impl Responder {
 
@@ -398,21 +404,14 @@ pub async fn add_handle_experience_form_input(
         .await
         .expect("Unable to generate phrases for experience");
 
-    let q = queue_handle.lock().expect("Unable to secure TranslateQueue");
-    let r = q.queue(TranslateJob::new(&raw_exp, &lang));
+    // async translation thread
+    let copy_raw_exp = raw_exp.clone();
+    let c = Arc::new(copy_raw_exp);
+    
+    let l = Arc::new(lang.clone());
 
-    /*
-    let c = lang.clone();
-    let mut r = raw_exp.clone();
-
-    let _translation = actix_rt::spawn(async move {
-        r.translate_experience_phrases(&c).await;
-    });
-
-    let _translations = raw_exp.translate_experience_phrases(&lang)
-        .await
-        .expect("Unable to translate phrases");
-    */
+    println!("Sending experience to translation");
+    let _translations = spawn(translate_experience_phrases(c, l));
 
     let node = Node::new(
         raw_exp.name_id,

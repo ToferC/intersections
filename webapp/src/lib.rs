@@ -141,6 +141,8 @@ pub fn generate_unique_code(mut characters: usize, dashes: bool) -> String {
     rand_string
 }
 
+/*
+
 use background_jobs::{Backoff, Job, MaxRetries};
 use futures::future::{ok, Ready};
 use serde::{Serialize, Deserialize};
@@ -191,3 +193,4 @@ impl Job for TranslateJob {
 
     const TIMEOUT: i64 = 15_000;
 }
+*/

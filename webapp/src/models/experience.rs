@@ -2,6 +2,8 @@ use serde::{Serialize, Deserialize};
 use diesel::prelude::*;
 use diesel::{QueryDsl, BelongingToDsl};
 use bigdecimal::BigDecimal;
+use futures::future::{Ready, ok};
+use std::sync::Arc;
 
 use bigdecimal::{ToPrimitive};
 use std::collections::BTreeMap;
@@ -327,6 +329,8 @@ impl RawExperience {
         // Saves experience phrases in language of origin
 
         let phrase = InsertablePhrase::new(lang, self.node_name.to_lowercase().trim().replace("/",""));
+
+        // check to see if phrase already exists, return phrase if it does
         
         let phrase = Phrases::create(&phrase).expect("Unable to create phrase");
 
@@ -343,7 +347,7 @@ impl RawExperience {
         Ok(true)
     }
 
-    pub async fn translate_experience_phrases(&mut self, lang: &str) -> Result<(), CustomError> {
+    pub async fn translate_experience_phrases<'a>(&'a mut self, lang: &'a str) {
         // Translates a complete experience including node name and statements
         // Returns a String that is meant to be split on "\n."
         
@@ -411,6 +415,77 @@ impl RawExperience {
             println!("Success - Name: {} ({}) -> {} ({})", &self.node_name, id, &translation.text, translation.id);    
         };
         
-        Ok(())
     }
+}
+
+pub async fn translate_experience_phrases<'a>(exp: Arc<RawExperience>, lang: Arc<String>) {
+    // Translates a complete experience including node name and statements
+    // Returns a String that is meant to be split on "\n."
+    
+    let mut translate_strings: Vec<String> = Vec::new();
+    
+    translate_strings.push(format!("{}.\n", &exp.node_name.clone()));
+    
+    for (i,s) in exp.statements.iter().enumerate() {
+        if s != "" {
+            if i+1 == exp.statements.len() {
+                translate_strings.push(format!("{}", &s));
+            } else {
+                translate_strings.push(format!("{}.\n", &s));
+            }
+        }
+    };
+    
+    let mut source = Language::English;
+    let mut target = Language::French;
+
+    let lang = &*lang.clone();
+    
+    let translate_lang = match lang.as_str() {
+        "en" => {
+            "fr".to_string()
+        },
+        "fr" => {
+            source = Language::French;
+            target = Language::English;
+            "en".to_string()
+        },
+        _ => {
+            "fr".to_string()
+        },
+    };
+    
+    println!("Translating experience: {}", &exp.node_name);
+            
+    let input = translate_strings.concat();
+    
+    let data = translate(source, target, input)
+    .await
+    .unwrap();
+    
+    // let input = data.input.split(".\n");
+    let output: Vec<String> = data.output.split(".\n").map(|s| s.to_string()).collect();
+
+    let name_trans = output.first().unwrap();
+
+    let trans = Phrases {
+        id: exp.name_id,
+        lang: translate_lang.to_owned(),
+        text: name_trans.replace("/",""),
+    };
+    
+    let translation = Phrases::add_translation(trans).expect("Unable to add translation phrase");
+    println!("Success - Name: {} ({}) -> {} ({})", &exp.node_name, exp.name_id, &translation.text, translation.id);
+
+    for (id, s) in exp.phrase_ids.clone().into_iter().zip(output.into_iter().skip(1)) {
+        let trans = Phrases {
+            id,
+            lang: translate_lang.to_owned(),
+            text: s.replace("/",""),
+        };
+        
+        let translation = Phrases::add_translation(trans).expect("Unable to add translation phrase");
+        println!("Success - Name: {} ({}) -> {} ({})", &exp.node_name, id, &translation.text, translation.id);    
+    };
+    
 }
