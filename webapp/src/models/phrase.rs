@@ -18,13 +18,15 @@ use database;
 pub struct InsertablePhrase {
     pub lang: String,
     pub text: String,
+    pub machine_translation: bool,
 }
 
 impl InsertablePhrase {
-    pub fn new(lang: &str, text: String) -> Self {
+    pub fn new(lang: &str, text: String, machine_translation: bool) -> Self {
         InsertablePhrase {
             lang: lang.to_string(),
             text,
+            machine_translation,
         }
     }
 }
@@ -35,6 +37,7 @@ pub struct Phrases {
     pub id: i32,
     pub lang: String,
     pub text: String,
+    pub machine_translation: bool,
 }
 
 impl Phrases {

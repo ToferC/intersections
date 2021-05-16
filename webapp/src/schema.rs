@@ -87,6 +87,7 @@ table! {
         id -> Int4,
         lang -> Varchar,
         text -> Varchar,
+        machine_translation -> Bool,
     }
 }
 

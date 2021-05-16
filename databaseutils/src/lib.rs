@@ -243,7 +243,7 @@ pub async fn import_demo_data(community_id: i32) {
                 let node = models::Nodes::create(&node_data);
 
                 let (node, _node_name) = match node {
-                    Ok(n) => (n, Phrases { id: raw_exp.name_id, lang: "en".to_string(), text: name.to_owned()}),
+                    Ok(n) => (n, Phrases { id: raw_exp.name_id, lang: "en".to_string(), text: name.to_owned(), machine_translation: false}),
                     Err(e) => {
                         println!("{}", e);
                         models::Nodes::find_by_slug(&name.trim().to_snake_case(), "en").expect("Unable to load node")
@@ -371,7 +371,7 @@ pub async fn generate_dummy_data(community_id: i32) {
         for s in 0+i*4..4+i*4 {
             if s == 0+i*4 {
                 // node_name
-                let phrase = models::InsertablePhrase::new("en", exp.node_name.to_owned());
+                let phrase = models::InsertablePhrase::new("en", exp.node_name.to_owned(), false);
     
                 let phrase = models::Phrases::create(&phrase).expect("Unable to create phrase");
     
@@ -379,6 +379,7 @@ pub async fn generate_dummy_data(community_id: i32) {
                     id: phrase.id,
                     lang: "fr".to_string(),
                     text: fr[s].to_lowercase().replace("/",""),
+                    machine_translation: true,
                 };
     
                 let translation = models::Phrases::add_translation(trans).expect("Unable to add translation phrase");
@@ -391,7 +392,7 @@ pub async fn generate_dummy_data(community_id: i32) {
             } else {
 
                 //statement
-                let phrase = models::InsertablePhrase::new("en", exp.statements[s-1-i*4].clone());
+                let phrase = models::InsertablePhrase::new("en", exp.statements[s-1-i*4].clone(), false);
     
                 let phrase = models::Phrases::create(&phrase).expect("Unable to create phrase");
     
@@ -399,6 +400,7 @@ pub async fn generate_dummy_data(community_id: i32) {
                     id: phrase.id,
                     lang: "fr".to_string(),
                     text: fr[s].to_lowercase().replace("/",""),
+                    machine_translation: true,
                 };
     
                 let translation = models::Phrases::add_translation(trans).expect("Unable to add translation phrase");
@@ -618,7 +620,7 @@ pub async fn add_base_nodes() {
         
                 for (n, f) in copy.iter().zip(fr) {
         
-                    let phrase = models::InsertablePhrase::new("en", n.0.to_owned());
+                    let phrase = models::InsertablePhrase::new("en", n.0.to_owned(), false);
         
                     let phrase = models::Phrases::create(&phrase).expect("Unable to create phrase");
         
@@ -626,6 +628,7 @@ pub async fn add_base_nodes() {
                         id: phrase.id,
                         lang: "fr".to_string(),
                         text: f.to_lowercase().replace("/",""),
+                        machine_translation: true,
                     };
         
                     let translation = models::Phrases::add_translation(trans).expect("Unable to add translation phrase");
@@ -706,6 +709,7 @@ pub async fn batch_translate(raw_experience_vec: Vec<RawExperience>, lang: &str)
             id: e.name_id,
             lang: translate_lang.to_string(),
             text: fr[row_counter].to_lowercase().replace("/",""),
+            machine_translation: true,
         };
 
         
@@ -722,6 +726,7 @@ pub async fn batch_translate(raw_experience_vec: Vec<RawExperience>, lang: &str)
                 id: phrase_id,
                 lang: "fr".to_string(),
                 text: fr[row_counter].to_lowercase().replace("/",""),
+                machine_translation: true,
             };
 
             row_counter += 1;

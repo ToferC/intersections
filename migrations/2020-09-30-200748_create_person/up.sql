@@ -2,6 +2,7 @@ CREATE TABLE phrases (
     id SERIAL NOT NULL,
     lang VARCHAR(2) NOT NULL,
     text VARCHAR NOT NULL,
+    machine_translation bool NOT NULL default false,
     PRIMARY KEY(id, lang)
 );
 

@@ -329,7 +329,7 @@ impl RawExperience {
         // Saves experience phrases in language of origin
         // Note that this also generates the node name for any new nodes
 
-        let prep_phrase = InsertablePhrase::new(lang, self.node_name.to_lowercase().trim().replace("/",""));
+        let prep_phrase = InsertablePhrase::new(lang, self.node_name.to_lowercase().trim().replace("/",""), false);
 
         // check to see if phrase already exists, return phrase if it does
         let p = Phrases::find_from_text(&prep_phrase.text, &prep_phrase.lang);
@@ -338,18 +338,21 @@ impl RawExperience {
         let phrase = match p {
             Ok(p) => {
                 println!("Exists");
+                // return found phrase
                 p
             },
             Err(e) => {
                 println!("Does not exist - creating{}", e);
+                // add new phrase to db
                 Phrases::create(&prep_phrase).expect("Unable to create phrase")
             }
         };
 
+        // set raw_exp name_id. This will become the node name and generate the node slug
         self.name_id = phrase.id;
 
         for s in &self.statements {
-            let prep_phrase = InsertablePhrase::new(lang, s.to_lowercase().trim().replace("/",""));
+            let prep_phrase = InsertablePhrase::new(lang, s.to_lowercase().trim().replace("/",""), false);
         
             // check to see if phrase already exists, return phrase if it does
             let p = Phrases::find_from_text(&prep_phrase.text, &prep_phrase.lang);
@@ -424,6 +427,7 @@ impl RawExperience {
             id: self.name_id,
             lang: translate_lang.to_owned(),
             text: name_trans.replace("/",""),
+            machine_translation: true,
         };
         
         let translation = Phrases::add_translation(trans).expect("Unable to add translation phrase");
@@ -434,6 +438,7 @@ impl RawExperience {
                 id,
                 lang: translate_lang.to_owned(),
                 text: s.replace("/",""),
+                machine_translation: true,
             };
             
             let translation = Phrases::add_translation(trans).expect("Unable to add translation phrase");
@@ -492,13 +497,12 @@ pub async fn translate_experience_phrases<'a>(exp: Arc<RawExperience>, lang: Arc
     let output: Vec<String> = data.output.split(".\n").map(|s| s.to_string()).collect();
 
     let name_trans = output.first().unwrap();
-
-    
     
     let trans = Phrases {
         id: exp.name_id,
         lang: translate_lang.to_owned(),
         text: name_trans.replace("/",""),
+        machine_translation: true,
     };
     
     // see if translation exists
@@ -524,6 +528,7 @@ pub async fn translate_experience_phrases<'a>(exp: Arc<RawExperience>, lang: Arc
             id,
             lang: translate_lang.to_owned(),
             text: s.replace("/",""),
+            machine_translation: true,
         };
         
         let p = Phrases::find_from_text(&trans.text, &trans.lang);
