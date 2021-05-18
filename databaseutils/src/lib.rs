@@ -371,9 +371,22 @@ pub async fn generate_dummy_data(community_id: i32) {
         for s in 0+i*4..4+i*4 {
             if s == 0+i*4 {
                 // node_name
-                let phrase = models::InsertablePhrase::new("en", exp.node_name.to_owned(), false);
+                let prep_phrase = models::InsertablePhrase::new("en", exp.node_name.to_owned(), false);
     
-                let phrase = models::Phrases::create(&phrase).expect("Unable to create phrase");
+                // check to see if phrase already exists, return phrase if it does
+                let p = Phrases::find_from_text(&prep_phrase.text, &prep_phrase.lang);
+
+                println!("Checking to see if phrase: {} exists", &prep_phrase.text);
+                let phrase = match p {
+                    Ok(p) => {
+                        println!("Exists");
+                        p
+                    },
+                    Err(e) => {
+                        println!("Does not exist - creating{}", e);
+                        Phrases::create(&prep_phrase).expect("Unable to create phrase")
+                    }
+                };
     
                 let trans = models::Phrases {
                     id: phrase.id,
@@ -382,7 +395,20 @@ pub async fn generate_dummy_data(community_id: i32) {
                     machine_translation: true,
                 };
     
-                let translation = models::Phrases::add_translation(trans).expect("Unable to add translation phrase");
+                // see if translation exists
+                let p = Phrases::find_from_text(&trans.text, &trans.lang);
+                
+                println!("Checking to see if phrase: {} exists", &trans.text);
+                let translation = match p {
+                    Ok(p) => {
+                        println!("Translation exists");
+                        p
+                    },
+                    Err(e) => {
+                        println!("Does not exist - creating{}", e);
+                        Phrases::add_translation(trans).expect("unable to add translation")
+                    }
+                };
 
                 println!("Success - node name: {} ({}) -> {} ({})", &phrase.text, phrase.id, &translation.text, translation.id);
 
@@ -392,9 +418,22 @@ pub async fn generate_dummy_data(community_id: i32) {
             } else {
 
                 //statement
-                let phrase = models::InsertablePhrase::new("en", exp.statements[s-1-i*4].clone(), false);
+                let prep_phrase = models::InsertablePhrase::new("en", exp.statements[s-1-i*4].clone(), false);
     
-                let phrase = models::Phrases::create(&phrase).expect("Unable to create phrase");
+                // check to see if phrase already exists, return phrase if it does
+                let p = Phrases::find_from_text(&prep_phrase.text, &prep_phrase.lang);
+
+                println!("Checking to see if phrase: {} exists", &prep_phrase.text);
+                let phrase = match p {
+                    Ok(p) => {
+                        println!("Exists");
+                        p
+                    },
+                    Err(e) => {
+                        println!("Does not exist - creating{}", e);
+                        Phrases::create(&prep_phrase).expect("Unable to create phrase")
+                    }
+                };
     
                 let trans = models::Phrases {
                     id: phrase.id,
@@ -403,7 +442,20 @@ pub async fn generate_dummy_data(community_id: i32) {
                     machine_translation: true,
                 };
     
-                let translation = models::Phrases::add_translation(trans).expect("Unable to add translation phrase");
+                // see if translation exists
+                let p = Phrases::find_from_text(&trans.text, &trans.lang);
+                
+                println!("Checking to see if phrase: {} exists", &trans.text);
+                let translation = match p {
+                    Ok(p) => {
+                        println!("Translation exists");
+                        p
+                    },
+                    Err(e) => {
+                        println!("Does not exist - creating{}", e);
+                        Phrases::add_translation(trans).expect("unable to add translation")
+                    }
+                };
 
                 // update raw_experience
                 println!("Success - statement: {} ({}) -> {} ({})", &phrase.text, phrase.id, &translation.text, translation.id);
@@ -620,9 +672,22 @@ pub async fn add_base_nodes() {
         
                 for (n, f) in copy.iter().zip(fr) {
         
-                    let phrase = models::InsertablePhrase::new("en", n.0.to_owned(), false);
+                    let prep_phrase = models::InsertablePhrase::new("en", n.0.to_owned(), false);
         
-                    let phrase = models::Phrases::create(&phrase).expect("Unable to create phrase");
+                    // check to see if phrase already exists, return phrase if it does
+                    let p = Phrases::find_from_text(&prep_phrase.text, &prep_phrase.lang);
+
+                    println!("Checking to see if phrase: {} exists", &prep_phrase.text);
+                    let phrase = match p {
+                        Ok(p) => {
+                            println!("Exists");
+                            p
+                        },
+                        Err(e) => {
+                            println!("Does not exist - creating{}", e);
+                            Phrases::create(&prep_phrase).expect("Unable to create phrase")
+                        }
+                    };
         
                     let trans = models::Phrases {
                         id: phrase.id,
@@ -631,7 +696,20 @@ pub async fn add_base_nodes() {
                         machine_translation: true,
                     };
         
-                    let translation = models::Phrases::add_translation(trans).expect("Unable to add translation phrase");
+                    // see if translation exists
+                    let p = Phrases::find_from_text(&trans.text, &trans.lang);
+                    
+                    println!("Checking to see if phrase: {} exists", &trans.text);
+                    let translation = match p {
+                        Ok(p) => {
+                            println!("Translation exists");
+                            p
+                        },
+                        Err(e) => {
+                            println!("Does not exist - creating{}", e);
+                            Phrases::add_translation(trans).expect("unable to add translation")
+                        }
+                    };
                     
                     let node = models::Node::new(
                         phrase.id,
@@ -712,10 +790,22 @@ pub async fn batch_translate(raw_experience_vec: Vec<RawExperience>, lang: &str)
             machine_translation: true,
         };
 
+        // see if translation exists
+        let p = Phrases::find_from_text(&trans.text, &trans.lang);
         
-        let translation = models::Phrases::add_translation(trans).expect("Unable to add translation phrase");
-        
-        println!("Success - node name: {} ({}) -> {} ({})", &e.node_name, e.name_id, &translation.text, translation.id);
+        println!("Checking to see if phrase: {} exists", &trans.text);
+        let translation = match p {
+            Ok(p) => {
+                println!("Translation exists");
+                p
+            },
+            Err(e) => {
+                println!("Does not exist - creating{}", e);
+                Phrases::add_translation(trans).expect("unable to add translation")
+            }
+        };
+
+        println!("Success - statement: {} ({}) -> {} ({})", &e.node_name, e.name_id, &translation.text, translation.id);
 
         row_counter += 1;
 
@@ -731,7 +821,20 @@ pub async fn batch_translate(raw_experience_vec: Vec<RawExperience>, lang: &str)
 
             row_counter += 1;
 
-            let translation = models::Phrases::add_translation(trans).expect("Unable to add translation phrase");
+            // see if translation exists
+            let p = Phrases::find_from_text(&trans.text, &trans.lang);
+            
+            println!("Checking to see if phrase: {} exists", &trans.text);
+            let translation = match p {
+                Ok(p) => {
+                    println!("Translation exists");
+                    p
+                },
+                Err(e) => {
+                    println!("Does not exist - creating{}", e);
+                    Phrases::add_translation(trans).expect("unable to add translation")
+                }
+            };
 
             println!("Success - statement: {} ({}) -> {} ({})", &e.node_name, e.name_id, &translation.text, translation.id);
 
