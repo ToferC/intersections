@@ -2,7 +2,8 @@ use std::{sync::{Mutex, MutexGuard, Arc}};
 use actix_web::{web, HttpRequest, HttpResponse, Responder, post, get, ResponseError};
 use bigdecimal::{BigDecimal, ToPrimitive};
 use actix_identity::Identity;
-use actix_rt::spawn;
+use tokio::{spawn};
+use futures::future::{lazy};
 use inflector::Inflector;
 use num_bigint::{ToBigInt};
 use serde::{Deserialize, Serialize};
@@ -205,7 +206,8 @@ pub async fn handle_experience_form_input(
                 let l = Arc::new(lang.clone());
 
                 println!("Sending experience to translation");
-                let _translations = spawn(translate_experience_phrases(c, l));
+                let _translations = spawn(
+                    translate_experience_phrases(c, l)).await;
 
                 let node = Node::new(
                     raw_exp.name_id,
@@ -399,7 +401,8 @@ pub async fn add_handle_experience_form_input(
     let l = Arc::new(lang.clone());
 
     println!("Sending experience to translation");
-    let _translations = spawn(translate_experience_phrases(c, l));
+    let _translations = spawn(
+        translate_experience_phrases(c, l)).await;
 
     let node = Node::new(
         raw_exp.name_id,

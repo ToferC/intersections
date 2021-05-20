@@ -2,7 +2,6 @@ use serde::{Serialize, Deserialize};
 use diesel::prelude::*;
 use diesel::{QueryDsl, BelongingToDsl};
 use bigdecimal::BigDecimal;
-use futures::future::{Ready, ok};
 use std::sync::Arc;
 
 use bigdecimal::{ToPrimitive};
@@ -16,6 +15,7 @@ use crate::models::{People, Nodes, Phrases, InsertablePhrase};
 use crate::schema::{experiences, nodes, phrases};
 
 use libretranslate::{translate, Language};
+use deepl_api::{DeepL, TranslatableTextList};
 
 #[derive(Debug, Serialize, Deserialize, AsChangeset, Insertable)]
 #[table_name = "experiences"]
@@ -451,6 +451,24 @@ impl RawExperience {
 pub async fn translate_experience_phrases<'a>(exp: Arc<RawExperience>, lang: Arc<String>) {
     // Translates a complete experience including node name and statements
     // Returns a String that is meant to be split on "\n."
+
+    let key = match std::env::var("DEEPL_API_KEY") {
+        Ok(val) if val.len() > 0 => val,
+        _ => {
+            eprintln!("Error: no DEEPL_API_KEY found. Please provide your API key in this environment variable.");
+            std::process::exit(1);
+        }
+    };
+
+    let tier = match std::env::var("DEEPL_API_TIER") {
+        Ok(val) if val == "FREE" => true,
+        _ => {
+            eprintln!("Error: no DEEPL_API_TIER found. Defaulting to false.");
+            false
+        }
+    };
+
+    let deepl = DeepL::new(key, tier);
     
     let mut translate_strings: Vec<String> = Vec::new();
     
@@ -466,8 +484,8 @@ pub async fn translate_experience_phrases<'a>(exp: Arc<RawExperience>, lang: Arc
         }
     };
     
-    let mut source = Language::English;
-    let mut target = Language::French;
+    let mut source = "EN".to_string();
+    let mut target = "FR".to_string();
 
     let lang = &*lang.clone();
     
@@ -476,8 +494,8 @@ pub async fn translate_experience_phrases<'a>(exp: Arc<RawExperience>, lang: Arc
             "fr".to_string()
         },
         "fr" => {
-            source = Language::French;
-            target = Language::English;
+            source = "FR".to_string();
+            target = "EN".to_string();
             "en".to_string()
         },
         _ => {
@@ -487,16 +505,16 @@ pub async fn translate_experience_phrases<'a>(exp: Arc<RawExperience>, lang: Arc
     
     println!("Translating experience: {}", &exp.node_name);
             
-    let input = translate_strings.concat();
-    
-    let data = translate(source, target, input)
-    .await
-    .unwrap();
-    
-    // let input = data.input.split(".\n");
-    let output: Vec<String> = data.output.split(".\n").map(|s| s.to_string()).collect();
+     // Translate Text
+     let texts = TranslatableTextList {
+        source_language: Some(source),
+        target_language: target,
+        texts: translate_strings,
+    };
 
-    let name_trans = output.first().unwrap();
+    let translated = deepl.translate(None, texts).await.unwrap();
+
+    let name_trans = translated.first().unwrap().text.clone();
     
     let trans = Phrases {
         id: exp.name_id,
@@ -522,12 +540,12 @@ pub async fn translate_experience_phrases<'a>(exp: Arc<RawExperience>, lang: Arc
     
     println!("Success - Name: {} ({}) -> {} ({})", &exp.node_name, exp.name_id, &translation.text, translation.id);
 
-    for (id, s) in exp.phrase_ids.clone().into_iter().zip(output.into_iter().skip(1)) {
+    for (id, s) in exp.phrase_ids.clone().into_iter().zip(translated.into_iter().skip(1)) {
 
         let trans = Phrases {
             id,
             lang: translate_lang.to_owned(),
-            text: s.replace("/",""),
+            text: s.text.replace("/",""),
             machine_translation: true,
         };
         

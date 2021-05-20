@@ -15,7 +15,7 @@ actix-web = "3.3.2"
 actix-web-httpauth = { git = "https://github.com/actix/actix-web-httpauth" }
 actix-web-static-files = "3.0.1"
 actix-rt = "1"
-tokio = { version = "1.5", features = ["full"] }
+tokio = { version = "0.2", features = ["full"] }
 actix-service = "2.0.0"
 actix-multipart = "0.3.0"
 actix-session = "0.4.0"
@@ -58,7 +58,7 @@ rand = "0.7.3"
 
 # localization
 fluent-templates = { version = "*", features = ["tera"] }
-libretranslate = "0.2.9"
+libretranslate = "^0.2.9"
 deepl-api = { git = "https://github.com/ToferC/deepl-api-rs.git" }
 
 # graph crates

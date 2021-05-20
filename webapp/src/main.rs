@@ -25,7 +25,7 @@ static_loader! {
     };
 }
 
-#[actix_web::main] 
+#[actix_rt::main] 
 async fn main() -> std::io::Result<()> {
     
     dotenv::dotenv().ok();
