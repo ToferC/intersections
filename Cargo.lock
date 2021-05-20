@@ -1464,13 +1464,13 @@ dependencies = [
 [[package]]
 name = "deepl-api"
 version = "0.2.0"
-source = "git+https://github.com/ToferC/deepl-api-rs.git#da0e2cc3099b2668bbe26b129dfa564c4a2b97c9"
+source = "git+https://github.com/ToferC/deepl-api-rs.git#c6d58e7b1a893d7f8fa2a86919a705404c9d063d"
 dependencies = [
  "clap",
  "error-chain",
  "reqwest 0.10.10",
  "serde",
- "tokio 1.6.0",
+ "tokio 0.2.25",
 ]
 
 [[package]]
@@ -2013,9 +2013,9 @@ dependencies = [
 
 [[package]]
 name = "getrandom"
-version = "0.2.2"
+version = "0.2.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c9495705279e7140bf035dde1f6e750c162df8b625267cd52cc44e0b156732c8"
+checksum = "7fcd999463524c52659517fe2cea98493cfe485d10565e7b0fb07dbba7ad2753"
 dependencies = [
  "cfg-if 1.0.0",
  "js-sys",
@@ -2837,7 +2837,7 @@ version = "0.5.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "ac1378b66f7c93a1c0f8464a19bf47df8795083842e5090f4b7305973d5a22d0"
 dependencies = [
- "getrandom 0.2.2",
+ "getrandom 0.2.3",
 ]
 
 [[package]]
@@ -3348,9 +3348,9 @@ checksum = "bc881b2c22681370c6a780e47af9840ef841837bc98118431d4e1868bd0c1086"
 
 [[package]]
 name = "proc-macro2"
-version = "1.0.26"
+version = "1.0.27"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a152013215dca273577e18d2bf00fa862b89b24169fb78c4c95aeb07992c9cec"
+checksum = "f0d8caf72986c1a598726adc988bb5984792ef84f5ee5aa50209145ee8077038"
 dependencies = [
  "unicode-xid",
 ]
@@ -3468,7 +3468,7 @@ version = "0.6.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "34cf66eb183df1c5876e2dcf6b13d57340741e8dc255b48e40a26de954d06ae7"
 dependencies = [
- "getrandom 0.2.2",
+ "getrandom 0.2.3",
 ]
 
 [[package]]
@@ -4374,12 +4374,8 @@ dependencies = [
  "memchr 2.4.0",
  "mio 0.7.11",
  "num_cpus",
- "once_cell",
- "parking_lot",
  "pin-project-lite 0.2.6",
- "signal-hook-registry",
  "tokio-macros 1.2.0",
- "winapi 0.3.9",
 ]
 
 [[package]]
@@ -4824,7 +4820,7 @@ version = "0.8.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "bc5cf98d8186244414c848017f0e2676b3fcb46807f6668a97dfe67359a3c4b7"
 dependencies = [
- "getrandom 0.2.2",
+ "getrandom 0.2.3",
  "serde",
 ]
 

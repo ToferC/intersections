@@ -460,15 +460,7 @@ pub async fn translate_experience_phrases<'a>(exp: Arc<RawExperience>, lang: Arc
         }
     };
 
-    let tier = match std::env::var("DEEPL_API_TIER") {
-        Ok(val) if val == "FREE" => true,
-        _ => {
-            eprintln!("Error: no DEEPL_API_TIER found. Defaulting to false.");
-            false
-        }
-    };
-
-    let deepl = DeepL::new(key, tier);
+    let deepl = DeepL::new(key); 
     
     let mut translate_strings: Vec<String> = Vec::new();
     
@@ -533,7 +525,7 @@ pub async fn translate_experience_phrases<'a>(exp: Arc<RawExperience>, lang: Arc
             p
         },
         Err(e) => {
-            println!("Does not exist - creating{}", e);
+            println!("Does not exist - creating {}", e);
             Phrases::add_translation(trans).expect("unable to add translation")
         }
     };
@@ -558,7 +550,7 @@ pub async fn translate_experience_phrases<'a>(exp: Arc<RawExperience>, lang: Arc
                 p
             },
             Err(e) => {
-                println!("Does not exist - creating{}", e);
+                println!("Does not exist - creating {}", e);
                 Phrases::add_translation(trans).expect("unable to add translation")
             }
         };

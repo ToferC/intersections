@@ -207,7 +207,7 @@ pub async fn handle_experience_form_input(
 
                 println!("Sending experience to translation");
                 let _translations = spawn(
-                    translate_experience_phrases(c, l)).await;
+                    translate_experience_phrases(c, l));
 
                 let node = Node::new(
                     raw_exp.name_id,
@@ -402,7 +402,7 @@ pub async fn add_handle_experience_form_input(
 
     println!("Sending experience to translation");
     let _translations = spawn(
-        translate_experience_phrases(c, l)).await;
+        translate_experience_phrases(c, l));
 
     let node = Node::new(
         raw_exp.name_id,
