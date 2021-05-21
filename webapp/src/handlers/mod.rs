@@ -113,7 +113,8 @@ pub use self::base::{
     index,
     about,
     find_experience, 
-    person_api, 
+    person_api,
+    api_phrases,
 };
 
 pub use self::errors::{

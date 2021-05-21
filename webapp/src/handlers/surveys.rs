@@ -223,11 +223,11 @@ pub async fn handle_experience_form_input(
                 let new_person = People::create(&person.clone()).expect("Unable to add person to DB");
                 
                 // Check if node exists, if not create it
-                let result = Nodes::find_by_slug(&node.slug, &lang);
+                let result = Nodes::find_by_slug(&node.slug);
                             
                 let node= match result {
                     // target exists
-                    Ok((target, _p)) => {
+                    Ok(target) => {
                         target
                     }
                     Err(e) => {
@@ -415,10 +415,10 @@ pub async fn add_handle_experience_form_input(
     let inclusivity = BigDecimal::new(inclusivity.to_bigint().unwrap(), 2);
     
     // Check if node exists, if not create it
-    let result = Nodes::find_by_slug(&node.slug, &lang);
+    let result = Nodes::find_by_slug(&node.slug);
     
     let node = match result {
-        Ok((target, _p)) => {
+        Ok(target) => {
             target
         }
         Err(e) => {

@@ -5,7 +5,7 @@ use crate::{AppData, generate_basic_context};
 use diesel::prelude::*;
 use diesel::{QueryDsl, BelongingToDsl};
 
-use crate::models::{Experiences, Nodes, People};
+use crate::models::{Experiences, Nodes, People, Phrases};
 use database;
 
 use crate::schema::{nodes};
@@ -54,6 +54,14 @@ pub async fn about(
 pub async fn api_base() -> impl Responder {
 
     let data = Experiences::load_api_data().unwrap();
+
+    HttpResponse::Ok().json(data)
+}
+
+#[get("/api/phrases")]
+pub async fn api_phrases() -> impl Responder {
+
+    let data = Phrases::find_all().unwrap();
 
     HttpResponse::Ok().json(data)
 }

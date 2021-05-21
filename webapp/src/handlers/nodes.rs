@@ -9,7 +9,7 @@ use diesel::{QueryDsl, BelongingToDsl};
 use std::collections::HashMap;
 
 use crate::{AppData, generate_basic_context};
-use crate::models::{Experiences, Nodes, Communities, User, People};
+use crate::models::{Experiences, Nodes, Communities, User, People, Phrases};
 use database;
 use crate::models::{AggregateExperience, generate_node_cyto_graph};
 use error_handler::error_handler::CustomError;
@@ -29,10 +29,10 @@ pub async fn node_page(
 
     let conn = database::connection().expect("Unable to connect to db");
     
-    let node_select = Nodes::find_by_slug(&node_slug, &lang);
+    let node_select = Nodes::find_by_slug(&node_slug);
 
     match node_select {
-        Ok((node, node_name)) => {
+        Ok(node) => {
 
             // get connected nodes via people with experiencee connections to our prime node
             let experience_vec: Vec<Experiences> = Experiences::belonging_to(&node)
@@ -90,6 +90,8 @@ pub async fn node_page(
         
             // Aggregate info from experiences related to the prime node
             let node_experience = AggregateExperience::from(experience_vec, &lang);
+
+            let node_name = Phrases::find(node.node_name, &lang).expect("Unable to load node_title");
         
             ctx.insert("title", &format!("{} node", &node_name.text));
         
@@ -157,10 +159,10 @@ pub async fn community_node_page(
             // get ids of people in the community
             let community_people_ids = People::find_ids_from_community(community.id).expect("Unable to find community members");
             
-            let node_select = Nodes::find_by_slug(&node_slug, &lang);
+            let node_select = Nodes::find_by_slug(&node_slug);
 
             match node_select {
-                Ok((node, node_name)) => {
+                Ok(node) => {
 
                     // get connected nodes via people with experience connections to our prime node and community
                     let experience_vec: Vec<Experiences> = experiences::table
@@ -238,8 +240,17 @@ pub async fn community_node_page(
                     ctx.insert("title", &format!("{} node in {} community", &node_experience.name, &community.tag));
                 
                     ctx.insert("node", &node);
+                    let node_name = Phrases::find(node.node_name, &lang);
 
-                    ctx.insert("node_name", &node_name.text);
+                    let title = match node_name {
+                        Ok(p) => p.text,
+                        Err(e) => {
+                            println!("Unable to load node_title: {}", e);
+                            "Title not found".to_string()
+                        }
+                    };
+
+                    ctx.insert("node_name", &title);
                     
                     ctx.insert("node_experience", &node_experience);
                 
@@ -276,10 +287,10 @@ pub async fn node_graph(
 
     let conn = database::connection().expect("Unable to connect to db");
     
-    let node_select = Nodes::find_by_slug(&node_slug, &lang);
+    let node_select = Nodes::find_by_slug(&node_slug);
 
     match node_select {
-        Ok((node, node_name)) => {
+        Ok(node) => {
 
             // get connected nodes via people with experiencee connections to our prime node
             let mut experience_vec: Vec<Experiences> = Experiences::belonging_to(&node)
@@ -324,6 +335,8 @@ pub async fn node_graph(
             let j = serde_json::to_string_pretty(&graph).unwrap();
             
             ctx.insert("graph_data", &j);
+
+            let node_name = Phrases::find(node.node_name, &lang).expect("Unable to load node_title");
             ctx.insert("node_name", &node_name.text);
         
             let title = "Node Network Graph";
@@ -390,10 +403,10 @@ pub async fn community_node_graph(
         
             let conn = database::connection().expect("Unable to connect to db");
             
-            let node_select = Nodes::find_by_slug(&node_slug, &lang);
+            let node_select = Nodes::find_by_slug(&node_slug);
 
             match node_select {
-                Ok((node, node_name)) => {
+                Ok(node) => {
 
                     // get connected nodes via people with experiencee connections to our prime node
                     let mut experience_vec: Vec<Experiences> = Experiences::belonging_to(&node)
@@ -444,6 +457,8 @@ pub async fn community_node_graph(
                     let j = serde_json::to_string_pretty(&graph).unwrap();
                     
                     ctx.insert("graph_data", &j);
+
+                    let node_name = Phrases::find(node.node_name, &lang).expect("Unable to load node_title");
                     ctx.insert("node_name", &node_name.to_owned());
                 
                     ctx.insert("community", &community);

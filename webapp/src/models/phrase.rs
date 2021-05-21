@@ -96,6 +96,13 @@ impl Phrases {
         Ok(phrase)
     }
 
+    pub fn find_all() -> Result<Vec<Self>, CustomError> {
+        let conn = database::connection()?;
+        let phrases = phrases::table.load::<Phrases>(&conn)?;
+
+        Ok(phrases)
+    }
+
     pub fn delete(id: i32) -> Result<usize, CustomError> {
         let conn = database::connection()?;
         let res = diesel::delete(phrases::table.filter(phrases::id.eq(id))).execute(&conn)?;

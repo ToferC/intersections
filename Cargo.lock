@@ -1449,6 +1449,7 @@ dependencies = [
  "bigdecimal",
  "chrono",
  "database",
+ "deepl-api",
  "dotenv",
  "error_handler",
  "futures",
@@ -1457,7 +1458,7 @@ dependencies = [
  "serde",
  "serde_derive",
  "serde_json",
- "tokio 1.6.0",
+ "tokio 0.2.25",
  "webapp",
 ]
 
@@ -4358,7 +4359,7 @@ dependencies = [
  "pin-project-lite 0.1.12",
  "signal-hook-registry",
  "slab",
- "tokio-macros 0.2.6",
+ "tokio-macros",
  "winapi 0.3.9",
 ]
 
@@ -4375,7 +4376,6 @@ dependencies = [
  "mio 0.7.11",
  "num_cpus",
  "pin-project-lite 0.2.6",
- "tokio-macros 1.2.0",
 ]
 
 [[package]]
@@ -4383,17 +4383,6 @@ name = "tokio-macros"
 version = "0.2.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "e44da00bfc73a25f814cd8d7e57a68a5c31b74b3152a0a1d1f590c97ed06265a"
-dependencies = [
- "proc-macro2",
- "quote",
- "syn",
-]
-
-[[package]]
-name = "tokio-macros"
-version = "1.2.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c49e3df43841dafb86046472506755d8501c5615673955f6aa17181125d13c37"
 dependencies = [
  "proc-macro2",
  "quote",

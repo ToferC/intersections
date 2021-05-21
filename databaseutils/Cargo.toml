@@ -11,7 +11,7 @@ webapp = { path = "../webapp" }
 database = { path = "../database"}
 error_handler = { path = "../error_handler" }
 
-tokio = { version = "1", features = ["rt", "macros"] }
+tokio = { version = "0.2", features = ["full"] }
 futures = "*"
 dotenv = "0.15.0"
 bigdecimal = { version = "0.1.2", features = ["serde"] }
@@ -23,6 +23,7 @@ chrono = { version = "0.4.11", features = ["serde"] }
 Inflector = "0.5.1"
 
 libretranslate = "0.2.9"
+deepl-api = { git = "https://github.com/ToferC/deepl-api-rs.git", branch="master" }
 
 [[bin]]
 name = "databaseutils"

@@ -44,6 +44,8 @@ use crate::handlers::{
     api_base,
     add_experience_form_handler,
     person_api,
+    api_phrases,
+    
     // graphs
     global_graph,
     //person_graph,
@@ -139,6 +141,7 @@ pub fn init_routes(config: &mut web::ServiceConfig) {
     // api
     config.service(api_base);
     config.service(person_api);
+    config.service(api_phrases);
     // graphs
     config.service(global_graph);
     //config.service(person_graph);

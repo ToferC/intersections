@@ -112,15 +112,13 @@ impl Nodes {
         Ok(node)
     }
 
-    pub fn find_by_slug(node_slug: &String, lang: &str) -> Result<(Self, Phrases), CustomError> {
+    pub fn find_by_slug(node_slug: &String) -> Result<Self, CustomError> {
         // returns a node and localized name based on a slug and language call
         // note that the slug is not localized
         let conn = database::connection()?;
-        let node = nodes::table.inner_join(phrases::table
-            .on(nodes::node_name.eq(phrases::id)
-            .and(phrases::lang.eq(lang))))
+        let node = nodes::table
             .filter(nodes::slug.eq(node_slug))
-            .first::<(Nodes, Phrases)>(&conn)?;
+            .first::<Nodes>(&conn)?;
         Ok(node)
     }
 

@@ -4,7 +4,7 @@ use std::fmt;
 use bigdecimal::{ToPrimitive};
 use std::collections::{BTreeMap, HashMap};
 
-use crate::models::{Experiences, Nodes};
+use crate::models::{Experiences, Nodes, Phrases};
 
 use super::AggregateExperience;
 
@@ -158,11 +158,22 @@ impl GNode {
             None => format!("/{}/node/{}", &lang, a.slug),
         };
 
-        let (_n, node_name) = Nodes::find_by_slug(&a.slug, &lang).expect("Unable to load node from slug");
+        println!("Searching for slug: {}--", &a.slug);
+
+        let n = Nodes::find_by_slug(&a.slug).expect("Unable to load node from slug");
+        let node_name = Phrases::find(n.node_name, &lang);
+
+        let title = match node_name {
+            Ok(p) => p.text,
+            Err(e) => {
+                println!("Unable to load node_title: {}", e);
+                "Title not found".to_string()
+            }
+        };
 
         let node = GNode {
             id: format!("{}", &a.slug),
-            title: format!("{}", &node_name.text),
+            title: format!("{}", &title),
             node_type: String::from("Node"),
             text: vec![a.domain.to_owned()],
             shape: shape,

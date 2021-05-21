@@ -4,14 +4,16 @@ use num_bigint::{ToBigInt};
 use std::{io::{stdin}, process::exit};
 use std::{num::ParseIntError};
 use std::collections::{BTreeMap};
+use std::sync::Arc;
+use tokio::spawn;
 
 use std::fs::File;
 use serde_json::Value;
 
-use libretranslate::{translate, Language};
+use deepl_api::{TranslatableTextList, DeepL};
 
 use error_handler::error_handler::CustomError; 
-use webapp::models::{self, RawExperience, Phrases};
+use webapp::models::{self, Phrases, RawExperience, translate_experience_phrases};
 use database;
 
 pub fn create_user(role: &str) -> Result<i32, CustomError> {
@@ -211,7 +213,9 @@ pub async fn import_demo_data(community_id: i32) {
         for i in e[1].as_array() { // experience Array per each person
             
             for n in i {
-                let name = n[1]["node_name"].as_str().unwrap().trim().to_owned();
+                // n[0] == experience
+                // n[1] == node
+                let name = n[0]["node_name"].as_str().unwrap().trim().to_lower_case().to_owned();
 
                 let mut statements: Vec<String> = Vec::new();
 
@@ -224,6 +228,7 @@ pub async fn import_demo_data(community_id: i32) {
                     statements,
                 );
 
+                // generate phrases for experience
                 let _result = raw_exp.generate_experience_phrases("en")
                     .await
                     .expect("Unable to generate phrases for experience.");
@@ -236,17 +241,17 @@ pub async fn import_demo_data(community_id: i32) {
 
                 let node_data = models::Node::new(
                     raw_exp.name_id,
-                    name.to_owned(),
+                    raw_exp.node_name.to_owned(),
                     n[1]["domain_token"].as_str().unwrap().trim().to_owned(),
                 );
     
                 let node = models::Nodes::create(&node_data);
 
-                let (node, _node_name) = match node {
-                    Ok(n) => (n, Phrases { id: raw_exp.name_id, lang: "en".to_string(), text: name.to_owned(), machine_translation: false}),
+                let node = match node {
+                    Ok(n) => n,
                     Err(e) => {
                         println!("{}", e);
-                        models::Nodes::find_by_slug(&name.trim().to_snake_case(), "en").expect("Unable to load node")
+                        models::Nodes::find_by_slug(&name.trim().to_snake_case()).expect("Unable to find node by slug")
                     }
                 };
 
@@ -274,9 +279,18 @@ pub async fn import_demo_data(community_id: i32) {
         };
     };
 
-    // Break vec into chunks and process
-    for e in raw_experience_vec.chunks(10) {
-        batch_translate(e.to_vec(), "en").await;
+    // Machine translation for experiences
+    for e in raw_experience_vec {
+        // translate user strings and map to existing phrases
+        // async translation thread
+        let copy_raw_exp = e.clone();
+        let c = Arc::new(copy_raw_exp);
+        
+        let l = Arc::new("en".to_string());
+
+        println!("Sending experience to translation");
+        let _translations = spawn(
+            translate_experience_phrases(c, l));
     };
 
     comm_data.inclusivity_map = temp_incl_map;
@@ -332,34 +346,42 @@ pub async fn generate_dummy_data(community_id: i32) {
 
     };
 
+    let key = match std::env::var("DEEPL_API_KEY") {
+        Ok(val) if val.len() > 0 => val,
+        _ => {
+            eprintln!("Error: no DEEPL_API_KEY found. Please provide your API key in this environment variable.");
+            std::process::exit(1);
+        }
+    };
+    
+    // send text to Deepl
     let mut translate_strings: Vec<String> = Vec::new();
         
     for e in &raw_exp_vec {
         translate_strings.push(format!("{}.\n", &e.node_name));
 
-        for (i, s) in e.statements.clone().iter().enumerate() {
+        for s in e.statements.clone().iter() {
             if s != "" {
-                if i+1 == e.statements.len() {
-                    translate_strings.push(format!("{}", &s));
-                } else {
-                    translate_strings.push(format!("{}.\n", &s));
-                }
+                translate_strings.push(s.clone());
             };
         };
     };
 
-    let source = Language::English;
-    let target = Language::French;
+    let deepl = DeepL::new(key); 
 
-    let input = translate_strings.concat();
+    let source = "EN".to_string();
+    let target = "FR".to_string();
 
-    let data = translate(source, target, input)
-        .await
-        .unwrap();
+    println!("Sending Translation to DeepL");
 
-    //let en = data.input.split(". ").into_iter();
-    let fr: Vec<String> = data.output.split(".\n").map(|s| s.to_string()).collect();
-    //let en = data.input.split(".\n");
+    // Translate Text
+    let texts = TranslatableTextList {
+        source_language: Some(source),
+        target_language: target,
+        texts: translate_strings,
+    };
+
+    let data = deepl.translate(None, texts).await.unwrap();
     
     for (i, l) in base_experiences.iter().enumerate() {
         
@@ -391,7 +413,7 @@ pub async fn generate_dummy_data(community_id: i32) {
                 let trans = models::Phrases {
                     id: phrase.id,
                     lang: "fr".to_string(),
-                    text: fr[s].to_lowercase().replace("/",""),
+                    text: data[s].text.trim().to_lowercase().replace("/",""),
                     machine_translation: true,
                 };
     
@@ -438,7 +460,7 @@ pub async fn generate_dummy_data(community_id: i32) {
                 let trans = models::Phrases {
                     id: phrase.id,
                     lang: "fr".to_string(),
-                    text: fr[s].to_lowercase().replace("/",""),
+                    text: data[s].text.to_lowercase().replace("/",""),
                     machine_translation: true,
                 };
     
@@ -646,31 +668,42 @@ pub async fn add_base_nodes() {
             ("policy analyst", "role"),
         ];
 
+        let key = match std::env::var("DEEPL_API_KEY") {
+            Ok(val) if val.len() > 0 => val,
+            _ => {
+                eprintln!("Error: no DEEPL_API_KEY found. Please provide your API key in this environment variable.");
+                std::process::exit(1);
+            }
+        };
+    
+        let deepl = DeepL::new(key); 
+
+        let source = "EN".to_string();
+        let target = "FR".to_string();
+
         let mut translate_strings: Vec<String> = Vec::new();
         
         for n in &nodes {
-            translate_strings.push(format!("{}.\n", &n.0));
+            translate_strings.push(n.0.to_owned());
         };
 
-        let source = Language::English;
-        let target = Language::French;
+        println!("Sending Translation to DeepL");
 
-        let input = translate_strings.concat();
+        // Translate Text
+        let texts = TranslatableTextList {
+            source_language: Some(source),
+            target_language: target,
+            texts: translate_strings,
+        };
 
-        println!("Sending Translation to LibreTranslate");
-
-        let data = translate(source, target, input)
-            .await;
+        let data = deepl.translate(None, texts).await;
 
         match data {
-            Ok(data) => {
-
-                //let en = data.input.split(". ").into_iter();
-                let fr = data.output.split(".\n");
+            Ok(translated) => {
         
                 let copy = nodes.clone();
         
-                for (n, f) in copy.iter().zip(fr) {
+                for (n, f) in copy.iter().zip(translated) {
         
                     let prep_phrase = models::InsertablePhrase::new("en", n.0.to_owned(), false);
         
@@ -692,7 +725,7 @@ pub async fn add_base_nodes() {
                     let trans = models::Phrases {
                         id: phrase.id,
                         lang: "fr".to_string(),
-                        text: f.to_lowercase().replace("/",""),
+                        text: f.text.to_lowercase().replace("/",""),
                         machine_translation: true,
                     };
         
@@ -732,34 +765,42 @@ pub async fn add_base_nodes() {
 }
 
 pub async fn batch_translate(raw_experience_vec: Vec<RawExperience>, lang: &str) {
-    // send text to Libretranslate
+    
+    let key = match std::env::var("DEEPL_API_KEY") {
+        Ok(val) if val.len() > 0 => val,
+        _ => {
+            eprintln!("Error: no DEEPL_API_KEY found. Please provide your API key in this environment variable.");
+            std::process::exit(1);
+        }
+    };
+    
+    // send text to Deepl
     let mut translate_strings: Vec<String> = Vec::new();
         
     for e in &raw_experience_vec {
-        translate_strings.push(format!("{}.\n", &e.node_name));
+        translate_strings.push(e.node_name.clone());
 
-        for (i, s) in e.statements.clone().iter().enumerate() {
+        for s in e.statements.clone().iter() {
             if s != "" {
-                if i+1 == e.statements.len() {
-                    translate_strings.push(format!("{}.\n", &s));
-                } else {
-                    translate_strings.push(format!("{}.\n", &s));
-                }
+                    translate_strings.push(s.clone());
             };
         };
     };
 
-    // Prepare translation
-    let mut source = Language::English;
-    let mut target = Language::French;
+    let deepl = DeepL::new(key); 
+
+    let mut source = "EN".to_string();
+    let mut target = "FR".to_string();
+
+    let lang = &*lang.clone();
     
-    let translate_lang = match &lang {
-        &"en" => {
+    let translate_lang = match lang {
+        "en" => {
             "fr".to_string()
         },
-        &"fr" => {
-            source = Language::French;
-            target = Language::English;
+        "fr" => {
+            source = "FR".to_string();
+            target = "EN".to_string();
             "en".to_string()
         },
         _ => {
@@ -767,26 +808,26 @@ pub async fn batch_translate(raw_experience_vec: Vec<RawExperience>, lang: &str)
         },
     };
 
-    let input = translate_strings.concat();
+    println!("Sending Translation to DeepL");
 
-    // Send translation
-    println!("Sending translation to Libretranslate");
+    // Translate Text
+    let texts = TranslatableTextList {
+        source_language: Some(source),
+        target_language: target,
+        texts: translate_strings,
+    };
 
-    let data = translate(source, target, input)
-        .await
-        .unwrap();
-
-    //let en = data.input.split(". ").into_iter();
-    let fr: Vec<String> = data.output.split(".\n").map(|s| s.to_string()).collect();
+    let data = deepl.translate(None, texts).await.unwrap();
 
     let mut row_counter: usize = 0;
+
     for e in raw_experience_vec.iter() {
         
         // node_name
         let trans = models::Phrases {
             id: e.name_id,
             lang: translate_lang.to_string(),
-            text: fr[row_counter].to_lowercase().replace("/",""),
+            text: data[row_counter].text.to_lowercase().replace("/",""),
             machine_translation: true,
         };
 
@@ -815,7 +856,7 @@ pub async fn batch_translate(raw_experience_vec: Vec<RawExperience>, lang: &str)
             let trans = models::Phrases {
                 id: phrase_id,
                 lang: "fr".to_string(),
-                text: fr[row_counter].to_lowercase().replace("/",""),
+                text: data[row_counter].text.to_lowercase().replace("/",""),
                 machine_translation: true,
             };
 
