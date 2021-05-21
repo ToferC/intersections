@@ -234,15 +234,18 @@ impl Experiences {
     }
 
     pub fn get_phrases(&self, lang: &str) -> Vec<Phrases> {
-        let mut phrase_ids = Vec::new();
-        phrase_ids.push(self.node_name);
+        let mut phrases = Vec::new();
 
-        phrase_ids.extend(&self.statements);
+        let name_phrase = Phrases::find(self.node_name, &lang).expect("Unable to load experience name");
 
-        let p = Phrases::get_phrases_from_ids(phrase_ids, &lang)
+        phrases.push(name_phrase);
+
+        let p = Phrases::get_phrases_from_ids(self.statements.clone(), &lang)
             .expect("Unable to load localizations from experience");
 
-        p
+        phrases.extend(p);
+
+        phrases
     }
 }
 
@@ -280,7 +283,6 @@ impl AggregateExperience {
         let statement_phrases = Phrases::get_phrases_from_ids(phrase_ids, &lang)
             .expect("Unable to load phrases from experience");
         
-
         for s in statement_phrases.iter() {
             *counts.entry(s.text.clone()).or_insert(0) += 1;
         };
@@ -325,19 +327,6 @@ impl RawExperience {
     pub async fn generate_experience_phrases(&mut self, lang: &str) -> Result<bool, CustomError> {
         // Saves experience phrases in language of origin
         // Note that this also generates the node name for any new nodes
-
-        let translate_lang = match lang {
-            "en" => {
-                "fr".to_string()
-            },
-            "fr" => {
-                "en".to_string()
-            },
-            _ => {
-                "fr".to_string()
-            },
-        };
-
         let prep_phrase = InsertablePhrase::new(lang, self.node_name.to_lowercase().trim().replace("/",""), false);
 
         // check to see if phrase already exists, return phrase if it does
@@ -354,16 +343,6 @@ impl RawExperience {
                 println!("Does not exist - creating: {}", e);
                 // add new phrase to db
                 let p = Phrases::create(&prep_phrase).expect("Unable to create phrase");
-
-                /*
-                // Add placeholder for translations -- should design a find_or_create function
-                let mut trans_placeholder = p.clone();
-                trans_placeholder.lang = translate_lang;
-                trans_placeholder.text = "translation pending".to_owned();
-                trans_placeholder.machine_translation = true;
-                Phrases::add_translation(trans_placeholder).expect("Unable to insert translation placeholder");
-                */
-
                 p
             }
         };
@@ -498,128 +477,6 @@ pub async fn translate_experience_phrases<'a>(exp: Arc<RawExperience>, lang: Arc
             Err(e) => {
                 println!("Does not exist - creating translation: {}", e);
                 Phrases::add_translation(trans).expect("unable to add translation")
-            }
-        };
-        
-        println!("Success - Name: {} ({}) -> {} ({})", &exp.node_name, exp.name_id, &translation.text, translation.id);
-    };
-}
-
-pub async fn translate_experience_phrases2<'a>(exp: Arc<RawExperience>, lang: Arc<String>) {
-    // Translates a complete experience including node name and statements
-    // Returns a String that is meant to be split on "\n."
-
-    let key = match std::env::var("DEEPL_API_KEY") {
-        Ok(val) if val.len() > 0 => val,
-        _ => {
-            eprintln!("Error: no DEEPL_API_KEY found. Please provide your API key in this environment variable.");
-            std::process::exit(1);
-        }
-    };
-
-    let deepl = DeepL::new(key); 
-    
-    let mut translate_strings: Vec<String> = Vec::new();
-    
-    translate_strings.push(exp.node_name.clone());
-    
-    for s in exp.statements.iter() {
-        if s != "" {
-            translate_strings.push(s.clone());
-        }
-    };
-    
-    let mut source = "EN".to_string();
-    let mut target = "FR".to_string();
-
-    let lang = &*lang.clone();
-    
-    let translate_lang = match lang.as_str() {
-        "en" => {
-            "fr".to_string()
-        },
-        "fr" => {
-            source = "FR".to_string();
-            target = "EN".to_string();
-            "en".to_string()
-        },
-        _ => {
-            "fr".to_string()
-        },
-    };
-    
-    println!("Translating experience: {}", &exp.node_name);
-            
-     // Translate Text
-     let texts = TranslatableTextList {
-        source_language: Some(source),
-        target_language: target,
-        texts: translate_strings,
-    };
-
-    let translated = deepl.translate(None, texts).await.unwrap();
-
-    // Update phrase for experience name
-    let name_trans = translated.first().unwrap().text.clone();
-    
-    let trans = InsertablePhrase {
-        lang: translate_lang.to_owned(),
-        text: name_trans.trim().to_lowercase().replace("/",""),
-        machine_translation: true,
-    };
-    
-    // see if translation exists
-    let p = Phrases::find_from_text(&trans.text, &trans.lang);
-    
-    println!("Checking to see if phrase: {} exists", &trans.text);
-    let translation = match p {
-        Ok(p) => {
-            println!("Translation \"{}\" exists", &p.text);
-            println!("Updating");
-            let p = Phrases::update(p.id, &trans).expect("Unable to update phrase");
-            p
-        },
-        Err(e) => {
-            println!("Does not exist - creating translation: {}", e);
-            Phrases::add_translation(Phrases {
-                id: exp.name_id,
-                lang: translate_lang.to_owned(),
-                text: name_trans.trim().to_lowercase().replace("/",""),
-                machine_translation: true,
-            }).expect("unable to add translation")
-        }
-    };
-    
-    println!("Success - Name: {} ({}) -> {} ({})", &exp.node_name, exp.name_id, &translation.text, translation.id);
-
-    // Update phrases for experience statements
-    for (id, s) in exp.phrase_ids.clone().into_iter().zip(translated.into_iter().skip(1)) {
-
-        let trans = InsertablePhrase {
-            lang: translate_lang.to_owned(),
-            text: s.text.trim().to_lowercase().replace("/",""),
-            machine_translation: true,
-        };
-        
-        // See if we already have a phrase for this translated text
-        let p = Phrases::find_from_text(&trans.text, &trans.lang);
-
-        println!("Checking to see if phrase: {} exists", &trans.text);
-        let translation = match p {
-            Ok(p) => {
-                println!("Translation \"{}\" exists", &p.text);
-                println!("Updating");
-                let p = Phrases::update(p.id, &trans).expect("Unable to update phrase");
-                p
-            },
-            Err(e) => {
-                println!("Does not exist - creating translation: {}", e);
-                Phrases::add_translation(Phrases {
-                    id: id,
-                    lang: translate_lang.to_owned(),
-                    text: name_trans.trim().to_lowercase().replace("/",""),
-                    machine_translation: true,
-                }).expect("unable to add translation")
             }
         };
         
