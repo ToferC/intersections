@@ -14,7 +14,6 @@ use database;
 use crate::models::{People, Nodes, Phrases, InsertablePhrase};
 use crate::schema::{experiences, nodes, phrases};
 
-use libretranslate::{translate, Language};
 use deepl_api::{DeepL, TranslatableTextList};
 
 #[derive(Debug, Serialize, Deserialize, AsChangeset, Insertable)]

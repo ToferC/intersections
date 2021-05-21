@@ -3,7 +3,6 @@ use actix_web::{web, HttpRequest, HttpResponse, Responder, post, get, ResponseEr
 use bigdecimal::{BigDecimal, ToPrimitive};
 use actix_identity::Identity;
 use tokio::{spawn};
-use futures::future::{lazy};
 use inflector::Inflector;
 use num_bigint::{ToBigInt};
 use serde::{Deserialize, Serialize};

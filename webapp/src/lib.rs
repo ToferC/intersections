@@ -2,7 +2,7 @@
 extern crate diesel;
 use std::sync::Mutex;
 
-use actix_web::{App, web};
+use actix_web::{web};
 use tera::{Tera, Context};
 use actix_session::Session;
 use actix_identity::Identity;

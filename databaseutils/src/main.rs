@@ -2,7 +2,6 @@ use std::{io::{stdin}, num::ParseIntError};
 
 use databaseutils::{create_user, create_test_admin, prepopulate_db};
 use database;
-use tokio::*;
 
 #[tokio::main]
 async fn main() {
