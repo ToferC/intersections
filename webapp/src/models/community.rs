@@ -10,7 +10,7 @@ use bigdecimal::{ToPrimitive};
 
 use crate::schema::{communities};
 use crate::generate_unique_code;
-use crate::models::{People, Experiences};
+use crate::models::{People, Experiences, Phrases, InsertablePhrase};
 use error_handler::error_handler::CustomError;
 use database;
 
@@ -237,4 +237,3 @@ impl Communities {
         Communities::update(&target)
     }
 }
-
