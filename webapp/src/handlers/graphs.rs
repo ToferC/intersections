@@ -17,7 +17,7 @@ pub async fn data_global_graph(
     // this function is a placeholder in case we go back here
     data: web::Data<AppData>,
     graph: web::Data<Mutex<CytoGraph>>,
-    node_names: web::Data<Mutex<Vec<(String, String)>>>,
+    
     req: HttpRequest,
   
     id: Identity,
@@ -29,7 +29,7 @@ pub async fn data_global_graph(
 
     drop(graph);
     
-    let (mut ctx, _session_user, _role, _lang) = generate_basic_context(id, &lang, req.uri().path(), node_names);
+    let (mut ctx, _session_user, _role, _lang) = generate_basic_context(id, &lang, req.uri().path());
 
     ctx.insert("graph_data", &j);
 
@@ -44,7 +44,7 @@ pub async fn data_global_graph(
 pub async fn global_graph(
     web::Path(lang): web::Path<String>,
     data: web::Data<AppData>,
-    node_names: web::Data<Mutex<Vec<(String, String)>>>,
+    
     id:Identity,
     req: HttpRequest,
   
@@ -64,7 +64,7 @@ pub async fn global_graph(
 
     let j = serde_json::to_string_pretty(&graph).unwrap();
     
-    let (mut ctx, _session_user, _role, _lang) = generate_basic_context(id, &lang, req.uri().path(), node_names);
+    let (mut ctx, _session_user, _role, _lang) = generate_basic_context(id, &lang, req.uri().path());
 
     ctx.insert("graph_data", &j);
 
@@ -79,7 +79,7 @@ pub async fn global_graph(
 pub async fn full_community_node_graph(
     data: web::Data<AppData>,
     web::Path((lang, community_slug)): web::Path<(String, String)>,
-    node_names: web::Data<Mutex<Vec<(String, String)>>>,
+    
     req: HttpRequest,
     id: Identity,
   
@@ -91,7 +91,7 @@ pub async fn full_community_node_graph(
     match community_result {
         Ok(community) => {
             
-            let (mut ctx, session_user, _role, _lang) = generate_basic_context(id, &lang, req.uri().path(), node_names);
+            let (mut ctx, session_user, _role, _lang) = generate_basic_context(id, &lang, req.uri().path());
 
             let session_user_id = match User::find_id_from_slug(&session_user) {
                 Ok(id) => id,

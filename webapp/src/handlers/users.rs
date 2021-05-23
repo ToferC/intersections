@@ -1,7 +1,5 @@
 // example auth: https://github.com/actix/actix-extras/blob/master/actix-identity/src/lib.rs
 
-use std::sync::Mutex;
-
 use actix_web::{HttpRequest, HttpResponse, Responder, get, post, web, ResponseError};
 use actix_identity::{Identity};
 use inflector::Inflector;
@@ -30,11 +28,11 @@ pub struct AdminUserForm {
 pub async fn user_index(
     data: web::Data<AppData>,
     web::Path(lang): web::Path<String>,
-    node_names: web::Data<Mutex<Vec<(String, String)>>>,
+    
     id: Identity,
     req:HttpRequest) -> impl Responder {
 
-    let (mut ctx, _session_user, role, _lang) = generate_basic_context(id, &lang, req.uri().path(), node_names);
+    let (mut ctx, _session_user, role, _lang) = generate_basic_context(id, &lang, req.uri().path());
 
     if role != "admin".to_string() {
         let err = CustomError::new(
@@ -66,12 +64,12 @@ pub async fn user_index(
 pub async fn user_page_handler(
     web::Path((lang, slug)): web::Path<(String, String)>,
     data: web::Data<AppData>,
-    node_names: web::Data<Mutex<Vec<(String, String)>>>,
+    
     req:HttpRequest,
     id: Identity,
 ) -> impl Responder {
     
-    let (mut ctx, session_user, role, _lang) = generate_basic_context(id, &lang, req.uri().path(), node_names);
+    let (mut ctx, session_user, role, _lang) = generate_basic_context(id, &lang, req.uri().path());
     
     if session_user.to_lowercase() != slug.to_lowercase() && role != "admin".to_string() {
         let err = CustomError::new(
@@ -117,12 +115,12 @@ pub async fn user_page_handler(
 pub async fn edit_user(
     data: web::Data<AppData>,
     web::Path((lang, slug)): web::Path<(String, String)>,
-    node_names: web::Data<Mutex<Vec<(String, String)>>>,
+    
     req:HttpRequest,
     id: Identity,
 ) -> impl Responder {
     
-    let (mut ctx, session_user, role, _lang) = generate_basic_context(id, &lang, req.uri().path(), node_names);
+    let (mut ctx, session_user, role, _lang) = generate_basic_context(id, &lang, req.uri().path());
 
     let user = User::find_from_slug(&slug);
 
@@ -240,12 +238,12 @@ pub async fn edit_user_post(
 pub async fn admin_edit_user(
     data: web::Data<AppData>,
     web::Path((lang, slug)): web::Path<(String, String)>,
-    node_names: web::Data<Mutex<Vec<(String, String)>>>,
+    
     req:HttpRequest,
     id: Identity,
 ) -> impl Responder {
     
-    let (mut ctx, _session_user, role, _lang) = generate_basic_context(id, &lang, req.uri().path(), node_names);
+    let (mut ctx, _session_user, role, _lang) = generate_basic_context(id, &lang, req.uri().path());
 
     if &role != &"admin".to_string() {
         let err = CustomError::new(
@@ -352,12 +350,12 @@ pub async fn admin_edit_user_post(
 pub async fn delete_user_handler(
     web::Path((lang, slug)): web::Path<(String, String)>,
     data: web::Data<AppData>,
-    node_names: web::Data<Mutex<Vec<(String, String)>>>,
+    
     req: HttpRequest,
     id: Identity,
 ) -> impl Responder {
 
-    let (mut ctx, session_user, role, _lang) = generate_basic_context(id, &lang, req.uri().path(), node_names);
+    let (mut ctx, session_user, role, _lang) = generate_basic_context(id, &lang, req.uri().path());
     
     if role != "admin".to_string() && &session_user != &slug {
         println!("User not admin");

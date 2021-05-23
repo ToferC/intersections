@@ -1,8 +1,6 @@
 #[macro_use]
 extern crate diesel;
-use std::sync::Mutex;
 
-use actix_web::{web};
 use tera::{Tera, Context};
 use actix_session::Session;
 use actix_identity::Identity;
@@ -64,13 +62,12 @@ pub fn extract_identity_data(id: &Identity) -> (String, String) {
     (session_user, role)
 }
 
-/// Generate context, session_user and role from id and node_names
+/// Generate context, session_user, role and node_names from id and lang
 pub fn generate_basic_context(
         id: Identity,
         lang: &str,
         path: &str,
-        node_names: web::Data<Mutex<Vec<(String, String)>>>) -> (Context, String, String, String
-    ) 
+    ) -> (Context, String, String, String) 
 {    
     let mut ctx = Context::new();
 
@@ -88,8 +85,10 @@ pub fn generate_basic_context(
     ctx.insert("lang", &validated_lang);
     ctx.insert("path", &path);
 
+    let node_names = models::Nodes::find_all_linked_names_slugs(&lang).expect("Unable to load names");
+
     // add node_names for navbar drop down
-    ctx.insert("node_names", &node_names.lock().expect("Unable to unlock").clone());
+    ctx.insert("node_names", &node_names);
 
     (ctx, session_user, role, lang.to_owned())
 }

@@ -50,6 +50,19 @@ impl Phrases {
         Ok(p)
     }
 
+    pub fn update_or_create(phrase: &InsertablePhrase) -> Result<Self, CustomError> {
+        let conn = database::connection()?;
+
+        let p = diesel::insert_into(phrases::table)
+            .values(phrase)
+            .on_conflict((phrases::lang, phrases::text))
+            .do_update()
+            .set(phrase)
+            .get_result(&conn)?;
+
+        Ok(p)
+    }
+
     pub fn add_translation(phrase: Phrases) -> Result<Self, CustomError> {
         let conn = database::connection()?;
         let p = diesel::insert_into(phrases::table)

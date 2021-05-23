@@ -88,6 +88,8 @@ impl Nodes {
     */
 
     pub fn find_all_linked_names_slugs(lang: &str) -> Result<Vec<(String, String)>, CustomError> {
+        // return string and slug for all nodes created outside of demo community
+        
         let conn = database::connection()?;
 
         let node_ids = Experiences::find_real_node_ids().expect("Unable to load experiences");

@@ -1,4 +1,3 @@
-use std::{sync::Mutex};
 use actix_web::{web, get, HttpResponse, HttpRequest, Responder};
 use actix_identity::Identity;
 use crate::{AppData, generate_basic_context};
@@ -24,12 +23,12 @@ pub async fn raw_index(
 pub async fn index(
     data: web::Data<AppData>,
     web::Path(lang): web::Path<String>,
-    node_names: web::Data<Mutex<Vec<(String, String)>>>, 
+     
     req:HttpRequest,
     id: Identity,
 ) -> impl Responder {
     
-    let (ctx, _, _, _) = generate_basic_context(id, &lang, req.uri().path(), node_names);
+    let (ctx, _, _, _) = generate_basic_context(id, &lang, req.uri().path());
     
     let rendered = data.tmpl.render("index.html", &ctx).unwrap();
     HttpResponse::Ok().body(rendered)
@@ -39,12 +38,12 @@ pub async fn index(
 pub async fn about(
     data: web::Data<AppData>,
     web::Path(lang): web::Path<String>,
-    node_names: web::Data<Mutex<Vec<(String, String)>>>, 
+     
     req:HttpRequest,
     id: Identity,
 ) -> impl Responder {
 
-    let (ctx, _, _, _) = generate_basic_context(id, &lang, req.uri().path(), node_names);
+    let (ctx, _, _, _) = generate_basic_context(id, &lang, req.uri().path());
 
     let rendered = data.tmpl.render("about.html", &ctx).unwrap();
     HttpResponse::Ok().body(rendered)

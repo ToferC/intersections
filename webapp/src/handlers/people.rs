@@ -1,4 +1,4 @@
-use std::sync::Mutex;
+
 
 use actix_web::{web, get, post, HttpResponse, HttpRequest, Responder, ResponseError};
 use actix_identity::Identity;
@@ -12,12 +12,12 @@ use crate::models::AggregateExperience;
 pub async fn person_page(
     web::Path((lang, code)): web::Path<(String, String)>, 
     data: web::Data<AppData>,
-    node_names: web::Data<Mutex<Vec<(String, String)>>>,
+    
     req:HttpRequest,
     id: Identity,
 ) -> impl Responder {
     
-    let (mut ctx, _session_user, _role, _lang) = generate_basic_context(id, &lang, req.uri().path(), node_names);
+    let (mut ctx, _session_user, _role, _lang) = generate_basic_context(id, &lang, req.uri().path());
 
     let person_select = People::find_from_code(&code);
 
@@ -76,12 +76,12 @@ pub async fn person_page(
 pub async fn person_graph(
     web::Path((lang, person_id)): web::Path<(String, i32)>,
     data: web::Data<AppData>,
-    node_names: web::Data<Mutex<Vec<(String, String)>>>,
+    
     req: HttpRequest,
     id: Identity,
 ) -> impl Responder {
 
-    let (mut ctx, _session_user, _role, _lang) = generate_basic_context(id, &lang, req.uri().path(), node_names);
+    let (mut ctx, _session_user, _role, _lang) = generate_basic_context(id, &lang, req.uri().path());
     
     let conn = database::connection().expect("Unable to connect to db");
     
@@ -141,12 +141,12 @@ pub async fn person_graph(
 pub async fn delete_person(
     web::Path((lang, code)): web::Path<(String, String)>,
     data: web::Data<AppData>,
-    node_names: web::Data<Mutex<Vec<(String, String)>>>,
+    
     req: HttpRequest,
     id: Identity,
 ) -> impl Responder {
 
-    let (mut ctx, _session_user, _role, _lang) = generate_basic_context(id, &lang, req.uri().path(), node_names);
+    let (mut ctx, _session_user, _role, _lang) = generate_basic_context(id, &lang, req.uri().path());
 
     let person = People::find_from_code(&code);
         

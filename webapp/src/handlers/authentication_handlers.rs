@@ -1,6 +1,5 @@
 // example auth: https://github.com/actix/actix-extras/blob/master/actix-identity/src/lib.rs
 
-use std::sync::Mutex;
 use std::env;
 
 use actix_web::{HttpRequest, HttpResponse, Responder, get, post, web};
@@ -42,12 +41,12 @@ pub struct PasswordForm {
 pub async fn login_handler(
     web::Path(lang): web::Path<String>,
     data: web::Data<AppData>,
-    node_names: web::Data<Mutex<Vec<(String, String)>>>,
+    
     req:HttpRequest,
     id: Identity,
 ) -> impl Responder {
 
-    let (ctx, _session_user, _role, _lang) = generate_basic_context(id, &lang, req.uri().path(), node_names);
+    let (ctx, _session_user, _role, _lang) = generate_basic_context(id, &lang, req.uri().path());
 
     let rendered = data.tmpl.render("authentication/log_in.html", &ctx).unwrap();
     HttpResponse::Ok().body(rendered)
@@ -100,12 +99,12 @@ pub async fn login_form_input(
 pub async fn register_handler(
      web::Path(lang): web::Path<String>,
     data: web::Data<AppData>,
-    node_names: web::Data<Mutex<Vec<(String, String)>>>,
+    
     req:HttpRequest,
     id: Identity,
 ) -> impl Responder {
     
-    let (ctx, _session_user, _role, _lang) = generate_basic_context(id, &lang, req.uri().path(), node_names);
+    let (ctx, _session_user, _role, _lang) = generate_basic_context(id, &lang, req.uri().path());
 
     let rendered = data.tmpl.render("authentication/register.html", &ctx).unwrap();
     HttpResponse::Ok().body(rendered)
@@ -115,12 +114,12 @@ pub async fn register_handler(
 pub async fn registration_error(
     web::Path(lang): web::Path<String>,
     data: web::Data<AppData>,
-    node_names: web::Data<Mutex<Vec<(String, String)>>>,
+    
     req:HttpRequest,
     id: Identity,
 ) -> impl Responder {
     
-    let (ctx, _session_user, _role, _lang) = generate_basic_context(id, &lang, req.uri().path(), node_names);
+    let (ctx, _session_user, _role, _lang) = generate_basic_context(id, &lang, req.uri().path());
 
     let rendered = data.tmpl.render("authentication/registration_error.html", &ctx).unwrap();
     HttpResponse::Ok().body(rendered)
@@ -177,12 +176,12 @@ pub async fn register_form_input(
 pub async fn email_verification(
     web::Path(lang): web::Path<String>,
     data: web::Data<AppData>,
-    node_names: web::Data<Mutex<Vec<(String, String)>>>,
+    
     req:HttpRequest,
     id: Identity,
 ) -> impl Responder {
     
-    let (mut ctx, session_user, role, _lang) = generate_basic_context(id.clone(), &lang, req.uri().path(), node_names);
+    let (mut ctx, session_user, role, _lang) = generate_basic_context(id.clone(), &lang, req.uri().path());
 
     if session_user == "".to_string() && role != "admin".to_string() {
         // person signed in shouldn't be here
@@ -290,12 +289,12 @@ pub async fn logout(
 pub async fn request_password_reset(
     web::Path(lang): web::Path<String>,
     data: web::Data<AppData>,
-    node_names: web::Data<Mutex<Vec<(String, String)>>>,
+    
     req:HttpRequest,
     id: Identity,
 ) -> impl Responder {
     
-    let (ctx, _session_user, _role, _lang) = generate_basic_context(id, &lang, req.uri().path(), node_names);
+    let (ctx, _session_user, _role, _lang) = generate_basic_context(id, &lang, req.uri().path());
 
     let rendered = data.tmpl.render("authentication/request_password_reset.html", &ctx).unwrap();
     HttpResponse::Ok().body(rendered)
@@ -307,7 +306,7 @@ pub async fn request_password_reset_post(
     data: web::Data<AppData>,
     req: HttpRequest, 
     form: web::Form<EmailForm>,
-    node_names: web::Data<Mutex<Vec<(String, String)>>>,
+    
     id: Identity,
 ) -> impl Responder {
     println!("Handling Post Request: {:?}", req);
@@ -332,7 +331,7 @@ pub async fn request_password_reset_post(
             ).expect("Unable to create verification");
 
             // render email
-            let (mut email_ctx, _session_user, _role, _lang) = generate_basic_context(id, &lang, req.uri().path(), node_names);
+            let (mut email_ctx, _session_user, _role, _lang) = generate_basic_context(id, &lang, req.uri().path());
 
             email_ctx.insert("user", &user);
             email_ctx.insert("verification", &token);
@@ -383,12 +382,12 @@ pub async fn request_password_reset_post(
 pub async fn password_email_sent(
      web::Path(lang): web::Path<String>,
     data: web::Data<AppData>,
-    node_names: web::Data<Mutex<Vec<(String, String)>>>,
+    
     req:HttpRequest,
     id: Identity,
 ) -> impl Responder {
     
-    let (ctx, _session_user, _role, _lang) = generate_basic_context(id, &lang, req.uri().path(), node_names);
+    let (ctx, _session_user, _role, _lang) = generate_basic_context(id, &lang, req.uri().path());
 
     let rendered = data.tmpl.render("authentication/password_email_sent.html", &ctx).unwrap();
     HttpResponse::Ok().body(rendered)
@@ -398,7 +397,7 @@ pub async fn password_email_sent(
 pub async fn password_reset(
     web::Path((lang, token)): web::Path<(String, String)>,
     data: web::Data<AppData>,
-    node_names: web::Data<Mutex<Vec<(String, String)>>>,
+    
     req:HttpRequest,
     id: Identity,
 ) -> impl Responder {
@@ -409,7 +408,7 @@ pub async fn password_reset(
         Ok(verified_token) => {
             let user = User::find_from_email(&verified_token.email_address).expect("Unable to load user from email");
 
-            let (mut ctx, _session_user, _role, _lang) = generate_basic_context(id, &lang, req.uri().path(), node_names);
+            let (mut ctx, _session_user, _role, _lang) = generate_basic_context(id, &lang, req.uri().path());
 
             ctx.insert("user", &user);
             ctx.insert("token", &token);

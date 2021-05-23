@@ -1,6 +1,6 @@
 // example auth: https://github.com/actix/actix-extras/blob/master/actix-identity/src/lib.rs
 
-use std::sync::Mutex;
+
 use std::env;
 
 use actix_web::{HttpRequest, HttpResponse, Responder, get, post, web, ResponseError};
@@ -31,11 +31,11 @@ pub struct DeleteCommunityForm {
 pub async fn community_index(
     web::Path(lang): web::Path<String>,
     data: web::Data<AppData>,
-    node_names: web::Data<Mutex<Vec<(String, String)>>>,
+    
     id: Identity,
     req:HttpRequest) -> impl Responder {
     
-    let (mut ctx, _session_user, role, _lang) = generate_basic_context(id, &lang, req.uri().path(), node_names);
+    let (mut ctx, _session_user, role, _lang) = generate_basic_context(id, &lang, req.uri().path());
     
     if role != "admin".to_string() {
         let err = CustomError::new(
@@ -66,11 +66,11 @@ pub async fn community_index(
 pub async fn open_community_index(
     web::Path(lang): web::Path<String>,
     data: web::Data<AppData>,
-    node_names: web::Data<Mutex<Vec<(String, String)>>>,
+    
     id: Identity,
     req:HttpRequest) -> impl Responder {
     
-    let (mut ctx, _session_user, _role, _lang) = generate_basic_context(id, &lang, req.uri().path(), node_names);
+    let (mut ctx, _session_user, _role, _lang) = generate_basic_context(id, &lang, req.uri().path());
 
     let communities_data = Communities::find_all_open();
 
@@ -93,12 +93,12 @@ pub async fn open_community_index(
 pub async fn view_community(
     web::Path((lang, community_slug)): web::Path<(String, String)>,
     data: web::Data<AppData>,
-    node_names: web::Data<Mutex<Vec<(String, String)>>>,
+    
     req:HttpRequest,
     id: Identity,
 ) -> impl Responder {
     
-    let (mut ctx, session_user, _role, _lang) = generate_basic_context(id, &lang, req.uri().path(), node_names);
+    let (mut ctx, session_user, _role, _lang) = generate_basic_context(id, &lang, req.uri().path());
     
     let community_select = Communities::find_from_slug(&community_slug);
 
@@ -175,12 +175,12 @@ pub async fn view_community(
 pub async fn add_community(
     web::Path(lang): web::Path<String>,
     data: web::Data<AppData>,
-    node_names: web::Data<Mutex<Vec<(String, String)>>>,
+    
     req:HttpRequest,
     id: Identity,
 ) -> impl Responder {
     
-    let (ctx, session_user, _role, _lang) = generate_basic_context(id, &lang, req.uri().path(), node_names);
+    let (ctx, session_user, _role, _lang) = generate_basic_context(id, &lang, req.uri().path());
 
     if session_user != "" {
         let rendered = data.tmpl.render("communities/add_community.html", &ctx).unwrap();
@@ -256,11 +256,11 @@ pub async fn add_community_form_input(
 pub async fn edit_community(
     web::Path((lang, community_slug)): web::Path<(String, String)>,
     data: web::Data<AppData>,
-    node_names: web::Data<Mutex<Vec<(String, String)>>>,
+    
     req:HttpRequest,
     id: Identity,
 ) -> impl Responder {
-    let (mut ctx, session_user, _role, _lang) = generate_basic_context(id, &lang, req.uri().path(), node_names);
+    let (mut ctx, session_user, _role, _lang) = generate_basic_context(id, &lang, req.uri().path());
 
     // validate user
     let user = User::find_from_slug(&session_user);
@@ -376,12 +376,12 @@ pub async fn edit_community_form_input(
 pub async fn delete_community(
     web::Path((lang, code)): web::Path<(String, String)>,
     data: web::Data<AppData>,
-    node_names: web::Data<Mutex<Vec<(String, String)>>>,
+    
     req: HttpRequest,
     id: Identity,
 ) -> impl Responder {
 
-    let (mut ctx, session_user, role, _lang) = generate_basic_context(id, &lang, req.uri().path(), node_names);
+    let (mut ctx, session_user, role, _lang) = generate_basic_context(id, &lang, req.uri().path());
     
     let user = match User::find_from_slug(&session_user){
         Ok(u) => u,

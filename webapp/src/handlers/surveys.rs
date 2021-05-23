@@ -1,4 +1,4 @@
-use std::{sync::{Mutex, MutexGuard, Arc}};
+use std::{sync::{Arc}};
 use actix_web::{web, HttpRequest, HttpResponse, Responder, post, get, ResponseError};
 use bigdecimal::{BigDecimal, ToPrimitive};
 use actix_identity::Identity;
@@ -78,7 +78,7 @@ pub async fn survey_intro(
     data: web::Data<AppData>,
     web::Path((lang, community_code)): web::Path<(String, String)>, 
     req:HttpRequest,
-    node_names: web::Data<Mutex<Vec<(String, String)>>>,
+    
     id: Identity,
 ) -> impl Responder {
     println!("Access index");
@@ -88,7 +88,7 @@ pub async fn survey_intro(
     
     match community_result {
         Ok(community) => {
-            let (mut ctx, _session_user, _role, _lang) = generate_basic_context(id, &lang, req.uri().path(), node_names);
+            let (mut ctx, _session_user, _role, _lang) = generate_basic_context(id, &lang, req.uri().path());
         
             // all names for form autocomplete
             let all_node_names = Nodes::find_all_names(&lang).expect("Unable to load node names");
@@ -111,7 +111,7 @@ pub async fn survey_intro(
 pub async fn experience_form_handler(
     data: web::Data<AppData>,
     web::Path((lang, community_code)): web::Path<(String, String)>, 
-    node_names: web::Data<Mutex<Vec<(String, String)>>>,
+    
     req:HttpRequest,
     id: Identity,
 ) -> impl Responder {
@@ -121,7 +121,7 @@ pub async fn experience_form_handler(
     
     match community_result {
         Ok(community) => {
-            let (mut ctx, _session_user, _role, _lang) = generate_basic_context(id, &lang, req.uri().path(), node_names);
+            let (mut ctx, _session_user, _role, _lang) = generate_basic_context(id, &lang, req.uri().path());
         
             // all names for form autocomplete
             let all_node_names = Nodes::find_all_names(&lang).expect("Unable to load node names");
@@ -143,7 +143,7 @@ pub async fn experience_form_handler(
 #[post("/{lang}/first_experience_form/{community_code}")]
 pub async fn handle_experience_form_input(
     _data: web::Data<AppData>,
-    node_names: web::Data<Mutex<Vec<(String, String)>>>,
+    
     web::Path((lang, community_code)): web::Path<(String, String)>, 
     req: HttpRequest, 
     form: web::Form<FirstExperienceForm>,
@@ -233,13 +233,7 @@ pub async fn handle_experience_form_input(
                         // no target
                         println!("{}", e);
                         let new_node = Nodes::create(&node).expect("Unable to create node.");
-            
-                        let mut temp_data: MutexGuard<Vec<(String, String)>> = node_names.lock().expect("Unable to unlock node_names");
-            
-                        temp_data.push((node_name.clone(), new_node.slug.clone()));
-            
-                        drop(temp_data);
-            
+                                                
                         new_node
                     }
                 };
@@ -313,11 +307,11 @@ pub async fn handle_experience_form_input(
 pub async fn add_experience_form_handler(
     web::Path((lang, code)): web::Path<(String, String)>, 
     data: web::Data<AppData>,
-    node_names: web::Data<Mutex<Vec<(String, String)>>>,
+    
     req:HttpRequest,
     id: Identity,
 ) -> impl Responder {
-    let (mut ctx, _session_user, _role, _lang) = generate_basic_context(id, &lang, req.uri().path(), node_names);
+    let (mut ctx, _session_user, _role, _lang) = generate_basic_context(id, &lang, req.uri().path());
 
     let p = People::find_from_code(&code).unwrap();
 
@@ -355,7 +349,7 @@ pub async fn add_experience_form_handler(
 pub async fn add_handle_experience_form_input(
     web::Path((lang, code)): web::Path<(String, String)>,
     _data: web::Data<AppData>,
-    node_names: web::Data<Mutex<Vec<(String, String)>>>,
+    
     _req: HttpRequest, 
     form: web::Form<AddExperienceForm>,
 ) -> impl Responder {
@@ -425,22 +419,6 @@ pub async fn add_handle_experience_form_input(
 
             // no target
             let new_node = Nodes::create(&node).expect("Unable to create node.");
-
-            /*
-            let node_rep = GNode::from_node(&new_node, &None);
-
-            let mut g = graph.lock().expect("Unable to unlock graph");
-
-            g.nodes.push(CytoNode {
-                data: node_rep,
-            });
-
-            */
-
-            // add node_names to appData
-            let mut nn = node_names.lock().expect("Unable to unlock");
-            nn.push((node_name.clone(), new_node.slug.clone()));
-            drop(nn);
 
             new_node
         }
