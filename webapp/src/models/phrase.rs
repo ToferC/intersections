@@ -92,6 +92,22 @@ impl Phrases {
             Ok(phrases)
     }
 
+    pub fn get_phrase_map(ids: Vec<i32>, lang: &str) -> Result<BTreeMap<i32, String>, CustomError> {
+        let conn = database::connection()?;
+        let phrases = phrases::table
+            .filter(phrases::id.eq_any(ids)
+            .and(phrases::lang.eq(lang)))
+            .load::<Phrases>(&conn)?;
+
+        let mut treemap = BTreeMap::new();
+
+        for p in phrases {
+            treemap.insert(p.id, p.text);
+        };
+
+        Ok(treemap)
+    }
+
     pub fn find_from_text(text: &str, lang: &str) -> Result<Self, CustomError> {
         let conn = database::connection()?;
         let phrases = phrases::table
@@ -125,11 +141,11 @@ impl Phrases {
     }
 }
 
-pub async fn generate_phrases(texts: Vec<String>, lang: &str) -> Result<BTreeMap<i32, String>, CustomError> {
+pub async fn generate_phrases(texts: Vec<String>, lang: &str) -> Result<Vec<(i32, String)>, CustomError> {
     // Saves experience phrases in language of origin
     // Note that this also generates the node name for any new nodes
 
-    let mut tree_map: BTreeMap<i32, String> = BTreeMap::new();
+    let mut tree_map: Vec<(i32, String)> = Vec::new();
 
     for t in texts {
         let prep_phrase = InsertablePhrase::new(lang, t.to_lowercase().trim().replace("/",""), false);
@@ -153,13 +169,13 @@ pub async fn generate_phrases(texts: Vec<String>, lang: &str) -> Result<BTreeMap
         };
 
         // set raw_exp name_id. This will become the node name and generate the node slug
-        tree_map.insert(phrase.id, t);
+        tree_map.push((phrase.id, t));
     }
     
     Ok(tree_map)
 }
 
-pub async fn translate_phrases<'a>(tree_map: Arc<BTreeMap<i32, String>>, lang: Arc<String>) -> Result<(), CustomError> {
+pub async fn translate_phrases<'a>(phrase_vec: Arc<Vec<(i32, String)>>, lang: Arc<String>) -> Result<(), CustomError> {
     // Translates a complete experience including node name and statements
     // Returns a String that is meant to be split on "\n."
 
@@ -192,7 +208,7 @@ pub async fn translate_phrases<'a>(tree_map: Arc<BTreeMap<i32, String>>, lang: A
         },
     };
 
-    let texts: Vec<String> = tree_map.values().map(|s| s.to_string()).collect();
+    let texts: Vec<String> = phrase_vec.iter().map(|p| p.1.to_string()).collect();
     
     println!("Translating texts: {:?}", &*texts);
             
@@ -205,10 +221,10 @@ pub async fn translate_phrases<'a>(tree_map: Arc<BTreeMap<i32, String>>, lang: A
 
     let translated = deepl.translate(None, texts).await.unwrap();
     
-    for (input, translation) in tree_map.iter().zip(translated) {
+    for (input, translation) in phrase_vec.iter().zip(translated) {
         
         let trans = Phrases {
-            id: *input.0,
+            id: input.0,
             lang: translate_lang.to_owned(),
             text: translation.text.trim().to_lowercase().replace("/",""),
             machine_translation: true,

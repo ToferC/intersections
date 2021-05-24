@@ -15,21 +15,21 @@
         
         <label>
             <strong>Community Name</strong>
-            <input class="form-control form-control-lg" type="text" name="community_name" value="{{ community.tag }}" required>
+            <input class="form-control form-control-lg" type="text" name="community_name" value="{{ phrases[community.tag] }}" required>
             <small id="code_help" class="form-text text-muted">Add a name or tag for your community.</small>
         </label>
         <br>
 
         <label>
             <strong>Description</strong>
-            <textarea class="form-control form-control-lg" rows=10 cols=45 type="text" name="description" required>{{ community.description }}</textarea>
+            <textarea class="form-control form-control-lg" rows=10 cols=45 type="text" name="description" required>{{ phrases[community.description] }}</textarea>
             <small id="code_help" class="form-text text-muted">Enter a short description of your community.</small>
         </label>
         <br>
 
         <label>
             <strong>Data Use Case</strong>
-            <textarea class="form-control form-control-lg" rows=10 cols=45 type="text" name="data_use_case" required>{{ community.data_use_case }}</textarea>
+            <textarea class="form-control form-control-lg" rows=10 cols=45 type="text" name="data_use_case" required>{{ phrases[community.data_use_case] }}</textarea>
             <small id="code_help" class="form-text text-muted">Explain here how the data from this community will be used. This will be shared with participants.</small>
         </label>
         <br>

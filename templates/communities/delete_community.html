@@ -7,14 +7,14 @@
 {% block content %}
     <div class="col m-md-2 m-1">
         <br>
-        <h1>Delete Community: {{ community.tag }}</h1>
+        <h1>Delete Community: {{ phrases[community.tag] }}</h1>
 
         <h2>Details</h2>
         <p>Community details and management.</p>
     
-        <p>{{ community.description }}</p>
+        <p>{{ phrases[community.description] }}</p>
 
-        <p>Your community code is {{ community.code }}</p>
+        <p>Your community code is {{ phrases[community.code] }}</p>
         
         <p>This community is {% if community.open %}open{% else %}private{% endif %}</p>
         <br>

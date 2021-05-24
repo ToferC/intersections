@@ -13,7 +13,7 @@ use serde_json::Value;
 use deepl_api::{TranslatableTextList, DeepL};
 
 use error_handler::error_handler::CustomError; 
-use webapp::models::{self, Phrases, RawExperience, translate_experience_phrases};
+use webapp::models::{self, Phrases, RawExperience, translate_experience_phrases, generate_phrases, translate_phrases};
 use database;
 
 pub fn create_user(role: &str) -> Result<i32, CustomError> {
@@ -123,23 +123,39 @@ pub async fn prepopulate_db(mode: &str) {
 
             let owner = models::User::find(target_id).expect("Unable to load user");
 
-            let mut test_id:i32;
+            let test_id:i32;
 
             let test_communities = models::Communities::find_test_ids()
                 .expect("Unable to load communities");
 
             if test_communities.len() == 0 as usize {
 
+                let mut texts = Vec::new();
+
+                texts.push("Demo Community".trim().to_owned());
+                texts.push("Original alpha test data for intersections. This data is a mix of dummy data, demonstration data and real people testing the platform. It is excluded from the global data set and can only be accessed as a separate community.".to_lowercase().trim().to_owned());
+                texts.push("Demonstration of test data in app".to_lowercase().trim().to_owned());
+
+                let phrases = generate_phrases(texts, "en")
+                    .await
+                    .expect("Unable to generate phrases");
+                
                 let test_community_data = &models::NewCommunity::new(
-                    "Demo Community".to_owned(),
-                    "Original alpha test data for intersections. This data is a mix of dummy data, demonstration data and real people testing the platform. It is excluded from the global data set and can only be accessed as a separate community.".to_owned(),
-                    "Demonstration of test data in app".to_owned(),
+                    phrases[0].0,
+                    phrases[1].0,
+                    phrases[2].0,
                     owner.email.to_owned(),
                     true,
+                    phrases[0].1.to_snake_case(),
                     owner.id,
                     true,
                 );
 
+                let tm = Arc::new(phrases.clone());
+                let l = Arc::new("en".to_string());
+
+                let _translate = tokio::spawn(translate_phrases(tm, l));
+                
                 let test_community = models::Communities::create(
                     test_community_data
                 ).expect("Unable to create demo community");
@@ -147,15 +163,31 @@ pub async fn prepopulate_db(mode: &str) {
                 test_id = test_community.id;
 
                 // Generate global community placeholder
+                let mut g_texts = Vec::new();
+
+                g_texts.push("Global".to_owned());
+                g_texts.push("Global community for disaggregated data".to_owned());
+                g_texts.push("Holder for disaggregated community data".to_owned());
+
+                let g_phrases = generate_phrases(g_texts, "en")
+                    .await
+                    .expect("Unable to generate phrases");
+
                 let global_community_data = &models::NewCommunity::new(
-                    "Global".to_owned(),
-                    "Global community for disaggregated data".to_owned(),
-                    "Holder for disaggregated community data".to_owned(),
+                    g_phrases[0].0,
+                    g_phrases[1].0,
+                    g_phrases[2].0,
                     owner.email.to_owned(),
                     true,
+                    g_phrases[0].1.to_snake_case(),
                     owner.id,
-                    false,
+                    true,
                 );
+
+                let tm = Arc::new(g_phrases.clone());
+                let l = Arc::new("en".to_string());
+
+                let _translate = tokio::spawn(translate_phrases(tm, l));
 
                 let _global_community = models::Communities::create(
                     global_community_data

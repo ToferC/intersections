@@ -123,7 +123,10 @@ pub async fn send_community_email(
             let community_add_profile_url = format!("{}/survey_intro/{}", application_url, &community.code);
             ctx.insert("add_community_profile_url", &community_add_profile_url);
 
+            let phrase_map = community.get_phrases(&lang);
+
             ctx.insert("community", &community);
+            ctx.insert("phrases", &phrase_map);
 
             let rendered = data.tmpl.render("emails/email_community_invitation.html", &ctx).unwrap();
 

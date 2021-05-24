@@ -1,7 +1,8 @@
 // example auth: https://github.com/actix/actix-extras/blob/master/actix-identity/src/lib.rs
 
 
-use std::env;
+use std::{env};
+use std::sync::Arc;
 
 use actix_web::{HttpRequest, HttpResponse, Responder, get, post, web, ResponseError};
 use actix_identity::{Identity};
@@ -10,8 +11,8 @@ use serde::{Deserialize};
 
 use qrcode_generator::QrCodeEcc;
 
-use crate::{AppData, extract_identity_data, generate_basic_context};
-use crate::models::{Communities, NewCommunity, User};
+use crate::{AppData, extract_identity_data, generate_basic_context, models::Phrases};
+use crate::models::{Communities, NewCommunity, User, generate_phrases, translate_phrases};
 use error_handler::error_handler::CustomError;
 
 #[derive(Deserialize, Debug)]
@@ -74,6 +75,7 @@ pub async fn open_community_index(
 
     let communities_data = Communities::find_all_open();
 
+    
     let communities = match communities_data {
         Ok(u) => u,
         Err(e) => {
@@ -81,6 +83,18 @@ pub async fn open_community_index(
             Vec::new()
         }
     };
+    
+    let mut phrase_ids = Vec::new();
+
+    for c in &communities {
+        phrase_ids.push(c.tag);
+        phrase_ids.push(c.description);
+        phrase_ids.push(c.data_use_case);
+    };
+
+    let phrase_map = Phrases::get_phrase_map(phrase_ids, &lang).expect("Unable to get phrase mamp");
+
+    ctx.insert("phrases", &phrase_map);
 
     ctx.insert("communities", &communities);
 
@@ -140,9 +154,11 @@ pub async fn view_community(
                 }
             };
         
+            let phrase_map = community.get_phrases(&lang);
+
             ctx.insert("community", &community);
+            ctx.insert("phrases", &phrase_map);
             ctx.insert("owner", &owner);
-            
             
             let community_add_profile_url = format!("/{}/survey_intro/{}", &lang, &community.code);
             ctx.insert("add_community_profile_url", &community_add_profile_url);
@@ -220,14 +236,30 @@ pub async fn add_community_form_input(
                 "open" => true,
                 _ => false,
             };
+
+            let mut texts = Vec::new();
+
+            texts.push(form.community_name.trim().to_owned());
+            texts.push(form.description.to_lowercase().trim().to_owned());
+            texts.push(form.data_use_case.to_lowercase().trim().to_owned());
+
+            let phrases = generate_phrases(texts, &lang)
+                .await
+                .expect("Unable to generate phrases");
+
+            let tm = Arc::new(phrases.clone());
+            let l = Arc::new(lang.clone());
+
+            let _translate = tokio::spawn(translate_phrases(tm, l));
             
             // create community
             let community_data = NewCommunity::new(
-                form.community_name.trim().to_owned(), 
-                form.description.trim().to_owned(),
-                form.data_use_case.trim().to_owned(),
+                phrases[0].0, 
+                phrases[1].0,
+                phrases[2].0,
                 u.email.to_owned(),
                 open,
+                phrases[0].1.to_snake_case(),
                 u.id,
                 false,
             );
@@ -277,6 +309,8 @@ pub async fn edit_community(
                     if community.user_id == u.id {
                         
                         ctx.insert("community", &community);
+                        let phrase_map = community.get_phrases(&lang);
+                        ctx.insert("phrases", &phrase_map);
                     
                     } else {
                         // user does not own community - redirect
@@ -334,12 +368,27 @@ pub async fn edit_community_form_input(
                             _ => false,
                         };
 
+                        let mut texts = Vec::new();
+
+                        texts.push(form.community_name.trim().to_owned());
+                        texts.push(form.description.to_lowercase().trim().to_owned());
+                        texts.push(form.data_use_case.to_lowercase().trim().to_owned());
+
+                        let phrases = generate_phrases(texts, &lang)
+                            .await
+                            .expect("Unable to generate phrases");
+
+                        let tm = Arc::new(phrases.clone());
+                        let l = Arc::new(lang.clone());
+
+                        let _translate = tokio::spawn(translate_phrases(tm, l));
+
                         // update community
-                        community.tag = form.community_name.trim().to_owned();
-                        community.slug = form.community_name.trim().to_snake_case().to_owned();
-                        community.description = form.description.trim().to_owned();
-                        community.data_use_case= form.data_use_case.trim().to_owned();
+                        community.tag = phrases[0].0;
+                        community.description = phrases[1].0;
+                        community.data_use_case= phrases[2].0;
                         community.open = open;
+                        community.slug = phrases[0].1.trim().to_snake_case().to_owned();
 
                         let update = Communities::update(&community);
 
@@ -402,6 +451,8 @@ pub async fn delete_community(
             } else {
 
                 ctx.insert("community", &community);
+                let phrase_map = community.get_phrases(&lang);
+                ctx.insert("phrases", &phrase_map);
 
                 let rendered = data.tmpl.render("communities/delete_community.html", &ctx).unwrap();
                 return HttpResponse::Ok().body(rendered)
@@ -448,7 +499,7 @@ pub async fn delete_community_form(
                 return err.error_response()
             } else {
         
-                if form.user_verify.trim().to_string() == community.tag {
+                if form.user_verify.trim().to_string() == Phrases::find(community.tag, &lang).expect("Unable to find phrase").text {
                     println!("Community matches verify string - transferring users and deleting");
 
                     let transfer = Communities::transfer_people(community.id, &"global".to_string());

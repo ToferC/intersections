@@ -23,9 +23,9 @@ CREATE UNIQUE INDEX users__email_idx ON users(email);
 
 CREATE TABLE communities (
     id SERIAL PRIMARY KEY,
-    tag VARCHAR(64) NOT NULL,
-    description VARCHAR NOT NULL,
-    data_use_case VARCHAR NOT NULL,
+    tag INT NOT NULL,
+    description INT NOT NULL,
+    data_use_case INT NOT NULL,
     contact_email VARCHAR(128) NOT NULL,
     date_created TIMESTAMP NOT NULL default CURRENT_DATE,
     open BOOL NOT NULL DEFAULT FALSE,

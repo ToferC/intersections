@@ -7,14 +7,14 @@
 {% block content %}
     <div class="col m-md-2 m-1">
         <br>
-        <h1>View Community: {{ community.tag }}</h1>
+        <h1>View Community: {{ phrases[community.tag] | title }}</h1>
 
         <div class="card card-body">
             <p>Community details and management.</p>
     
-                <p>{{ community.description }}</p>
+                <p>{{ phrases[community.description] | capitalize }}</p>
 
-                <p>Data Use Case: {{ community.data_use_case }}</p>
+                <p>Data Use Case: {{ phrases[community.data_use_case] | capitalize }}</p>
 
                 {% if owner and user.validated %}
                     <p>Your community code is {{ community.code }}</p>
@@ -95,16 +95,16 @@
             <p>You can modify and send this email to people in your community.</p>
             <div class="card card-body">
                 <P>Hello/bonjour,</P>
-                <p>I'm pleased to invite you to be part of the {{ community.tag }} community on the intersectional data pilot.
+                <p>I'm pleased to invite you to be part of the {{ phrases[community.tag] | title }} community on the intersectional data pilot.
                     The purpose of the pilot is to help individuals and organizations learn about intersectionality and identify bias by
                     anonymously tracking inclusion and exclusion in the community or organization.</p>
 
-                <p>Community description: {{ community.description }}</p>
+                <p>Community description: {{ phrases[community.description] | capitalize }}</p>
                 
                 <p>No identifying information is stored as part of the survey. When you finish the survey, you will be provided with a code so you can access your profile.</p>
                 <p>You are the only person who will receive this code and without the code, no-one can view your profile.</p>
 
-                <p>The intended use of this data within the community is as follows: {{ community.data_use_case }}</p>
+                <p>The intended use of this data within the community is as follows: {{ phrases[community.data_use_case] | capitalize }}</p>
 
                 <p>You can access and complete the survey by <a href="{{ add_community_profile_url }}">clicking this link</a>.</p>
 

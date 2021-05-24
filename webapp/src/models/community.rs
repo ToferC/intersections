@@ -8,9 +8,9 @@ use std::collections::{BTreeMap};
 use inflector::Inflector;
 use bigdecimal::{ToPrimitive};
 
-use crate::schema::{communities};
+use crate::schema::{communities, phrases};
 use crate::generate_unique_code;
-use crate::models::{People, Experiences, Phrases, InsertablePhrase};
+use crate::models::{People, Experiences, Phrases};
 use error_handler::error_handler::CustomError;
 use database;
 
@@ -28,9 +28,9 @@ pub struct CommunityData {
 #[derive(Debug, Serialize, Deserialize, AsChangeset, Insertable, Clone)]
 #[table_name = "communities"]
 pub struct NewCommunity {
-    pub tag: String,
-    pub description: String,
-    pub data_use_case: String,
+    pub tag: i32,
+    pub description: i32,
+    pub data_use_case: i32,
     pub contact_email: String,
     pub date_created: chrono::NaiveDateTime,
     pub open: bool,
@@ -42,7 +42,7 @@ pub struct NewCommunity {
 }
 
 impl NewCommunity {
-    pub fn new(tag: String, description: String, data_use_case: String, contact_email: String, open: bool, user_id: i32, test: bool) -> NewCommunity {
+    pub fn new(tag: i32, description: i32, data_use_case: i32, contact_email: String, open: bool, slug: String, user_id: i32, test: bool) -> NewCommunity {
 
         let comm_data = CommunityData {
             members: 0,
@@ -55,14 +55,14 @@ impl NewCommunity {
         };
 
         NewCommunity {
-            tag: tag.clone(),
+            tag,
             description,
             data_use_case,
             contact_email,
             date_created: chrono::NaiveDate::from_ymd(2020, 6, 6).and_hms(3, 3, 3),
             open,
             code: generate_unique_code(24, true),
-            slug: tag.to_snake_case(),
+            slug,
             user_id,
             data: serde_json::to_value(&comm_data).unwrap(),
             test,
@@ -73,14 +73,14 @@ impl NewCommunity {
         let now = Utc::now().naive_utc();
 
         NewCommunity {
-            tag: community.tag.to_owned(),
-            description: community.description.to_owned(),
-            data_use_case: community.data_use_case.to_owned(),
+            tag: community.tag,
+            description: community.description,
+            data_use_case: community.data_use_case,
             contact_email: community.contact_email.to_owned(),
             date_created: now,
             open: community.open,
             code: community.code.to_owned(),
-            slug: community.tag.to_snake_case(),
+            slug: community.slug.to_owned(),
             user_id: community.user_id,
             data: community.data.to_owned(),
             test: community.test,
@@ -92,9 +92,9 @@ impl NewCommunity {
 #[table_name = "communities"]
 pub struct Communities {
     pub id: i32,
-    pub tag: String,
-    pub description: String,
-    pub data_use_case: String,
+    pub tag: i32,
+    pub description: i32,
+    pub data_use_case: i32,
     pub contact_email: String,
     pub date_created: NaiveDateTime,
     pub open: bool,
@@ -173,9 +173,13 @@ impl Communities {
         Ok(community)
     }
 
-    pub fn get_tag_slugs() -> Result<Vec<(String, String)>, CustomError> {
+    pub fn get_tag_slugs(lang: &str) -> Result<Vec<(String, String)>, CustomError> {
         let conn = database::connection()?;
-        let index = communities::table.select((communities::tag, communities::slug)).load::<(String, String)>(&conn)?;
+        let index = communities::table.inner_join(phrases::table
+            .on(communities::tag.eq(phrases::id)
+            .and(phrases::lang.eq(lang))))
+            .select((phrases::text, communities::slug))
+            .load::<(String, String)>(&conn)?;
 
         Ok(index)
     }
@@ -187,6 +191,19 @@ impl Communities {
             .set(community)
             .get_result(&conn)?;
         Ok(community)
+    }
+
+    pub fn get_phrases(&self, lang: &str) -> BTreeMap<i32, String> {
+        let mut phrases = Vec::new();
+
+        phrases.push(self.tag);
+        phrases.push(self.description);
+        phrases.push(self.data_use_case);
+
+        let p = Phrases::get_phrase_map(phrases, &lang)
+            .expect("Unable to load localizations from experience");
+
+        p
     }
 
     pub fn delete(id: i32) -> Result<usize, CustomError> {

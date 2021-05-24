@@ -3,9 +3,9 @@ table! {
 
     communities (id) {
         id -> Int4,
-        tag -> Varchar,
-        description -> Varchar,
-        data_use_case -> Varchar,
+        tag -> Int4,
+        description -> Int4,
+        data_use_case -> Int4,
         contact_email -> Varchar,
         date_created -> Timestamp,
         open -> Bool,
