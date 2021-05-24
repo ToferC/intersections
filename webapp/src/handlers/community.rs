@@ -56,6 +56,18 @@ pub async fn community_index(
             }
         };
 
+        let mut phrase_ids = Vec::new();
+
+        for c in &communities {
+            phrase_ids.push(c.tag);
+            phrase_ids.push(c.description);
+            phrase_ids.push(c.data_use_case);
+        };
+
+        let phrase_map = Phrases::get_phrase_map(phrase_ids, &lang).expect("Unable to get phrase mamp");
+
+        ctx.insert("phrases", &phrase_map);
+
         ctx.insert("communities", &communities);
 
         let rendered = data.tmpl.render("communities/community_index.html", &ctx).unwrap();

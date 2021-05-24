@@ -12,9 +12,11 @@
         <h2>Details</h2>
         <p>Community details and management.</p>
     
-        <p>{{ phrases[community.description] }}</p>
+        <p>Description: {{ phrases[community.description] | capitalize}}</p>
 
-        <p>Your community code is {{ phrases[community.code] }}</p>
+        <p>Data Use Policy: {{ phrases[community.data_use_case] | capitalize}}</p>
+
+        <p>Your community code is {{ community.code }}</p>
         
         <p>This community is {% if community.open %}open{% else %}private{% endif %}</p>
         <br>
@@ -38,7 +40,7 @@
             <form name="DeleteCommunityForm" id="deleteCommunityForm" action=/{{ lang }}/delete_community/{{ community.code }} method=POST>
     
                 <label>
-                    <strong>Enter the community's name to Delete: {{ community.tag }}</strong>
+                    <strong>Enter the community's name to Delete: {{ phrases[community.tag] }}</strong>
                     <input class="form-control form-control-lg" type="text" name="user_verify" placeholder="Community to delete..." required>
                     <small id="code_help" class="form-text text-muted">Enter the community name to delete. This action is permanent.
                     </small>

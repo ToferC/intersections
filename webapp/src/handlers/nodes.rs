@@ -235,11 +235,11 @@ pub async fn community_node_page(
                     // Aggregate info from experiences related to the prime node
                     let node_experience = AggregateExperience::from(experience_vec, &lang);
                 
-                    ctx.insert("title", &format!("{} node in {} community", &node_experience.name, &community.tag));
+                    ctx.insert("title", &format!("{}", &node_experience.name));
                 
                     ctx.insert("node", &node);
 
-                    let phrases = Phrases::get_phrase_map(vec![node.node_name], &lang).expect("Unable to load node_title");
+                    let phrases = Phrases::get_phrase_map(vec![node.node_name, community.tag], &lang).expect("Unable to load node_title");
                 
                     ctx.insert("phrases", &phrases);
                     

@@ -7,10 +7,10 @@
 {% block content %}
     <div class="col-md m-md-2 m-1">
         <br>
-        <h1>{{ node_name | title }}</h1>
-        <p class="text-muted">{{ node.domain_token | title }}</p>
+        <h1>{{ phrases[node.node_name] | title }}</h1>
+        <p class="text-muted">Node - {{ node.domain_token | title }}</p>
         <p><a href="/{{ lang }}/global_graph">View global graph</a> | <a href="/{{ lang }}">Return to Index</a></p>
-        <p><a href="/{{ lang }}/node_graph/{{ node.slug }}">View graph for {{ node_name }}</a></p>
+        <p><a href="/{{ lang }}/node_graph/{{ node.slug }}">View graph for {{ phrases[node.node_name] }}</a></p>
 
         <hr>
         <p>The table below shows the data from this specific node.</p>
