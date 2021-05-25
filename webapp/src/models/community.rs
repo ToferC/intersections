@@ -5,7 +5,6 @@ use diesel::RunQueryDsl;
 use diesel::{QueryDsl};
 use std::collections::{BTreeMap};
 
-use inflector::Inflector;
 use bigdecimal::{ToPrimitive};
 
 use crate::schema::{communities, phrases};

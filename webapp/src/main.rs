@@ -1,5 +1,4 @@
 use std::env;
-use std::sync::{Mutex, Arc};
 use actix_web::{App, HttpServer, middleware, web, guard};
 use actix_identity::{CookieIdentityPolicy, IdentityService};
 use actix_web_static_files;
@@ -9,7 +8,6 @@ use sendgrid::SGClient;
 
 use database;
 use webapp::handlers; 
-use webapp::models;
 use webapp::AppData;
 
 use fluent_templates::{FluentLoader, static_loader};
@@ -83,11 +81,6 @@ async fn main() -> std::io::Result<()> {
         .load_languages(&Localizations, &[loader.fallback_language()])
         .unwrap();
      */ 
-
-
-    let node_names = models::Nodes::find_all_linked_names_slugs("en").expect("Unable to load names");
-    
-    let y = Arc::new(Mutex::new(node_names));
     
     println!("Serving on: {}:{}", &host, &port);
     
@@ -103,11 +96,6 @@ async fn main() -> std::io::Result<()> {
 
         // mail client
         let sg = SGClient::new(sendgrid_key.clone());
-            
-        // let graph = Arc::clone(&x);
-        let node_names = Arc::clone(&y);
-        
-        // load node_names for navbar population
             
         let generated = generate();
 
@@ -127,7 +115,6 @@ async fn main() -> std::io::Result<()> {
                 mail_client: sg,
             })
             // .app_data(web::Data::from(graph))
-            .app_data(web::Data::from(node_names))
             .wrap(IdentityService::new(
                 CookieIdentityPolicy::new(&cookie_secret_key.as_bytes())
             .name("user-auth")
