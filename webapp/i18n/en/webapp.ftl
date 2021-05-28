@@ -225,3 +225,38 @@ unique-code = Your unique code is:
 unique-code-explanation = You can make a copy of this code or request an email when you finish your profile. Only someone with this code can see your profile.
 progress = Progress
 may-add-more = You can add more, if you like.
+
+## Community Node
+node-in = node in
+domain-in-community = { $domain } in { $community } community
+view-community-graph = View community graph
+return-to-index = Return to Index
+view-graph-for = View graph for
+table-below = The table below shows the data from this specific node.
+explanation-results = Explanation of results
+table-explanation-details = The lived experiences entered as part of the survey have been combined into a graph - a networked representation of connections across many people.
+        Below, you will see the results for the experience you selected, called a node.
+        Further below, or in the next column depending on your device, you will see the results for all of the other experiences that are connected with the one you selected.
+        As more people complete the survey, this insight will deepen.
+        Here are what the results mean:
+
+experience = Experience
+experience-details = the name of the lived experience
+domain = Domain
+domain-details = whether the experience is a part of the person or a part of the system of work
+instances = Instances
+instances-details = how many times this experience has been entered in the survey. If the result is "1", then you are the first person to do so
+mean-inclusivity = Mean Inclusivity
+mean-inclusivity-details = the average inclusivity rating for the experience from -1.00 to +1.00.
+frequency-distribution-details = The next chart is a frequency distribution of the responses to the statement: "Though this experience, in the workplace, I feel..."
+statement = Statement
+statement-details = the explanation of how the experience effected the person
+count = Count
+count-details = the number of times people recorded this explanation
+stats-placeholder = [[ ADD STATISTICS HERE ]]
+associated-experiences = Associated Experiences
+associated-experiences-details = These are experiences from other nodes that have been linked to the { $domain } trait of { $name }. 
+    They are presented here to show how the nodes relate and how by looking at more than one facet of a person's experience, we can better understand our people's needs.
+
+## Node
+node = Node

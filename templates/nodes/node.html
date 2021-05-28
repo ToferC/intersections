@@ -8,43 +8,40 @@
     <div class="col-md m-md-2 m-1">
         <br>
         <h1>{{ phrases[node.node_name] | title }}</h1>
-        <p class="text-muted">Node - {{ node.domain_token | title }}</p>
-        <p><a href="/{{ lang }}/global_graph">View global graph</a> | <a href="/{{ lang }}">Return to Index</a></p>
-        <p><a href="/{{ lang }}/node_graph/{{ node.slug }}">View graph for {{ phrases[node.node_name] }}</a></p>
+        <p class="text-muted">{{ fluent(key="node", lang=lang )}} - {{ node.domain_token | title }}</p>
+        <p><a href="/{{ lang }}/global_graph">{{ fluent(key="view-global-graph", lang=lang )}}</a> | <a href="/{{ lang }}">{{ fluent(key="return-to-index", lang=lang )}}</a></p>
+        <p><a href="/{{ lang }}/node_graph/{{ node.slug }}">{{ fluent(key="view-graph-for", lang=lang )}} {{ phrases[node.node_name] }}</a></p>
 
         <hr>
-        <p>The table below shows the data from this specific node.</p>
+        <hr>
+        <p>{{ fluent(key="table-below", lang=lang )}}</p>
         <button class="btn btn-info" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
-            Explanation of results
+            {{ fluent(key="explanation-results", lang=lang )}}
         </button>
         <div class="collapse" id="collapseExample">
             <div class="card card-body">
-            <p>The lived experiences entered as part of the survey have been combined into a graph - a networked representation of connections across many people.</p>
-            <p>Below, you will see the results for the experience you selected, called a node.</p>
-            <p>Further below, or in the next column depending on your device, you will see the results for all of the other experiences that are connected with the one you selected.
-                As more peole complete the survey, this insight will deepen.</p>
-            <p>Here are what the results mean:</p>
+            <p>{{ fluent(key="table-explanation-details", lang=lang )}}</p>
             <ul>
-                <li><strong>experience</strong> - the name of the lived experience</li>
-                <li><strong>Domain</strong> - whether the experience is a part of the person or a part of the system of work</li>
-                <li><strong>Instances</strong> - how many times this experience has been entered in the survey. If the result is "1", then you are the first person to do so</li>
-                <li><strong>Mean Inclusivity</strong> - the average inclusivity rating for the experience from -1.00 to +1.00.</li>
+                <li><strong>{{ fluent(key="experience", lang=lang )}}</strong> - {{ fluent(key="experience-details", lang=lang )}}</li>
+                <li><strong>{{ fluent(key="domain", lang=lang )}}</strong> - {{ fluent(key="domain-details", lang=lang )}}</li>
+                <li><strong>{{ fluent(key="instances", lang=lang )}}</strong> - {{ fluent(key="instances-details", lang=lang )}}</li>
+                <li><strong>{{ fluent(key="mean-inclusivity", lang=lang )}}</strong> - {{ fluent(key="mean-inclusivity-details", lang=lang )}}</li>
             </ul>
-            <p>The next chart is a frequency distribution of the responses to the statement: "Though this experience, in the workplace, I feel..."</p>
+            <p>{{ fluent(key="frequency-distribution-details", lang=lang )}}</p>
             <ul>
-                <li><strong>Statement</strong> - the explanation of how the experience effected the person</li>
-                <li><strong>Count</strong> - the number of times people recorded this explanation</li>
+                <li><strong>{{ fluent(key="statement", lang=lang )}}</strong> - {{ fluent(key="statement-details", lang=lang )}}</li>
+                <li><strong>{{ fluent(key="count", lang=lang )}}</strong> - {{ fluent(key="count-details", lang=lang )}}</li>
             </ul>
         </div>
         </div>
-        <p>[[ ADD STATISTICS HERE ]]</p>
+        <p>{{ fluent(key="stats-placeholder", lang=lang )}}</p>
 
         <table>
             <tr>
-                <th style="text-align: center;">Experience</th>
-                <th style="text-align: center;">Domain</th>
-                <th style="text-align: center;">Instances</th>
-                <th style="text-align: center;">Mean Inclusivity</th>
+                <th style="text-align: center;">{{ fluent(key="experience", lang=lang )}}</th>
+                <th style="text-align: center;">{{ fluent(key="domain", lang=lang )}}</th>
+                <th style="text-align: center;">{{ fluent(key="instances", lang=lang )}}</th>
+                <th style="text-align: center;">{{ fluent(key="mean-inclusivity", lang=lang )}}</th>
             </tr>
             <tr>
                 <td style="text-align: center;">{{ node_experience.name | title }}</td>
@@ -67,8 +64,8 @@
 
         <table>
             <tr>
-                <th style="text-align: center;">Statement</th>
-                <th style="text-align: center;">Count</th>
+                <th style="text-align: center;">{{ fluent(key="statement", lang=lang )}}</th>
+                <th style="text-align: center;">{{ fluent(key="count", lang=lang )}}</th>
             </tr>
             {% for tuple in node_experience.frequency_distribution %}
                 <tr>
@@ -82,21 +79,20 @@
 
     <div class="col-md m-md-2 m-1">
         <br>
-        <h1>Associated Experiences</h1>
-        <p>These are experiences from other nodes that have been linked to the {{ node.domain_token }} trait of {{ phrases[node.node_name] }}. 
-            They are presented here to show how the nodes relate and how by looking at more than one facet of a person's experience, 
-            we can better understand our people's needs.</p>
+        <h1>{{ fluent(key="associated-experiences", lang=lang )}}</h1>
+        {% set name = phrases[node.node_name] %}
+        <p>{{ fluent(key="associated-experiences-details", domain=node.domain_token, name=name, lang=lang )}}</p>
         <hr>
                 {% for experience in other_experiences %}
                     <table>
                         <tr>
-                            <th style="text-align: center;">Experience</th>
-                            <th style="text-align: center;">Domain</th>
-                            <th style="text-align: center;">Instances</th>
-                            <th style="text-align: center;">Mean Inclusivity</th>
+                            <th style="text-align: center;">{{ fluent(key="experience", lang=lang )}}</th>
+                            <th style="text-align: center;">{{ fluent(key="domain", lang=lang )}}</th>
+                            <th style="text-align: center;">{{ fluent(key="instances", lang=lang )}}</th>
+                            <th style="text-align: center;">{{ fluent(key="mean-inclusivity", lang=lang )}}</th>
                         </tr>
                         <tr>
-                            <td style="text-align: center;"><a href="/{{ lang }}/node/{{ experience.name | snake_case }}">{{ experience.name | title }}</a></td>
+                            <td style="text-align: center;"><a href="/{{ lang }}/community_node/{{ community.slug }}/{{ experience.slug }}">{{ experience.name | title }}</a></td>
                             <td style="text-align: center;">{{ experience.domain | title }}</td>
                             <td style="text-align: center;">{{ experience.count }}</td>
                             <td style="text-align: center;">
@@ -116,8 +112,8 @@
 
                     <table>
                         <tr>
-                            <th style="text-align: center;">Statement</th>
-                            <th style="text-align: center;">Count</th>
+                            <th style="text-align: center;">{{ fluent(key="statement", lang=lang )}}</th>
+                            <th style="text-align: center;">{{ fluent(key="count", lang=lang )}}</th>
                         </tr>
                         {% for tuple in experience.frequency_distribution %}
                             <tr>
