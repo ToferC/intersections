@@ -52,7 +52,11 @@ pub async fn email_person_info(
             };
 
             ctx.insert("person", &person);
+            
+            let phrase_map = community.get_phrases(&lang);
+
             ctx.insert("community", &community);
+            ctx.insert("phrases", &phrase_map);
             ctx.insert("application_url", &application_url);
 
             let rendered = data.tmpl.render("emails/email_person.html", &ctx).unwrap();

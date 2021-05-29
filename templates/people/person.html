@@ -9,7 +9,7 @@
     <div class="col m-md-2 m-1">
         <br>
         <h1>{{ title }}</h1>
-        <p><a href="/{{ lang }}/person_network_graph/{{ person.id }}">{{ fluent(key="view-person-graph", lang=lang )}}</a> | <a href="/">{{ fluent(key="return-to-index", lang=lang )}}</a></p>
+        <p><a href="/{{ lang }}/full_community_graph/{{ community.slug }}">{{ fluent(key="view-community-graph", lang=lang )}}</a> | <a href="/">{{ fluent(key="return-to-index", lang=lang )}}</a></p>
         <hr>
         <h2>{{ fluent(key="your-code", lang=lang )}} </h2> <p><strong>{{ person.code }}</strong></p> 
         <p>{{ fluent(key="take-care-of-code", lang=lang )}}</p>
@@ -114,50 +114,53 @@
 
     <div class="col m-md-2 m-1">
         <br>
-        <h1>Global Experiences</h1>
+        <h1>{{ fluent(key="global-experiences", lang=lang )}}</h1>
         <br>
-        <p>These are the aggregate experiences from everyone who completed the survey and identified these experiences as part of their identity. They are presented here so that you can compare the person selected with the global ratings.</p>
+        <p>{{ fluent(key="global-experiences-explanation", lang=lang )}}</p>
         <hr>
-                {% for experience in other_experiences %}
-                    <table>
-                        <tr>
-                            <th style="text-align: center;">Experience</th>
-                            <th style="text-align: center;">Domain</th>
-                            <th style="text-align: center;">Instances</th>
-                            <th style="text-align: center;">Mean Inclusivity</th>
-                        </tr>
-                        <tr>
-                            <td style="text-align: center;"><a href="/{{ lang }}/node/{{ experience.slug }}">{{ experience.name | title }}</a></td>
-                            <td style="text-align: center;">{{ experience.domain | title }}</td>
-                            <td style="text-align: center;">{{ experience.count }}</td>
-                            <td style="text-align: center;">
-                                {{ experience.mean_inclusivity | round(method="ceil", precision=3) }}
-                                {% if experience.mean_inclusivity | float > 0.2 %}
-                                    <span style="color: green; font-size: 2em;">＋</span>
-                                {% elif experience.mean_inclusivity | float < -0.2 %}
-                                    <span style="color: red; font-size: 2em;">－</span>
-                                {% else %}
-                                    <span style="color: blue; font-size: 1.5em;"><></span>
-                                {% endif %}
-                            </td>
-                        </tr>
-                    </table>
-                    <br>
-                    <table>
-                        <tr>
-                            <th style="text-align: center;">Statement</th>
-                            <th style="text-align: center;">Count</th>
-                        </tr>
-                        {% for tuple in experience.frequency_distribution %}
-                            <tr>
-                                <td>{{ tuple.0 }}</td>
-                                <td style="text-align: center;">{{ tuple.1 }}</td>
-                            </tr>
-                        {% endfor %}
-                    </table>
-                    <hr>
-                    <br>
-                {% endfor %}
+        {% for experience in other_experiences %}
+        <table>
+            <tr>
+                <th style="text-align: center;">{{ fluent(key="experience", lang=lang )}}</th>
+                <th style="text-align: center;">{{ fluent(key="domain", lang=lang )}}</th>
+                <th style="text-align: center;">{{ fluent(key="instances", lang=lang )}}</th>
+                <th style="text-align: center;">{{ fluent(key="mean-inclusivity", lang=lang )}}</th>
+            </tr>
+            <tr>
+                <td style="text-align: center;"><a href="/{{ lang }}/community_node/{{ community.slug }}/{{ experience.slug }}">{{ experience.name | title }}</a></td>
+                <td style="text-align: center;">{{ experience.domain | title }}</td>
+                <td style="text-align: center;">{{ experience.count }}</td>
+                <td style="text-align: center;">
+                    {{ experience.mean_inclusivity | round(method="ceil", precision=3) }}
+                    {% if experience.mean_inclusivity | float > 0.2 %}
+                        <span style="color: green; font-size: 2em;">＋</span>
+                    {% elif experience.mean_inclusivity | float < -0.2 %}
+                        <span style="color: red; font-size: 2em;">－</span>
+                    {% else %}
+                        <span style="color: blue; font-size: 1.5em;"><></span>
+                    {% endif %}
+                </td>
+            </tr>
+        </table>
+
+        <br>
+
+        <table>
+            <tr>
+                <th style="text-align: center;">{{ fluent(key="statement", lang=lang )}}</th>
+                <th style="text-align: center;">{{ fluent(key="count", lang=lang )}}</th>
+            </tr>
+            {% for tuple in experience.frequency_distribution %}
+                <tr>
+                    <td>{{ tuple.0 }}</td>
+                    <td style="text-align: center;">{{ tuple.1 }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+
+        <hr>
+        <br>
+    {% endfor %}
     </div>
 
 {% endblock content %}

@@ -6,7 +6,7 @@ use crate::{AppData, generate_basic_context};
 
 use std::collections::HashMap;
 
-use crate::models::{Experiences, Communities, People, User};
+use crate::models::{Experiences, Communities, People, User, Phrases};
 use crate::models::{CytoGraph, generate_node_cyto_graph};
 
 
@@ -69,7 +69,7 @@ pub async fn global_graph(
     ctx.insert("graph_data", &j);
 
     let title = "Global Network Graph";
-    ctx.insert("title", title);
+    ctx.insert("community_name", title);
     
     let rendered = data.tmpl.render("graphs/node_network_graph.html", &ctx).unwrap();
     HttpResponse::Ok().body(rendered)
@@ -79,10 +79,8 @@ pub async fn global_graph(
 pub async fn full_community_node_graph(
     data: web::Data<AppData>,
     web::Path((lang, community_slug)): web::Path<(String, String)>,
-    
     req: HttpRequest,
     id: Identity,
-  
 ) -> impl Responder {
 
     // Validate community
@@ -107,23 +105,26 @@ pub async fn full_community_node_graph(
             
                 // create vec of bridge connections from people
                 let mut people_connections: HashMap<i32, Vec<String>> = HashMap::new();
+                let mut community_exp_vec: Vec<Experiences> = Vec::new();
             
                 for l in &experience_vec {
 
                     if community_people_ids.contains(&l.person_id) {
                         people_connections.entry(l.person_id).or_insert(Vec::new()).push(l.slug.to_owned()); 
+                        community_exp_vec.push(l.clone());
                     }
                 };
             
                 // now instead of building AggExperience, we build the graph
-                let graph = generate_node_cyto_graph(experience_vec, people_connections, Some(community.slug), &lang);
+                let graph = generate_node_cyto_graph(community_exp_vec, people_connections, Some(community.slug), &lang);
             
                 let j = serde_json::to_string_pretty(&graph).unwrap();
             
                 ctx.insert("graph_data", &j);
+
+                let community_name = Phrases::find(community.tag, &lang).expect("Unable to find phrase");
             
-                let title = format!("{} Community Node Graph", &community.tag);
-                ctx.insert("title", &title);
+                ctx.insert("community_name", &community_name.text);
                 
                 let rendered = data.tmpl.render("graphs/node_network_graph.html", &ctx).unwrap();
                 HttpResponse::Ok().body(rendered)

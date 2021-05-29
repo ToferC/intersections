@@ -128,7 +128,7 @@ pub async fn registration_error(
 #[post("/{lang}/register")]
 pub async fn register_form_input(
     web::Path(lang): web::Path<String>,
-    _data: web::Data<AppData>,
+    data: web::Data<AppData>,
     req: HttpRequest, 
     form: web::Form<RegisterForm>,
     id: Identity,
@@ -162,6 +162,42 @@ pub async fn register_form_input(
             session.set("session_user", user.slug.to_owned()).expect("Unable to set user name");
         
             id.remember(user.slug.to_owned());
+
+            // send verification email
+            let verification = EmailVerification::create(
+                &InsertableVerification::new(&user.email)
+            ).expect("Unable to create verification");
+
+            let (mut email_ctx, _, _, _) = generate_email_context(id, &lang, req.uri().path());
+            email_ctx.insert("user", &user);
+            email_ctx.insert("verification", &verification);
+
+            let application_url: String;
+            let environment = env::var("ENVIRONMENT").unwrap();
+
+            if environment == "production" {
+                application_url = format!("https://www.intersectional-data.ca/{}", &lang);
+            } else {
+                application_url = format!("http://localhost:8088/{}", &lang);
+            };
+
+            email_ctx.insert("application_url", &application_url);
+
+            let rendered_email = data.tmpl.render("emails/email_verification.html", &email_ctx).unwrap();
+
+            let email = Email::new(
+                user.email.clone(), 
+                rendered_email, 
+                "Email Verification Code - Intersectional Data".to_string(), 
+                data.mail_client.clone(),
+            );
+
+            let r = Email::send(&email).await;
+
+            match r {
+                Ok(()) => println!("Email sent"),
+                Err(err) => println!("Error {}", err),
+            };
             
             return HttpResponse::Found().header("Location", format!("/{}/email_verification", &lang)).finish()
         },
@@ -193,6 +229,37 @@ pub async fn email_verification(
     match user {
         Ok(user) => {
             ctx.insert("user", &user);
+        
+            let rendered = data.tmpl.render("authentication/email_verification.html", &ctx).unwrap();
+            HttpResponse::Ok().body(rendered)
+        },
+        Err(err) => {
+            println!("No user found: {}", err);
+            return HttpResponse::Found().header("Location", format!("/{}", &lang)).finish()
+        },
+    }
+}
+
+#[get("/{lang}/resend_email_verification")]
+pub async fn resend_email_verification(
+    web::Path(lang): web::Path<String>,
+    data: web::Data<AppData>,
+    req:HttpRequest,
+    id: Identity,
+) -> impl Responder {
+    
+    let (mut ctx, session_user, role, _lang) = generate_basic_context(id.clone(), &lang, req.uri().path());
+
+    if session_user == "".to_string() && role != "admin".to_string() {
+        // person signed in shouldn't be here
+        return HttpResponse::Found().header("Location", format!("/{}", &lang)).finish()
+    };
+
+    let user = User::find_from_slug(&session_user);
+
+    match user {
+        Ok(user) => {
+            ctx.insert("user", &user);
 
             // send verification email
             let verification = EmailVerification::create(
@@ -202,6 +269,17 @@ pub async fn email_verification(
             let (mut email_ctx, _, _, _) = generate_email_context(id, &lang, req.uri().path());
             email_ctx.insert("user", &user);
             email_ctx.insert("verification", &verification);
+
+            let application_url: String;
+            let environment = env::var("ENVIRONMENT").unwrap();
+
+            if environment == "production" {
+                application_url = format!("https://www.intersectional-data.ca/{}", &lang);
+            } else {
+                application_url = format!("http://localhost:8088/{}", &lang);
+            };
+
+            email_ctx.insert("application_url", &application_url);
 
             let rendered_email = data.tmpl.render("emails/email_verification.html", &email_ctx).unwrap();
 

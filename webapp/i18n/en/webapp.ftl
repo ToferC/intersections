@@ -125,7 +125,7 @@ update-password = Update Password
 
 ## Email Verification
 verify-email = Verify your email
-enter-key = Please enter the code you received at <strong>{ $useremail } to complete your registration.
+enter-key = Please enter the code you received at { $useremail } to complete your registration.
 code = Code
 code-helper = Enter the five digit code you received at the email you used to register.
 verify = Verify
@@ -334,8 +334,14 @@ verification-page = the verification page
 your-code = Your code is:
 time-limit = You have 60 minutes to enter this code to verify your account. If you need to, you can
 request-another-code = request another code
+thank-you = Thank you,
 
 ### Password reset request
 password-reset-received = We received a request to reset your password on { -app-name }. If you think this is an error, please contact { -user-support-email }.
 if-you-instructions = If this was you, You can reset your password through the following link.
 from-login-screen = from the log in screen.
+
+## Graphs
+
+### Global Graph
+global-graph = Global Graph

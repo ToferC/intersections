@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block title %}
-  <title>{{ title }}</title>
+  <title>Community Node Graph {{ community_name }}</title>
 {% endblock title %}}
 
 {% block add_preload %}
@@ -80,7 +80,7 @@
 
 {% block content %}
 <div class="col m-md-2 m-1">
-  <h1>{{ title }} <button class="btn btn-dark btn-sm" style="float: right;" type="button" data-toggle="collapse" data-target="#collapseLegend" aria-expanded="true" aria-controls="collapseLegend">
+  <h1>{{ community_name }} <button class="btn btn-dark btn-sm" style="float: right;" type="button" data-toggle="collapse" data-target="#collapseLegend" aria-expanded="true" aria-controls="collapseLegend">
     Toggle Legend
   </button></h1>
   <hr>

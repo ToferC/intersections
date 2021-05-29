@@ -58,6 +58,7 @@ use crate::handlers::{
 
     // email validation
     email_verification,
+    resend_email_verification,
     verify_code,
 
     // password reset
@@ -152,6 +153,7 @@ pub fn init_routes(config: &mut web::ServiceConfig) {
     config.service(register_form_input);
     config.service(registration_error);
     config.service(email_verification);
+    config.service(resend_email_verification);
     config.service(verify_code);
 
     // forgot password

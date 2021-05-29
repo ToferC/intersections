@@ -149,7 +149,7 @@ pub use self::community::{add_community, add_community_form_input, delete_commun
 pub use self::email::{email_person_info, send_community_email, EmailForm};
 
 pub use self::authentication_handlers::{register_handler, register_form_input, registration_error, login_handler, login_form_input, logout,
-    email_verification, verify_code, password_reset, password_reset_post, request_password_reset_post,
+    email_verification, resend_email_verification, verify_code, password_reset, password_reset_post, request_password_reset_post,
     password_email_sent, request_password_reset};
     
 pub use self::utility::{DeleteForm, UrlParams, toggle_language, toggle_language_index, toggle_language_two, toggle_language_three};
