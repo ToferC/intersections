@@ -6,7 +6,7 @@ use inflector::Inflector;
 use serde::{Deserialize};
 
 use crate::{AppData, extract_identity_data, generate_basic_context};
-use crate::models::{User, Communities};
+use crate::models::{User, Communities, Phrases};
 use crate::handlers::DeleteForm;
 use error_handler::error_handler::CustomError;
 
@@ -96,6 +96,18 @@ pub async fn user_page_handler(
                         Vec::new()
                     }
                 };
+
+                let mut phrase_ids = Vec::new();
+
+                for c in &communities {
+                    phrase_ids.push(c.tag);
+                    phrase_ids.push(c.description);
+                    phrase_ids.push(c.data_use_case);
+                };
+
+                let phrase_map = Phrases::get_phrase_map(phrase_ids, &lang).expect("Unable to get phrase mamp");
+
+                ctx.insert("phrases", &phrase_map);
         
                 ctx.insert("communities", &communities);
             

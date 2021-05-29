@@ -94,7 +94,10 @@ pub async fn survey_intro(
             let all_node_names = Nodes::find_all_names(&lang).expect("Unable to load node names");
             ctx.insert("all_node_names", &all_node_names);
 
+            let phrase_map = community.get_phrases(&lang);
+
             ctx.insert("community", &community);
+            ctx.insert("phrases", &phrase_map);
             
             let rendered = data.tmpl.render("survey/survey_intro.html", &ctx).unwrap();
             HttpResponse::Ok().body(rendered)

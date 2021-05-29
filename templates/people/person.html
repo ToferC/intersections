@@ -9,18 +9,18 @@
     <div class="col m-md-2 m-1">
         <br>
         <h1>{{ title }}</h1>
-        <p><a href="/{{ lang }}/person_network_graph/{{ person.id }}">View Person Graph</a> | <a href="/">Return to Index</a></p>
+        <p><a href="/{{ lang }}/person_network_graph/{{ person.id }}">{{ fluent(key="view-person-graph", lang=lang )}}</a> | <a href="/">{{ fluent(key="return-to-index", lang=lang )}}</a></p>
         <hr>
-        <h2>Your code is: </h2> <p><strong>{{ person.code }}</strong></p> 
-        <p>Please make a copy of your code or request an email that contains links back to this page and to your community.</p>
-        <p>The application does not keep any identifying information and the administrators will not be able to provide you with this code once you've finished your survey and closed the window.</p>
+        <h2>{{ fluent(key="your-code", lang=lang )}} </h2> <p><strong>{{ person.code }}</strong></p> 
+        <p>{{ fluent(key="take-care-of-code", lang=lang )}}</p>
+        <p>{{ fluent(key="cant-get-code-back", lang=lang )}}</p>
 
         <form name="EmailForm" id="emailForm" action=/{{ lang }}/person/{{ person.code }} method=POST>
         
         <label>
-            <strong>Send me an email</strong>
+            <strong>{{ fluent(key="send-me-email", lang=lang )}}</strong>
             <input class="form-control form-control-lg" type="email" name="email" placeholder="yourname@domain.com" required>
-            <small id="code_help" class="form-text text-muted">Enter the email address where you would like to receive your information.</small>
+            <small id="code_help" class="form-text text-muted">{{ fluent(key="enter-email-here", lang=lang )}}</small>
         </label>
         <br>
 
@@ -30,29 +30,28 @@
             data-callback='onSubmit' 
             data-action='submit'
             type=submit
-            >Send Email</button>
+            >{{ fluent(key="send-email-button", lang=lang )}}</button>
         <hr>
     </form>
         <button class="btn btn-info" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
-            Explanation of results
+            {{ fluent(key="explanation-results", lang=lang )}}
         </button>
         <div class="collapse" id="collapseExample">
             <div class="card card-body">
-            <p>The experiences of your lived experience that you entered as part of the survey have been combined into a graph - a networked representation of your data, combined with the data of other people.</p>
-            <p>Below, you will find your own data - a summary of what you entered in the survey. The only thing new to you here might be the <strong>total inclusivity</strong> measure. This takes the individual ratings that you entered through the slider and returns the sum.</p>
-            <p>Further below, or in the next column depending on your device, you will see the results from the full data graph. This includes your results, but also those of every other person who described a similar lived experience. This lets you see how other people might interpret experiences similar to your own.
-                As more peole complete the survey, this insight will deepen.</p>
-            <p>Here are what the results mean:</p>
+            <p>{{ fluent(key="your-lived-experience", lang=lang )}}</p>
+            <p>{{ fluent(key="your-data", lang=lang )}}</p>
+            <p>{{ fluent(key="global-data-explanation", lang=lang )}}</p>
+            <p>{{ fluent(key="explanation-results", lang=lang )}}:</p>
             <ul>
-                <li><strong>Experience</strong> - the name of the lived experience</li>
-                <li><strong>Domain</strong> - whether the experience is a part of the person or a part of the system of work</li>
-                <li><strong>Instances</strong> - how many times this experience has been entered in the survey. If the result is "1", then you are the first person to do so</li>
-                <li><strong>Mean Inclusivity</strong> - the average inclusivity rating for the experience from -1.00 to +1.00.</li>
+                <li><strong>{{ fluent(key="experience", lang=lang )}}</strong> - {{ fluent(key="experience-details", lang=lang )}}</li>
+                <li><strong>{{ fluent(key="domain", lang=lang )}}</strong> - {{ fluent(key="domain-details", lang=lang )}}</li>
+                <li><strong>{{ fluent(key="instances", lang=lang )}}</strong> - {{ fluent(key="instances-details", lang=lang )}}/li>
+                <li><strong>{{ fluent(key="mean-inclusivity", lang=lang )}}</strong> - {{ fluent(key="mean-inclusivity-details", lang=lang )}}</li>
             </ul>
-            <p>The next chart is a frequency distribution of the responses to the statement: "Though this experience, in the workplace, I feel..."</p>
+            <p>{{ fluent(key="frequency-distribution-details", lang=lang )}}</p>
             <ul>
-                <li><strong>Statement</strong> - the explanation of how the experience effected the person</li>
-                <li><strong>Count</strong> - the number of times people recorded this explanation</li>
+                <li><strong>{{ fluent(key="statement", lang=lang )}}</strong> - {{ fluent(key="statement-details", lang=lang )}}</li>
+                <li><strong>{{ fluent(key="count", lang=lang )}}</strong> - {{ fluent(key="count-details", lang=lang )}}</li>
             </ul>
         </div>
         </div>
@@ -74,9 +73,9 @@
                 <!-- experience.0 == experience, experience.1 = vector of phrases -->
                     <table>
                         <tr>
-                            <th style="text-align: center;">Experience</th>
-                            <th style="text-align: center;">Domain</th>
-                            <th style="text-align: center;">Inclusivity</th>
+                            <th style="text-align: center;">{{ fluent(key="experience", lang=lang )}}</th>
+                <th style="text-align: center;">{{ fluent(key="domain", lang=lang )}}</th>
+                <th style="text-align: center;">{{ fluent(key="inclusivity", lang=lang )}}</th>
                         </tr>
                         <tr>
                             <td style="text-align: center;"><a href="/{{ lang }}/node/{{ experience.0.slug }}">{{ experience.1.0.text | title }}</a></td>
@@ -96,7 +95,7 @@
                     <br>
                     <table>
                         <tr>
-                            <th style="text-align: center;">Statements</th>
+                            <th style="text-align: center;">{{ fluent(key="statements", lang=lang )}}</th>
                         </tr>
                         {% for statement in experience.1 | slice(start=1) %}
                             <tr>
@@ -107,8 +106,8 @@
                     <hr>
                     <br>
                 {% endfor %}
-                <a class="btn btn-dark" href="/{{ lang }}/add_experience_form/{{ person.person.code }}">Add an experience</a>
-                <a class="btn btn-danger" href="/{{ lang }}/delete_person/{{ person.person.code }}">Delete Profile</a>
+                <a class="btn btn-dark" href="/{{ lang }}/add_experience_form/{{ person.person.code }}">{{ fluent(key="add-experience", lang=lang )}}</a>
+                <a class="btn btn-danger" href="/{{ lang }}/delete_person/{{ person.person.code }}">{{ fluent(key="delete-my-profile", lang=lang )}}</a>
             {% endfor %}
             <hr>
     </div>

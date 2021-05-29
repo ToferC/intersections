@@ -12,9 +12,9 @@
             <h1>{{ fluent(key="survey-introduction", lang=lang )}}</h1>
             <hr>
     
-                <p>{{ fluent(key="invited-community", community=community.tag, lang=lang )}}</p>
+                <p>{{ fluent(key="invited-community", community=phrases[community.tag], lang=lang )}}</p>
                 <p>{{ fluent(key="community-explanation", lang=lang )}}</p>
-                <p>{{ community.description }}</p>
+                <p>{{ phrases[community.description] }}</p>
                 <p>{{ fluent(key="community-contact", contact=community.contact_email, lang=lang )}}</p>
     
         </div>

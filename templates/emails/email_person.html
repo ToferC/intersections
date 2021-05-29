@@ -9,35 +9,31 @@
 <body>
 
     <div class="col m-md-2 m-1">
-        <p>Hello/bonjour,</p>
-        <p>
-            Thank you for participating in the Intersectional Data MVP. This is the only email you will receive unless you specifically request your data again. Your email address is not saved or associated with your data in the Intersectional Data application.
-        </p>
-        <p>
-            You will find links below to access your data, see the data for your community and to delete your data. You will also find a record of the data on your profile. Note that your data will remain the same, but the comparison data may change over time as more people add their experiences.
-        </p>
+        <p>{{ fluent(key="hello", lang=lang )}}</p>
+        <p>{{ fluent(key="thank-you-for-participating", lang=lang )}}</p>
+        <p>{{ fluent(key="email-link-descriptions", lang=lang )}}</p>
         <hr>
-        <h2>Important Links</h2>
+        <h2>{{ fluent(key="important-links", lang=lang )}}</h2>
         <ul>
-            <li><a href="{{ application_url }}/person/{{ person.code }}">Go to my profile</a></li>
-            <li><a href="{{ application_url }}/add_experience_form/{{ person.code }}">Add an experience</a></li>
-            <li><a href="{{ application_url }}/community/{{ community.slug }}">Link to my community: {{ community.tag }}</a></li>
-            <li><a href="{{ application_url }}/delete_person/{{ person.code }}">Delete my profile</a></li>
+            <li><a href="{{ application_url }}/person/{{ person.code }}">{{ fluent(key="go-to-profile", lang=lang )}}</a></li>
+            <li><a href="{{ application_url }}/add_experience_form/{{ person.code }}">{{ fluent(key="add-experience", lang=lang )}}</a></li>
+            <li><a href="{{ application_url }}/community/{{ community.slug }}">{{ fluent(key="link-to-community", lang=lang )}} {{ community.tag }}</a></li>
+            <li><a href="{{ application_url }}/delete_person/{{ person.code }}">{{ fluent(key="delete-my-profile", lang=lang )}}</a></li>
             <li>---------------------</li>
-            <li><a href="{{ application_url }}">Return to the application</a></li>
+            <li><a href="{{ application_url }}">{{ fluent(key="return-to-application", lang=lang )}}</a></li>
         </ul>
         <hr>
         
-        <h2>Community Information</h2>
-        <p>Name: {{ community.tag }}</p>
-        <p>Description: {{ community.description }}</p>
-        <p>Data Policy: {{ community.data_use_case }}</p>
-        <p>Administrator: <a href="mailto:{{ community.contact_email }}">{{ community.contact_email }}</a></p>
+        <h2>{{ fluent(key="community-information", lang=lang )}}</h2>
+        <p>{{ fluent(key="name", lang=lang )}} {{ phrases[community.tag] }}</p>
+        <p>{{ fluent(key="description", lang=lang )}} {{ phrases[community.description] }}</p>
+        <p>{{ fluent(key="data-policy", lang=lang )}} {{ phrases[community.data_use_case] }}</p>
+        <p>{{ fluent(key="administrator", lang=lang )}} <a href="mailto:{{ community.contact_email }}">{{ community.contact_email }}</a></p>
 
         <hr>
-        <p>Thank you again for participating in this project. If you have any questions on the community you participated in, please contact your community administrator above. If you have any questions or would like to provide feedback on the application, please contact Chris Allison at cgeist7@gmail.com.</p>
-        <p>Sincere regards,</p>
-        <p>User Support at Intersectional-Data.ca</p>
+        <p>{{ fluent(key="thank-you-participating", lang=lang )}}</p>
+        <p>{{ fluent(key="sincere-regards", lang=lang )}}</p>
+        <p>{{ fluent(key="user-support-signature", lang=lang )}}</p>
     </div>
 </body>
 </html>

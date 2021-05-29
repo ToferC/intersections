@@ -1,6 +1,9 @@
 ## General Section
 
 -app-name = Intersectional-data.ca
+-user-support-email = usersupport@intersectional-data.ca
+
+intersectional-data = { -app-name }
 intersections = Intersections
 app-description = { -app-name } is a learning project and experiment in collecting, connecting, and gaining insight from the lived experience of participants while protecting their privacy.
 app-mvp = Intersectional Data Survey & Analysis MVP
@@ -28,7 +31,7 @@ developed-by = Developed by ToferC 2020-21
 
 ## Index
 
-welcome-to = Welcome to Intersectional-data.ca
+welcome-to = Welcome to { -app-name }
 greeting = Hello { $name }!
 important = Important:
 overview = This is a learning project and experiment in collecting, connecting, and gaining insight from the lived experience of participants while protecting their privacy.
@@ -95,7 +98,7 @@ password-helper = Your password (at least 12 characters long).
 forgot-password = I forgot my password
 
 ## Register Page
-register-to-app = Register to Intersectional-data.ca
+register-to-app = Register to { -app-name }
 why-register = You only need to register an account to create and manage communities or organizations for use with intersections. You do not need an account to create and view data.
 register-email-helper = Enter the email address you want to use to log in.
 user-name = User name
@@ -226,7 +229,9 @@ unique-code-explanation = You can make a copy of this code or request an email w
 progress = Progress
 may-add-more = You can add more, if you like.
 
-## Community Node
+## Nodes
+
+### Community Node
 node-in = node in
 domain-in-community = { $domain } in { $community } community
 view-community-graph = View community graph
@@ -258,5 +263,79 @@ associated-experiences = Associated Experiences
 associated-experiences-details = These are experiences from other nodes that have been linked to the { $domain } trait of { $name }. 
     They are presented here to show how the nodes relate and how by looking at more than one facet of a person's experience, we can better understand our people's needs.
 
-## Node
+### Node
 node = Node
+
+## Person
+
+### Person Page
+view-person-graph = View Person Graph
+take-care-of-code = Please make a copy of your code or request an email that contains links back to this page and to your community.
+cant-get-code-back = The application does not keep any identifying information and the administrators will not be able to provide you with this code once you've finished your survey and closed the window.
+send-me-email = Send me an email
+enter-email-here = Enter the email address where you would like to receive your information.
+send-email-button = Send Email
+your-lived-experience = The experiences of your lived experience that you entered as part of the survey have been combined into a graph - a networked representation of your data, combined with the data of other people.
+your-data = Below, you will find your own data - a summary of what you entered in the survey. The only thing new to you here might be the *total inclusivity* measure. This takes the individual ratings that you entered through the slider and returns the sum.
+global-data-explanation = Further below, or in the next column depending on your device, you will see the results from everyone who's participated. This includes your results, but also those of every other person who described a similar lived experience. This lets you see how other people might interpret experiences similar to your own.
+    As more peole complete the survey, this insight will deepen.
+inclusivity = Inclusivity
+global-experiences = Global Experiences
+global-experiences-explanation = These are the aggregate experiences from everyone who completed the survey and identified these experiences as part of their identity. They are presented here so that you can compare the person selected with the global ratings.
+statements = Statements
+
+## Emails
+
+### Email Community
+hello = Hello,
+community-email-body = 
+    I'm pleased to invite you to be part of the { $community } community on the intersectional data pilot.
+
+    The purpose of the pilot is to help individuals and organizations learn about intersectionality and identify bias by shining a light on inclusion and exclusion in the community or organization.
+
+community-description = Community description:
+
+    { $description }
+
+no-identifying-information = No identifying information is stored as part of the survey. When you finish the survey, you will be provided with a code so you can access your profile.
+    You are the only person who will receive this code and without the code, no-one can view your profile.
+    
+data-use-case = The intended use of this data within the community is as follows:
+
+    { $datause }
+
+access-complete = You can access and complete the survey by 
+click-url = clicking this link.
+thank-you-reach-at = Thank you and you can reach me at { $contact } if you have any questions.
+
+### Email Person Data
+thank-you-for-participating = Thank you for participating in the Intersectional Data MVP. This is the only email you will receive unless you specifically request your data again. Your email address is not saved or associated with your data in the Intersectional Data application.
+email-link-descriptions = You will find links below to access your data, see the data for your community and to delete your data. You will also find a record of the data on your profile. Note that your data will remain the same, but the comparison data may change over time as more people add their experiences.
+important-links = Important Links
+go-to-profile = Go to my profile
+link-to-community = Link to my community:
+delete-my-profile = Delete my profile
+return-to-application = Return to { -app-name }
+community-information = Community Information
+
+name = Name:
+description = Description:
+data-policy = Data Policy:
+administrator = Administrator:
+thank-you-participating = Thank you again for participating in this project. If you have any questions on the community you participated in, please contact your community administrator above. If you have any questions or would like to provide feedback on the application, please contact User Support at { -user-support-email }.
+sincere-regards = Sincere regards,
+user-support-signature = User Support at { -user-support-email }
+
+### Email Verification
+email-registered-with = Your email address has been registered with
+registered-in-error = If you think this is an error, please contact { -user-support-email }.
+register-instructions = If this is you, and you would like to verify your account, please enter the code below on
+verification-page = the verification page
+your-code = Your code is:
+time-limit = You have 60 minutes to enter this code to verify your account. If you need to, you can
+request-another-code = request another code
+
+### Password reset request
+password-reset-received = We received a request to reset your password on { -app-name }. If you think this is an error, please contact { -user-support-email }.
+if-you-instructions = If this was you, You can reset your password through the following link.
+from-login-screen = from the log in screen.

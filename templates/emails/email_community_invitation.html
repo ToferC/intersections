@@ -9,26 +9,17 @@
 <body>
 
     <div class="card card-body">
-        <P>Hello/bonjour,</P>
-        
-        <p>I'm pleased to invite you to be part of the {{ phrases[community.tag] | title }} community on the intersectional data pilot.
-            The purpose of the pilot is to help individuals and organizations learn about intersectionality and identify bias by
-            shining a light on inclusion and exclusion in the community or organization.</p>
-
-        <p>Community description:</p>
-
-        <p>{{ phrases[community.description] | capitalize }}</p>
-        
-        <p>No identifying information is stored as part of the survey. When you finish the survey, you will be provided with a code so you can access your profile.</p>
-        <p>You are the only person who will receive this code and without the code, no-one can view your profile.</p>
-
-        <p>The intended use of this data within the community is as follows:</p>
-        
-        <p>{{ phrases[community.data_use_case] | capitalize }}</p>
-
-        <p>You can access and complete the survey by <a href="{{ add_community_profile_url }}">clicking this link</a>.</p>
-
-        <p>Thank you and you can reach me at {{ community.contact_email }} if you have any questions.</p>
+        <p>{{ fluent(key="hello", lang=lang )}}</p>
+        <p>{{ fluent(
+                key="community-email-body", 
+                community=phrases[community.tag] | title,
+                lang=lang, 
+            )}}</p>
+        <p>{{ fluent(key="community-description", description=phrases[community.description] | capitalize, lang=lang )}}</p>
+        <p>{{ fluent(key="no-identifying-information", lang=lang )}}</p>
+        <p>{{ fluent(key="data-use-case", datause=phrases[community.data_use_case] | capitalize, lang=lang )}}</p>
+        <p>{{ fluent(key="access-complete", lang=lang )}}<a href="{{ add_community_profile_url }}"> {{ fluent(key="click-url", lang=lang )}}</a></p>
+        <p>{{ fluent(key="thank-you-reach-at", contact=community.contact_email, lang=lang )}}</p>
     </div>
 </body>
 </html>
