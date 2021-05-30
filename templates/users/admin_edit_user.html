@@ -1,13 +1,13 @@
 {% extends "base.html" %}
 
 {% block title %}
-    <title>{{ fluent(key="edit-user-admin-title", user={{ user.user_name }}, lang=lang )}}</title>
+    <title>{{ fluent(key="edit-user-admin-title", user=user.user_name, lang=lang )}}</title>
 {% endblock title %}
 
 {% block content %}
     <div class="col m-md-2 m-1">
         <br>
-        <h1>{{ fluent(key="edit-user-admin-title", user={{ user.user_name }}, lang=lang )}}</h1>
+        <h1>{{ fluent(key="edit-user-admin-title", user=user.user_name, lang=lang )}}</h1>
         <p>{{ fluent(key="edit-user-admin-explain", lang=lang )}}</p>
 
 

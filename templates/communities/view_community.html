@@ -14,10 +14,10 @@
     
                 <p>{{ phrases[community.description] | capitalize }}</p>
 
-                <p>{{ fluent(key="data-use-case", lang=lang )}} {{ phrases[community.data_use_case] | capitalize }}</p>
+                <p>{{ fluent(key="data-use-case", datause=phrases[community.data_use_case] | capitalize, lang=lang )}}</p>
 
                 {% if owner and user.validated %}
-                    <p>{{ fluent(key="your-community-code", lang=lang )}} {{ community.code }}</p>
+                    <p>{{ fluent(key="your-community-code", lang=lang )}} <strong>{{ community.code }}</strong></p>
                 {% endif %}
                 
                 <p>{{ fluent(key="this-community-is", lang=lang )}} {% if community.open %}{{ fluent(key="open", lang=lang )}}{% else %}{{ fluent(key="private", lang=lang )}}{% endif %}</p>

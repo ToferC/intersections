@@ -310,7 +310,7 @@ open = Open
 created = Created:
 data-use = Data Use:
 experiences = Experiences
-avg-inclusivity = Avg. Inclusvity
+avg-inclusivity = Avg. Inclusivity
 details-button = Details
 graph-button = Graph
 edit-button = Edit
@@ -368,8 +368,8 @@ community-description = Community description:
 no-identifying-information = No identifying information is stored as part of the survey. When you finish the survey, you will be provided with a code so you can access your profile.
     You are the only person who will receive this code and without the code, no-one can view your profile.
 
-data-use-case = The intended use of this data within the community is as follows:
-
+data-use-case = The intended use of this data within the community is as follows: 
+    
     { $datause }
 
 access-complete = You can access and complete the survey by 
@@ -447,10 +447,12 @@ invite-to-community-helper = Enter the email addresses to invite to the communit
 invite-to-community-button = Send Invitation Emails
 template-email-title = Template email to participants
 template-email-instructions = You can modify and send this email to people in your community.
+invitations = Invitations
 
 ### Community Index
 community-index-overview = Communities and organizations on intersections. Aggregate data from Open communities can be viewed by anyone. In each community you can see it's purpose, planned data usage, creation date and more.
 demo = Demo
+members = Members
 
 ### Add Community
 add-community-title = Add Community
@@ -462,7 +464,6 @@ community-status = Community Status
 community-description-helper = Enter a short description of your community. This will be shared with participants.
 data-use-case-helper = Explain here how the data from this community will be used. This will be shared with participants.
 community-status-helper = Choose if you would like your community to be open (other people can view), or private (only you can view).
-add-community-button = Add Community
 
 ### Edit Community
 edit-community-title = Edit Community
@@ -495,3 +496,7 @@ not-authorized = Not Authorized
 not-authorized-explain = You're not authorized to complete this action.
 go-back-or = You can go back or
 return-main-page = return to the main page
+
+### Record not found
+record-not-found = Record not found
+record-not-found-explain = The Record you are searching for is not available.
