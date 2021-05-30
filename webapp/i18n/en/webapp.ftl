@@ -304,6 +304,7 @@ change-username-email = Change username or email address
 reset-password = Reset Password
 your-managed-communities = Your managed communities
 community = Community
+community-colon = Community:
 private = Private
 open = Open
 created = Created:
@@ -410,6 +411,39 @@ click-explore = Click to explore node data
 click-view = Click again to view node
 click-elsewhere = Click elsewhere to unselect
 
+## Communities
 
+### View Community
+view-community = View Community:
+community-details-management = Community details and management
+your-community-code = Your community code is
+this-community-is = This community is
+actions-title = Actions
+link-to-add-profile = Link to Add Profile to Community
+edit-community-button = Edit Community
+delete-community-button = Delete Community
+scan-qr-code = Scan or share QR code to participants
+send-emails-participants-title = Send emails to participants
+send-emails-instructions = Enter the email addresses for your desired participants in the text box below and then hit send. Each will receive an invitation to join your community. 
+    You can enter multiple email addresses in the text box at one time.
+invite-to-community-label = Invite to Community
+invite-to-community-helper = Enter the email addresses to invite to the community.
+invite-to-community-button = Send Invitation Emails
+template-email-title = Template email to participants
+template-email-instructions = You can modify and send this email to people in your community.
 
+### Community Index
+community-index-overview = Communities and organizations on intersections. Aggregate data from Open communities can be viewed by anyone. In each community you can see it's purpose, planned data usage, creation date and more.
+demo = Demo
 
+### Add Community
+add-community-title = Add Community
+add-community-explanation = Use this form to add a community to intersections. You will receive a unique access code that participants can use to associate their profiles with your community or organization. 
+    You will be able to invite members to the community through a link, QR code or through the application.
+community-name = Community Name
+community-name-helper = Add a name or tag for your community.
+community-status = Community Status
+community-description-helper = Enter a short description of your community. This will be shared with participants.
+data-use-case-helper = Explain here how the data from this community will be used. This will be shared with participants.
+community-status-helper = Choose if you would like your community to be open (other people can view), or private (only you can view).
+add-community-button = Add Community

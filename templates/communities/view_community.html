@@ -1,34 +1,34 @@
 {% extends "base.html" %}
 
 {% block title %}
-    <title>Community: {{ phrases[community.tag] }}</title>
+    <title>{{ fluent(key="community-colon", lang=lang )}} {{ phrases[community.tag] }}</title>
 {% endblock title %}
 
 {% block content %}
     <div class="col m-md-2 m-1">
         <br>
-        <h1>View Community: {{ phrases[community.tag] | title }}</h1>
+        <h1>{{ fluent(key="view-community", lang=lang )}} {{ phrases[community.tag] | title }}</h1>
 
         <div class="card card-body">
-            <p>Community details and management.</p>
+            <p>{{ fluent(key="community-details-management", lang=lang )}}</p>
     
                 <p>{{ phrases[community.description] | capitalize }}</p>
 
-                <p>Data Use Case: {{ phrases[community.data_use_case] | capitalize }}</p>
+                <p>{{ fluent(key="data-use-case", lang=lang )}} {{ phrases[community.data_use_case] | capitalize }}</p>
 
                 {% if owner and user.validated %}
-                    <p>Your community code is {{ community.code }}</p>
+                    <p>{{ fluent(key="your-community-code", lang=lang )}} {{ community.code }}</p>
                 {% endif %}
                 
-                <p>This community is {% if community.open %}open{% else %}private{% endif %}</p>
+                <p>{{ fluent(key="this-community-is", lang=lang )}} {% if community.open %}{{ fluent(key="open", lang=lang )}}{% else %}{{ fluent(key="private", lang=lang )}}{% endif %}</p>
                 <br>
 
                 <table>
                     <tr>
-                        <th style="text-align: center;">Members</th>
-                        <th style="text-align: center;">Invitations</th>
-                        <th style="text-align: center;">Experiences</th>
-                        <th style="text-align: center;">Avg. Inclusvity</th>
+                        <th style="text-align: center;">{{ fluent(key="members", lang=lang )}}</th>
+                        <th style="text-align: center;">{{ fluent(key="invitations", lang=lang )}}</th>
+                        <th style="text-align: center;">{{ fluent(key="experiences", lang=lang )}}</th>
+                        <th style="text-align: center;">{{ fluent(key="avg-inclusivity", lang=lang )}}</th>
                     </tr>
                     <tr>
                         <td style="text-align: center;">{{ community.data.members }}</td>
@@ -39,37 +39,36 @@
                 </table>
                 <br>
                 
-                <h2>Actions</h2>
+                <h2>{{ fluent(key="actions-title", lang=lang )}}</h2>
                 
-                <a class="btn btn-dark" href="/{{ lang }}/full_community_graph/{{ community.slug }}">View Community Graph</a>
+                <a class="btn btn-dark" href="/{{ lang }}/full_community_graph/{{ community.slug }}">{{ fluent(key="view-community-graph", lang=lang )}}</a>
                 <br>
                 {% if owner and user.validated %}
-                <a class="btn btn-dark" href="{{ add_community_profile_url }}">Link to Add Profile to Community</a>
+                <a class="btn btn-dark" href="{{ add_community_profile_url }}">{{ fluent(key="link-to-add-profile", lang=lang )}}</a>
                 <br>
-                <a class="btn btn-dark" href="/{{ lang }}/edit_community/{{ community.slug }}">Edit Community</a>
-                <a class="btn btn-danger" href="/{{ lang }}/delete_community/{{ community.code }}">Delete Community</a>
+                <a class="btn btn-dark" href="/{{ lang }}/edit_community/{{ community.slug }}">{{ fluent(key="edit-community-button", lang=lang )}}</a>
+                <a class="btn btn-danger" href="/{{ lang }}/delete_community/{{ community.code }}">{{ fluent(key="delete-community-button", lang=lang )}}</a>
                 {% endif %}
                 <br> 
         </div>
 
             {% if owner and user.validated %}
             <div class="card card-body">
-                <h2>Scan or share QR code to participants.</h2>
+                <h2>{{ fluent(key="scan-qr-code", lang=lang )}}</h2>
     
                 {{ qrcode | safe }}
             </div>
 
             <hr>
 
-            <h2>Send emails to participants</h2>
-            <p>Enter the email addresses for your desired participants in the text box below and then hit send. Each will receive an invitation to join your community. 
-                You can enter multiple email addresses in the text box at one time.
+            <h2>{{ fluent(key="send-emails-participants-title", lang=lang )}}</h2>
+            <p>{{ fluent(key="send-emails-instructions", lang=lang )}}
             </p>
 
             <form name="EmailsForm" id="emailsForm" action=/{{ lang }}/send_community_email/{{ community.slug }} method=POST>
                 
                 <label>
-                    <strong>Invite to Community</strong>
+                    <strong>{{ fluent(key="invite-to-community-label", lang=lang )}}</strong>
                     <textarea class="form-control form-control-lg" 
                     type="text" 
                     name="emails" 
@@ -77,7 +76,7 @@
                     rows="8"
                     cols="33"
                     required></textarea>
-                    <small id="code_help" class="form-text text-muted">Enter the email addresses to invite to the community.</small>
+                    <small id="code_help" class="form-text text-muted">{{ fluent(key="invite-to-community-helper", lang=lang )}}</small>
                 </label>
                 <br>
         
@@ -87,28 +86,24 @@
                     data-callback='onSubmit' 
                     data-action='submit'
                     type=submit
-                    >Send Invitation Emails</button>
+                    >{{ fluent(key="invite-to-community-button", lang=lang )}}</button>
                 <hr>
             </form>
 
-            <h3>Template email to participants</h3>
-            <p>You can modify and send this email to people in your community.</p>
+            <h3>{{ fluent(key="template-email-title", lang=lang )}}</h3>
+            <p>{{ fluent(key="template-email-instructions", lang=lang )}}</p>
             <div class="card card-body">
-                <P>Hello/bonjour,</P>
-                <p>I'm pleased to invite you to be part of the {{ phrases[community.tag] | title }} community on the intersectional data pilot.
-                    The purpose of the pilot is to help individuals and organizations learn about intersectionality and identify bias by
-                    anonymously tracking inclusion and exclusion in the community or organization.</p>
-
-                <p>Community description: {{ phrases[community.description] | capitalize }}</p>
-                
-                <p>No identifying information is stored as part of the survey. When you finish the survey, you will be provided with a code so you can access your profile.</p>
-                <p>You are the only person who will receive this code and without the code, no-one can view your profile.</p>
-
-                <p>The intended use of this data within the community is as follows: {{ phrases[community.data_use_case] | capitalize }}</p>
-
-                <p>You can access and complete the survey by <a href="{{ add_community_profile_url }}">clicking this link</a>.</p>
-
-                <p>Thank you and you can reach me at {{ community.contact_email }} if you have any questions.</p>
+                <p>{{ fluent(key="hello", lang=lang )}}</p>
+                <p>{{ fluent(
+                        key="community-email-body", 
+                        community=phrases[community.tag] | title,
+                        lang=lang, 
+                    )}}</p>
+                <p>{{ fluent(key="community-description", description=phrases[community.description] | capitalize, lang=lang )}}</p>
+                <p>{{ fluent(key="no-identifying-information", lang=lang )}}</p>
+                <p>{{ fluent(key="data-use-case", datause=phrases[community.data_use_case] | capitalize, lang=lang )}}</p>
+                <p>{{ fluent(key="access-complete", lang=lang )}}<a href="{{ add_community_profile_url }}"> {{ fluent(key="click-url", lang=lang )}}</a></p>
+                <p>{{ fluent(key="thank-you-reach-at", contact=community.contact_email, lang=lang )}}</p>
             </div>
 
         {% endif %}

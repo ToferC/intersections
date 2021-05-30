@@ -1,46 +1,45 @@
 {% extends "base.html" %}
 
 {% block title %}
-    <title>Add Community</title>
+    <title>{{ fluent(key="add-community-title", lang=lang )}}</title>
 {% endblock title %}
 
 {% block content %}
     <div class="col m-md-2 m-1">
         <br>
-        <h1>Add a community</h1>
-        <p>Use this form to add a community to intersections. You will receive a unique access code that participants can use to associate their profiles with your community or organization. 
-            You will be able to invite members to the community through a link, QR code or through the application.</p>
+        <h1>{{ fluent(key="add-community-title", lang=lang )}}</h1>
+        <p>{{ fluent(key="add-community-explanation", lang=lang )}}</p>
 
         <form name="CommunityForm" id="communityForm" action=/{{ lang }}/add_community method=POST>
         
         <label>
-            <strong>Community Name</strong>
+            <strong>{{ fluent(key="community-name", lang=lang )}}</strong>
             <input class="form-control form-control-lg" type="text" name="community_name" placeholder="Your community name..." required>
-            <small id="code_help" class="form-text text-muted">Add a name or tag for your community.</small>
+            <small id="code_help" class="form-text text-muted">{{ fluent(key="community-name-helper", lang=lang )}}</small>
         </label>
         <br>
 
         <label>
-            <strong>Description</strong>
+            <strong>{{ fluent(key="description", lang=lang )}}</strong>
             <textarea class="form-control form-control-lg" type="text" rows=10 cols=45 name="description" placeholder="A community..." required></textarea>
-            <small id="code_help" class="form-text text-muted">Enter a short description of your community. This will be shared with participants.</small>
+            <small id="code_help" class="form-text text-muted">{{ fluent(key="community-description-helper", lang=lang )}}</small>
         </label>
         <br>
 
         <label>
-            <strong>Data Use Case</strong>
+            <strong>{{ fluent(key="data-use-case", lang=lang )}}</strong>
             <textarea class="form-control form-control-lg" type="text" rows=10 cols=45 name="data_use_case" placeholder="This data will be used..." required></textarea>
-            <small id="code_help" class="form-text text-muted">Explain here how the data from this community will be used. This will be shared with participants.</small>
+            <small id="code_help" class="form-text text-muted">{{ fluent(key="data-use-case-helper", lang=lang )}}</small>
         </label>
         <br>
 
         <label>
-            <strong>Community Status</strong>
+            <strong>{{ fluent(key="community-status", lang=lang )}}</strong>
             <select name="open">
-                <option value="open" selected>Open</option>
-                <option value="private">Private</option>
+                <option value="open" selected>{{ fluent(key="open", lang=lang )}}</option>
+                <option value="private">{{ fluent(key="private", lang=lang )}}</option>
               </select>
-            <small id="code_help" class="form-text text-muted">Choose if you would like your community to be open (other people can view), or private (only you can view).</small>
+            <small id="code_help" class="form-text text-muted">{{ fluent(key="community-status-helper", lang=lang )}}</small>
         </label>
         <hr>
 
@@ -50,7 +49,7 @@
             data-callback='onSubmit' 
             data-action='submit'
             type=submit
-            >Add Community</button>
+            >{{ fluent(key="add-community-button", lang=lang )}}</button>
         <hr>
     </form>
                 
