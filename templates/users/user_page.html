@@ -1,36 +1,36 @@
 {% extends "base.html" %}
 
 {% block title %}
-    <title>User: {{ user.user_name }}</title>
+    <title>{{ fluent(key="user-profile-for", lang=lang )}} {{ user.user_name }}</title>
 {% endblock title %}
 
 {% block content %}
     <div class="col m-md-2 m-1">
         <br>
-        <h1>Profile for {{ user.user_name }}</h1>
+        <h1>{{ fluent(key="user-profile-for", lang=lang )}} {{ user.user_name }}</h1>
         <div class="card card-body">
-            <p>User details and account management.</p>
+            <p>{{ fluent(key="user-details", lang=lang )}}</p>
     
                 <p>{{ user.user_name }}</p>
     
                 <p>{{ user.email }}</p>
 
-                <h2>Account Options</h2>
+                <h2>{{ fluent(key="account-options", lang=lang )}}</h2>
                 <p>
                     {% if role == "admin" %}
-                    <a class="btn btn-dark" href="/{{ lang }}/admin_edit_user/{{ user.slug }}">Edit User as Admin</a>
+                    <a class="btn btn-dark" href="/{{ lang }}/admin_edit_user/{{ user.slug }}">{{ fluent(key="edit-as-admin", lang=lang )}}</a>
                     {% else %}
-                    <a class="btn btn-dark" href="/{{ lang }}/edit_user/{{ user.slug }}">Change username or email address</a>
+                    <a class="btn btn-dark" href="/{{ lang }}/edit_user/{{ user.slug }}">{{ fluent(key="change-username-email", lang=lang )}}</a>
                     {% endif %}
-                    <a class="btn btn-dark" href="/{{ lang }}/request_password_reset">Reset Password</a>
-                    <a class="btn btn-danger" href="/{{ lang }}/delete_user/{{ user.slug }}">Delete User</a>
+                    <a class="btn btn-dark" href="/{{ lang }}/request_password_reset">{{ fluent(key="reset-password", lang=lang )}}</a>
+                    <a class="btn btn-danger" href="/{{ lang }}/delete_user/{{ user.slug }}">{{ fluent(key="delete-user", lang=lang )}}</a>
                 </p>
 
         </div>
         <br>
 
-        <h2>Communities</h2>
-        <p>Your managed communities</p>
+        <h2>{{ fluent(key="communities", lang=lang )}}</h2>
+        <p>{{ fluent(key="your-managed-communities", lang=lang )}}</p>
 
         {% if communities %}
         <div class="row row-cols-1 row-cols-md-3 g-4">
@@ -42,14 +42,14 @@
                     <h5 class="card-title">
                         {{ phrases[community.tag] | title }}{% if community.test %} (Demo){% endif %}
                     </h5>
-                    <p class="card-text"><small class="text-muted">{{ community.contact_email }} | {% if community.open %}Open{% else %}Private{% endif %} Community | Created: {{ community.date_created | date(format="%Y-%m-%d") }}</small></p>
+                    <p class="card-text"><small class="text-muted">{{ community.contact_email }} | {% if community.open %}{{ fluent(key="open", lang=lang )}}{% else %}{{ fluent(key="private", lang=lang )}}{% endif %} {{ fluent(key="community", lang=lang )}} | {{ fluent(key="created", lang=lang )}} {{ community.date_created | date(format="%Y-%m-%d") }}</small></p>
                     <p class="card-text">{{ phrases[community.description] | capitalize }}</p>
-                    <p class="card-text">Data Use: {{ phrases[community.data_use_case] | capitalize }}</p>
+                    <p class="card-text">{{ fluent(key="data-use", lang=lang )}} {{ phrases[community.data_use_case] | capitalize }}</p>
                     <table>
                         <tr>
-                            <th style="text-align: center;">Members</th>
-                            <th style="text-align: center;">Experiences</th>
-                            <th style="text-align: center;">Avg. Inclusvity</th>
+                            <th style="text-align: center;">{{ fluent(key="members", lang=lang )}}</th>
+                            <th style="text-align: center;">{{ fluent(key="experiences", lang=lang )}}</th>
+                            <th style="text-align: center;">{{ fluent(key="avg-inclusivity", lang=lang )}}</th>
                         </tr>
                         <tr>
                             <td style="text-align: center;">{{ community.data.members }}</td>
@@ -58,10 +58,10 @@
                         </tr>
                     </table>
                     <br>
-                    <a class="btn btn-dark" href="/{{ lang }}/community/{{ community.slug }}">Details</a>
-                    <a class="btn btn-dark" href="/{{ lang }}/full_community_graph/{{ community.slug }}">Graph</a>
-                    <a class="btn btn-dark" href="/{{ lang }}/edit_community/{{ community.slug }}">Edit</a>
-                    <a class="btn btn-danger" href="/{{ lang }}/delete_community/{{ community.id }}">Delete</a>
+                    <a class="btn btn-dark" href="/{{ lang }}/community/{{ community.slug }}">{{ fluent(key="details-button", lang=lang )}}</a>
+                    <a class="btn btn-dark" href="/{{ lang }}/full_community_graph/{{ community.slug }}">{{ fluent(key="graph-button", lang=lang )}}</a>
+                    <a class="btn btn-dark" href="/{{ lang }}/edit_community/{{ community.slug }}">{{ fluent(key="edit-button", lang=lang )}}</a>
+                    <a class="btn btn-danger" href="/{{ lang }}/delete_community/{{ community.id }}">{{ fluent(key="delete-button", lang=lang )}}</a>
                 </div>
             </div>
         </div>
@@ -71,10 +71,10 @@
 
         <br>
         {% if user.validated %}
-            <p><a class="btn btn-dark" href="/{{ lang }}/add_community">Add Community</a></p>
+            <p><a class="btn btn-dark" href="/{{ lang }}/add_community">{{ fluent(key="add-community-button", lang=lang )}}</a></p>
         {% else %}
-            <p><strong>You need to verify your account before you can create communities.</strong></p>
-            <a class="btn btn-dark" href="/{{ lang }}/resend_email_verification">Send email verification</a>
+            <p><strong>{{ fluent(key="must-verify", lang=lang )}}</strong></p>
+            <a class="btn btn-dark" href="/{{ lang }}/resend_email_verification">{{ fluent(key="send-email-verification", lang=lang )}}</a>
         {% endif %}
 
     </div>

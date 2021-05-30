@@ -311,9 +311,11 @@
                 <li class="nav-item active">
                     <a class="nav-link" href="/{{ lang }}/log_in">{{ fluent(key="login", lang=lang )}}<span class="sr-only">(current)</span></a>
                 </li>
-                <li class="nav-item active">
-                    <a class="nav-link" href="/{{ lang }}/register">{{ fluent(key="register", lang=lang )}}<span class="sr-only">(current)</span></a>
-                </li>
+                <!--
+                    <li class="nav-item active">
+                        <a class="nav-link" href="/{{ lang }}/register">{{ fluent(key="register", lang=lang )}}<span class="sr-only">(current)</span></a>
+                    </li>
+                -->
                 {% endif %}
             </ul>
             <a class="btn btn-dark" href="/toggle_language{{ path }}">{{ fluent(key="language-toggle", lang=lang ) }}</a>

@@ -1,23 +1,25 @@
 {% extends "base.html" %}
 
 {% block title %}
-    <title>Delete User: {{ user.user_name }}</title>
+    <title>{{ fluent(key="delete-user", lang=lang )}} {{ user.user_name }}</title>
 {% endblock title %}
 
 {% block content %}
     <div class="col m-md-2 m-1">
         <br>
-        <h1>User page for {{ user.user_name }}</h1>
-        <p>User details and account management.</p>
+        <h1>{{ fluent(key="delete-user", lang=lang )}} {{ user.user_name }}</h1>
+        <p>{{ fluent(key="delete-user-explain", lang=lang )}}</p>
 
             <p>{{ user.user_name }}</p>
 
             <p>{{ user.email }}</p>
 
+            <h2>{{ fluent(key="communities", lang=lang )}}</h2>
+            <p>{{ fluent(key="delete-user-communities-explain", lang=lang )}}</p>
             <ul>
                 {% if user.communities %}
                 {% for community in user.communities %}
-                    <li>{{ community.tag }}</li>
+                    <li>{{ phrases[community.tag] }}</li>
                 {% endfor %}
                 {% endif %}
             </ul>
@@ -25,9 +27,9 @@
             <form name="DeleteForm" id="deleteForm" action=/{{ lang }}/delete_user/{{ user.slug }} method=POST>
 
                 <label>
-                    <strong>Delete User: {{ user.user_name }}</strong>
-                    <input class="form-control form-control-lg" type="text" name="verify" placeholder="User to delete..." required>
-                    <small id="code_help" class="form-text text-muted">Enter the user name of the user you would like to delete. This action is permanent.
+                    <strong>{{ fluent(key="delete-user-colon", lang=lang )}} {{ user.user_name }}</strong>
+                    <input class="form-control form-control-lg" type="text" name="verify" placeholder="{{ fluent(key="delete-user-placeholder", lang=lang )}}" required>
+                    <small id="code_help" class="form-text text-muted">{{ fluent(key="delete-user-helper", lang=lang )}}
                     </small>
                 </label>
                 <br>
@@ -38,9 +40,9 @@
                     data-callback='onSubmit' 
                     data-action='submit'
                     type=submit
-                    >Delete</button>
+                    >{{ fluent(key="delete-button", lang=lang )}}</button>
 
-                <button class="btn btn-dark" href="/{{ lang }}/user_index">Return</button>
+                <button class="btn btn-dark" href="/{{ lang }}/user_index">{{ fluent(key="return-button", lang=lang )}}</button>
             
             </form>
 

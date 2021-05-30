@@ -1,22 +1,22 @@
 {% extends "base.html" %}
 
 {% block title %}
-    <title>User Index</title>
+    <title>{{ fluent(key="user-index", lang=lang )}}</title>
 {% endblock title %}
 
 {% block content %}
     <div class="col m-md-2 m-1">
         <br>
-        <h1>Users</h1>
-        <p>Active users on intersections</p>
+        <h1>{{ fluent(key="user-index", lang=lang )}}</h1>
+        <p>{{ fluent(key="active-users", lang=lang )}}</p>
 
         <table>
             <tr>
-                <th style="text-align: center;">User</th>
-                <th style="text-align: center;">Email</th>
-                <th style="text-align: center;">Role</th>
-                <th style="text-align: center;">Link</th>
-                <th style="text-align: center;">Delete</th>
+                <th style="text-align: center;">{{ fluent(key="user", lang=lang )}}</th>
+                <th style="text-align: center;">{{ fluent(key="email", lang=lang )}}</th>
+                <th style="text-align: center;">{{ fluent(key="role", lang=lang )}}</th>
+                <th style="text-align: center;">{{ fluent(key="link", lang=lang )}}</th>
+                <th style="text-align: center;">{{ fluent(key="delete-button", lang=lang )}}</th>
             </tr>
             {% if users %}
                 {% for user in users %} 
@@ -25,13 +25,15 @@
                     <td>{{ user.user_name }}</td>
                     <td>{{ user.email }}</td>
                     <td>{{ user.role }}</td>
-                    <td><a href="/{{ lang }}/user/{{ user.slug }}">Link</a></td>
-                    <td><a style="color:red" href="/{{ lang }}/delete_user/{{ user.id }}">Delete</a></td>
+                    <td><a href="/{{ lang }}/user/{{ user.slug }}">{{ fluent(key="link", lang=lang )}}</a></td>
+                    <td><a style="color:red" href="/{{ lang }}/delete_user/{{ user.id }}">{{ fluent(key="delete-button", lang=lang )}}</a></td>
                 </tr>
                         
                 {% endfor %}
             {% else %}
             <tr>
+                <td>N/A</td>
+                <td>N/A</td>
                 <td>N/A</td>
                 <td>N/A</td>
                 <td>N/A</td>

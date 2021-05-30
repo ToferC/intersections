@@ -68,7 +68,11 @@ pub async fn global_graph(
 
     ctx.insert("graph_data", &j);
 
-    let title = "Global Network Graph";
+    let title = match lang.as_str() {
+        "en" => "Global Network Graph",
+        _ => "Graph du réseau mondial",
+    };
+
     ctx.insert("community_name", title);
     
     let rendered = data.tmpl.render("graphs/node_network_graph.html", &ctx).unwrap();
@@ -110,6 +114,7 @@ pub async fn full_community_node_graph(
                 for l in &experience_vec {
 
                     if community_people_ids.contains(&l.person_id) {
+                        // add to people connections and experience vec
                         people_connections.entry(l.person_id).or_insert(Vec::new()).push(l.slug.to_owned()); 
                         community_exp_vec.push(l.clone());
                     }

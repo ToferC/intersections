@@ -380,6 +380,30 @@ pub async fn delete_user_handler(
             Ok(u) => {
 
                 ctx.insert("user", &u);
+
+                let c = Communities::find_by_owner_user_id(&u.id);
+        
+                let communities = match c {
+                    Ok(c) => c,
+                    Err(e) => {
+                        println!("Error - {}", e);
+                        Vec::new()
+                    }
+                };
+
+                let mut phrase_ids = Vec::new();
+
+                for c in &communities {
+                    phrase_ids.push(c.tag);
+                    phrase_ids.push(c.description);
+                    phrase_ids.push(c.data_use_case);
+                };
+
+                let phrase_map = Phrases::get_phrase_map(phrase_ids, &lang).expect("Unable to get phrase mamp");
+
+                ctx.insert("phrases", &phrase_map);
+        
+                ctx.insert("communities", &communities);
             
                 let rendered = data.tmpl.render("users/delete_user.html", &ctx).unwrap();
                 return HttpResponse::Ok().body(rendered)

@@ -284,6 +284,57 @@ global-experiences = Global Experiences
 global-experiences-explanation = These are the aggregate experiences from everyone who completed the survey and identified these experiences as part of their identity. They are presented here so that you can compare the person selected with the global ratings.
 statements = Statements
 
+### Delete Person
+delete-person = Delete Person
+delete-explain = Delete your profile on { -app-name }.
+date-created = Date Created: 
+delete-instructions = To delete your profile, enter: "Delete my profile" with no quotations in the field below.
+delete-helper-text = Enter "Delete my profile" to continue. This action is permanent.
+delete-button = Delete
+cancel-button = Cancel
+
+## User
+
+### User Page
+user-profile-for = User profile for:
+user-details = User details and account management.
+account-options = Account Options
+edit-as-admin = Edit User as Admin
+change-username-email = Change username or email address
+reset-password = Reset Password
+your-managed-communities = Your managed communities
+community = Community
+private = Private
+open = Open
+created = Created:
+data-use = Data Use:
+experiences = Experiences
+avg-inclusivity = Avg. Inclusvity
+details-button = Details
+graph-button = Graph
+edit-button = Edit
+add-community-button = Add Community
+must-verify = You need to verify your account before you can create communities.
+send-email-verification = Send email verification
+
+### Delete User
+delete-user = Delete user
+delete-user-explain = Continue here to delete your user profile.
+delete-user-colon = Delete User:
+delete-user-placeholder = User to delete...
+delete-user-helper = Enter the user name of the user you would like to delete. This action is permanent.
+delete-user-communities-explain = When this profile is deleted, all owned communities will also be deleted.
+    Any experiences associated with the profile will become part of the global community, but will no longer be associated with the deleted communities or each other.
+return-button = Return
+communities = Communities
+
+### User Index
+user = User
+active-users = Active users on { -app-name }
+email = Email
+role = Role
+link = Link
+
 ## Emails
 
 ### Email Community
@@ -299,7 +350,7 @@ community-description = Community description:
 
 no-identifying-information = No identifying information is stored as part of the survey. When you finish the survey, you will be provided with a code so you can access your profile.
     You are the only person who will receive this code and without the code, no-one can view your profile.
-    
+
 data-use-case = The intended use of this data within the community is as follows:
 
     { $datause }
@@ -343,5 +394,22 @@ from-login-screen = from the log in screen.
 
 ## Graphs
 
-### Global Graph
+### Network Graph
 global-graph = Global Graph
+community-graph = Community Graph
+toggle-legend = Toggle Legend
+legend = Legend
+lowest-inclusivity = Lowest Inclusivity
+negative-inclusivity = Negative Inclusivity
+neutral-inclusivity = Neutral Inclusivity
+positive-inclusivity = Positive Inclusivity
+highest-inclusivity = Highest Inclusivity
+zoom-drag = Zoom and drag to see data
+hover = Hover to see connections
+click-explore = Click to explore node data
+click-view = Click again to view node
+click-elsewhere = Click elsewhere to unselect
+
+
+
+

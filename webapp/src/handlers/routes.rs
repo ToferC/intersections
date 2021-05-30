@@ -52,14 +52,14 @@ use crate::handlers::{
     full_community_node_graph,
 
     // registration
-    register_form_input,
-    register_handler,
-    registration_error,
+    //register_form_input,
+    //register_handler,
+    //registration_error,
 
     // email validation
-    email_verification,
-    resend_email_verification,
-    verify_code,
+    //email_verification,
+    //resend_email_verification,
+    //verify_code,
 
     // password reset
     request_password_reset,
@@ -132,29 +132,30 @@ pub fn init_routes(config: &mut web::ServiceConfig) {
 
     // node
     config.service(node_page);
-    // community_node
     config.service(community_node_page);
-    // node_graph
+    
+    // graphs
     config.service(node_graph);
-    // community_node_graph
     config.service(community_node_graph);
+    config.service(global_graph);
+    //config.service(person_graph);
 
     // api
     config.service(api_base);
     config.service(person_api);
     config.service(api_phrases);
-    // graphs
-    config.service(global_graph);
-    //config.service(person_graph);
+
     config.service(full_community_node_graph);
 
     // registration and validation
+    /*
     config.service(register_handler);
     config.service(register_form_input);
     config.service(registration_error);
     config.service(email_verification);
     config.service(resend_email_verification);
     config.service(verify_code);
+    */
 
     // forgot password
     config.service(request_password_reset);

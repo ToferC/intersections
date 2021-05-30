@@ -81,26 +81,26 @@
 {% block content %}
 <div class="col m-md-2 m-1">
   <h1>{{ fluent(key="global-graph", lang=lang )}} <button class="btn btn-dark btn-sm" style="float: right;" type="button" data-toggle="collapse" data-target="#collapseLegend" aria-expanded="true" aria-controls="collapseLegend">
-    Toggle Legend
+    {{ fluent(key="toggle-legend", lang=lang )}}
   </button></h1>
   <hr>
   <div class="collapse show" id="collapseLegend">
   <div class='my-legend'>
-    <div class='legend-title'>Legend</div>
+    <div class='legend-title'>{{ fluent(key="legend", lang=lang )}}</div>
     <div class='legend-scale'>
       <ul class='legend-labels' id="legend">
-        <li><span class="round" style='background:#999ac0'></span>Personal Experience</li>
-        <li><span style='background:#999ac0;'></span>Organizational Role</li>
+        <li><span class="round" style='background:#999ac0'></span>{{ fluent(key="personal-experience", lang=lang )}}</li>
+        <li><span style='background:#999ac0;'></span>{{ fluent(key="organizational-role", lang=lang )}}</li>
         <li>-------</li>
-        <li><span style='background: #00429d;'></span>Lowest Inclusivity</li>
-        <li><span style='background: #616caf;'></span>Negative Inclusivity</li>
-        <li><span style='background: #999ac0;'></span>Neutral Inclusivity</li>
-        <li><span style='background: #cccbd0;'></span>Positive Inclusivity</li>
-        <li><span style='background: #ffffe0;'></span>Positive Inclusivity</li>
+        <li><span style='background: #00429d;'></span>{{ fluent(key="lowest-inclusivity", lang=lang )}}</li>
+        <li><span style='background: #616caf;'></span>{{ fluent(key="negative-inclusivity", lang=lang )}}</li>
+        <li><span style='background: #999ac0;'></span>{{ fluent(key="neutral-inclusivity", lang=lang )}}</li>
+        <li><span style='background: #cccbd0;'></span>{{ fluent(key="positive-inclusivity", lang=lang )}}</li>
+        <li><span style='background: #ffffe0;'></span>{{ fluent(key="highest-inclusivity", lang=lang )}}</li>
         <li>-------</li>
-        <li>Zoom and drag to see data.</li>
-        <li>Hover to see connections.</li>
-        <li>Click to explore node data.</li>
+        <li>{{ fluent(key="zoom-drag", lang=lang )}}</li>
+        <li>{{ fluent(key="hover", lang=lang )}}</li>
+        <li>{{ fluent(key="click-explore", lang=lang )}}</li>
         <!-- Color palette from: https://gka.github.io/palettes/#/5|s|00429d,ffffe0|ffffe0,ff005e,93003a|1|1 -->
       </ul>
     </div>

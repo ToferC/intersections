@@ -179,7 +179,7 @@ pub async fn delete_person_post(
         
     match person {
         Ok(person) => {
-            if form.verify.trim().to_string() == "Delete my profile" {
+            if form.verify.trim().to_string() == "Delete my profile" || form.verify.trim().to_string() == "Supprimer mon profil" {
                 println!("matches verify string - deleting person");
 
                 // remove data from community

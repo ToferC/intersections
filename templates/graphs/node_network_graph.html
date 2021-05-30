@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block title %}
-  <title>Community Node Graph {{ community_name }}</title>
+  <title>{{ fluent(key="community-graph", lang=lang )}} {{ community_name }}</title>
 {% endblock title %}}
 
 {% block add_preload %}
@@ -81,29 +81,29 @@
 {% block content %}
 <div class="col m-md-2 m-1">
   <h1>{{ community_name }} <button class="btn btn-dark btn-sm" style="float: right;" type="button" data-toggle="collapse" data-target="#collapseLegend" aria-expanded="true" aria-controls="collapseLegend">
-    Toggle Legend
+    {{ fluent(key="toggle-legend", lang=lang )}}
   </button></h1>
   <hr>
-
+  
   <div class="collapse show" id="collapseLegend">
   <div class='my-legend'>
-    <div class='legend-title'>Legend</div>
+    <div class='legend-title'>{{ fluent(key="legend", lang=lang )}}</div>
     <div class='legend-scale'>
       <ul class='legend-labels' id="legend">
-        <li><span class="round" style='background:#999ac0'></span>Personal Experience</li>
-        <li><span style='background:#999ac0;'></span>Organizational Role</li>
+        <li><span class="round" style='background:#999ac0'></span>{{ fluent(key="personal-experience", lang=lang )}}</li>
+        <li><span style='background:#999ac0;'></span>{{ fluent(key="organizational-role", lang=lang )}}</li>
         <li>-------</li>
-        <li><span style='background: #00429d;'></span>Lowest Inclusivity</li>
-        <li><span style='background: #616caf;'></span>Negative Inclusivity</li>
-        <li><span style='background: #999ac0;'></span>Neutral Inclusivity</li>
-        <li><span style='background: #cccbd0;'></span>Positive Inclusivity</li>
-        <li><span style='background: #ffffe0;'></span>Positive Inclusivity</li>
+        <li><span style='background: #00429d;'></span>{{ fluent(key="lowest-inclusivity", lang=lang )}}</li>
+        <li><span style='background: #616caf;'></span>{{ fluent(key="negative-inclusivity", lang=lang )}}</li>
+        <li><span style='background: #999ac0;'></span>{{ fluent(key="neutral-inclusivity", lang=lang )}}</li>
+        <li><span style='background: #cccbd0;'></span>{{ fluent(key="positive-inclusivity", lang=lang )}}</li>
+        <li><span style='background: #ffffe0;'></span>{{ fluent(key="highest-inclusivity", lang=lang )}}</li>
         <li>-------</li>
-        <li>Zoom and drag to see data.</li>
-        <li>Hover to see inclusivity.</li>
-        <li>Click node to see links.</li>
-        <li>Click again to view node.</li>
-        <li>Click elsewhere to unselect</li>
+        <li>{{ fluent(key="zoom-drag", lang=lang )}}</li>
+        <li>{{ fluent(key="hover", lang=lang )}}</li>
+        <li>{{ fluent(key="click-explore", lang=lang )}}</li>
+        <li>{{ fluent(key="click-view", lang=lang )}}</li>
+        <li>{{ fluent(key="click-elsewhere", lang=lang )}}</li>
       </ul>
     </div>
   </div>
