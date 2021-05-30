@@ -1,34 +1,38 @@
 {% extends "base.html" %}
 
 {% block title %}
-    <title>Delete Community: {{ community.tag }}</title>
+    <title>{{ fluent(key="delete-community", lang=lang )}} {{ community.tag }}</title>
 {% endblock title %}
 
 {% block content %}
     <div class="col m-md-2 m-1">
         <br>
-        <h1>Delete Community: {{ phrases[community.tag] }}</h1>
+        <h1>{{ fluent(key="delete-community", lang=lang )}} {{ phrases[community.tag] }}</h1>
 
-        <h2>Details</h2>
-        <p>Community details and management.</p>
+        <h2>{{ fluent(key="details", lang=lang )}}</h2>
+        <p>{{ fluent(key="community-details-management", lang=lang )}}</p>
     
-        <p>Description: {{ phrases[community.description] | capitalize}}</p>
+        <p>{{ phrases[community.description] | capitalize }}</p>
 
-        <p>Data Use Policy: {{ phrases[community.data_use_case] | capitalize}}</p>
+        <p>{{ fluent(key="data-use-case", lang=lang )}} {{ phrases[community.data_use_case] | capitalize }}</p>
 
-        <p>Your community code is {{ community.code }}</p>
+        {% if owner and user.validated %}
+            <p>{{ fluent(key="your-community-code", lang=lang )}} {{ community.code }}</p>
+        {% endif %}
         
-        <p>This community is {% if community.open %}open{% else %}private{% endif %}</p>
+        <p>{{ fluent(key="this-community-is", lang=lang )}} {% if community.open %}{{ fluent(key="open", lang=lang )}}{% else %}{{ fluent(key="private", lang=lang )}}{% endif %}</p>
         <br>
 
         <table>
             <tr>
-                <th style="text-align: center;">Members</th>
-                <th style="text-align: center;">Experiences</th>
-                <th style="text-align: center;">Avg. Inclusvity</th>
+                <th style="text-align: center;">{{ fluent(key="members", lang=lang )}}</th>
+                <th style="text-align: center;">{{ fluent(key="invitations", lang=lang )}}</th>
+                <th style="text-align: center;">{{ fluent(key="experiences", lang=lang )}}</th>
+                <th style="text-align: center;">{{ fluent(key="avg-inclusivity", lang=lang )}}</th>
             </tr>
             <tr>
                 <td style="text-align: center;">{{ community.data.members }}</td>
+                <td style="text-align: center;">{{ community.data.invitations }}</td>
                 <td style="text-align: center;">{{ community.data.experiences }}</td>
                 <td style="text-align: center;">{{ community.data.mean_inclusivity | round(method="ceil", precision=3) }}</td>
             </tr>
@@ -36,14 +40,13 @@
         <br>
 
         <div class="card-body">
-            <p><strong>IMPORTANT: Deleting a community will move all data from community members to the aggregate global community. You will not be able to view this community separately again.</strong></p>
+            <p><strong>{{ fluent(key="delete-warning", lang=lang )}}</strong></p>
             <form name="DeleteCommunityForm" id="deleteCommunityForm" action=/{{ lang }}/delete_community/{{ community.code }} method=POST>
     
                 <label>
-                    <strong>Enter the community's name to Delete: {{ phrases[community.tag] }}</strong>
-                    <input class="form-control form-control-lg" type="text" name="user_verify" placeholder="Community to delete..." required>
-                    <small id="code_help" class="form-text text-muted">Enter the community name to delete. This action is permanent.
-                    </small>
+                    <strong>{{ fluent(key="enter-community-name-delete", lang=lang )}} {{ phrases[community.tag] }}</strong>
+                    <input class="form-control form-control-lg" type="text" name="user_verify" placeholder="{{ fluent(key="community-delete-placeholder", lang=lang )}}" required>
+                    <small id="code_help" class="form-text text-muted">{{ fluent(key="community-delete-helper", lang=lang )}}</small>
                 </label>
                 <hr>
         
@@ -53,9 +56,9 @@
                     data-callback='onSubmit' 
                     data-action='submit'
                     type=submit
-                    >Delete</button>
+                    >{{ fluent(key="delete-button", lang=lang )}}</button>
     
-                <button class="btn btn-dark" href="/{{ lang }}/user/{{ session_user }}">Return to User Profile</button>
+                <button class="btn btn-dark" href="/{{ lang }}/user/{{ session_user }}">{{ fluent(key="return-to-profile", lang=lang )}}</button>
                 <hr>
             
             </form>

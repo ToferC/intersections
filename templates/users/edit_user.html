@@ -1,33 +1,33 @@
 {% extends "base.html" %}
 
 {% block title %}
-    <title>Edit User: {{ user.user_name }}</title>
+    <title>{{ fluent(key="edit-user-title", user={{ user.user_name }}, lang=lang )}}</title>
 {% endblock title %}
 
 {% block content %}
     <div class="col m-md-2 m-1">
         <br>
-        <h1>Edit User: {{ user.user_name }}</h1>
-        <p>Update and edit your account details here.</p>
+        <h1>{{ fluent(key="edit-user-title", user={{ user.user_name }}, lang=lang )}}</h1>
+        <p>{{ fluent(key="edit-user-explain", lang=lang )}}</p>
 
 
         <form name="UserForm" id="userForm" action=/{{ lang }}/edit_user/{{ user.slug }} method=POST>
         
-        <label>
-            <strong>Email address</strong>
-            <input class="form-control form-control-lg" type="email" name="email" value="{{ user.email }}" required>
-            <small id="code_help" class="form-text text-muted">You will use this to log in.</small>
-        </label>
-        <br>
-
-        <label>
-            <strong>User name</strong>
-            <input class="form-control form-control-lg" type="text" name="user_name" value="{{ user.user_name }}" required>
-            <small id="code_help" class="form-text text-muted">The name you'd like to be called when using intersections.</small>
-        </label>
-
-        <br>
-        <p><strong>If you update your email address, you will receive a code by email to verify your new email address. Check your email and then enter the code on the next page.</strong></p>
+            <label>
+                <strong>{{ fluent(key="email-address", lang=lang )}}</strong>
+                <input class="form-control form-control-lg" type="email" name="email" value="{{ user.email }}" required>
+                <small id="code_help" class="form-text text-muted">{{ fluent(key="email-address-helper", lang=lang )}}.</small>
+            </label>
+            <br>
+    
+            <label>
+                <strong>{{ fluent(key="user-name", lang=lang )}}</strong>
+                <input class="form-control form-control-lg" type="text" name="user_name" value="{{ user.user_name }}" required>
+                <small id="code_help" class="form-text text-muted">{{ fluent(key="user-name-helper", lang=lang )}}</small>
+            </label>
+            <br>
+    
+        <p><strong>{{ fluent(key="email-change-notice", lang=lang )}}</strong></p>
 
         <hr>
         <button 
@@ -36,7 +36,7 @@
             data-callback='onSubmit' 
             data-action='submit'
             type=submit
-            >Update</button>
+            >{{ fluent(key="update-button", lang=lang )}}</button>
         <hr>
     </form>
                 

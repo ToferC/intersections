@@ -1,15 +1,15 @@
 {% extends "base.html" %}
 
 {% block title %}
-    <title>Record not found</title>
+    <title>{{ fluent(key="record-not-found", lang=lang )}}</title>
 {% endblock title %}
 
 {% block content %}
     <div class="col m-md-2 m-1">
         <br>
-        <h1>Record not found</h1>
-        <p>The Record you are searching for is not available.</p>
-        <p>You can go back or <a href="/{{ lang }}">return to the main page.</a></p>
+        <h1>{{ fluent(key="record-not-found", lang=lang )}}</h1>
+        <p>{{ fluent(key="record-not-found-explain", lang=lang )}}</p>
+        <p>{{ fluent(key="go-back-or", lang=lang )}} <a href="/{{ lang }}">{{ fluent(key="return-main-page", lang=lang )}}</a></p>
 
     </div>
 {% endblock content %}

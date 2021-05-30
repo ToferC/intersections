@@ -318,6 +318,22 @@ add-community-button = Add Community
 must-verify = You need to verify your account before you can create communities.
 send-email-verification = Send email verification
 
+### Edit User
+edit-user-title = Edit User { $user }
+edit-user-explain = Update and edit your account details here.
+email-change-notice = If you update your email address, you will receive a code by email to verify your new email address. Check your email and then enter the code on the next page.
+
+### Admin Edit User
+edit-user-admin-title = Edit User { $user } as admin
+edit-user-admin-explain = Update and edit the user's account details here.
+role-helper = Choose role and privileges for this user.
+admin = Admin
+validated = Validated
+true = True
+false = False
+validated-helper = Choose to validate or invalidate the user.
+update-button = Update
+
 ### Delete User
 delete-user = Delete user
 delete-user-explain = Continue here to delete your user profile.
@@ -447,3 +463,35 @@ community-description-helper = Enter a short description of your community. This
 data-use-case-helper = Explain here how the data from this community will be used. This will be shared with participants.
 community-status-helper = Choose if you would like your community to be open (other people can view), or private (only you can view).
 add-community-button = Add Community
+
+### Edit Community
+edit-community-title = Edit Community
+edit-community-explanation = Use this form to edit your community
+update-community-button = Update Community
+
+### Delete Community
+delete-community = Delete Community
+delete-warning = IMPORTANT: Deleting a community will move all data from community members to the aggregate global community. You will not be able to view this community separately again.
+enter-community-name-delete = Enter the community's name to Delete:
+community-delete-placeholder = Name of community to delete...
+community-delete-helper = Enter the community name to delete. This action is permanent.
+return-to-profile = Return to User Profile
+
+## Errors
+
+### 404
+page-not-found = Page Not Found: 404
+you-requested = You requested:
+does-not-exist = which doesn't exist in this application.
+wrong-turn = Looks like you took a wrong turn.
+go-home = Go back home?
+
+### Internal Server Error
+internal-server-error = Internal Server Error
+having-problems = Looks like we're having a bit of a problem.
+
+### Not Authorized
+not-authorized = Not Authorized
+not-authorized-explain = You're not authorized to complete this action.
+go-back-or = You can go back or
+return-main-page = return to the main page
