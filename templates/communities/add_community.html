@@ -14,21 +14,21 @@
         
         <label>
             <strong>{{ fluent(key="community-name", lang=lang )}}</strong>
-            <input class="form-control form-control-lg" type="text" name="community_name" placeholder="Your community name..." required>
+            <input class="form-control form-control-lg" type="text" name="community_name" placeholder="{{ fluent(key="community-name-placeholder", lang=lang )}}" required>
             <small id="code_help" class="form-text text-muted">{{ fluent(key="community-name-helper", lang=lang )}}</small>
         </label>
         <br>
 
         <label>
             <strong>{{ fluent(key="description", lang=lang )}}</strong>
-            <textarea class="form-control form-control-lg" type="text" rows=10 cols=45 name="description" placeholder="A community..." required></textarea>
+            <textarea class="form-control form-control-lg" type="text" rows=10 cols=45 name="description" placeholder="{{ fluent(key="community-description-placeholder", lang=lang )}}." required></textarea>
             <small id="code_help" class="form-text text-muted">{{ fluent(key="community-description-helper", lang=lang )}}</small>
         </label>
         <br>
 
         <label>
             <strong>{{ fluent(key="data-use-case-label", lang=lang )}}</strong>
-            <textarea class="form-control form-control-lg" type="text" rows=10 cols=45 name="data_use_case" placeholder="This data will be used..." required></textarea>
+            <textarea class="form-control form-control-lg" type="text" rows=10 cols=45 name="data_use_case" placeholder="{{ fluent(key="data-use-case-placeholder", lang=lang )}}" required></textarea>
             <small id="code_help" class="form-text text-muted">{{ fluent(key="data-use-case-helper", lang=lang )}}</small>
         </label>
         <br>

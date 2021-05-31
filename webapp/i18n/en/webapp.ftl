@@ -459,10 +459,13 @@ add-community-title = Add Community
 add-community-explanation = Use this form to add a community to intersections. You will receive a unique access code that participants can use to associate their profiles with your community or organization. 
     You will be able to invite members to the community through a link, QR code or through the application.
 community-name = Community Name
+community-name-placeholder = Your community name...
 community-name-helper = Add a name or tag for your community.
 community-status = Community Status
+community-description-placeholder = A community that...
 community-description-helper = Enter a short description of your community. This will be shared with participants.
 data-use-case-label = Data Use Case
+data-use-case-placeholder = This data will be used...
 data-use-case-helper = Explain here how the data from this community will be used. This will be shared with participants.
 community-status-helper = Choose if you would like your community to be open (other people can view), or private (only you can view).
 
