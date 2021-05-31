@@ -1,15 +1,15 @@
 {% extends "base.html" %}
 
 {% block title %}
-    <title>Not Authorized</title>
+    <title>{{ fluent(key="not-authorized", lang=lang )}}</title>
 {% endblock title %}
 
 {% block content %}
     <div class="col m-md-2 m-1">
         <br>
-        <h1>Not Authorized</h1>
-        <p>You're not authorized to complete this action.</p>
-        <p>You can go back or <a href="/{{ lang }}">return to the main page.</a></p>
+        <h1>{{ fluent(key="not-authorized", lang=lang )}}</h1>
+        <p>{{ fluent(key="not-authorized-explain", lang=lang )}}</p>
+        <p>{{ fluent(key="go-back-or", lang=lang )}} <a href="/{{ lang }}">{{ fluent(key="return-main-page", lang=lang )}}</a></p>
 
     </div>
 {% endblock content %}

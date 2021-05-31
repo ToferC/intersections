@@ -30,7 +30,6 @@ learner-models = Learner Models
 developed-by = Developed by ToferC 2020-21
 
 ## Index
-
 welcome-to = Welcome to { -app-name }
 greeting = Hello { $name }!
 important = Important:
@@ -44,7 +43,6 @@ something-to-say-header = I have something to say
 fill-feedback = Fill out the feedback form.
 
 ## About
-
 who = Who are you?
 chris-description-1 = My name is Chris Allison. I'm an executive in the federal government of Canada and a developer / data person. I believe data is one of our best tools to identify and eliminate bias in our organizations. I'm working on this project as a way to test the hypothesis and work towards a more equitable and inclusive future.
 chris-description-2 = I am white, male, heterosexual and cisgendered. My partner is black and my children are mixed. I'm working on this for them and to help break down systemic racist structures in our organizations.
@@ -149,7 +147,7 @@ or = OR
 questions-header = The Questions
 question-explanation = This section explains the questions that you will answer and provides some context. If you don't need this context, please click the "Start the Survey" button, above.
 
-### Question One
+## Question One
 question-one = 1. Name your experience
 question-one-explanation = How would you describe this experience in your own words?
 question-one-details = You are more than just your job. Examples are: Mother, Father, Manager, Artist, Millenial, Black, Indigenous, White, Executive, New Employee. Anything that describes an element of who you are and that impacts your experience in the workplace.
@@ -167,7 +165,7 @@ layer-education = Education
 layer-socio-econ = Socioeconomic Status/Class
 layer-profession = Profession/Career
 
-### Question Two
+## Question Two
 question-two = 2. Is this experience part of you as a person or is it a role related to your work?
 question-two-explanation = Where does this experience come from. Is it a part of your identity, experience or culture? Is it a role that you have been given as part of your work? Is it a function you play within a network or system?
 question-two-shorthand = In shorthand, you can break it down like this:
@@ -178,7 +176,7 @@ experience-is = This experience is...
 personal = A personal experience
 organizational = An organizational role
 
-### Question Three
+## Question Three
 question-three = 3. Describe your experience
 question-three-explanation = Each of us experiences things in different ways. Two managers or two parents may have extremely different perspectives of their lived experience. To clarify your experience, complete the phrases below in your own words. You will be asked to provide three responses, but you may use as many or as few as you like.
 through-this = Though this experience, in the workplace
@@ -186,7 +184,7 @@ i-feel = I feel...
 question-three-helper = Enter a few words about how this experience interacts with your work life.
 
 
-### Question Four
+## Question Four
 question-four = 4. Identify how this experience impacts your sense of inclusion in the workplace.
 question-four-explanation = How does this experience make you feel included or excluded in the workplace?
 question-four-slider-direction = For this question, you will move the slider below where you think this experience falls on the range of being more or less included in your workplace. It generates a score between -1.0 (most excluded) and +1.0 (most included), with 0 being in the middle.
@@ -205,7 +203,7 @@ save-experience-button = Save Experience
 question-one-placeholder = Experience name...
 question-one-helper = Enter a few words to name your experience here.
 
-### Tips
+## Tips
 tip = Tip:
 tip-string = { $number  ->
     [0] Add one element of your lived experience at a time. You may wish to add an experience related to your race or ethnic identity.
@@ -219,7 +217,7 @@ tip-string = { $number  ->
     *[other] Amazing. You’ve got the hang of this. Add as many additional experiences as you like.
 }
 
-### Learning Moments
+## Learning Moments
 learning-one = [Placeholder for learning moment.]
 
 ## Add Experience Form
@@ -231,7 +229,7 @@ may-add-more = You can add more, if you like.
 
 ## Nodes
 
-### Community Node
+## Community Node
 node-in = node in
 domain-in-community = { $domain } in { $community } community
 view-community-graph = View community graph
@@ -263,12 +261,12 @@ associated-experiences = Associated Experiences
 associated-experiences-details = These are experiences from other nodes that have been linked to the { $domain } trait of { $name }. 
     They are presented here to show how the nodes relate and how by looking at more than one facet of a person's experience, we can better understand our people's needs.
 
-### Node
+## Node
 node = Node
 
 ## Person
 
-### Person Page
+## Person Page
 view-person-graph = View Person Graph
 take-care-of-code = Please make a copy of your code or request an email that contains links back to this page and to your community.
 cant-get-code-back = The application does not keep any identifying information and the administrators will not be able to provide you with this code once you've finished your survey and closed the window.
@@ -284,7 +282,7 @@ global-experiences = Global Experiences
 global-experiences-explanation = These are the aggregate experiences from everyone who completed the survey and identified these experiences as part of their identity. They are presented here so that you can compare the person selected with the global ratings.
 statements = Statements
 
-### Delete Person
+## Delete Person
 delete-person = Delete Person
 delete-explain = Delete your profile on { -app-name }.
 date-created = Date Created: 
@@ -295,7 +293,7 @@ cancel-button = Cancel
 
 ## User
 
-### User Page
+## User Page
 user-profile-for = User profile for:
 user-details = User details and account management.
 account-options = Account Options
@@ -318,12 +316,12 @@ add-community-button = Add Community
 must-verify = You need to verify your account before you can create communities.
 send-email-verification = Send email verification
 
-### Edit User
+## Edit User
 edit-user-title = Edit User { $user }
 edit-user-explain = Update and edit your account details here.
 email-change-notice = If you update your email address, you will receive a code by email to verify your new email address. Check your email and then enter the code on the next page.
 
-### Admin Edit User
+## Admin Edit User
 edit-user-admin-title = Edit User { $user } as admin
 edit-user-admin-explain = Update and edit the user's account details here.
 role-helper = Choose role and privileges for this user.
@@ -334,7 +332,7 @@ false = False
 validated-helper = Choose to validate or invalidate the user.
 update-button = Update
 
-### Delete User
+## Delete User
 delete-user = Delete user
 delete-user-explain = Continue here to delete your user profile.
 delete-user-colon = Delete User:
@@ -345,7 +343,7 @@ delete-user-communities-explain = When this profile is deleted, all owned commun
 return-button = Return
 communities = Communities
 
-### User Index
+## User Index
 user = User
 active-users = Active users on { -app-name }
 email = Email
@@ -354,7 +352,7 @@ link = Link
 
 ## Emails
 
-### Email Community
+## Email Community
 hello = Hello,
 community-email-body = 
     I'm pleased to invite you to be part of the { $community } community on the intersectional data pilot.
@@ -376,7 +374,7 @@ access-complete = You can access and complete the survey by
 click-url = clicking this link.
 thank-you-reach-at = Thank you and you can reach me at { $contact } if you have any questions.
 
-### Email Person Data
+## Email Person Data
 thank-you-for-participating = Thank you for participating in the Intersectional Data MVP. This is the only email you will receive unless you specifically request your data again. Your email address is not saved or associated with your data in the Intersectional Data application.
 email-link-descriptions = You will find links below to access your data, see the data for your community and to delete your data. You will also find a record of the data on your profile. Note that your data will remain the same, but the comparison data may change over time as more people add their experiences.
 important-links = Important Links
@@ -394,7 +392,7 @@ thank-you-participating = Thank you again for participating in this project. If 
 sincere-regards = Sincere regards,
 user-support-signature = User Support at { -user-support-email }
 
-### Email Verification
+## Email Verification
 email-registered-with = Your email address has been registered with
 registered-in-error = If you think this is an error, please contact { -user-support-email }.
 register-instructions = If this is you, and you would like to verify your account, please enter the code below on
@@ -404,14 +402,14 @@ time-limit = You have 60 minutes to enter this code to verify your account. If y
 request-another-code = request another code
 thank-you = Thank you,
 
-### Password reset request
+## Password reset request
 password-reset-received = We received a request to reset your password on { -app-name }. If you think this is an error, please contact { -user-support-email }.
 if-you-instructions = If this was you, You can reset your password through the following link.
 from-login-screen = from the log in screen.
 
 ## Graphs
 
-### Network Graph
+## Network Graph
 global-graph = Global Graph
 community-graph = Community Graph
 toggle-legend = Toggle Legend
@@ -429,7 +427,7 @@ click-elsewhere = Click elsewhere to unselect
 
 ## Communities
 
-### View Community
+## View Community
 view-community = View Community:
 community-details-management = Community details and management
 your-community-code = Your community code is
@@ -449,12 +447,12 @@ template-email-title = Template email to participants
 template-email-instructions = You can modify and send this email to people in your community.
 invitations = Invitations
 
-### Community Index
+## Community Index
 community-index-overview = Communities and organizations on intersections. Aggregate data from Open communities can be viewed by anyone. In each community you can see it's purpose, planned data usage, creation date and more.
 demo = Demo
 members = Members
 
-### Add Community
+## Add Community
 add-community-title = Add Community
 add-community-explanation = Use this form to add a community to intersections. You will receive a unique access code that participants can use to associate their profiles with your community or organization. 
     You will be able to invite members to the community through a link, QR code or through the application.
@@ -465,12 +463,12 @@ community-description-helper = Enter a short description of your community. This
 data-use-case-helper = Explain here how the data from this community will be used. This will be shared with participants.
 community-status-helper = Choose if you would like your community to be open (other people can view), or private (only you can view).
 
-### Edit Community
+## Edit Community
 edit-community-title = Edit Community
 edit-community-explanation = Use this form to edit your community
 update-community-button = Update Community
 
-### Delete Community
+## Delete Community
 delete-community = Delete Community
 delete-warning = IMPORTANT: Deleting a community will move all data from community members to the aggregate global community. You will not be able to view this community separately again.
 enter-community-name-delete = Enter the community's name to Delete:
@@ -480,23 +478,23 @@ return-to-profile = Return to User Profile
 
 ## Errors
 
-### 404
+## 404
 page-not-found = Page Not Found: 404
 you-requested = You requested:
 does-not-exist = which doesn't exist in this application.
 wrong-turn = Looks like you took a wrong turn.
 go-home = Go back home?
 
-### Internal Server Error
+## Internal Server Error
 internal-server-error = Internal Server Error
 having-problems = Looks like we're having a bit of a problem.
 
-### Not Authorized
+## Not Authorized
 not-authorized = Not Authorized
 not-authorized-explain = You're not authorized to complete this action.
 go-back-or = You can go back or
 return-main-page = return to the main page
 
-### Record not found
+## Record not found
 record-not-found = Record not found
 record-not-found-explain = The Record you are searching for is not available.
