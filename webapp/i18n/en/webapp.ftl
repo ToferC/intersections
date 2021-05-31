@@ -462,6 +462,7 @@ community-name = Community Name
 community-name-helper = Add a name or tag for your community.
 community-status = Community Status
 community-description-helper = Enter a short description of your community. This will be shared with participants.
+data-use-case-label = Data Use Case
 data-use-case-helper = Explain here how the data from this community will be used. This will be shared with participants.
 community-status-helper = Choose if you would like your community to be open (other people can view), or private (only you can view).
 

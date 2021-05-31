@@ -505,6 +505,7 @@ community-name = Nom de la communauté
 community-name-helper = Ajoutez un nom ou une balise pour votre communauté.
 community-status = Statut de la communauté
 community-description-helper = Entrez une brève description de votre communauté. Cela sera partagé avec les participants.
+data-use-case-label = Utilisation des Données
 data-use-case-helper = Expliquez ici comment les données de cette communauté seront utilisées. Cela sera partagé avec les participants.
 community-status-helper = Choisissez si vous souhaitez que votre communauté soit ouverte (d'autres personnes peuvent voir) ou privée (vous seul pouvez voir).
 
