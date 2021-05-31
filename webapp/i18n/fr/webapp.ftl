@@ -502,10 +502,13 @@ add-community-explanation =
     Utilisez ce formulaire pour ajouter une communauté aux intersections. Vous recevrez un code d'accès unique que les participants pourront utiliser pour associer leurs profils à votre communauté ou organisation.
     Vous pourrez inviter des membres dans la communauté via un lien, un code QR ou via l'application.
 community-name = Nom de la communauté
+community-name-placeholder = Le nom de votre communauté ...
 community-name-helper = Ajoutez un nom ou une balise pour votre communauté.
 community-status = Statut de la communauté
+community-description-placeholder = Une communauté qui ...
 community-description-helper = Entrez une brève description de votre communauté. Cela sera partagé avec les participants.
 data-use-case-label = Utilisation des Données
+data-use-case-placeholder = Ces données seront utilisées ...
 data-use-case-helper = Expliquez ici comment les données de cette communauté seront utilisées. Cela sera partagé avec les participants.
 community-status-helper = Choisissez si vous souhaitez que votre communauté soit ouverte (d'autres personnes peuvent voir) ou privée (vous seul pouvez voir).
 
