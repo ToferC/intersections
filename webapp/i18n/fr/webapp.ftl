@@ -158,7 +158,7 @@ or = OU
 questions-header = Les questions
 question-explanation = Cette section explique les questions auxquelles vous répondrez et fournit un contexte. Si vous n'avez pas besoin de ce contexte, veuillez cliquer sur le bouton "Démarrer le sondage" ci-dessus.
 
-### Question One
+## Question One
 
 question-one = 1. Nommez votre expérience
 question-one-explanation = Comment décririez-vous cette expérience dans vos propres mots?
@@ -177,7 +177,7 @@ layer-education = Éducation
 layer-socio-econ = Statut / Classe socio-économique
 layer-profession = Profession / Carrière
 
-### Question Two
+## Question Two
 
 question-two = 2. Cette expérience fait-elle partie de vous en tant que personne ou est-ce un rôle lié à votre travail?
 question-two-explanation = D'où vient cette expérience. Cela fait-il partie de votre identité, de votre expérience ou de votre culture? Est-ce un rôle qui vous a été confié dans le cadre de votre travail? Est-ce une fonction que vous jouez au sein d'un réseau ou d'un système?
@@ -188,7 +188,7 @@ experience-is = Cette expérience est ...
 personal = Une expérience personnelle
 organizational = Un rôle organisationnel
 
-### Question Three
+## Question Three
 
 question-three = 3. Décrivez votre expérience
 question-three-explanation = Chacun de nous vit les choses de différentes manières. Deux gestionnaires ou deux parents peuvent avoir des perspectives extrêmement différentes de leur expérience vécue. Pour clarifier votre expérience, complétez les phrases ci-dessous dans vos propres mots. Il vous sera demandé de fournir trois réponses, mais vous pouvez en utiliser autant ou aussi peu que vous le souhaitez.
@@ -196,7 +196,7 @@ through-this = Bien que cette expérience, sur le lieu de travail
 i-feel = je me sens ...
 question-three-helper = Entrez quelques mots sur la manière dont cette expérience interagit avec votre vie professionnelle.
 
-### Question Four
+## Question Four
 
 question-four = 4. Identifiez comment cette expérience influe sur votre sentiment d'inclusion dans le milieu de travail.
 question-four-explanation = Comment cette expérience vous fait-elle vous sentir inclus ou exclu sur le lieu de travail?
@@ -216,7 +216,7 @@ save-experience-button = Enregistrer l'expérience
 question-one-placeholder = Nom de l'expérience ...
 question-one-helper = Entrez quelques mots pour nommer votre expérience ici.
 
-### Tips
+## Tips
 
 tip = Conseil:
 tip-string =
@@ -232,7 +232,7 @@ tip-string =
        *[other] Incroyable. Vous avez compris cela. Ajoutez autant d'expériences supplémentaires que vous le souhaitez.
     }
 
-### Learning Moments
+## Learning Moments
 
 learning-one = [Espace réservé pour le moment d'apprentissage.]
 
@@ -247,7 +247,7 @@ may-add-more = Vous pouvez en ajouter si vous le souhaitez.
 ## Nodes
 
 
-### Community Node
+## Community Node
 
 node-in = nœud dans
 domain-in-community = { $domain } dans la communauté { $community }
@@ -281,14 +281,14 @@ associated-experiences-details =
     Ce sont des expériences d'autres nœuds qui ont été liés au trait { $domain } de { $name }.
     Ils sont présentés ici pour montrer comment les nœuds sont liés et comment, en examinant plus d'une facette de l'expérience d'une personne, nous pouvons mieux comprendre les besoins de nos gens.
 
-### Node
+## Node
 
 node = Nœud
 
 ## Person
 
 
-### Person Page
+## Person Page
 
 view-person-graph = Afficher le graphique de la personne
 take-care-of-code = Veuillez faire une copie de votre code ou demander un e-mail contenant des liens vers cette page et vers votre communauté.
@@ -306,7 +306,7 @@ global-experiences = Expériences Globales
 global-experiences-explanation = Ce sont les expériences agrégées de tous ceux qui ont répondu à l'enquête et ont identifié ces expériences comme faisant partie de leur identité. Ils sont présentés ici afin que vous puissiez comparer la personne sélectionnée avec les notes globales.
 statements = statements = Déclarations
 
-### Delete Person
+## Delete Person
 
 delete-person = Supprimer la personne
 delete-explain = Supprimez votre profil sur { -app-name }.
@@ -319,7 +319,7 @@ cancel-button = Annuler
 ## User
 
 
-### User Page
+## User Page
 
 user-profile-for = Profil utilisateur pour:
 user-details = Détails de l'utilisateur et gestion du compte.
@@ -343,13 +343,13 @@ add-community-button = Ajouter une communauté
 must-verify = Vous devez vérifier votre compte avant de pouvoir créer des communautés.
 send-email-verification = Envoyer la vérification par e-mail
 
-### Edit User
+## Edit User
 
 edit-user-title = Modifier l'utilisateur { $user }
 edit-user-explain = Mettez à jour et modifiez les détails de votre compte ici.
 email-change-notice = Si vous mettez à jour votre adresse e-mail, vous recevrez un code par e-mail pour vérifier votre nouvelle adresse e-mail. Vérifiez votre e-mail, puis entrez le code sur la page suivante.
 
-### Admin Edit User
+## Admin Edit User
 
 edit-user-admin-title = edit-user-admin-title = Modifier l'utilisateur { $user } en tant qu'administrateur
 edit-user-admin-explain = Mettez à jour et modifiez les détails du compte de l'utilisateur ici.
@@ -361,7 +361,7 @@ false = Faux
 validated-helper = Choisissez de valider ou d'invalider l'utilisateur.
 update-button = Mettre à jour
 
-### Delete User
+## Delete User
 
 delete-user = Supprimer l'utilisateur
 delete-user-explain = Continuez ici pour supprimer votre profil utilisateur.
@@ -374,7 +374,7 @@ delete-user-communities-explain =
 return-button = Retour
 communities = Communautés
 
-### User Index
+## User Index
 
 user = Utilisateur
 active-users = Utilisateurs actifs sur { -app-name }
@@ -385,7 +385,7 @@ link = Lien
 ## Emails
 
 
-### Email Community
+## Email Community
 
 hello = Bonjour,
 community-email-body =
@@ -407,7 +407,7 @@ access-complete = Vous pouvez accéder et compléter le sondage en
 click-url = cliquant sur ce lien.
 thank-you-reach-at = Merci et vous pouvez me joindre à { $contact } si vous avez des questions.
 
-### Email Person Data
+## Email Person Data
 
 thank-you-for-participating = Merci d'avoir participé au MVP Intersectional Data. C'est le seul e-mail que vous recevrez à moins que vous ne demandiez à nouveau spécifiquement vos données. Votre adresse e-mail n'est pas enregistrée ou associée à vos données dans l'application de données intersectionnelles.
 email-link-descriptions = Vous trouverez ci-dessous des liens pour accéder à vos données, voir les données de votre communauté et supprimer vos données. Vous trouverez également un enregistrement des données sur votre profil. Notez que vos données resteront les mêmes, mais les données de comparaison peuvent changer au fil du temps à mesure que de plus en plus de personnes ajoutent leurs expériences.
@@ -425,7 +425,7 @@ thank-you-participating = Merci encore d'avoir participé à ce projet. Si vous 
 sincere-regards = Sincères salutations,
 user-support-signature = Assistance utilisateur sur { -user-support-email }
 
-### Email Verification
+## Email Verification
 
 email-registered-with = Votre adresse e-mail a été enregistrée avec
 registered-in-error = Si vous pensez qu'il s'agit d'une erreur, veuillez contacter { -user-support-email }.
@@ -436,7 +436,7 @@ time-limit = Vous avez 60 minutes pour saisir ce code afin de vérifier votre co
 request-another-code = demander un autre code
 thank-you = Merci,
 
-### Password reset request
+## Password reset request
 
 password-reset-received = Nous avons reçu une demande de réinitialisation de votre mot de passe sur { -app-name }. Si vous pensez qu'il s'agit d'une erreur, veuillez contacter { -user-support-email }.
 if-you-instructions = Si c'était vous, vous pouvez réinitialiser votre mot de passe via le lien suivant.
@@ -445,12 +445,14 @@ from-login-screen = depuis l'écran de connexion.
 ## Graphs
 
 
-### Network Graph
+## Network Graph
 
 global-graph = Graphe global
 community-graph = Graphe de la communauté
 toggle-legend = Basculer la légende
 legend = Légende
+personal-experience-legend = Expérience personnelle
+organizational-role-legend = Rôle organisationnel
 lowest-inclusivity = plus basse inclusivité
 negative-inclusivity = inclusivité négative
 neutral-inclusivity = Inclusivité neutre
@@ -465,7 +467,7 @@ click-elsewhere = Cliquez ailleurs pour désélectionner
 ## Communities
 
 
-### View Community
+## View Community
 
 view-community = Afficher la communauté:
 community-details-management = Détails et gestion de la communauté
@@ -487,13 +489,13 @@ template-email-title = Modèle d'e-mail aux participants
 template-email-instructions = Vous pouvez modifier et envoyer cet e-mail aux personnes de votre communauté.
 invitations = Invitations
 
-### Community Index
+## Community Index
 
 community-index-overview = Communautés et organisations aux intersections. Les données agrégées des communautés ouvertes peuvent être consultées par n'importe qui. Dans chaque communauté, vous pouvez voir son objectif, l'utilisation prévue des données, la date de création et plus encore.
 demo = Démo
 members = Membres
 
-### Add Community
+## Add Community
 
 add-community-title = Ajouter une communauté
 add-community-explanation =
@@ -506,13 +508,13 @@ community-description-helper = Entrez une brève description de votre communaut�
 data-use-case-helper = Expliquez ici comment les données de cette communauté seront utilisées. Cela sera partagé avec les participants.
 community-status-helper = Choisissez si vous souhaitez que votre communauté soit ouverte (d'autres personnes peuvent voir) ou privée (vous seul pouvez voir).
 
-### Edit Community
+## Edit Community
 
 edit-community-title = Modifier la communauté
 edit-community-explanation = Utilisez ce formulaire pour éditer votre communauté
 update-community-button = Mettre à jour la communauté
 
-### Delete Community
+## Delete Community
 
 delete-community = Supprimer la communauté
 delete-warning = IMPORTANT: la suppression d'une communauté déplacera toutes les données des membres de la communauté vers la communauté globale agrégée. Vous ne pourrez plus afficher cette communauté séparément.
@@ -524,7 +526,7 @@ return-to-profile = Revenir au profil utilisateur
 ## Errors
 
 
-### 404
+## 404
 
 page-not-found = Page non trouvée: 404
 you-requested = Vous avez demandé:
@@ -532,19 +534,19 @@ does-not-exist = qui n'existe pas dans cette application.
 wrong-turn = Il semble que vous ayez pris un mauvais virage.
 go-home = Rentrer à la page d'accueil?
 
-### Internal Server Error
+## Internal Server Error
 
 internal-server-error = Erreur interne du serveur
 having-problems = Il semble que nous ayons un petit problème.
 
-### Not Authorized
+## Not Authorized
 
 not-authorized = Non Autorisé
 not-authorized-explain = Vous n'êtes pas autorisé à effectuer cette action.
 go-back-or = Vous pouvez revenir en arrière ou
 return-main-page = retour à la page principale
 
-### Record not found
+## Record not found
 
 record-not-found = Enregistrement non trouvé
 record-not-found-explain = L'enregistrement que vous recherchez n'est pas disponible.
