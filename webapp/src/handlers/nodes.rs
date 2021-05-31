@@ -453,9 +453,12 @@ pub async fn community_node_graph(
                     ctx.insert("node_name", &node_name.to_owned());
                 
                     ctx.insert("community", &community);
+                    let community_name = Phrases::find(community.tag, &lang).expect("Unable to find phrase");
+                    ctx.insert("community_name", &community_name.text);
                 
-                    let title = format!("Graph - {} - {}", &node_name.text.to_title_case(), &community.tag);
+                    let title = format!("Graph - {} - {}", &node_name.text.to_title_case(), &community_name.text);
                     ctx.insert("title", &title);
+
                 
                     let rendered = data.tmpl.render("graphs/node_network_graph.html", &ctx).unwrap();
                     HttpResponse::Ok().body(rendered)

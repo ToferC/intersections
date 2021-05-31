@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block title %}
-  <title>{{ fluent(key="community-graph", lang=lang )}} {{ community_name }}</title>
+  <title>{{ title }}</title>
 {% endblock title %}}
 
 {% block add_preload %}
@@ -80,7 +80,7 @@
 
 {% block content %}
 <div class="col m-md-2 m-1">
-  <h1>{{ community_name }} <button class="btn btn-dark btn-sm" style="float: right;" type="button" data-toggle="collapse" data-target="#collapseLegend" aria-expanded="true" aria-controls="collapseLegend">
+  <h1>{{ title }} <button class="btn btn-dark btn-sm" style="float: right;" type="button" data-toggle="collapse" data-target="#collapseLegend" aria-expanded="true" aria-controls="collapseLegend">
     {{ fluent(key="toggle-legend", lang=lang )}}
   </button></h1>
   <hr>

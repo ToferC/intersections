@@ -73,7 +73,7 @@ pub async fn global_graph(
         _ => "Graph du réseau mondial",
     };
 
-    ctx.insert("community_name", title);
+    ctx.insert("title", &title);
     
     let rendered = data.tmpl.render("graphs/node_network_graph.html", &ctx).unwrap();
     HttpResponse::Ok().body(rendered)
@@ -129,7 +129,9 @@ pub async fn full_community_node_graph(
 
                 let community_name = Phrases::find(community.tag, &lang).expect("Unable to find phrase");
             
-                ctx.insert("community_name", &community_name.text);
+                let title = format!("Graph - {}", &community_name.text);
+                
+                ctx.insert("title", &title);
                 
                 let rendered = data.tmpl.render("graphs/node_network_graph.html", &ctx).unwrap();
                 HttpResponse::Ok().body(rendered)
