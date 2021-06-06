@@ -1,5 +1,6 @@
 use actix_web::{web, get, HttpResponse, HttpRequest, Responder};
 use actix_identity::Identity;
+use rand::distributions::Exp;
 use crate::{AppData, generate_basic_context};
 use diesel::prelude::*;
 use diesel::{QueryDsl, BelongingToDsl};
@@ -29,7 +30,16 @@ pub async fn api_experiences() -> impl Responder {
 
     let data = Experiences::find_all().unwrap();
 
-    HttpResponse::Ok().json(data)
+    let mut mod_data: Vec<(Experiences, Vec<Phrases>)> = Vec::new();
+
+    for mut e in data {
+        e.person_id = 999;
+        e.date_created = chrono::NaiveDateTime::from_timestamp(1000000000, 0);
+        let phrases = e.get_phrases("en");
+        mod_data.push((e, phrases));
+    };
+
+    HttpResponse::Ok().json(mod_data)
 }
 
 #[get("/api/phrases")]
