@@ -115,7 +115,8 @@ pub use self::base::{
 };
 
 pub use self::api::{
-    api_base, 
+    api_base,
+    api_experiences,
     find_experience, 
     person_api,
     api_phrases,

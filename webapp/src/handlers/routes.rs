@@ -35,13 +35,16 @@ use crate::handlers::{
     // emails
     email_person_info,
     send_community_email,
+
     // nodes
     node_page,
     community_node_page,
     node_graph,
     community_node_graph,
+
     // API
     api_base,
+    api_experiences,
     add_experience_form_handler,
     person_api,
     api_phrases,
@@ -142,6 +145,7 @@ pub fn init_routes(config: &mut web::ServiceConfig) {
 
     // api
     config.service(api_base);
+    config.service(api_experiences);
     config.service(person_api);
     config.service(api_phrases);
 

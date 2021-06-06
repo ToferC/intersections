@@ -9,9 +9,23 @@ use database;
 
 use crate::schema::{nodes};
 
+#[get("/{lang}/api")]
+pub async fn api_base(
+    data: web::Data<AppData>,
+    web::Path(lang): web::Path<String>,
+     
+    req:HttpRequest,
+    id: Identity,
+) -> impl Responder {
+    
+    let (ctx, _, _, _) = generate_basic_context(id, &lang, req.uri().path());
+    
+    let rendered = data.tmpl.render("api_base.html", &ctx).unwrap();
+    HttpResponse::Ok().body(rendered)
+}
 
-#[get("/api")]
-pub async fn api_base() -> impl Responder {
+#[get("/api/experiences")]
+pub async fn api_experiences() -> impl Responder {
 
     let data = Experiences::find_all().unwrap();
 
