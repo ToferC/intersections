@@ -83,7 +83,7 @@ impl People {
         let test_commmunity_ids = Communities::find_test_ids().expect("Unable to load communities");
         
         let people = people::table
-            .filter(people::community_id.ne(any(test_commmunity_ids)))
+            .filter(people::community_id.ne_all(test_commmunity_ids))
             .load::<People>(&conn)?;
         Ok(people)
     }
@@ -95,7 +95,7 @@ impl People {
         
         let people_ids = people::table
             .select(people::id)
-            .filter(people::community_id.ne(any(test_commmunity_ids)))
+            .filter(people::community_id.ne_all(test_commmunity_ids))
             .load::<i32>(&conn)?;
 
         Ok(people_ids)

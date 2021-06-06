@@ -1,4 +1,5 @@
 mod base;
+mod api;
 mod surveys;
 mod routes;
 mod graphs;
@@ -108,10 +109,13 @@ mod utility {
 }
 
 pub use self::base::{
-    api_base, 
     raw_index,
     index,
     about,
+};
+
+pub use self::api::{
+    api_base, 
     find_experience, 
     person_api,
     api_phrases,

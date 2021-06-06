@@ -23,7 +23,7 @@
         <label>
             <strong>{{ fluent(key="description", lang=lang )}}</strong>
             <textarea class="form-control form-control-lg" rows=10 cols=45 type="text" name="description" required>{{ phrases[community.description] }}</textarea>
-            <small id="code_help" class="form-text text-muted">{{ fluent(key="community-description-helper", lang=lang )}}</small>
+            <small id="code_help" class="form-text text-muted">{{ fluent(key="community-description-helper", lang=lang ) | capitalize }}</small>
         </label>
         <br>
 
