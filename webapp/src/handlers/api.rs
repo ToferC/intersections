@@ -91,7 +91,7 @@ pub async fn person_api(
     HttpResponse::Ok().json(result)
 }
 
-#[get("/experience/{id}")]
+#[get("/api//experience/{id}")]
 pub async fn find_experience(web::Path(id): web::Path<i32>) -> impl Responder {
     
     HttpResponse::Ok().json(Experiences::find(id).unwrap())
