@@ -16,13 +16,14 @@
         <hr>
 
         <form name="ExperienceForm" id="experienceForm" action=/{{ lang }}/first_experience_form/{{ community.code }} method=POST>
-        
+        <!--
         <label>
             <strong>{{ fluent(key="add-profile-code", lang=lang )}}</strong>
             <input class="form-control form-control-lg" name="related_code" placeholder="{{ fluent(key="profile-code-placeholder", lang=lang )}}">
             <small id="code_help" class="form-text text-muted">{{ fluent(key="profile-code-helper", lang=lang )}}</small>
         </label>
         <hr>
+        -->
 
         <strong>{{ fluent(key="progress-header", counter=0, lang=lang )}}</strong>
         <div class="progress">
@@ -31,14 +32,15 @@
         <hr>
 
         <div class="row">
+            <h2>{{ fluent(key="question-one-survey", number=0, lang=lang )}}</h2>
+            
+            <label>
+                <input class="form-control form-control-lg mdb-autocomplete" id="node_name_autocomplete" name="name" placeholder="{{ fluent(key="question-one-placeholder", number=0, lang=lang )}}" required
+                maxlength="32" autocomplete="off">
+                <small id="experience_help" class="form-text text-muted">{{ fluent(key="question-one-helper", number=0, lang=lang )}}</small>
+            </label>
+            <!--
             <div class="col m-md-2 m-1">
-                <h2>{{ fluent(key="question-one", lang=lang )}}</h2>
-                
-                <label>
-                    <input class="form-control form-control-lg mdb-autocomplete" id="node_name_autocomplete" name="name" placeholder="{{ fluent(key="question-one-placeholder", lang=lang )}}" required
-                    maxlength="32" autocomplete="off">
-                    <small id="experience_help" class="form-text text-muted">{{ fluent(key="question-one-helper", number=0, lang=lang )}}</small>
-                </label>
             </div>
             <div class="col m-md-2 m-1">
                 <div class="card card-body">
@@ -46,8 +48,10 @@
                     <p>{{ fluent(key="learning-one", lang=lang )}}</p>
                 </div>
             </div>
+        -->
         </div>
 
+        <!--
             <hr>
 
             <h2>{{ fluent(key="question-two", lang=lang )}}</h2>
@@ -65,7 +69,8 @@
                 </div>
             </fieldset>
 
-            <hr>
+        -->
+        <hr>
             
             <h2>{{ fluent(key="question-three", lang=lang )}}</h2>
                     

@@ -77,6 +77,7 @@ table! {
         date_created -> Timestamp,
         related_codes -> Array<Text>,
         community_id -> Int4,
+        experiences -> Int4,
     }
 }
 

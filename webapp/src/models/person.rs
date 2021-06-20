@@ -2,7 +2,6 @@ use serde::{Serialize, Deserialize};
 use chrono::prelude::*;
 use diesel::prelude::*;
 use diesel::RunQueryDsl;
-use diesel::dsl::any;
 use diesel::{QueryDsl, BelongingToDsl};
 
 use crate::schema::{people};
@@ -18,6 +17,7 @@ pub struct NewPerson {
     pub date_created: chrono::NaiveDateTime,
     pub related_codes: Vec<String>,
     pub community_id: i32,
+    pub experiences: i32,
 }
 
 impl NewPerson {
@@ -27,6 +27,7 @@ impl NewPerson {
             date_created: chrono::NaiveDate::from_ymd(2020, 6, 6).and_hms(3, 3, 3),
             related_codes: Vec::new(),
             community_id,
+            experiences: 1, // Person is created when first experience is added
         }
     }
 
@@ -39,6 +40,7 @@ impl NewPerson {
             date_created: now,
             related_codes: person.related_codes.to_owned(),
             community_id: person.community_id,
+            experiences: 1,
         }
     }
 }
@@ -51,6 +53,7 @@ pub struct People {
     pub date_created: NaiveDateTime,
     pub related_codes: Vec<String>,
     pub community_id: i32,
+    pub experiences: i32,
 }
 
 impl People {

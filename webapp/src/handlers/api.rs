@@ -1,6 +1,5 @@
 use actix_web::{web, get, HttpResponse, HttpRequest, Responder};
 use actix_identity::Identity;
-use rand::distributions::Exp;
 use crate::{AppData, generate_basic_context};
 use diesel::prelude::*;
 use diesel::{QueryDsl, BelongingToDsl};

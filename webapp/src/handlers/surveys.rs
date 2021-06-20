@@ -9,7 +9,7 @@ use serde::{Deserialize, Serialize};
 
 use crate::{AppData, generate_basic_context};
 use crate::models::{Experience, Experiences, RawExperience,
-    NewPerson, People, Node, Nodes, Communities, CommunityData, 
+    NewPerson, People, Node, Nodes, DOMAINS, Communities, CommunityData, 
     Phrases, translate_experience_phrases};
 use error_handler::error_handler::CustomError;
 
@@ -27,7 +27,6 @@ pub struct FirstExperienceForm {
 #[derive(Deserialize, Debug)]
 pub struct AddExperienceForm {
     name: String,
-    domain: String,
     response_1: String,
     response_2: String,
     response_3: String,
@@ -149,7 +148,7 @@ pub async fn handle_experience_form_input(
     
     web::Path((lang, community_code)): web::Path<(String, String)>, 
     req: HttpRequest, 
-    form: web::Form<FirstExperienceForm>,
+    form: web::Form<AddExperienceForm>,
 ) -> impl Responder {
     println!("Handling Post Request: {:?}", req);
 
@@ -164,12 +163,14 @@ pub async fn handle_experience_form_input(
                 };
             
                 // associate person to community
-                let mut person = NewPerson::new(community.id);
+                let person = NewPerson::new(community.id);
             
-                // Get related persons
+                // Get related persons - now handling through email links
+                /*
                 if &form.related_code != "" {
                     person.related_codes.push(form.related_code.trim().to_owned());
                 };
+                 */
 
                 let node_name = form.name.to_lowercase().trim().to_owned();
 
@@ -214,7 +215,7 @@ pub async fn handle_experience_form_input(
                 let node = Node::new(
                     raw_exp.name_id,
                     raw_exp.node_name.to_owned(),
-                    form.domain.to_lowercase().trim().to_owned(),
+                    DOMAINS[0].to_owned(),
                 );
                 
                 let inclusivity = &form.inclusivity;
@@ -363,7 +364,7 @@ pub async fn add_handle_experience_form_input(
     };
 
     println!("Find person");
-    let p = People::find_from_code(&code).unwrap();
+    let mut p = People::find_from_code(&code).unwrap();
 
     let node_name = form.name.to_lowercase().trim().to_owned();
 
@@ -403,7 +404,7 @@ pub async fn add_handle_experience_form_input(
     let node = Node::new(
         raw_exp.name_id,
         form.name.to_lower_case().trim().to_owned(),
-        form.domain.to_lowercase().trim().to_owned(),
+        DOMAINS[p.experiences as usize].to_owned(),
     );
 
     let inclusivity = &form.inclusivity;
@@ -472,6 +473,10 @@ pub async fn add_handle_experience_form_input(
     community.data = serde_json::to_value(comm_data).unwrap();
 
     let update = Communities::update(&community);
+
+    // Update person experiences count
+    p.experiences += 1;
+    People::update(p.id, p).expect("Unable to update person");
 
     match update {
         Ok(c) => {

@@ -12,17 +12,18 @@
         <div class="col-md m-md-2 m-1">
             <br>
             <h1>{{ fluent(key="add-experience", lang=lang )}}</h1>
+            <hr>
             <p><strong>{{ fluent(key="or", lang=lang )}}</strong>  <a class="btn btn-dark" href="/{{ lang }}/person/{{ user_code }}">{{ fluent(key="take-to-profile", lang=lang )}}.</a></p>
             <hr>
-            <h2>{{ fluent(key="unique-code", lang=lang )}}:</h2> <p><strong>{{ user_code }}</strong></p>
+            <h2>{{ fluent(key="unique-code", lang=lang )}}</h2> <p><strong>{{ user_code }}</strong></p>
             <p>{{ fluent(key="unique-code-explanation", lang=lang )}}</p>
             <hr>
 
             {% set experience_len = people_experiences | last %}
             {% set prog_bar = experience_len.experiences | length %}
-            {% set progbar_width = prog_bar / 6 * 100 %}
+            {% set progbar_width = prog_bar / 12 * 100 %}
 
-            <strong>{{ fluent(key="progress", lang=lang )}} ({{ prog_bar }}/6)</strong>
+            <strong>{{ fluent(key="progress", lang=lang )}} ({{ prog_bar }}/12)</strong>
 
             <div class="progress">
                 <div class="progress-bar bg-success" style="width: {{progbar_width}}%" role="progressbar" aria-valuenow="prog_bar" aria-valuemin="0" aria-valuemax="100"></div>
@@ -35,16 +36,17 @@
             <br>
             <form action="/{{ lang }}/add_experience_form/{{ user_code }}" method=POST id="experienceForm" name="experienceForm">
                 
-            <div class="row">
-                <div class="col m-md-2 m-1">
-                    <h2>{{ fluent(key="question-one", lang=lang )}}</h2>
-                    
-                    <label>
-                        <input class="form-control form-control-lg mdb-autocomplete" id="node_name_autocomplete" name="name" placeholder="{{ fluent(key="question-one-placeholder", lang=lang )}}" required
-                        maxlength="32" autocomplete="off">
-                        <small id="experience_help" class="form-text text-muted">{{ fluent(key="question-one-helper", number=prog_bar, lang=lang )}}</small>
-                    </label>
-                </div>
+                <h2>{{ fluent(key="question-one-survey", number=prog_bar, lang=lang )}}</h2>
+                
+                <label>
+                    <input class="form-control form-control-lg mdb-autocomplete" id="node_name_autocomplete" name="name" placeholder="{{ fluent(key="question-one-placeholder", number=prog_bar, lang=lang )}}" required
+                    maxlength="32" autocomplete="off">
+                    <small id="experience_help" class="form-text text-muted">{{ fluent(key="question-one-helper", number=prog_bar, lang=lang )}}</small>
+                </label>
+                <!--
+                    <div class="row">
+                    <div class="col m-md-2 m-1">
+                    </div>
                 <div class="col m-md-2 m-1">
                     <div class="card card-body">
                         <p><strong>{{ fluent(key="tip", lang=lang )}} </strong> {{ fluent(key="tip-string", number=prog_bar, lang=lang )}}</p>
@@ -52,6 +54,9 @@
                     </div>
                 </div>
             </div>
+            -->
+
+            <!--
     
                 <hr>
     
@@ -69,6 +74,8 @@
                         <label for="role">{{ fluent(key="organizational", lang=lang )}}</label>
                     </div>
                 </fieldset>
+
+            -->
     
                 <hr>
                 

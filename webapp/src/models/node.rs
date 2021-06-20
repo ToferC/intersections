@@ -8,6 +8,26 @@ use crate::models::{Experiences, Phrases};
 
 use crate::schema::{nodes, phrases};
 
+pub const DOMAINS: [&'static str; 17] = [
+    "race_culture",
+    "gender",
+    "sexuality",
+    "socio_economic",
+    "language",
+    "education",
+    "religion",
+    "ability_disability",
+    "personality",
+    "age",
+    "mental_health",
+    "body_image",
+    "relationship_caregiving",
+    "employment_status",
+    "organizational_role",
+    "community_role",
+    "other",
+];
+
 #[derive(Debug, Serialize, Deserialize, AsChangeset, Insertable)]
 #[table_name = "nodes"]
 pub struct Node {

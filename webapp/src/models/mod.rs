@@ -10,7 +10,7 @@ pub mod phrase;
 
 pub use experience::{Experience, Experiences, AggregateExperience, RawExperience, translate_experience_phrases};
 pub use person::{NewPerson, People};
-pub use node::{Node, Nodes};
+pub use node::{Node, Nodes, DOMAINS};
 pub use user::{User, InsertableUser, SlimUser, LoggedUser, UserData, verify, make_salt, make_hash};
 pub use community::{Communities, NewCommunity, CommunityData};
 pub use email::Email;
