@@ -51,16 +51,53 @@ CREATE TABLE people (
 CREATE TABLE nodes (
     id SERIAL PRIMARY KEY,
     node_name INT UNIQUE NOT NULL,
-    domain_token VARCHAR(10) NOT NULL CHECK (domain_token IN ('person', 'role', 'system')),
-    translation varchar(32) NOT NULL default '',
-    synonyms text[] NOT NULL default '{""}',
+    domain_token VARCHAR(32) NOT NULL CHECK (domain_token IN (
+        'race_culture',
+        'gender',
+        'sexuality',
+        'socio_economic',
+        'language',
+        'education',
+        'religion',
+        'ability_disability',
+        'personality',
+        'age',
+        'mental_health',
+        'body_image',
+        'relationship_caregiving',
+        'employment_status',
+        'organizational_role',
+        'community_role',
+        'other',
+        'person', 'role', 'system'
+    )),
+    synonyms INT[] NOT NULL default '{}',
     slug VARCHAR(48) UNIQUE NOT NULL
 );
 
 CREATE TABLE experiences (
     id SERIAL PRIMARY KEY,
     node_name INT NOT NULL,
-    node_domain VARCHAR(10) NOT NULL CHECK (node_domain IN ('person', 'role', 'system')),
+    node_domain VARCHAR(32) NOT NULL CHECK (node_domain IN (
+        'race_culture',
+        'gender',
+        'sexuality',
+        'socio_economic',
+        'language',
+        'education',
+        'religion',
+        'ability_disability',
+        'personality',
+        'age',
+        'mental_health',
+        'body_image',
+        'relationship_caregiving',
+        'employment_status',
+        'organizational_role',
+        'community_role',
+        'other',
+        'person', 'role', 'system'
+    )),
     person_id INT NOT NULL,
     FOREIGN KEY(person_id)
         REFERENCES people(id) ON DELETE CASCADE,

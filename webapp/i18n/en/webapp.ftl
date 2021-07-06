@@ -168,6 +168,25 @@ question-one-survey = { $number  ->
     *[other] 1. Amazing. You’ve got the hang of this. Add as many additional experiences as you like.
 }
 
+domain-token = { $token -> 
+    [race_culture] Race / Culture
+    [gender] Gender
+    [sexuality] Sexuality
+    [socio_economic] Socio-economic
+    [language] Language
+    [religion] Religion
+    [ability_disability] Ability / Disability
+    [personality] Personality Type
+    [age] Age
+    [mental_health] Mental Health
+    [body_image] Body Image
+    [relationship_caregiving] Relationships / Caregiving
+    [employment_status] Employment Status
+    [organizational_role] Organizational Role
+    [community_role] Community Role
+    *[other] Other
+}
+
 question-one-placeholder = { $number  ->
     [0] E.g.: Black, white, hispanic, Korean, Chinese, Algonquin... 
     [1] E.g.: Male, female, trans, he/him, they/them, two-spirited...

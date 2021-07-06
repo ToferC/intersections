@@ -51,8 +51,7 @@ table! {
         id -> Int4,
         node_name -> Int4,
         domain_token -> Varchar,
-        translation -> Varchar,
-        synonyms -> Array<Text>,
+        synonyms -> Array<Int4>,
         slug -> Varchar,
     }
 }

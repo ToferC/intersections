@@ -44,7 +44,7 @@
             </tr>
             <tr>
                 <td style="text-align: center;">{{ node_experience.name | title }}</td>
-                <td style="text-align: center;">{{ node_experience.domain | title }}</td>
+                <td style="text-align: center;">{{ fluent(key="domain-token", lang=lang, token=node_experience.domain)}}</td>
                 <td style="text-align: center;">{{ node_experience.count }}</td>
                 <td style="text-align: center;">
                     {{ node_experience.mean_inclusivity | round(method="ceil", precision=3) }}
@@ -92,7 +92,7 @@
                         </tr>
                         <tr>
                             <td style="text-align: center;"><a href="/{{ lang }}/community_node/{{ community.slug }}/{{ experience.slug }}">{{ experience.name | title }}</a></td>
-                            <td style="text-align: center;">{{ experience.domain | title }}</td>
+                            <td style="text-align: center;">{{ fluent(key="domain-token", lang=lang, token=experience.domain)}}</td>
                             <td style="text-align: center;">{{ experience.count }}</td>
                             <td style="text-align: center;">
                                 {{ experience.mean_inclusivity | round(method="ceil", precision=3) }}

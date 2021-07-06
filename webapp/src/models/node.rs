@@ -60,8 +60,7 @@ pub struct Nodes {
     pub id: i32,
     pub node_name: i32,
     pub domain_token: String,
-    pub translation: String,
-    pub synonyms: Vec<String>,
+    pub synonyms: Vec<i32>,
     pub slug: String,
 }
 

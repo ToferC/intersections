@@ -11,7 +11,7 @@
         {
           "id": 1,
           "node_name": "father",
-          "node_domain": "person",
+          "node_domain": "relationship_caregiving",
           "person_id": 1,
           "node_id": 1,
           "date_created": "2020-10-19T00:00:00",
@@ -25,7 +25,7 @@
         {
           "id": 1,
           "node_name": "father",
-          "domain_token": "person",
+          "domain_token": "relationship_caregiving",
           "translation": "",
           "synonyms": [
             ""
@@ -36,7 +36,7 @@
         {
           "id": 2,
           "node_name": "manager",
-          "node_domain": "role",
+          "node_domain": "organizational_role",
           "person_id": 1,
           "node_id": 2,
           "date_created": "2020-10-19T00:00:00",
@@ -50,7 +50,7 @@
         {
           "id": 2,
           "node_name": "manager",
-          "domain_token": "role",
+          "domain_token": "organizational_role",
           "translation": "",
           "synonyms": [
             ""
@@ -61,7 +61,7 @@
         {
           "id": 3,
           "node_name": "gen x",
-          "node_domain": "person",
+          "node_domain": "age",
           "person_id": 1,
           "node_id": 3,
           "date_created": "2020-10-19T00:00:00",
@@ -75,7 +75,7 @@
         {
           "id": 3,
           "node_name": "gen x",
-          "domain_token": "person",
+          "domain_token": "age",
           "translation": "",
           "synonyms": [
             ""
@@ -96,7 +96,7 @@
         {
           "id": 4,
           "node_name": "mother",
-          "node_domain": "person",
+          "node_domain": "relationship_caregiving",
           "person_id": 2,
           "node_id": 4,
           "date_created": "2020-10-19T00:00:00",
@@ -110,7 +110,7 @@
         {
           "id": 4,
           "node_name": "mother",
-          "domain_token": "person",
+          "domain_token": "relationship_caregiving",
           "translation": "",
           "synonyms": [
             ""
@@ -121,7 +121,7 @@
         {
           "id": 5,
           "node_name": "white",
-          "node_domain": "person",
+          "node_domain": "race_culture",
           "person_id": 2,
           "node_id": 5,
           "date_created": "2020-10-19T00:00:00",
@@ -133,7 +133,7 @@
         {
           "id": 5,
           "node_name": "white",
-          "domain_token": "role",
+          "domain_token": "race_culture",
           "translation": "",
           "synonyms": [
             ""
@@ -154,7 +154,7 @@
         {
           "id": 7,
           "node_name": "mother",
-          "node_domain": "person",
+          "node_domain": "relationship_caregiving",
           "person_id": 3,
           "node_id": 4,
           "date_created": "2020-10-19T00:00:00",
@@ -168,7 +168,7 @@
         {
           "id": 4,
           "node_name": "mother",
-          "domain_token": "person",
+          "domain_token": "relationship_caregiving",
           "translation": "",
           "synonyms": [
             ""
@@ -179,7 +179,7 @@
         {
           "id": 6,
           "node_name": "black",
-          "node_domain": "person",
+          "node_domain": "race_culture",
           "person_id": 3,
           "node_id": 6,
           "date_created": "2020-10-19T00:00:00",
@@ -193,7 +193,7 @@
         {
           "id": 6,
           "node_name": "black",
-          "domain_token": "role",
+          "domain_token": "race_culture",
           "translation": "",
           "synonyms": [
             ""
@@ -204,7 +204,7 @@
         {
           "id": 8,
           "node_name": "executive",
-          "node_domain": "role",
+          "node_domain": "organizational_role",
           "person_id": 3,
           "node_id": 7,
           "date_created": "2020-10-19T00:00:00",
@@ -218,7 +218,7 @@
         {
           "id": 7,
           "node_name": "executive",
-          "domain_token": "role",
+          "domain_token": "organizational_role",
           "translation": "",
           "synonyms": [
             ""
@@ -229,7 +229,7 @@
         {
           "id": 9,
           "node_name": "innovator",
-          "node_domain": "system",
+          "node_domain": "community_role",
           "person_id": 3,
           "node_id": 8,
           "date_created": "2020-10-19T00:00:00",
@@ -243,7 +243,7 @@
         {
           "id": 8,
           "node_name": "innovator",
-          "domain_token": "system",
+          "domain_token": "community_role",
           "translation": "",
           "synonyms": [
             ""
@@ -264,7 +264,7 @@
         {
           "id": 10,
           "node_name": "white",
-          "node_domain": "person",
+          "node_domain": "race_culture",
           "person_id": 4,
           "node_id": 5,
           "date_created": "2020-10-19T00:00:00",
@@ -278,7 +278,7 @@
         {
           "id": 5,
           "node_name": "white",
-          "domain_token": "role",
+          "domain_token": "race_culture",
           "translation": "",
           "synonyms": [
             ""
@@ -299,7 +299,7 @@
         {
           "id": 11,
           "node_name": "millenial",
-          "node_domain": "person",
+          "node_domain": "age",
           "person_id": 5,
           "node_id": 9,
           "date_created": "2020-10-20T13:10:45.881402",
@@ -313,7 +313,7 @@
         {
           "id": 9,
           "node_name": "millenial",
-          "domain_token": "person",
+          "domain_token": "age",
           "translation": "",
           "synonyms": [
             ""
@@ -324,7 +324,7 @@
         {
           "id": 12,
           "node_name": "caregiver to my parents",
-          "node_domain": "person",
+          "node_domain": "relationship_caregiving",
           "person_id": 5,
           "node_id": 10,
           "date_created": "2020-10-20T13:11:38.914029",
@@ -338,7 +338,7 @@
         {
           "id": 10,
           "node_name": "caregiver to my parents",
-          "domain_token": "person",
+          "domain_token": "relationship_caregiving",
           "translation": "",
           "synonyms": [
             ""
@@ -349,7 +349,7 @@
         {
           "id": 13,
           "node_name": "senior policy analyst",
-          "node_domain": "role",
+          "node_domain": "organizational_role",
           "person_id": 5,
           "node_id": 11,
           "date_created": "2020-10-20T13:12:11.723659",
@@ -363,7 +363,7 @@
         {
           "id": 11,
           "node_name": "senior policy analyst",
-          "domain_token": "role",
+          "domain_token": "organizational_role",
           "translation": "",
           "synonyms": [
             ""
@@ -384,7 +384,7 @@
         {
           "id": 14,
           "node_name": "father",
-          "node_domain": "person",
+          "node_domain": "relationship_caregiving",
           "person_id": 6,
           "node_id": 1,
           "date_created": "2020-10-20T13:49:46.105260",
@@ -398,7 +398,7 @@
         {
           "id": 1,
           "node_name": "father",
-          "domain_token": "person",
+          "domain_token": "relationship_caregiving",
           "translation": "",
           "synonyms": [
             ""
@@ -409,7 +409,7 @@
         {
           "id": 15,
           "node_name": "executive",
-          "node_domain": "role",
+          "node_domain": "organizational_role",
           "person_id": 6,
           "node_id": 7,
           "date_created": "2020-10-20T13:50:40.471581",
@@ -423,7 +423,7 @@
         {
           "id": 7,
           "node_name": "executive",
-          "domain_token": "role",
+          "domain_token": "organizational_role",
           "translation": "",
           "synonyms": [
             ""
@@ -444,7 +444,7 @@
         {
           "id": 16,
           "node_name": "middle class",
-          "node_domain": "person",
+          "node_domain": "socio_economic",
           "person_id": 7,
           "node_id": 12,
           "date_created": "2020-10-20T13:56:22.028565",
@@ -458,7 +458,7 @@
         {
           "id": 12,
           "node_name": "middle class",
-          "domain_token": "person",
+          "domain_token": "socio_economic",
           "translation": "",
           "synonyms": [
             ""
@@ -479,7 +479,7 @@
         {
           "id": 17,
           "node_name": "baby boomer",
-          "node_domain": "person",
+          "node_domain": "age",
           "person_id": 8,
           "node_id": 13,
           "date_created": "2020-10-20T23:59:46.162110",
@@ -493,7 +493,7 @@
         {
           "id": 13,
           "node_name": "baby boomer",
-          "domain_token": "person",
+          "domain_token": "age",
           "translation": "",
           "synonyms": [
             ""
@@ -514,7 +514,7 @@
         {
           "id": 20,
           "node_name": "manager",
-          "node_domain": "role",
+          "node_domain": "organizational_role",
           "person_id": 9,
           "node_id": 2,
           "date_created": "2020-10-22T20:15:23.825579",
@@ -528,7 +528,7 @@
         {
           "id": 2,
           "node_name": "manager",
-          "domain_token": "role",
+          "domain_token": "organizational_role",
           "translation": "",
           "synonyms": [
             ""
@@ -539,7 +539,7 @@
         {
           "id": 18,
           "node_name": "white",
-          "node_domain": "person",
+          "node_domain": "race_culture",
           "person_id": 9,
           "node_id": 5,
           "date_created": "2020-10-22T20:13:36.779497",
@@ -553,7 +553,7 @@
         {
           "id": 5,
           "node_name": "white",
-          "domain_token": "role",
+          "domain_token": "race_culture",
           "translation": "",
           "synonyms": [
             ""
@@ -564,7 +564,7 @@
         {
           "id": 19,
           "node_name": "grew up lower income",
-          "node_domain": "person",
+          "node_domain": "socio_economic",
           "person_id": 9,
           "node_id": 14,
           "date_created": "2020-10-22T20:14:43.268099",
@@ -578,7 +578,7 @@
         {
           "id": 14,
           "node_name": "grew up lower income",
-          "domain_token": "person",
+          "domain_token": "socio_economic",
           "translation": "",
           "synonyms": [
             ""
@@ -599,7 +599,7 @@
         {
           "id": 21,
           "node_name": "mother",
-          "node_domain": "role",
+          "node_domain": "relationship_caregiving",
           "person_id": 10,
           "node_id": 4,
           "date_created": "2020-10-22T20:44:41.021339",
@@ -613,7 +613,7 @@
         {
           "id": 4,
           "node_name": "mother",
-          "domain_token": "person",
+          "domain_token": "relationship_caregiving",
           "translation": "",
           "synonyms": [
             ""
@@ -624,7 +624,7 @@
         {
           "id": 23,
           "node_name": "white",
-          "node_domain": "person",
+          "node_domain": "race_culture",
           "person_id": 10,
           "node_id": 5,
           "date_created": "2020-10-22T20:47:35.042597",
@@ -638,7 +638,7 @@
         {
           "id": 5,
           "node_name": "white",
-          "domain_token": "role",
+          "domain_token": "race_culture",
           "translation": "",
           "synonyms": [
             ""
@@ -649,7 +649,7 @@
         {
           "id": 22,
           "node_name": "person in recovery",
-          "node_domain": "person",
+          "node_domain": "other",
           "person_id": 10,
           "node_id": 15,
           "date_created": "2020-10-22T20:46:23.921260",
@@ -663,7 +663,7 @@
         {
           "id": 15,
           "node_name": "person in recovery",
-          "domain_token": "person",
+          "domain_token": "other",
           "translation": "",
           "synonyms": [
             ""
@@ -674,7 +674,7 @@
         {
           "id": 24,
           "node_name": "someone without formal education",
-          "node_domain": "person",
+          "node_domain": "education",
           "person_id": 10,
           "node_id": 16,
           "date_created": "2020-10-22T20:49:22.416392",
@@ -687,7 +687,7 @@
         {
           "id": 16,
           "node_name": "someone without formal education",
-          "domain_token": "person",
+          "domain_token": "education",
           "translation": "",
           "synonyms": [
             ""
@@ -708,7 +708,7 @@
         {
           "id": 26,
           "node_name": "black",
-          "node_domain": "person",
+          "node_domain": "race_culture",
           "person_id": 11,
           "node_id": 6,
           "date_created": "2020-10-24T18:15:56.853240",
@@ -722,7 +722,7 @@
         {
           "id": 6,
           "node_name": "black",
-          "domain_token": "role",
+          "domain_token": "race_culture",
           "translation": "",
           "synonyms": [
             ""
@@ -733,7 +733,7 @@
         {
           "id": 28,
           "node_name": "executive",
-          "node_domain": "role",
+          "node_domain": "organizational_role",
           "person_id": 11,
           "node_id": 7,
           "date_created": "2020-10-24T18:18:05.980097",
@@ -747,7 +747,7 @@
         {
           "id": 7,
           "node_name": "executive",
-          "domain_token": "role",
+          "domain_token": "organizational_role",
           "translation": "",
           "synonyms": [
             ""
@@ -758,7 +758,7 @@
         {
           "id": 25,
           "node_name": "black female mid career executiv",
-          "node_domain": "person",
+          "node_domain": "other",
           "person_id": 11,
           "node_id": 159,
           "date_created": "2020-10-24T18:13:31.525806",
@@ -772,7 +772,7 @@
         {
           "id": 159,
           "node_name": "black female mid career executiv",
-          "domain_token": "person",
+          "domain_token": "other",
           "translation": "",
           "synonyms": [
             ""
@@ -783,7 +783,7 @@
         {
           "id": 27,
           "node_name": "working mother",
-          "node_domain": "person",
+          "node_domain": "relationship_caregiving",
           "person_id": 11,
           "node_id": 160,
           "date_created": "2020-10-24T18:17:12.182534",
@@ -797,7 +797,7 @@
         {
           "id": 160,
           "node_name": "working mother",
-          "domain_token": "person",
+          "domain_token": "relationship_caregiving",
           "translation": "",
           "synonyms": [
             ""
@@ -808,7 +808,7 @@
         {
           "id": 29,
           "node_name": "young executive ",
-          "node_domain": "role",
+          "node_domain": "age",
           "person_id": 11,
           "node_id": 161,
           "date_created": "2020-10-24T18:20:21.359689",
@@ -822,7 +822,7 @@
         {
           "id": 161,
           "node_name": "young executive ",
-          "domain_token": "role",
+          "domain_token": "age",
           "translation": "",
           "synonyms": [
             ""
@@ -833,7 +833,7 @@
         {
           "id": 30,
           "node_name": "invisible disability",
-          "node_domain": "person",
+          "node_domain": "ability_disability",
           "person_id": 11,
           "node_id": 162,
           "date_created": "2020-10-24T18:22:12.727518",
@@ -847,7 +847,7 @@
         {
           "id": 162,
           "node_name": "invisible disability",
-          "domain_token": "person",
+          "domain_token": "ability_disability",
           "translation": "",
           "synonyms": [
             ""
@@ -868,7 +868,7 @@
         {
           "id": 31,
           "node_name": "christian",
-          "node_domain": "person",
+          "node_domain": "religion",
           "person_id": 12,
           "node_id": 163,
           "date_created": "2020-10-24T18:30:31.592515",
@@ -882,7 +882,7 @@
         {
           "id": 163,
           "node_name": "christian",
-          "domain_token": "person",
+          "domain_token": "religion",
           "translation": "",
           "synonyms": [
             ""
@@ -903,7 +903,7 @@
         {
           "id": 32,
           "node_name": "christian",
-          "node_domain": "person",
+          "node_domain": "religion",
           "person_id": 13,
           "node_id": 163,
           "date_created": "2020-10-24T18:30:51.656544",
@@ -917,7 +917,7 @@
         {
           "id": 163,
           "node_name": "christian",
-          "domain_token": "person",
+          "domain_token": "religion",
           "translation": "",
           "synonyms": [
             ""
@@ -938,7 +938,7 @@
         {
           "id": 33,
           "node_name": "first go at this",
-          "node_domain": "person",
+          "node_domain": "other",
           "person_id": 14,
           "node_id": 164,
           "date_created": "2020-10-26T01:18:50.640633",
@@ -952,7 +952,7 @@
         {
           "id": 164,
           "node_name": "first go at this",
-          "domain_token": "person",
+          "domain_token": "other",
           "translation": "",
           "synonyms": [
             ""
@@ -973,7 +973,7 @@
         {
           "id": 34,
           "node_name": "senior policy advisor",
-          "node_domain": "role",
+          "node_domain": "organizational_role",
           "person_id": 15,
           "node_id": 165,
           "date_created": "2020-11-02T04:32:01.157241",
@@ -987,7 +987,7 @@
         {
           "id": 165,
           "node_name": "senior policy advisor",
-          "domain_token": "role",
+          "domain_token": "organizational_role",
           "translation": "",
           "synonyms": [
             ""
@@ -998,7 +998,7 @@
         {
           "id": 35,
           "node_name": "black ",
-          "node_domain": "person",
+          "node_domain": "race_culture",
           "person_id": 15,
           "node_id": 166,
           "date_created": "2020-11-02T04:33:17.605839",
@@ -1012,7 +1012,7 @@
         {
           "id": 166,
           "node_name": "black ",
-          "domain_token": "person",
+          "domain_token": "race_culture",
           "translation": "",
           "synonyms": [
             ""
@@ -1023,7 +1023,7 @@
         {
           "id": 36,
           "node_name": "man",
-          "node_domain": "person",
+          "node_domain": "gender",
           "person_id": 15,
           "node_id": 167,
           "date_created": "2020-11-02T04:34:27.778599",
@@ -1037,7 +1037,7 @@
         {
           "id": 167,
           "node_name": "man",
-          "domain_token": "person",
+          "domain_token": "gender",
           "translation": "",
           "synonyms": [
             ""
@@ -1048,7 +1048,7 @@
         {
           "id": 37,
           "node_name": "father ",
-          "node_domain": "person",
+          "node_domain": "relationship_caregiving",
           "person_id": 15,
           "node_id": 168,
           "date_created": "2020-11-02T04:35:21.972086",
@@ -1062,7 +1062,7 @@
         {
           "id": 168,
           "node_name": "father ",
-          "domain_token": "person",
+          "domain_token": "relationship_caregiving",
           "translation": "",
           "synonyms": [
             ""
@@ -1073,7 +1073,7 @@
         {
           "id": 38,
           "node_name": "feminist ",
-          "node_domain": "person",
+          "node_domain": "other",
           "person_id": 15,
           "node_id": 169,
           "date_created": "2020-11-02T04:49:24.944832",
@@ -1087,7 +1087,7 @@
         {
           "id": 169,
           "node_name": "feminist ",
-          "domain_token": "person",
+          "domain_token": "other",
           "translation": "",
           "synonyms": [
             ""
@@ -1098,7 +1098,7 @@
         {
           "id": 39,
           "node_name": "brother ",
-          "node_domain": "person",
+          "node_domain": "relationship_caregiving",
           "person_id": 15,
           "node_id": 170,
           "date_created": "2020-11-02T04:51:11.425441",
@@ -1112,7 +1112,7 @@
         {
           "id": 170,
           "node_name": "brother ",
-          "domain_token": "person",
+          "domain_token": "relationship_caregiving",
           "translation": "",
           "synonyms": [
             ""
@@ -1133,7 +1133,7 @@
         {
           "id": 40,
           "node_name": "woman, black, lgbtq, career",
-          "node_domain": "person",
+          "node_domain": "other",
           "person_id": 16,
           "node_id": 171,
           "date_created": "2020-11-09T17:59:49.066383",
@@ -1147,7 +1147,7 @@
         {
           "id": 171,
           "node_name": "woman, black, lgbtq, career",
-          "domain_token": "person",
+          "domain_token": "other",
           "translation": "",
           "synonyms": [
             ""
@@ -1168,7 +1168,7 @@
         {
           "id": 41,
           "node_name": "a black woman",
-          "node_domain": "person",
+          "node_domain": "race_culture",
           "person_id": 17,
           "node_id": 172,
           "date_created": "2020-11-09T18:04:55.791295",
@@ -1182,7 +1182,7 @@
         {
           "id": 172,
           "node_name": "a black woman",
-          "domain_token": "person",
+          "domain_token": "race_culture",
           "translation": "",
           "synonyms": [
             ""
@@ -1193,7 +1193,7 @@
         {
           "id": 42,
           "node_name": "lgbtq2 lesbian",
-          "node_domain": "person",
+          "node_domain": "sexuality",
           "person_id": 17,
           "node_id": 173,
           "date_created": "2020-11-09T18:08:12.049461",
@@ -1207,7 +1207,7 @@
         {
           "id": 173,
           "node_name": "lgbtq2 lesbian",
-          "domain_token": "person",
+          "domain_token": "sexuality",
           "translation": "",
           "synonyms": [
             ""
@@ -1218,7 +1218,7 @@
         {
           "id": 43,
           "node_name": "jamaican-canadian",
-          "node_domain": "person",
+          "node_domain": "race_culture",
           "person_id": 17,
           "node_id": 174,
           "date_created": "2020-11-09T18:11:26.871326",
@@ -1232,7 +1232,7 @@
         {
           "id": 174,
           "node_name": "jamaican-canadian",
-          "domain_token": "person",
+          "domain_token": "race_culture",
           "translation": "",
           "synonyms": [
             ""
@@ -1243,7 +1243,7 @@
         {
           "id": 45,
           "node_name": "career",
-          "node_domain": "person",
+          "node_domain": "employment_status",
           "person_id": 17,
           "node_id": 175,
           "date_created": "2020-11-09T18:13:31.983535",
@@ -1257,7 +1257,7 @@
         {
           "id": 175,
           "node_name": "career",
-          "domain_token": "person",
+          "domain_token": "employment_status",
           "translation": "",
           "synonyms": [
             ""
@@ -1268,7 +1268,7 @@
         {
           "id": 44,
           "node_name": "career",
-          "node_domain": "person",
+          "node_domain": "employment_status",
           "person_id": 17,
           "node_id": 175,
           "date_created": "2020-11-09T18:13:15.923942",
@@ -1282,7 +1282,7 @@
         {
           "id": 175,
           "node_name": "career",
-          "domain_token": "person",
+          "domain_token": "employment_status",
           "translation": "",
           "synonyms": [
             ""
@@ -1303,7 +1303,7 @@
         {
           "id": 49,
           "node_name": "father",
-          "node_domain": "person",
+          "node_domain": "relationship_caregiving",
           "person_id": 18,
           "node_id": 1,
           "date_created": "2020-11-10T17:29:09.562113",
@@ -1317,7 +1317,7 @@
         {
           "id": 1,
           "node_name": "father",
-          "domain_token": "person",
+          "domain_token": "relationship_caregiving",
           "translation": "",
           "synonyms": [
             ""
@@ -1328,7 +1328,7 @@
         {
           "id": 47,
           "node_name": "white",
-          "node_domain": "person",
+          "node_domain": "race_culture",
           "person_id": 18,
           "node_id": 5,
           "date_created": "2020-11-10T17:27:03.995781",
@@ -1342,7 +1342,7 @@
         {
           "id": 5,
           "node_name": "white",
-          "domain_token": "role",
+          "domain_token": "race_culture",
           "translation": "",
           "synonyms": [
             ""
@@ -1353,7 +1353,7 @@
         {
           "id": 46,
           "node_name": "executive",
-          "node_domain": "role",
+          "node_domain": "organizational_role",
           "person_id": 18,
           "node_id": 7,
           "date_created": "2020-11-10T17:23:54.060085",
@@ -1367,7 +1367,7 @@
         {
           "id": 7,
           "node_name": "executive",
-          "domain_token": "role",
+          "domain_token": "organizational_role",
           "translation": "",
           "synonyms": [
             ""
@@ -1378,7 +1378,7 @@
         {
           "id": 48,
           "node_name": "innovator",
-          "node_domain": "role",
+          "node_domain": "community_role",
           "person_id": 18,
           "node_id": 8,
           "date_created": "2020-11-10T17:28:09.321198",
@@ -1392,7 +1392,7 @@
         {
           "id": 8,
           "node_name": "innovator",
-          "domain_token": "system",
+          "domain_token": "community_role",
           "translation": "",
           "synonyms": [
             ""
@@ -1413,7 +1413,7 @@
         {
           "id": 53,
           "node_name": "father",
-          "node_domain": "person",
+          "node_domain": "relationship_caregiving",
           "person_id": 19,
           "node_id": 1,
           "date_created": "2020-11-18T20:45:41.478802",
@@ -1427,7 +1427,7 @@
         {
           "id": 1,
           "node_name": "father",
-          "domain_token": "person",
+          "domain_token": "relationship_caregiving",
           "translation": "",
           "synonyms": [
             ""
@@ -1438,7 +1438,7 @@
         {
           "id": 56,
           "node_name": "gen x",
-          "node_domain": "person",
+          "node_domain": "age",
           "person_id": 19,
           "node_id": 3,
           "date_created": "2020-11-18T20:49:10.258888",
@@ -1452,7 +1452,7 @@
         {
           "id": 3,
           "node_name": "gen x",
-          "domain_token": "person",
+          "domain_token": "age",
           "translation": "",
           "synonyms": [
             ""
@@ -1463,7 +1463,7 @@
         {
           "id": 50,
           "node_name": "executive",
-          "node_domain": "role",
+          "node_domain": "organizational_role",
           "person_id": 19,
           "node_id": 7,
           "date_created": "2020-11-18T19:29:27.305787",
@@ -1477,7 +1477,7 @@
         {
           "id": 7,
           "node_name": "executive",
-          "domain_token": "role",
+          "domain_token": "organizational_role",
           "translation": "",
           "synonyms": [
             ""
@@ -1488,7 +1488,7 @@
         {
           "id": 57,
           "node_name": "innovator",
-          "node_domain": "role",
+          "node_domain": "community_role",
           "person_id": 19,
           "node_id": 8,
           "date_created": "2020-11-18T20:50:09.028878",
@@ -1502,7 +1502,7 @@
         {
           "id": 8,
           "node_name": "innovator",
-          "domain_token": "system",
+          "domain_token": "community_role",
           "translation": "",
           "synonyms": [
             ""
@@ -1513,7 +1513,7 @@
         {
           "id": 54,
           "node_name": "university education",
-          "node_domain": "person",
+          "node_domain": "education",
           "person_id": 19,
           "node_id": 100,
           "date_created": "2020-11-18T20:46:43.152033",
@@ -1526,7 +1526,7 @@
         {
           "id": 100,
           "node_name": "university education",
-          "domain_token": "person",
+          "domain_token": "education",
           "translation": "",
           "synonyms": [
             ""
@@ -1537,7 +1537,7 @@
         {
           "id": 59,
           "node_name": "male",
-          "node_domain": "person",
+          "node_domain": "gender",
           "person_id": 19,
           "node_id": 116,
           "date_created": "2020-11-18T20:52:28.887120",
@@ -1551,7 +1551,7 @@
         {
           "id": 116,
           "node_name": "male",
-          "domain_token": "person",
+          "domain_token": "gender",
           "translation": "",
           "synonyms": [
             ""
@@ -1562,7 +1562,7 @@
         {
           "id": 61,
           "node_name": "heterosexual",
-          "node_domain": "person",
+          "node_domain": "sexuality",
           "person_id": 19,
           "node_id": 118,
           "date_created": "2020-12-10T20:13:47.279685",
@@ -1574,7 +1574,7 @@
         {
           "id": 118,
           "node_name": "heterosexual",
-          "domain_token": "person",
+          "domain_token": "sexuality",
           "translation": "",
           "synonyms": [
             ""
@@ -1585,7 +1585,7 @@
         {
           "id": 58,
           "node_name": "heterosexual",
-          "node_domain": "person",
+          "node_domain": "sexuality",
           "person_id": 19,
           "node_id": 118,
           "date_created": "2020-11-18T20:50:59.252223",
@@ -1597,7 +1597,7 @@
         {
           "id": 118,
           "node_name": "heterosexual",
-          "domain_token": "person",
+          "domain_token": "sexuality",
           "translation": "",
           "synonyms": [
             ""
@@ -1608,7 +1608,7 @@
         {
           "id": 52,
           "node_name": "grew up middle class",
-          "node_domain": "person",
+          "node_domain": "socio_economic",
           "person_id": 19,
           "node_id": 176,
           "date_created": "2020-11-18T20:44:40.496170",
@@ -1621,7 +1621,7 @@
         {
           "id": 176,
           "node_name": "grew up middle class",
-          "domain_token": "person",
+          "domain_token": "socio_economic",
           "translation": "",
           "synonyms": [
             ""
@@ -1632,7 +1632,7 @@
         {
           "id": 51,
           "node_name": "grew up middle class",
-          "node_domain": "person",
+          "node_domain": "socio_economic",
           "person_id": 19,
           "node_id": 176,
           "date_created": "2020-11-18T20:44:40.482857",
@@ -1645,7 +1645,7 @@
         {
           "id": 176,
           "node_name": "grew up middle class",
-          "domain_token": "person",
+          "domain_token": "socio_economic",
           "translation": "",
           "synonyms": [
             ""
@@ -1656,7 +1656,7 @@
         {
           "id": 55,
           "node_name": "divorced",
-          "node_domain": "person",
+          "node_domain": "relationship_caregiving",
           "person_id": 19,
           "node_id": 177,
           "date_created": "2020-11-18T20:47:30.035242",
@@ -1670,7 +1670,7 @@
         {
           "id": 177,
           "node_name": "divorced",
-          "domain_token": "person",
+          "domain_token": "relationship_caregiving",
           "translation": "",
           "synonyms": [
             ""
@@ -1681,7 +1681,7 @@
         {
           "id": 62,
           "node_name": "virtual worker",
-          "node_domain": "role",
+          "node_domain": "other",
           "person_id": 19,
           "node_id": 179,
           "date_created": "2021-01-13T19:06:30.268605",
@@ -1695,7 +1695,7 @@
         {
           "id": 179,
           "node_name": "virtual worker",
-          "domain_token": "role",
+          "domain_token": "other",
           "translation": "",
           "synonyms": [
             ""
@@ -1716,7 +1716,7 @@
         {
           "id": 60,
           "node_name": "husband",
-          "node_domain": "person",
+          "node_domain": "relationship_caregiving",
           "person_id": 20,
           "node_id": 178,
           "date_created": "2020-12-04T19:43:18.024678",
@@ -1730,7 +1730,7 @@
         {
           "id": 178,
           "node_name": "husband",
-          "domain_token": "person",
+          "domain_token": "relationship_caregiving",
           "translation": "",
           "synonyms": [
             ""
@@ -1751,7 +1751,7 @@
         {
           "id": 66,
           "node_name": "white",
-          "node_domain": "person",
+          "node_domain": "race_culture",
           "person_id": 21,
           "node_id": 5,
           "date_created": "2021-01-14T15:15:37.050555",
@@ -1765,7 +1765,7 @@
         {
           "id": 5,
           "node_name": "white",
-          "domain_token": "role",
+          "domain_token": "race_culture",
           "translation": "",
           "synonyms": [
             ""
@@ -1776,7 +1776,7 @@
         {
           "id": 64,
           "node_name": "low socioeconomic upbringing",
-          "node_domain": "person",
+          "node_domain": "socio_economic",
           "person_id": 21,
           "node_id": 93,
           "date_created": "2021-01-14T15:08:28.205385",
@@ -1790,7 +1790,7 @@
         {
           "id": 93,
           "node_name": "low socioeconomic upbringing",
-          "domain_token": "person",
+          "domain_token": "socio_economic",
           "translation": "",
           "synonyms": [
             ""
@@ -1801,7 +1801,7 @@
         {
           "id": 67,
           "node_name": "working mother",
-          "node_domain": "person",
+          "node_domain": "relationship_caregiving",
           "person_id": 21,
           "node_id": 160,
           "date_created": "2021-01-14T15:17:34.480681",
@@ -1815,7 +1815,7 @@
         {
           "id": 160,
           "node_name": "working mother",
-          "domain_token": "person",
+          "domain_token": "relationship_caregiving",
           "translation": "",
           "synonyms": [
             ""
@@ -1826,7 +1826,7 @@
         {
           "id": 63,
           "node_name": "white mother from lower class",
-          "node_domain": "role",
+          "node_domain": "other",
           "person_id": 21,
           "node_id": 180,
           "date_created": "2021-01-14T15:04:37.608122",
@@ -1840,7 +1840,7 @@
         {
           "id": 180,
           "node_name": "white mother from lower class",
-          "domain_token": "role",
+          "domain_token": "other",
           "translation": "",
           "synonyms": [
             ""
@@ -1851,7 +1851,7 @@
         {
           "id": 65,
           "node_name": "woman",
-          "node_domain": "person",
+          "node_domain": "gender",
           "person_id": 21,
           "node_id": 181,
           "date_created": "2021-01-14T15:09:44.792967",
@@ -1865,7 +1865,7 @@
         {
           "id": 181,
           "node_name": "woman",
-          "domain_token": "person",
+          "domain_token": "gender",
           "translation": "",
           "synonyms": [
             ""
@@ -1876,7 +1876,7 @@
         {
           "id": 68,
           "node_name": "highly educated",
-          "node_domain": "person",
+          "node_domain": "education",
           "person_id": 21,
           "node_id": 182,
           "date_created": "2021-01-14T15:19:17.088100",
@@ -1890,7 +1890,7 @@
         {
           "id": 182,
           "node_name": "highly educated",
-          "domain_token": "person",
+          "domain_token": "education",
           "translation": "",
           "synonyms": [
             ""
@@ -1901,7 +1901,7 @@
         {
           "id": 69,
           "node_name": "young-looking genxer",
-          "node_domain": "person",
+          "node_domain": "age",
           "person_id": 21,
           "node_id": 183,
           "date_created": "2021-01-14T15:52:50.736409",
@@ -1915,7 +1915,7 @@
         {
           "id": 183,
           "node_name": "young-looking genxer",
-          "domain_token": "person",
+          "domain_token": "age",
           "translation": "",
           "synonyms": [
             ""
@@ -1936,7 +1936,7 @@
         {
           "id": 75,
           "node_name": "white",
-          "node_domain": "person",
+          "node_domain": "race_culture",
           "person_id": 22,
           "node_id": 5,
           "date_created": "2021-02-18T20:05:47.487561",
@@ -1950,7 +1950,7 @@
         {
           "id": 5,
           "node_name": "white",
-          "domain_token": "role",
+          "domain_token": "race_culture",
           "translation": "",
           "synonyms": [
             ""
@@ -1961,7 +1961,7 @@
         {
           "id": 70,
           "node_name": "childless",
-          "node_domain": "person",
+          "node_domain": "relationship_caregiving",
           "person_id": 22,
           "node_id": 184,
           "date_created": "2021-02-18T19:49:12.137178",
@@ -1975,7 +1975,7 @@
         {
           "id": 184,
           "node_name": "childless",
-          "domain_token": "person",
+          "domain_token": "relationship_caregiving",
           "translation": "",
           "synonyms": [
             ""
@@ -1986,7 +1986,7 @@
         {
           "id": 71,
           "node_name": "grew up poor",
-          "node_domain": "person",
+          "node_domain": "socio_economic",
           "person_id": 22,
           "node_id": 185,
           "date_created": "2021-02-18T19:50:37.076003",
@@ -2000,7 +2000,7 @@
         {
           "id": 185,
           "node_name": "grew up poor",
-          "domain_token": "person",
+          "domain_token": "socio_economic",
           "translation": "",
           "synonyms": [
             ""
@@ -2011,7 +2011,7 @@
         {
           "id": 72,
           "node_name": "bisexual but passing",
-          "node_domain": "person",
+          "node_domain": "sexuality",
           "person_id": 22,
           "node_id": 186,
           "date_created": "2021-02-18T19:53:10.613272",
@@ -2025,7 +2025,7 @@
         {
           "id": 186,
           "node_name": "bisexual but passing",
-          "domain_token": "person",
+          "domain_token": "sexuality",
           "translation": "",
           "synonyms": [
             ""
@@ -2036,7 +2036,7 @@
         {
           "id": 73,
           "node_name": "caregiver to parents not childr",
-          "node_domain": "person",
+          "node_domain": "relationship_caregiving",
           "person_id": 22,
           "node_id": 187,
           "date_created": "2021-02-18T19:56:52.666527",
@@ -2050,7 +2050,7 @@
         {
           "id": 187,
           "node_name": "caregiver to parents not childr",
-          "domain_token": "person",
+          "domain_token": "relationship_caregiving",
           "translation": "",
           "synonyms": [
             ""
@@ -2061,7 +2061,7 @@
         {
           "id": 74,
           "node_name": "non-driver",
-          "node_domain": "person",
+          "node_domain": "other",
           "person_id": 22,
           "node_id": 188,
           "date_created": "2021-02-18T19:59:51.770264",
@@ -2075,7 +2075,7 @@
         {
           "id": 188,
           "node_name": "non-driver",
-          "domain_token": "person",
+          "domain_token": "other",
           "translation": "",
           "synonyms": [
             ""
@@ -2086,7 +2086,7 @@
         {
           "id": 76,
           "node_name": "from ol minority community",
-          "node_domain": "person",
+          "node_domain": "language",
           "person_id": 22,
           "node_id": 189,
           "date_created": "2021-02-18T20:08:04.258723",
@@ -2100,7 +2100,7 @@
         {
           "id": 189,
           "node_name": "from ol minority community",
-          "domain_token": "person",
+          "domain_token": "language",
           "translation": "",
           "synonyms": [
             ""
@@ -2121,7 +2121,7 @@
         {
           "id": 77,
           "node_name": "millenial",
-          "node_domain": "person",
+          "node_domain": "age",
           "person_id": 23,
           "node_id": 9,
           "date_created": "2021-03-09T15:15:26.627587",
@@ -2135,7 +2135,7 @@
         {
           "id": 9,
           "node_name": "millenial",
-          "domain_token": "person",
+          "domain_token": "age",
           "translation": "",
           "synonyms": [
             ""
@@ -2146,7 +2146,7 @@
         {
           "id": 79,
           "node_name": "senior policy analyst",
-          "node_domain": "role",
+          "node_domain": "organizational_role",
           "person_id": 23,
           "node_id": 11,
           "date_created": "2021-03-09T15:16:34.329999",
@@ -2160,7 +2160,7 @@
         {
           "id": 11,
           "node_name": "senior policy analyst",
-          "domain_token": "role",
+          "domain_token": "organizational_role",
           "translation": "",
           "synonyms": [
             ""
@@ -2181,7 +2181,7 @@
         {
           "id": 78,
           "node_name": "pwg",
-          "node_domain": "person",
+          "node_domain": "other",
           "person_id": 24,
           "node_id": 190,
           "date_created": "2021-03-09T15:16:33.415250",
@@ -2195,7 +2195,7 @@
         {
           "id": 190,
           "node_name": "pwg",
-          "domain_token": "person",
+          "domain_token": "other",
           "translation": "",
           "synonyms": [
             ""
@@ -2216,7 +2216,7 @@
         {
           "id": 83,
           "node_name": "white",
-          "node_domain": "person",
+          "node_domain": "race_culture",
           "person_id": 25,
           "node_id": 5,
           "date_created": "2021-03-09T18:52:36.255472",
@@ -2230,7 +2230,7 @@
         {
           "id": 5,
           "node_name": "white",
-          "domain_token": "role",
+          "domain_token": "race_culture",
           "translation": "",
           "synonyms": [
             ""
@@ -2241,7 +2241,7 @@
         {
           "id": 80,
           "node_name": "c-ptsd",
-          "node_domain": "person",
+          "node_domain": "mental_health",
           "person_id": 25,
           "node_id": 191,
           "date_created": "2021-03-09T18:45:49.606106",
@@ -2255,7 +2255,7 @@
         {
           "id": 191,
           "node_name": "c-ptsd",
-          "domain_token": "person",
+          "domain_token": "mental_health",
           "translation": "",
           "synonyms": [
             ""
@@ -2266,7 +2266,7 @@
         {
           "id": 81,
           "node_name": "being gender fluid",
-          "node_domain": "person",
+          "node_domain": "gender",
           "person_id": 25,
           "node_id": 192,
           "date_created": "2021-03-09T18:46:58.490928",
@@ -2278,7 +2278,7 @@
         {
           "id": 192,
           "node_name": "being gender fluid",
-          "domain_token": "person",
+          "domain_token": "gender",
           "translation": "",
           "synonyms": [
             ""
@@ -2289,7 +2289,7 @@
         {
           "id": 82,
           "node_name": "queer",
-          "node_domain": "person",
+          "node_domain": "sexuality",
           "person_id": 25,
           "node_id": 193,
           "date_created": "2021-03-09T18:49:56.406224",
@@ -2303,7 +2303,7 @@
         {
           "id": 193,
           "node_name": "queer",
-          "domain_token": "person",
+          "domain_token": "sexuality",
           "translation": "",
           "synonyms": [
             ""
@@ -2314,7 +2314,7 @@
         {
           "id": 84,
           "node_name": "trades school education",
-          "node_domain": "role",
+          "node_domain": "education",
           "person_id": 25,
           "node_id": 194,
           "date_created": "2021-03-09T18:55:40.848203",
@@ -2328,7 +2328,7 @@
         {
           "id": 194,
           "node_name": "trades school education",
-          "domain_token": "role",
+          "domain_token": "education",
           "translation": "",
           "synonyms": [
             ""
@@ -2349,7 +2349,7 @@
         {
           "id": 87,
           "node_name": "woman",
-          "node_domain": "person",
+          "node_domain": "gender",
           "person_id": 26,
           "node_id": 181,
           "date_created": "2021-03-09T22:00:31.392415",
@@ -2363,7 +2363,7 @@
         {
           "id": 181,
           "node_name": "woman",
-          "domain_token": "person",
+          "domain_token": "gender",
           "translation": "",
           "synonyms": [
             ""
@@ -2374,7 +2374,7 @@
         {
           "id": 85,
           "node_name": "mental health",
-          "node_domain": "person",
+          "node_domain": "mental_health",
           "person_id": 26,
           "node_id": 195,
           "date_created": "2021-03-09T21:57:48.768043",
@@ -2387,7 +2387,7 @@
         {
           "id": 195,
           "node_name": "mental health",
-          "domain_token": "person",
+          "domain_token": "mental_health",
           "translation": "",
           "synonyms": [
             ""
@@ -2398,7 +2398,7 @@
         {
           "id": 86,
           "node_name": "acting manager",
-          "node_domain": "role",
+          "node_domain": "organizational_role",
           "person_id": 26,
           "node_id": 196,
           "date_created": "2021-03-09T21:59:08.986092",
@@ -2412,7 +2412,7 @@
         {
           "id": 196,
           "node_name": "acting manager",
-          "domain_token": "role",
+          "domain_token": "organizational_role",
           "translation": "",
           "synonyms": [
             ""
@@ -2433,7 +2433,7 @@
         {
           "id": 89,
           "node_name": "white",
-          "node_domain": "person",
+          "node_domain": "race_culture",
           "person_id": 27,
           "node_id": 5,
           "date_created": "2021-03-10T21:31:08.273034",
@@ -2446,7 +2446,7 @@
         {
           "id": 5,
           "node_name": "white",
-          "domain_token": "role",
+          "domain_token": "race_culture",
           "translation": "",
           "synonyms": [
             ""
@@ -2457,7 +2457,7 @@
         {
           "id": 93,
           "node_name": "francophone",
-          "node_domain": "person",
+          "node_domain": "language",
           "person_id": 27,
           "node_id": 104,
           "date_created": "2021-03-10T21:34:20.784882",
@@ -2471,7 +2471,7 @@
         {
           "id": 104,
           "node_name": "francophone",
-          "domain_token": "person",
+          "domain_token": "language",
           "translation": "",
           "synonyms": [
             ""
@@ -2482,7 +2482,7 @@
         {
           "id": 91,
           "node_name": "heterosexual",
-          "node_domain": "person",
+          "node_domain": "sexuality",
           "person_id": 27,
           "node_id": 118,
           "date_created": "2021-03-10T21:32:20.005924",
@@ -2494,7 +2494,7 @@
         {
           "id": 118,
           "node_name": "heterosexual",
-          "domain_token": "person",
+          "domain_token": "sexuality",
           "translation": "",
           "synonyms": [
             ""
@@ -2505,7 +2505,7 @@
         {
           "id": 92,
           "node_name": "young",
-          "node_domain": "person",
+          "node_domain": "age",
           "person_id": 27,
           "node_id": 129,
           "date_created": "2021-03-10T21:33:02.061661",
@@ -2519,7 +2519,7 @@
         {
           "id": 129,
           "node_name": "young",
-          "domain_token": "person",
+          "domain_token": "age",
           "translation": "",
           "synonyms": [
             ""
@@ -2530,7 +2530,7 @@
         {
           "id": 90,
           "node_name": "researcher",
-          "node_domain": "role",
+          "node_domain": "organizational_role",
           "person_id": 27,
           "node_id": 141,
           "date_created": "2021-03-10T21:31:48.394184",
@@ -2544,7 +2544,7 @@
         {
           "id": 141,
           "node_name": "researcher",
-          "domain_token": "role",
+          "domain_token": "organizational_role",
           "translation": "",
           "synonyms": [
             ""
@@ -2555,7 +2555,7 @@
         {
           "id": 88,
           "node_name": "woman",
-          "node_domain": "person",
+          "node_domain": "gender",
           "person_id": 27,
           "node_id": 181,
           "date_created": "2021-03-10T21:29:37.384841",
@@ -2569,7 +2569,7 @@
         {
           "id": 181,
           "node_name": "woman",
-          "domain_token": "person",
+          "domain_token": "gender",
           "translation": "",
           "synonyms": [
             ""
@@ -2590,7 +2590,7 @@
         {
           "id": 94,
           "node_name": "student",
-          "node_domain": "role",
+          "node_domain": "education",
           "person_id": 28,
           "node_id": 197,
           "date_created": "2021-03-12T11:57:17.035555",
@@ -2604,7 +2604,7 @@
         {
           "id": 197,
           "node_name": "student",
-          "domain_token": "role",
+          "domain_token": "education",
           "translation": "",
           "synonyms": [
             ""

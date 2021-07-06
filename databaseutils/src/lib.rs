@@ -40,7 +40,7 @@ pub fn create_user(organizational_role: &str) -> Result<i32, CustomError> {
         user_name: user_name.trim().to_string(),
         email: email.to_lowercase().trim().to_string(),
         password: hash.trim().to_string(),
-        organizational_role: organizational_role.to_owned(),
+        role: organizational_role.to_owned(),
         validated: true,
     };
 
@@ -60,7 +60,7 @@ pub fn create_test_admin() -> Result<i32, CustomError> {
             user_name: "admin".to_owned(),
             email: "admin@email.com".to_owned(),
             password: "ChumbaWumba11".to_owned(),
-            organizational_role: "admin".to_owned(),
+            role: "admin".to_owned(),
             validated: true,
         }
     )?;
