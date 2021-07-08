@@ -291,6 +291,7 @@ pub async fn import_demo_data(community_id: i32) {
                 let l = models::Experience::new(
                     raw_exp.name_id.clone(),
                     node.domain_token.to_owned(),
+                    3,
                     person.id,
                     node.id, 
                     raw_exp.phrase_ids.clone(),
@@ -527,7 +528,8 @@ pub async fn generate_dummy_data(community_id: i32) {
         models::Experiences::create(
             &models::Experience::new(
                 exp.name_id, 
-                l.1.to_string(), 
+                l.1.to_string(),
+                3,
                 l.2, 
                 l.3, 
                 exp.phrase_ids, 

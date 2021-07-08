@@ -211,6 +211,7 @@ pub async fn community_node_page(
                                     id: l.id,
                                     node_name: l.node_name.to_owned(),
                                     node_domain: l.node_domain.to_owned(),
+                                    importance: l.importance,
                                     person_id: l.person_id,
                                     node_id: l.node_id,
                                     date_created: l.date_created,

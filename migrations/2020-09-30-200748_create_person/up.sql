@@ -68,8 +68,7 @@ CREATE TABLE nodes (
         'employment_status',
         'organizational_role',
         'community_role',
-        'other',
-        'person', 'role', 'system'
+        'other'
     )),
     synonyms INT[] NOT NULL default '{}',
     slug VARCHAR(48) UNIQUE NOT NULL
@@ -95,9 +94,9 @@ CREATE TABLE experiences (
         'employment_status',
         'organizational_role',
         'community_role',
-        'other',
-        'person', 'role', 'system'
+        'other'
     )),
+    importance INT NOT NULL DEFAULT 3,
     person_id INT NOT NULL,
     FOREIGN KEY(person_id)
         REFERENCES people(id) ON DELETE CASCADE,

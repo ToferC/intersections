@@ -35,6 +35,7 @@ table! {
         id -> Int4,
         node_name -> Int4,
         node_domain -> Varchar,
+        importance -> Int4,
         person_id -> Int4,
         node_id -> Int4,
         date_created -> Timestamp,

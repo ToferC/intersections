@@ -21,9 +21,9 @@
 
             {% set experience_len = people_experiences | last %}
             {% set prog_bar = experience_len.experiences | length %}
-            {% set progbar_width = prog_bar / 12 * 100 %}
+            {% set progbar_width = prog_bar / 16 * 100 %}
 
-            <strong>{{ fluent(key="progress", lang=lang )}} ({{ prog_bar }}/12)</strong>
+            <strong>{{ fluent(key="progress-header", counter=prog_bar, lang=lang )}}</strong>
 
             <div class="progress">
                 <div class="progress-bar bg-success" style="width: {{progbar_width}}%" role="progressbar" aria-valuenow="prog_bar" aria-valuemin="0" aria-valuemax="100"></div>
@@ -56,7 +56,7 @@
             </div>
             -->
 
-            <!--
+            
     
                 <hr>
     
@@ -65,18 +65,31 @@
                 <fieldset>
                     <legend>{{ fluent(key="experience-is", lang=lang )}}</legend>
                     <div>
-                        <input type="radio" id="person" name="domain" value="Person" checked>
-                        <label for="person">{{ fluent(key="personal", lang=lang )}}</label>
+                        <input type="radio" id="not-important" name="importance" value=1>
+                        <label for="not-important">{{ fluent(key="not-important", lang=lang )}}</label>
                     </div>
     
                     <div>
-                        <input type="radio" id="role" name="domain" value="Role">
-                        <label for="role">{{ fluent(key="organizational", lang=lang )}}</label>
+                        <input type="radio" id="slightly-important" name="importance" value=2>
+                        <label for="slightly-important">{{ fluent(key="slightly-important", lang=lang )}}</label>
+                    </div>
+    
+                    <div>
+                        <input type="radio" id="moderately-important" name="importance" value=3 checked>
+                        <label for="moderately-important">{{ fluent(key="moderately-important", lang=lang )}}</label>
+                    </div>
+    
+                    <div>
+                        <input type="radio" id="very-important" name="importance" value=4>
+                        <label for="very-important">{{ fluent(key="very-important", lang=lang )}}</label>
+                    </div>
+    
+                    <div>
+                        <input type="radio" id="extremely-important" name="importance" value=5>
+                        <label for="extremely-important">{{ fluent(key="extremely-important", lang=lang )}}</label>
                     </div>
                 </fieldset>
 
-            -->
-    
                 <hr>
                 
                 <h2>{{ fluent(key="question-three", lang=lang )}}</h2>

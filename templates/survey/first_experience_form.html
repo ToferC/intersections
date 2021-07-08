@@ -31,15 +31,15 @@
         </div>
         <hr>
 
-        <div class="row">
-            <h2>{{ fluent(key="question-one-survey", number=0, lang=lang )}}</h2>
-            
-            <label>
-                <input class="form-control form-control-lg mdb-autocomplete" id="node_name_autocomplete" name="name" placeholder="{{ fluent(key="question-one-placeholder", number=0, lang=lang )}}" required
-                maxlength="32" autocomplete="off">
-                <small id="experience_help" class="form-text text-muted">{{ fluent(key="question-one-helper", number=0, lang=lang )}}</small>
-            </label>
-            <!--
+        <h2>{{ fluent(key="question-one-survey", number=0, lang=lang )}}</h2>
+        
+        <label>
+            <input class="form-control form-control-lg mdb-autocomplete" id="node_name_autocomplete" name="name" placeholder="{{ fluent(key="question-one-placeholder", number=0, lang=lang )}}" required
+            maxlength="32" autocomplete="off">
+            <small id="experience_help" class="form-text text-muted">{{ fluent(key="question-one-helper", number=0, lang=lang )}}</small>
+        </label>
+        <!--
+            <div class="row">
             <div class="col m-md-2 m-1">
             </div>
             <div class="col m-md-2 m-1">
@@ -48,10 +48,9 @@
                     <p>{{ fluent(key="learning-one", lang=lang )}}</p>
                 </div>
             </div>
-        -->
         </div>
+        -->
 
-        <!--
             <hr>
 
             <h2>{{ fluent(key="question-two", lang=lang )}}</h2>
@@ -59,17 +58,31 @@
             <fieldset>
                 <legend>{{ fluent(key="experience-is", lang=lang )}}</legend>
                 <div>
-                    <input type="radio" id="person" name="domain" value="Person" checked>
-                    <label for="person">{{ fluent(key="personal", lang=lang )}}</label>
+                    <input type="radio" id="not-important" name="importance" value=1>
+                    <label for="not-important">{{ fluent(key="not-important", lang=lang )}}</label>
                 </div>
 
                 <div>
-                    <input type="radio" id="role" name="domain" value="Role">
-                    <label for="role">{{ fluent(key="organizational", lang=lang )}}</label>
+                    <input type="radio" id="slightly-important" name="importance" value=2>
+                    <label for="slightly-important">{{ fluent(key="slightly-important", lang=lang )}}</label>
+                </div>
+
+                <div>
+                    <input type="radio" id="moderately-important" name="importance" value=3 checked>
+                    <label for="moderately-important">{{ fluent(key="moderately-important", lang=lang )}}</label>
+                </div>
+
+                <div>
+                    <input type="radio" id="very-important" name="importance" value=4>
+                    <label for="very-important">{{ fluent(key="very-important", lang=lang )}}</label>
+                </div>
+
+                <div>
+                    <input type="radio" id="extremely-important" name="importance" value=5>
+                    <label for="extremely-important">{{ fluent(key="extremely-important", lang=lang )}}</label>
                 </div>
             </fieldset>
 
-        -->
         <hr>
             
             <h2>{{ fluent(key="question-three", lang=lang )}}</h2>

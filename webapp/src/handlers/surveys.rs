@@ -17,6 +17,7 @@ use error_handler::error_handler::CustomError;
 pub struct FirstExperienceForm {
     name: String,
     domain: String,
+    importance: i32,
     response_1: String,
     response_2: String,
     response_3: String,
@@ -27,6 +28,7 @@ pub struct FirstExperienceForm {
 #[derive(Deserialize, Debug)]
 pub struct AddExperienceForm {
     name: String,
+    importance: i32,
     response_1: String,
     response_2: String,
     response_3: String,
@@ -246,6 +248,7 @@ pub async fn handle_experience_form_input(
                 let l = Experience::new(
                     node.node_name,
                     node.domain_token.clone(),
+                    form.importance,
                     new_person.id,
                     node.id,
                     raw_exp.phrase_ids,
@@ -431,6 +434,7 @@ pub async fn add_handle_experience_form_input(
     let l = Experience::new(
         node.node_name,
         node.domain_token.clone(),
+        form.importance,
         p.id,
         node.id,
         raw_exp.phrase_ids,

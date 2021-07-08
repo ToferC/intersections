@@ -8,7 +8,7 @@
     <div class="col-md m-md-2 m-1">
         <br>
         <h1>{{ phrases[node.node_name] | title }}</h1>
-        <p class="text-muted">{{ fluent(key="domain-in-community", domain=node.domain_token | title, community=phrases[community.tag], lang=lang )}}</p>
+        <p class="text-muted">{{ fluent(key="domain-token", lang=lang, token=node.domain_token)}} {{ fluent(key="in-community", community=phrases[community.tag], lang=lang )}}</p>
         <p><a href="/{{ lang }}/full_community_graph/{{ community.slug }}">{{ fluent(key="view-community-graph", lang=lang )}}</a> | <a href="/{{ lang }}">{{ fluent(key="return-to-index", lang=lang )}}</a></p>
         <p><a href="/{{ lang }}/community_node_graph/{{ community.slug }}/{{ node.slug }}">{{ fluent(key="view-graph-for", lang=lang )}} {{ phrases[node.node_name] }}</a></p>
         

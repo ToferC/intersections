@@ -160,24 +160,27 @@ question-one-survey = { $number  ->
     [6] 1. Add an experience related to your religious beliefs or faith.
     [7] 1. Add an experience related to your ability or a permanent or temporary disability.
     [8] 1. Add an experience related to your personality type.
-    [9] 1. Add an experience related to your age
+    [9] 1. Add an experience related to your age or generation
     [10] 1. Add an experience related to your current state of mental health.
     [11] 1. Add an experience related to your body image or perception.
     [12] 1. Add an experience related to your relationship status or caregiving responsibilities.
     [13] 1. Add an experience related to employment status.
+    [14] 1. Add an experience related to your role in your organization.
+    [15] 1. Add an experience related to your community status or affiliations.
     *[other] 1. Amazing. You’ve got the hang of this. Add as many additional experiences as you like.
 }
 
 domain-token = { $token -> 
     [race_culture] Race / Culture
-    [gender] Gender
+    [gender] Gender Expression
     [sexuality] Sexuality
     [socio_economic] Socio-economic
     [language] Language
+    [education] Education
     [religion] Religion
-    [ability_disability] Ability / Disability
+    [ability_disability] (Dis)ability
     [personality] Personality Type
-    [age] Age
+    [age] Age / Generation
     [mental_health] Mental Health
     [body_image] Body Image
     [relationship_caregiving] Relationships / Caregiving
@@ -202,11 +205,12 @@ question-one-placeholder = { $number  ->
     [11] E.g.: Slim, overweight, muscular, underweight, skinny...
     [12] E.g.: Parent, caregiver to my parents, married, divorced, single parent, without children...
     [13] E.g.: Employed, unemployed, student, part-time worker, gig worker...
+    [14] E.g.: Manager, policy analyst, administrative professional, executive...
+    [15] E.g.: Innovator, feminist, mentor, anti-racism advocate, environmentalist...
     *[other] Continue exploring: Personal experiences, upbringing, appearance, mannerisms...
 }
 
 question-one-helper = Enter a few words to name your experience here. You can find examples in the text box above.
-
 question-one-explanation = How would you describe this experience in your own words?
 question-one-details = You are more than just your job. Examples are: Mother, Father, Manager, Artist, Millenial, Black, Indigenous, White, Executive, New Employee. Anything that describes an element of who you are and that impacts your experience in the workplace.
 useful-framework = A useful framework for this exercise was developed by Ritu in
@@ -224,15 +228,16 @@ layer-socio-econ = Socioeconomic Status/Class
 layer-profession = Profession/Career
 
 ## Question Two
-question-two = 2. Is this experience part of you as a person or is it a role related to your work?
-question-two-explanation = Where does this experience come from. Is it a part of your identity, experience or culture? Is it a role that you have been given as part of your work? Is it a function you play within a network or system?
+question-two = 2. How important is this experience to you as part of your identity?
+question-two-explanation = Rate this experience in terms of it's importance from "Not at all important" to "Extremely important".
 question-two-shorthand = In shorthand, you can break it down like this:
-personal-experience = Personal Experience = part of your individual experience that exists outside of the workplace.
-organizational-role = Organizational Role = a formal or informal function or work role within the workplace.
 
 experience-is = This experience is...
-personal = A personal experience
-organizational = An organizational role
+not-important = Not at all important
+slightly-important = Slightly important
+moderately-important = Moderately important
+very-important = Very important
+extremely-important = Extremely important
 
 ## Question Three
 question-three = 3. Describe your experience
@@ -255,7 +260,7 @@ add-experience = Add an experience
 add-profile-code = If you already have a profile code, you can enter it here to connect your new profile with your existing profiles:
 profile-code-placeholder = Your previous profile code
 profile-code-helper = You only need to do this if you already have a previous profile and you'd like to connect it to a new profile.
-progress-header = Progress ({$counter}/6)
+progress-header = Progress ({$counter}/16)
 save-experience-button = Save Experience
 
 ## Tips
@@ -288,7 +293,7 @@ may-add-more = You can add more, if you like.
 
 ## Community Node
 node-in = node in
-domain-in-community = { $domain } in { $community } community
+in-community = in { $community } community
 view-community-graph = View community graph
 return-to-index = Return to Index
 view-graph-for = View graph for

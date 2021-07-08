@@ -26,6 +26,7 @@ use deepl_api::{DeepL, TranslatableTextList};
 pub struct Experience {
     pub node_name: i32,
     pub node_domain: String,
+    pub importance: i32,
     pub person_id: i32,
     pub node_id: i32,
     pub date_created: chrono::NaiveDateTime,
@@ -37,10 +38,11 @@ pub struct Experience {
 }
 
 impl Experience {
-    pub fn new(node_name: i32, node_domain: String, person_id: i32, node_id: i32, statements: Vec<i32>, inclusivity: BigDecimal, slug: String) -> Self {
+    pub fn new(node_name: i32, node_domain: String, importance: i32, person_id: i32, node_id: i32, statements: Vec<i32>, inclusivity: BigDecimal, slug: String) -> Self {
         Experience {
             node_name,
             node_domain,
+            importance,
             person_id,
             node_id, 
             date_created: chrono::Utc::now().naive_utc(),
@@ -54,6 +56,7 @@ impl Experience {
         Experience {
             node_name: experience.node_name,
             node_domain: experience.node_domain.clone(),
+            importance: experience.importance,
             person_id: experience.person_id,
             node_id: experience.node_id, 
             date_created: experience.date_created,
@@ -72,6 +75,7 @@ pub struct Experiences {
     pub id: i32,
     pub node_name: i32,
     pub node_domain: String,
+    pub importance: i32,
     pub person_id: i32,
     pub node_id: i32,
     pub date_created: chrono::NaiveDateTime,
