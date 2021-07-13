@@ -201,7 +201,7 @@
               let content = document.createElement('div');
 
               if (ele.data("node_type") == "Node") {
-                content.innerHTML = "Inclusivity: " + ele.data("inclusivity").toFixed(2) +"<br>" + "Count: " + ele.data("size");
+                content.innerHTML = "Inclusivity: " + ele.data("inclusivity").toFixed(2) + "<br>" + "Importance: " + ele.data("importance").toFixed(2) + " Count: " + ele.data("size");
               } else {
                 content.innerHTML = ele.data("weight");
               };
