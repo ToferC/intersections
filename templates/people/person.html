@@ -74,12 +74,14 @@
                     <table>
                         <tr>
                             <th style="text-align: center;">{{ fluent(key="experience", lang=lang )}}</th>
-                <th style="text-align: center;">{{ fluent(key="domain", lang=lang )}}</th>
-                <th style="text-align: center;">{{ fluent(key="inclusivity", lang=lang )}}</th>
+                            <th style="text-align: center;">{{ fluent(key="domain", lang=lang )}}</th>
+                            <th style="text-align: center;">{{ fluent(key="importance", lang=lang )}}</th>
+                            <th style="text-align: center;">{{ fluent(key="inclusivity", lang=lang )}}</th>
                         </tr>
                         <tr>
                             <td style="text-align: center;"><a href="/{{ lang }}/node/{{ experience.0.slug }}">{{ experience.1.0.text | title }}</a></td>
                             <td style="text-align: center;">{{ experience.0.node_domain | title }}</td>
+                            <td style="text-align: center;">{{ experience.0.mean_importance | round(method="ceil", precision=3) }}</td>
                             <td style="text-align: center;">
                                 {{ experience.0.inclusivity | float }}
                                 {% if experience.0.inclusivity | float > 0.2 %}
@@ -124,12 +126,14 @@
                 <th style="text-align: center;">{{ fluent(key="experience", lang=lang )}}</th>
                 <th style="text-align: center;">{{ fluent(key="domain", lang=lang )}}</th>
                 <th style="text-align: center;">{{ fluent(key="instances", lang=lang )}}</th>
+                <th style="text-align: center;">{{ fluent(key="importance", lang=lang )}}</th>
                 <th style="text-align: center;">{{ fluent(key="mean-inclusivity", lang=lang )}}</th>
             </tr>
             <tr>
                 <td style="text-align: center;"><a href="/{{ lang }}/community_node/{{ community.slug }}/{{ experience.slug }}">{{ experience.name | title }}</a></td>
                 <td style="text-align: center;">{{ experience.domain | title }}</td>
                 <td style="text-align: center;">{{ experience.count }}</td>
+                <td style="text-align: center;">{{ experience.mean_importance | round(method="ceil", precision=3) }}</td>
                 <td style="text-align: center;">
                     {{ experience.mean_inclusivity | round(method="ceil", precision=3) }}
                     {% if experience.mean_inclusivity | float > 0.2 %}
