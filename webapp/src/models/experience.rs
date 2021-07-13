@@ -258,6 +258,7 @@ pub struct AggregateExperience {
     pub domain: String,
     pub count: u32,
     pub mean_inclusivity: f32,
+    pub mean_importance: f32,
     pub frequency_distribution: Vec<(String, u32)>,
     pub slug: String,
 }
@@ -270,6 +271,7 @@ impl AggregateExperience {
         let slug = &experience_vec[0].slug;
         
         let mut inclusivity: f32 = 0.0;
+        let mut importance: f32 = 0.0;
         let mut counts = BTreeMap::new();
         
         let name = Phrases::find(experience_vec[0].node_name, &lang).expect("Unable to load experience name");
@@ -280,6 +282,7 @@ impl AggregateExperience {
             
             phrase_ids.extend(&e.statements);
             inclusivity += e.inclusivity.to_f32().expect("Unable to convert bigdecimal");
+            importance += e.importance.to_f32().expect("Unable to convert float to importance");
             
         };
         
@@ -300,6 +303,7 @@ impl AggregateExperience {
             domain: domain.to_owned(),
             count: count,
             mean_inclusivity: inclusivity / count as f32,
+            mean_importance: importance / count as f32,
             frequency_distribution: v,
             slug: slug.to_owned(),
         }

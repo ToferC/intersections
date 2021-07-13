@@ -40,12 +40,14 @@
                 <th style="text-align: center;">{{ fluent(key="experience", lang=lang )}}</th>
                 <th style="text-align: center;">{{ fluent(key="domain", lang=lang )}}</th>
                 <th style="text-align: center;">{{ fluent(key="instances", lang=lang )}}</th>
+                <th style="text-align: center;">{{ fluent(key="importance", lang=lang )}}</th>
                 <th style="text-align: center;">{{ fluent(key="mean-inclusivity", lang=lang )}}</th>
             </tr>
             <tr>
                 <td style="text-align: center;">{{ node_experience.name | title }}</td>
                 <td style="text-align: center;">{{ fluent(key="domain-token", lang=lang, token=node_experience.domain)}}</td>
                 <td style="text-align: center;">{{ node_experience.count }}</td>
+                <td style="text-align: center;">{{ node_experience.mean_importance | round(method="ceil", precision=3)}}</td>
                 <td style="text-align: center;">
                     {{ node_experience.mean_inclusivity | round(method="ceil", precision=3) }}
                     {% if node_experience.mean_inclusivity | float > 0.2 %}
@@ -88,12 +90,14 @@
                             <th style="text-align: center;">{{ fluent(key="experience", lang=lang )}}</th>
                             <th style="text-align: center;">{{ fluent(key="domain", lang=lang )}}</th>
                             <th style="text-align: center;">{{ fluent(key="instances", lang=lang )}}</th>
+                            <th style="text-align: center;">{{ fluent(key="importance", lang=lang )}}</th>
                             <th style="text-align: center;">{{ fluent(key="mean-inclusivity", lang=lang )}}</th>
                         </tr>
                         <tr>
                             <td style="text-align: center;"><a href="/{{ lang }}/community_node/{{ community.slug }}/{{ experience.slug }}">{{ experience.name | title }}</a></td>
                             <td style="text-align: center;">{{ fluent(key="domain-token", lang=lang, token=experience.domain)}}</td>
                             <td style="text-align: center;">{{ experience.count }}</td>
+                            <td style="text-align: center;">{{ experience.mean_importance | round(method="ceil", precision=3) }}</td>
                             <td style="text-align: center;">
                                 {{ experience.mean_inclusivity | round(method="ceil", precision=3) }}
                                 {% if experience.mean_inclusivity | float > 0.2 %}

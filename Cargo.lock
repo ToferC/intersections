@@ -1250,6 +1250,7 @@ dependencies = [
  "error_handler",
  "futures",
  "num-bigint 0.2.6",
+ "rand 0.7.3",
  "serde",
  "serde_derive",
  "serde_json",

@@ -10,6 +10,7 @@ edition = "2018"
 webapp = { path = "../webapp" }
 database = { path = "../database"}
 error_handler = { path = "../error_handler" }
+rand = "*"
 
 tokio = { version = "0.2", features = ["full"] }
 futures = "*"
