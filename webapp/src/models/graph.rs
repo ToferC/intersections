@@ -63,6 +63,7 @@ pub struct GNode {
     pub size: i32,
     pub color: String,
     pub inclusivity: f32,
+    pub importance: f32,
     pub href: String,
 }
 
@@ -180,6 +181,7 @@ impl GNode {
             size: a.count as i32,
             color: colour,
             inclusivity: a.mean_inclusivity.to_f32().expect("Unable to convert BigDecimal"),
+            importance: a.mean_importance.to_f32().expect("Unable to convert importance to float"),
             href,
         };
 
