@@ -60,7 +60,8 @@ pub struct GNode {
     pub node_type: String,
     pub text: Vec<String>,
     pub shape: String,
-    pub size: i32,
+    pub count: i32,
+    pub size: f32,
     pub color: String,
     pub inclusivity: f32,
     pub importance: f32,
@@ -149,9 +150,9 @@ impl GNode {
     pub fn from_agg_experience(a: &AggregateExperience, community: &Option<String>, lang: &str) -> GNode {
 
         let (colour, shape): (String, String) = if a.domain == "person" {
-            (String::from("green"), String::from("ellipse"))
+            (String::from("green"), String::from("rectangle"))
         } else {
-            (String::from("blue"), String::from("rectangle"))
+            (String::from("blue"), String::from("ellipse"))
         };
 
         let href = match community {
@@ -178,7 +179,8 @@ impl GNode {
             node_type: String::from("Node"),
             text: vec![a.domain.to_owned()],
             shape: shape,
-            size: a.count as i32,
+            count: a.count as i32,
+            size: a.mean_importance.to_f32().expect("Unable to convert importance to float") * 5.0,
             color: colour,
             inclusivity: a.mean_inclusivity.to_f32().expect("Unable to convert BigDecimal"),
             importance: a.mean_importance.to_f32().expect("Unable to convert importance to float"),

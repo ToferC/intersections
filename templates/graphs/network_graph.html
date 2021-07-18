@@ -90,8 +90,8 @@
     <div class='legend-title'>{{ fluent(key="legend", lang=lang )}}</div>
     <div class='legend-scale'>
       <ul class='legend-labels' id="legend">
-        <li><span class="round" style='background:#999ac0'></span>{{ fluent(key="personal-experience-legend", lang=lang )}}</li>
-        <li><span style='background:#999ac0;'></span>{{ fluent(key="organizational-role-legend", lang=lang )}}</li>
+        <li><span class="round", style='background:#999ac0; height: 7px; width: 7px;'></span>{{ fluent(key="low-importance-legend", lang=lang )}}</li>
+        <li><span class="round" style='background:#999ac0;'></span>{{ fluent(key="high-importance-legend", lang=lang )}}</li>
         <li>-------</li>
         <li><span style='background: #00429d;'></span>{{ fluent(key="lowest-inclusivity", lang=lang )}}</li>
         <li><span style='background: #616caf;'></span>{{ fluent(key="negative-inclusivity", lang=lang )}}</li>
@@ -191,11 +191,9 @@
               let content = document.createElement('div');
 
               if (ele.data("node_type") == "Node") {
-                content.innerHTML = ele.data("text");
-              } else if (ele.data("node_type") == "Person") {
-                content.innerHTML = ele.data("text");
+                content.innerHTML = "Inclusivity: " + ele.data("inclusivity").toFixed(2) + "<br>" + "Importance: " + ele.data("importance").toFixed(2) + " Count: " + ele.data("count");
               } else {
-                content.innerHTML = ele.data("text");
+                content.innerHTML = ele.data("weight");
               };
 
               return content;
