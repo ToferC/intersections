@@ -65,28 +65,28 @@
                 <fieldset>
                     <legend>{{ fluent(key="experience-is", lang=lang )}}</legend>
                     <div>
-                        <input type="radio" id="not-important" name="importance" value=1>
-                        <label for="not-important">{{ fluent(key="not-important", lang=lang )}}</label>
+                        <input type="radio" id="extremely-important" name="importance" value=5>
+                        <label for="extremely-important">{{ fluent(key="extremely-important", lang=lang )}}</label>
                     </div>
-    
+                    
+                    <div>
+                        <input type="radio" id="very-important" name="importance" value=4>
+                        <label for="very-important">{{ fluent(key="very-important", lang=lang )}}</label>
+                    </div>
+                    
+                    <div>
+                        <input type="radio" id="moderately-important" name="importance" value=3 checked>
+                        <label for="moderately-important">{{ fluent(key="moderately-important", lang=lang )}}</label>
+                    </div>
+                    
                     <div>
                         <input type="radio" id="slightly-important" name="importance" value=2>
                         <label for="slightly-important">{{ fluent(key="slightly-important", lang=lang )}}</label>
                     </div>
     
                     <div>
-                        <input type="radio" id="moderately-important" name="importance" value=3 checked>
-                        <label for="moderately-important">{{ fluent(key="moderately-important", lang=lang )}}</label>
-                    </div>
-    
-                    <div>
-                        <input type="radio" id="very-important" name="importance" value=4>
-                        <label for="very-important">{{ fluent(key="very-important", lang=lang )}}</label>
-                    </div>
-    
-                    <div>
-                        <input type="radio" id="extremely-important" name="importance" value=5>
-                        <label for="extremely-important">{{ fluent(key="extremely-important", lang=lang )}}</label>
+                        <input type="radio" id="not-important" name="importance" value=1>
+                        <label for="not-important">{{ fluent(key="not-important", lang=lang )}}</label>
                     </div>
                 </fieldset>
 

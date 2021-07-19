@@ -6,7 +6,7 @@
 
 {% block content %}
 
-    <div class="col m-md-2 m-1">
+    <div class="col-md m-md-2 m-1">
         <br>
         <h1>{{ title }}</h1>
         <p><a href="/{{ lang }}/full_community_graph/{{ community.slug }}">{{ fluent(key="view-community-graph", lang=lang )}}</a> | <a href="/">{{ fluent(key="return-to-index", lang=lang )}}</a></p>
@@ -17,25 +17,28 @@
 
         <form name="EmailForm" id="emailForm" action=/{{ lang }}/person/{{ person.code }} method=POST>
         
-        <label>
-            <strong>{{ fluent(key="send-me-email", lang=lang )}}</strong>
-            <input class="form-control form-control-lg" type="email" name="email" placeholder="yourname@domain.com" required>
-            <small id="code_help" class="form-text text-muted">{{ fluent(key="enter-email-here", lang=lang )}}</small>
-        </label>
-        <br>
+            <label>
+                <strong>{{ fluent(key="send-me-email", lang=lang )}}</strong>
+                <input class="form-control form-control-lg" type="email" name="email" placeholder="yourname@domain.com" required>
+                <small id="code_help" class="form-text text-muted">{{ fluent(key="enter-email-here", lang=lang )}}</small>
+            </label>
+            <br>
 
-        <button 
-            class="btn g-recaptcha btn-dark" 
-            data-sitekey="6LfAltkZAAAAAN7rJGBvRUPm36M1aiL7q2a8SznA" 
-            data-callback='onSubmit' 
-            data-action='submit'
-            type=submit
-            >{{ fluent(key="send-email-button", lang=lang )}}</button>
-        <hr>
-    </form>
+            <button 
+                class="btn g-recaptcha btn-dark" 
+                data-sitekey="6LfAltkZAAAAAN7rJGBvRUPm36M1aiL7q2a8SznA" 
+                data-callback='onSubmit' 
+                data-action='submit'
+                type=submit
+                >{{ fluent(key="send-email-button", lang=lang )}}</button>
+            <hr>
+
+        </form>
+        
         <button class="btn btn-info" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
             {{ fluent(key="explanation-results", lang=lang )}}
         </button>
+
         <div class="collapse" id="collapseExample">
             <div class="card card-body">
             <p>{{ fluent(key="your-lived-experience", lang=lang )}}</p>
@@ -45,7 +48,7 @@
             <ul>
                 <li><strong>{{ fluent(key="experience", lang=lang )}}</strong> - {{ fluent(key="experience-details", lang=lang )}}</li>
                 <li><strong>{{ fluent(key="domain", lang=lang )}}</strong> - {{ fluent(key="domain-details", lang=lang )}}</li>
-                <li><strong>{{ fluent(key="instances", lang=lang )}}</strong> - {{ fluent(key="instances-details", lang=lang )}}/li>
+                <li><strong>{{ fluent(key="instances", lang=lang )}}</strong> - {{ fluent(key="instances-details", lang=lang )}}</li>
                 <li><strong>{{ fluent(key="mean-inclusivity", lang=lang )}}</strong> - {{ fluent(key="mean-inclusivity-details", lang=lang )}}</li>
             </ul>
             <p>{{ fluent(key="frequency-distribution-details", lang=lang )}}</p>
@@ -53,7 +56,7 @@
                 <li><strong>{{ fluent(key="statement", lang=lang )}}</strong> - {{ fluent(key="statement-details", lang=lang )}}</li>
                 <li><strong>{{ fluent(key="count", lang=lang )}}</strong> - {{ fluent(key="count-details", lang=lang )}}</li>
             </ul>
-        </div>
+            </div>
         </div>
         <hr>
         <h2>My Profile</h2>
@@ -80,8 +83,8 @@
                         </tr>
                         <tr>
                             <td style="text-align: center;"><a href="/{{ lang }}/node/{{ experience.0.slug }}">{{ experience.1.0.text | title }}</a></td>
-                            <td style="text-align: center;">{{ experience.0.node_domain | title }}</td>
-                            <td style="text-align: center;">{{ experience.0.mean_importance | round(method="ceil", precision=3) }}</td>
+                            <td style="text-align: center;">{{ fluent(key="domain-token", lang=lang, token=experience.0.node_domain)}}</td>
+                            <td style="text-align: center;">{{ experience.0.importance | round(method="ceil", precision=3) }}</td>
                             <td style="text-align: center;">
                                 {{ experience.0.inclusivity | float }}
                                 {% if experience.0.inclusivity | float > 0.2 %}
@@ -114,7 +117,7 @@
             <hr>
     </div>
 
-    <div class="col m-md-2 m-1">
+    <div class="col-md m-md-2 m-1">
         <br>
         <h1>{{ fluent(key="global-experiences", lang=lang )}}</h1>
         <br>
@@ -131,7 +134,7 @@
             </tr>
             <tr>
                 <td style="text-align: center;"><a href="/{{ lang }}/community_node/{{ community.slug }}/{{ experience.slug }}">{{ experience.name | title }}</a></td>
-                <td style="text-align: center;">{{ experience.domain | title }}</td>
+                <td style="text-align: center;">{{ fluent(key="domain-token", lang=lang, token=experience.domain)}}</td>
                 <td style="text-align: center;">{{ experience.count }}</td>
                 <td style="text-align: center;">{{ experience.mean_importance | round(method="ceil", precision=3) }}</td>
                 <td style="text-align: center;">
