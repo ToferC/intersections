@@ -161,6 +161,48 @@ question-explanation = Cette section explique les questions auxquelles vous rép
 ## Question One
 
 question-one = 1. Nommez votre expérience
+question-one-survey =
+    { $number ->
+        [0] 1. Ajoutez une expérience liée à votre race, votre culture ou votre identité ethnique.
+        [1] 1. Ajoutez une expérience liée à votre sexe.
+        [2] 1. Ajoutez une expérience liée à votre sexualité.
+        [3] 1. Ajoutez une expérience liée à votre milieu socio-économique.
+        [4] 1. Ajoutez une expérience liée à vos langues connues et familières.
+        [5] 1. Ajoutez une expérience liée à votre niveau d'études.
+        [6] 1. Ajoutez une expérience liée à vos croyances religieuses ou votre foi.
+        [7] 1. Ajoutez une expérience liée à votre capacité ou à une incapacité permanente ou temporaire.
+        [8] 1. Ajoutez une expérience liée à votre type de personnalité.
+        [9] 1. Ajoutez une expérience liée à votre âge ou à votre génération
+        [10] 1. Ajoutez une expérience liée à votre état de santé mentale actuel.
+        [11] 1. Ajoutez une expérience liée à votre image ou perception corporelle.
+        [12] 1. Ajoutez une expérience liée à votre statut relationnel ou à vos responsabilités en matière de soins.
+        [13] 1. Ajouter une expérience liée au statut d'emploi.
+        [14] 1. Ajoutez une expérience liée à votre rôle dans votre organisation.
+        [15] 1. Ajoutez une expérience liée à votre statut communautaire ou à vos affiliations.
+       *[autre] 1. Incroyable. Vous avez le coup de main. Ajoutez autant d'expériences supplémentaires que vous le souhaitez.
+    }
+domain-token =
+    { $token ->
+        [race_culture] Race / Culture
+        [gender] Expression de genre
+        [sexuality] Sexualité
+        [socio_economic] Socio-économique
+        [language] Langue
+        [education] Éducation
+        [religion] Religion
+        [ability_disability] (Dis)ability
+        [personality] Type de personnalité
+        [age] Âge / Génération
+        [mental_health] Santé mentale
+        [body_image] Image corporelle
+        [relationship_caregiving] Relations / Prestation de soins
+        [employment_status] Statut d'emploi
+        [organizational_role] Rôle organisationnel
+        [community_role] Rôle de la communauté
+       *[other] Autre
+    }
+question-one-placeholder = Nom de l'expérience ...
+question-one-helper = Entrez quelques mots pour nommer votre expérience ici.
 question-one-explanation = Comment décririez-vous cette expérience dans vos propres mots?
 question-one-details = Vous êtes plus que votre travail. Exemples: mère, père, gestionnaire, artiste, millénaire, noir, autochtone, blanc, cadre, nouvel employé. Tout ce qui décrit un élément de qui vous êtes et qui a un impact sur votre expérience sur le lieu de travail.
 useful-framework = Un cadre utile pour cet exercice a été développé par Ritu en
@@ -182,11 +224,12 @@ layer-profession = Profession / Carrière
 question-two = 2. Cette expérience fait-elle partie de vous en tant que personne ou est-ce un rôle lié à votre travail?
 question-two-explanation = D'où vient cette expérience. Cela fait-il partie de votre identité, de votre expérience ou de votre culture? Est-ce un rôle qui vous a été confié dans le cadre de votre travail? Est-ce une fonction que vous jouez au sein d'un réseau ou d'un système?
 question-two-shorthand = En bref, vous pouvez le décomposer comme ceci:
-personal-experience = Expérience personnelle = partie de votre expérience individuelle qui existe en dehors du lieu de travail.
-organizational-role = Rôle organisationnel = fonction ou rôle de travail formel ou informel sur le lieu de travail.
 experience-is = Cette expérience est ...
-personal = Une expérience personnelle
-organizational = Un rôle organisationnel
+not-important = Pas du tout important
+slightly-important = slightly-important = Légèrement important
+moderately-important = Modérément important
+very-important = very-important = Très important
+extremely-important = extremely-important = Extrêmement important
 
 ## Question Three
 
@@ -213,8 +256,6 @@ profile-code-placeholder = Votre code de profil précédent
 profile-code-helper = Vous ne devez le faire que si vous avez déjà un profil précédent et que vous souhaitez le connecter à un nouveau profil.
 progress-header = Progression ({ $counter } / 6)
 save-experience-button = Enregistrer l'expérience
-question-one-placeholder = Nom de l'expérience ...
-question-one-helper = Entrez quelques mots pour nommer votre expérience ici.
 
 ## Tips
 
@@ -250,7 +291,7 @@ may-add-more = Vous pouvez en ajouter si vous le souhaitez.
 ## Community Node
 
 node-in = nœud dans
-domain-in-community = { $domain } dans la communauté { $community }
+in-community = in-community = dans la communauté { $community }
 view-community-graph = Voir le graph de la communauté
 return-to-index = Retour à l'index
 view-graph-for = Voir le graph pour
@@ -265,6 +306,8 @@ table-explanation-details =
 experience = Expérience
 experience-details = le nom de l'expérience vécue
 domain = Domaine
+importance = importance
+importance-details = Quelle est l'importance de l'expérience sur une échelle de un à cinq
 domain-details = si l'expérience fait partie de la personne ou fait partie du système de travail
 instances = Instances
 instances-details = combien de fois cette expérience a été saisie dans l'enquête. Si le résultat est "1", vous êtes la première personne à le faire
@@ -451,8 +494,8 @@ global-graph = Graphe global
 community-graph = Graphe de la communauté
 toggle-legend = Basculer la légende
 legend = Légende
-personal-experience-legend = Expérience personnelle
-organizational-role-legend = Rôle organisationnel
+low-importance-legend = Faible importance
+high-importance-legend = Haute importance
 lowest-inclusivity = plus basse inclusivité
 negative-inclusivity = inclusivité négative
 neutral-inclusivity = Inclusivité neutre
