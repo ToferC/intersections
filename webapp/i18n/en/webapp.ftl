@@ -277,8 +277,6 @@ tip-string = { $number  ->
     *[other] Amazing. You’ve got the hang of this. Add as many additional experiences as you like.
 }
 
-
-
 ## Learning Moments
 learning-one = [Placeholder for learning moment.]
 
@@ -309,7 +307,8 @@ experience = Experience
 experience-details = the name of the lived experience
 domain = Domain
 importance = Importance
-importance-details = How important the experience is on a scale of one to five
+mean-importance = Mean Importance
+mean-importance-details = The average rating of how important the experience is on a scale of one to five
 domain-details = Which domain the experience falls into
 instances = Instances
 instances-details = how many times this experience has been entered in the survey. If the result is "1", then you are the first person to do so

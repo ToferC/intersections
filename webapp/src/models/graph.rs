@@ -180,7 +180,7 @@ impl GNode {
             text: vec![a.domain.to_owned()],
             shape: shape,
             count: a.count as i32,
-            size: a.mean_importance.to_f32().expect("Unable to convert importance to float") * 5.0,
+            size: a.mean_importance.to_f32().expect("Unable to convert importance to float") * 10.0,
             color: colour,
             inclusivity: a.mean_inclusivity.to_f32().expect("Unable to convert BigDecimal"),
             importance: a.mean_importance.to_f32().expect("Unable to convert importance to float"),
