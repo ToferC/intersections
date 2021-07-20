@@ -307,7 +307,6 @@ experience = Expérience
 experience-details = le nom de l'expérience vécue
 domain = Domaine
 importance = Importance
-importance-details = Quelle est l'importance de l'expérience sur une échelle de un à cinq
 domain-details = si l'expérience fait partie de la personne ou fait partie du système de travail
 instances = Instances
 instances-details = combien de fois cette expérience a été saisie dans l'enquête. Si le résultat est "1", vous êtes la première personne à le faire
