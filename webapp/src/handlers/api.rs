@@ -54,7 +54,7 @@ pub async fn person_api(
     web::Path(code): web::Path<String>,
 ) -> impl Responder {
     
-    let conn = database::connection().expect("Unable to connect to db");
+    let mut conn = database::connection().expect("Unable to connect to db");
 
     let target_person: People =  People::find_from_code(&code).expect("Couldn't load target person");
 
@@ -75,7 +75,7 @@ pub async fn person_api(
     // join experiences and nodes
     let node_experiences: Vec<(Experiences, Nodes)> = Experiences::belonging_to(&people_vec)
         .inner_join(nodes::table)
-        .load::<(Experiences, Nodes)>(&conn)
+        .load::<(Experiences, Nodes)>(&mut conn)
         .expect("Error leading people");
 
     // group node_experiences by people

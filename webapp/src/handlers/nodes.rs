@@ -27,7 +27,7 @@ pub async fn node_page(
     
     let (mut ctx, _session_user, _role, _lang) = generate_basic_context(id, &lang, req.uri().path());
 
-    let conn = database::connection().expect("Unable to connect to db");
+    let mut conn = database::connection().expect("Unable to connect to db");
     
     let node_select = Nodes::find_by_slug(&node_slug);
 
@@ -36,7 +36,7 @@ pub async fn node_page(
 
             // get connected nodes via people with experiencee connections to our prime node
             let experience_vec: Vec<Experiences> = Experiences::belonging_to(&node)
-                .load::<Experiences>(&conn)
+                .load::<Experiences>(&mut conn)
                 .expect("Error leading connected experiences");
         
             let mut people_id_vec: Vec<i32> = Vec::new();
@@ -53,10 +53,10 @@ pub async fn node_page(
         
             // add experiences for the people connected by node
             let connected_experiences = experiences::table.filter(experiences::person_id.eq_any(&people_id_vec))
-                .load::<Experiences>(&conn)
+                .load::<Experiences>(&mut conn)
                 .expect("Unable to load experiences");
             
-            for l in &connected_experiences {
+            for l in &mut connected_experiences {
                 node_id_vec.push(l.node_id);
             };
         
@@ -70,7 +70,7 @@ pub async fn node_page(
             for i in node_id_vec {
                 let mut temp_experience_vec: Vec<Experiences> = Vec::new();
         
-                for l in &connected_experiences {
+                for l in &mut connected_experiences {
         
                     if i == l.node_id && i != node.id {
                         temp_experience_vec.push(l.clone());
@@ -166,7 +166,7 @@ pub async fn community_node_page(
                     let experience_vec: Vec<Experiences> = experiences::table
                         .filter(experiences::person_id.eq_any(&community_people_ids)
                             .and(experiences::node_id.eq(&node.id)))
-                        .load::<Experiences>(&conn)
+                        .load::<Experiences>(&mut conn)
                         .expect("Error loading connected experiences");
                 
                     let mut people_id_vec: Vec<i32> = Vec::new();
@@ -187,10 +187,10 @@ pub async fn community_node_page(
                     // add experiences for the people connected by node
                     let connected_experiences = experiences::table
                         .filter(experiences::person_id.eq_any(&people_id_vec))
-                        .load::<Experiences>(&conn)
+                        .load::<Experiences>(&mut conn)
                         .expect("Unable to load experiences");
                     
-                    for l in &connected_experiences {
+                    for l in &mut connected_experiences {
                         node_id_vec.push(l.node_id);
                     };
                 
@@ -204,7 +204,7 @@ pub async fn community_node_page(
                     for i in node_id_vec {
                         let mut temp_experience_vec: Vec<Experiences> = Vec::new();
                 
-                        for l in &connected_experiences {
+                        for l in &mut connected_experiences {
                 
                             if i == l.node_id && i != node.id {
                                 temp_experience_vec.push( Experiences {
@@ -286,7 +286,7 @@ pub async fn node_graph(
 
             // get connected nodes via people with experiencee connections to our prime node
             let mut experience_vec: Vec<Experiences> = Experiences::belonging_to(&node)
-                .load::<Experiences>(&conn)
+                .load::<Experiences>(&mut conn)
                 .expect("Error leading connected experiences");
         
             let mut people_id_vec: Vec<i32> = Vec::new();
@@ -306,7 +306,7 @@ pub async fn node_graph(
         
             // add experiences for the people connected by node
             let mut connected_experiences = experiences::table.filter(experiences::person_id.eq_any(&people_id_vec))
-                .load::<Experiences>(&conn)
+                .load::<Experiences>(&mut conn)
                 .expect("Unable to load experiences");
             
             experience_vec.append(&mut connected_experiences);
@@ -317,7 +317,7 @@ pub async fn node_graph(
         
             println!("{:?}", &people_connections);
         
-            for l in &connected_experiences {
+            for l in &mut connected_experiences {
                 node_id_vec.push(l.node_id);
             };
         
@@ -402,7 +402,7 @@ pub async fn community_node_graph(
 
                     // get connected nodes via people with experiencee connections to our prime node
                     let mut experience_vec: Vec<Experiences> = Experiences::belonging_to(&node)
-                        .load::<Experiences>(&conn)
+                        .load::<Experiences>(&mut conn)
                         .expect("Error leading connected experiences");
                     
                     let mut people_id_vec: Vec<i32> = Vec::new();
@@ -419,7 +419,7 @@ pub async fn community_node_graph(
                     
                     // add experiences for the people connected by node
                     let mut connected_experiences = experiences::table.filter(experiences::person_id.eq_any(&people_id_vec))
-                        .load::<Experiences>(&conn)
+                        .load::<Experiences>(&mut conn)
                         .expect("Unable to load experiences");
                     
                     experience_vec.append(&mut connected_experiences);
@@ -439,7 +439,7 @@ pub async fn community_node_graph(
                     
                     println!("{:?}", &people_connections);
                 
-                    for l in &connected_experiences {
+                    for l in &mut connected_experiences {
                         node_id_vec.push(l.node_id);
                     };
                 

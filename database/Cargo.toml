@@ -2,15 +2,16 @@
 name = "database"
 version = "0.1.0"
 authors = ["ToferC <cgeist7@gmail.com>"]
-edition = "2018"
+edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-derive_more = "0.99.2"
-diesel = { version = "1.4.2", features = ["postgres", "extras", "uuid", "r2d2", "chrono", "uuidv07"]}
-diesel_migrations = "1.4.0"
-r2d2 = "0.8.8"
+derive_more = "0.99.8"
+diesel = { version = "2.1.4", features = ["postgres", "extras", "uuid", "r2d2", "chrono", "64-column-tables"]}
+diesel_migrations = "2.1.0"
+r2d2 = "0.8.10"
 lazy_static = "1.4"
+shrinkwraprs = "0.3"
 
 error_handler = { path = "../error_handler" }

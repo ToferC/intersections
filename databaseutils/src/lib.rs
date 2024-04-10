@@ -1,9 +1,9 @@
 use bigdecimal::{BigDecimal, ToPrimitive};
 use inflector::Inflector;
-use num_bigint::{ToBigInt};
-use std::{io::{stdin}, process::exit};
-use std::{num::ParseIntError};
-use std::collections::{BTreeMap};
+use num_bigint::ToBigInt;
+use std::{io::stdin, process::exit};
+use std::num::ParseIntError;
+use std::collections::BTreeMap;
 use std::sync::Arc;
 use tokio::spawn;
 
@@ -294,7 +294,7 @@ pub async fn import_demo_data(community_id: i32) {
                 let l = models::Experience::new(
                     raw_exp.name_id.clone(),
                     node.domain_token.to_owned(),
-                    rng.gen_range(1, 6),
+                    rng.gen_range(1..6),
                     person.id,
                     node.id, 
                     raw_exp.phrase_ids.clone(),
@@ -533,7 +533,7 @@ pub async fn generate_dummy_data(community_id: i32) {
             &models::Experience::new(
                 exp.name_id, 
                 l.1.to_string(),
-                rng.gen_range(1, 6),
+                rng.gen_range(1..6),
                 l.2, 
                 l.3, 
                 exp.phrase_ids, 

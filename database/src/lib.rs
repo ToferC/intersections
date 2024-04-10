@@ -10,11 +10,12 @@ use lazy_static::lazy_static;
 use r2d2;
 use std::env;
 
+use diesel_migrations::{embed_migrations, EmbeddedMigrations, MigrationHarness};
+
 type Pool = r2d2::Pool<ConnectionManager<PgConnection>>;
 pub type DbConnection = r2d2::PooledConnection<ConnectionManager<PgConnection>>;
 
-#[macro_use]
-embed_migrations!();
+const MIGRATIONS: EmbeddedMigrations = embed_migrations!();
 
 lazy_static! {
     static ref POOL: Pool = {
@@ -24,11 +25,14 @@ lazy_static! {
     };
 }
 
+fn run_migration(conn: &mut PgConnection) {
+    conn.run_pending_migrations(MIGRATIONS).unwrap();
+}
+
 pub fn init() {
     lazy_static::initialize(&POOL);
-    let conn = connection().expect("Failed to get DB connection");
-    embedded_migrations::run(&conn).unwrap();
-}
+    let mut conn = connection().expect("Failed to get DB connection");
+    run_migration(&mut conn);}
 
 pub fn connection() -> Result<DbConnection, CustomError> {
     POOL.get()

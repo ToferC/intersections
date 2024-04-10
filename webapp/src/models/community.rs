@@ -107,18 +107,18 @@ pub struct Communities {
 // Database operations
 impl Communities {
     pub fn create(community: &NewCommunity) -> Result<Self, CustomError> {
-        let conn = database::connection()?;
+        let mut conn = database::connection()?;
         let community = NewCommunity::from(community);
         let community = diesel::insert_into(communities::table)
             .values(community)
-            .get_result(&conn)?;
+            .get_result(&mut conn)?;
         Ok(community)
     }
 
     pub fn find_all() -> Result<Vec<Self>, CustomError> {
-        let conn = database::connection()?;
+        let mut conn = database::connection()?;
         let communities = communities::table
-            .load::<Communities>(&conn)?;
+            .load::<Communities>(&mut conn)?;
         Ok(communities)
     }
 
@@ -126,7 +126,7 @@ impl Communities {
         let conn = database::connection()?;
         let communities = communities::table
             .filter(communities::test.eq(false))
-            .load::<Communities>(&conn)?;
+            .load::<Communities>(&mut conn)?;
         Ok(communities)
     }
 
@@ -135,7 +135,7 @@ impl Communities {
         let community_ids = communities::table
             .select(communities::id)
             .filter(communities::test.eq(true))
-            .load::<i32>(&conn)?;
+            .load::<i32>(&mut conn)?;
         Ok(community_ids)
     }
 
@@ -143,32 +143,32 @@ impl Communities {
         let conn = database::connection()?;
         let communities = communities::table
             .filter(communities::open.eq(true))
-            .load::<Communities>(&conn)?;
+            .load::<Communities>(&mut conn)?;
         Ok(communities)
     }
 
     pub fn find(id: i32) -> Result<Self, CustomError> {
         let conn = database::connection()?;
-        let community = communities::table.filter(communities::id.eq(id)).first(&conn)?;
+        let community = communities::table.filter(communities::id.eq(id)).first(&mut conn)?;
         Ok(community)
     }
 
     pub fn find_by_owner_user_id(id: &i32) -> Result<Vec<Self>, CustomError> {
         let conn = database::connection()?;
         let community = communities::table.filter(communities::user_id.eq(id))
-            .load(&conn)?;
+            .load(&mut conn)?;
         Ok(community)
     }
 
     pub fn find_from_code(code: &String) -> Result<Self, CustomError> {
         let conn = database::connection()?;
-        let community = communities::table.filter(communities::code.eq(code)).first(&conn)?;
+        let community = communities::table.filter(communities::code.eq(code)).first(&mut conn)?;
         Ok(community)
     }
 
     pub fn find_from_slug(slug: &String) -> Result<Self, CustomError> {
         let conn = database::connection()?;
-        let community = communities::table.filter(communities::slug.eq(slug)).first(&conn)?;
+        let community = communities::table.filter(communities::slug.eq(slug)).first(&mut conn)?;
         Ok(community)
     }
 
@@ -178,17 +178,17 @@ impl Communities {
             .on(communities::tag.eq(phrases::id)
             .and(phrases::lang.eq(lang))))
             .select((phrases::text, communities::slug))
-            .load::<(String, String)>(&conn)?;
+            .load::<(String, String)>(&mut conn)?;
 
         Ok(index)
     }
 
     pub fn update(community: &Communities) -> Result<Self, CustomError> {
-        let conn = database::connection()?;
+        let mut conn = database::connection()?;
         let community = diesel::update(communities::table)
             .filter(communities::id.eq(community.id))
             .set(community)
-            .get_result(&conn)?;
+            .get_result(&mut conn)?;
         Ok(community)
     }
 
@@ -207,7 +207,7 @@ impl Communities {
 
     pub fn delete(id: i32) -> Result<usize, CustomError> {
         let conn = database::connection()?;
-        let res = diesel::delete(communities::table.filter(communities::id.eq(id))).execute(&conn)?;
+        let res = diesel::delete(communities::table.filter(communities::id.eq(id))).execute(&mut conn)?;
         Ok(res)
     }
 

@@ -1,13 +1,13 @@
 // example auth: https://github.com/actix/actix-extras/blob/master/actix-identity/src/lib.rs
 
 
-use std::{env};
+use std::env;
 use std::sync::Arc;
 
-use actix_web::{HttpRequest, HttpResponse, Responder, get, post, web, ResponseError};
-use actix_identity::{Identity};
+use actix_web::{HttpRequest, HttpResponse, Responder, get, post, web};
+use actix_identity::Identity;
 use inflector::Inflector;
-use serde::{Deserialize};
+use serde::Deserialize;
 
 use qrcode_generator::QrCodeEcc;
 
@@ -39,7 +39,7 @@ pub async fn community_index(
     let (mut ctx, _session_user, role, _lang) = generate_basic_context(id, &lang, req.uri().path());
     
     if role != "admin".to_string() {
-        let err = CustomError::new(
+        let err = error_handler::error_handler::CustomError::new(
             406,
             "Not authorized".to_string(),
         );

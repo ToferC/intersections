@@ -1,10 +1,10 @@
-use std::{sync::{Arc}};
+use std::sync::{Arc};
 use actix_web::{web, HttpRequest, HttpResponse, Responder, post, get, ResponseError};
 use bigdecimal::{BigDecimal, ToPrimitive};
 use actix_identity::Identity;
-use tokio::{spawn};
+use tokio::spawn;
 use inflector::Inflector;
-use num_bigint::{ToBigInt};
+use num_bigint::ToBigInt;
 use serde::{Deserialize, Serialize};
 
 use crate::{AppData, generate_basic_context};

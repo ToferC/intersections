@@ -88,37 +88,37 @@ pub struct Experiences {
 
 impl Experiences {
     pub fn create(experience: &Experience) -> Result<Self, CustomError> {
-        let conn = database::connection()?;
+        let mut conn = database::connection()?;
         let p = Experience::from(experience);
         let p = diesel::insert_into(experiences::table)
             .values(p)
-            .get_result(&conn)?;
+            .get_result(&mut conn)?;
         Ok(p)
     }
 
     pub fn find_all() -> Result<Vec<Self>, CustomError> {
-        let conn = database::connection()?;
-        let experiences = experiences::table.load::<Experiences>(&conn)?;
+        let mut conn = database::connection()?;
+        let experiences = experiences::table.load::<Experiences>(&mut conn)?;
         Ok(experiences)
     }
 
     pub fn find_all_real() -> Result<Vec<Self>, CustomError> {
-        let conn = database::connection()?;
+        let mut conn = database::connection()?;
 
         let real_people_ids = People::find_real_ids().expect("Unable to load real people");
 
         let experiences = experiences::table
             .filter(experiences::person_id.eq_any(real_people_ids))
-            .load::<Experiences>(&conn)?;
+            .load::<Experiences>(&mut conn)?;
             
         Ok(experiences)
     }
 
     pub fn find_all_node_ids() -> Result<Vec<i32>, CustomError> {
         // return vec of all node IDs (test, pre-populated and real)
-        let conn = database::connection()?;
+        let mut conn = database::connection()?;
 
-        let ids = experiences::table.select(experiences::node_id).load::<i32>(&conn)?;
+        let ids = experiences::table.select(experiences::node_id).load::<i32>(&mut conn)?;
 
         Ok(ids)
     }
@@ -132,7 +132,7 @@ impl Experiences {
         let ids = experiences::table
             .select(experiences::node_id)
             .filter(experiences::person_id.eq_any(real_people_ids))
-            .load::<i32>(&conn)?;
+            .load::<i32>(&mut conn)?;
 
         Ok(ids)
     }
@@ -149,7 +149,7 @@ impl Experiences {
         // join experiences and nodes
         let node_experiences = Experiences::belonging_to(&people)
             .inner_join(nodes::table)
-            .load::<(Experiences, Nodes)>(&conn)
+            .load::<(Experiences, Nodes)>(&mut conn)
             .expect("Error leading people");
 
         // group node_experiences by people
@@ -166,7 +166,7 @@ impl Experiences {
 
     pub fn find(id: i32) -> Result<Self, CustomError> {
         let conn = database::connection()?;
-        let experience = experiences::table.filter(experiences::id.eq(id)).first(&conn)?;
+        let experience = experiences::table.filter(experiences::id.eq(id)).first(&mut conn)?;
         Ok(experience)
     }
 
@@ -175,14 +175,14 @@ impl Experiences {
         let conn = database::connection()?;
         /*
         let experience_vec = experiences::table.filter(experiences::node_id.eq(id))
-            .load::<Experiences>(&conn)?;
+            .load::<Experiences>(&mut conn)?;
         */
         let experience_vec = experiences::table.
             inner_join(phrases::table
             .on(phrases::id.eq(experiences::node_name)
             .and(phrases::lang.eq(lang))))
             .filter(experiences::node_id.eq(id))
-            .load::<(Experiences, Phrases)>(&conn)?;
+            .load::<(Experiences, Phrases)>(&mut conn)?;
 
         let mut phrase_ids = Vec::new();
 
@@ -201,14 +201,14 @@ impl Experiences {
         let conn = database::connection()?;
         /*
         let experience_vec = experiences::table.filter(experiences::node_id.eq(id))
-            .load::<Experiences>(&conn)?;
+            .load::<Experiences>(&mut conn)?;
         */
         let experience_vec = experiences::table.
             inner_join(phrases::table
             .on(phrases::id.eq(experiences::node_name)
             .and(phrases::lang.eq(lang))))
             .filter(experiences::node_id.eq(id))
-            .load::<(Experiences, Phrases)>(&conn)?;
+            .load::<(Experiences, Phrases)>(&mut conn)?;
 
         Ok(experience_vec)
     }
@@ -216,23 +216,23 @@ impl Experiences {
     pub fn find_from_people_id(id: i32) -> Result<Vec<Self>, CustomError> {
         let conn = database::connection()?;
         let experience_vec = experiences::table.filter(experiences::person_id.eq(id))
-            .load::<Experiences>(&conn)?;
+            .load::<Experiences>(&mut conn)?;
         
         Ok(experience_vec)
     }
 
     pub fn update(id: i32, experience: Experience) -> Result<Self, CustomError> {
-        let conn = database::connection()?;
+        let mut conn = database::connection()?;
         let experience = diesel::update(experiences::table)
             .filter(experiences::id.eq(id))
             .set(experience)
-            .get_result(&conn)?;
+            .get_result(&mut conn)?;
         Ok(experience)
     }
 
     pub fn delete(id: i32) -> Result<usize, CustomError> {
         let conn = database::connection()?;
-        let res = diesel::delete(experiences::table.filter(experiences::id.eq(id))).execute(&conn)?;
+        let res = diesel::delete(experiences::table.filter(experiences::id.eq(id))).execute(&mut conn)?;
         Ok(res)
     }
 

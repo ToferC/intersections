@@ -1,6 +1,6 @@
 use serde::{Serialize, Deserialize};
 use diesel::prelude::*;
-use diesel::{QueryDsl};
+use diesel::QueryDsl;
 use std::{collections::BTreeMap, sync::Arc};
 use deepl_api::{DeepL, TranslatableTextList};
 
@@ -33,7 +33,7 @@ impl InsertablePhrase {
     }
 }
 
-#[derive(Debug, Serialize, Deserialize, Clone, Queryable, Associations, Insertable)]
+#[derive(Debug, Serialize, Deserialize, Clone, Queryable, Insertable)]
 #[table_name = "phrases"]
 pub struct Phrases {
     pub id: i32,
@@ -45,10 +45,10 @@ pub struct Phrases {
 impl Phrases {
     
     pub fn create(phrase: &InsertablePhrase) -> Result<Self, CustomError> {
-        let conn = database::connection()?;
+        let mut conn = database::connection()?;
         let p = diesel::insert_into(phrases::table)
             .values(phrase)
-            .get_result(&conn)?;
+            .get_result(&mut conn)?;
         Ok(p)
     }
 
@@ -60,25 +60,25 @@ impl Phrases {
             .on_conflict((phrases::id, phrases::lang))
             .do_update()
             .set(phrase)
-            .get_result(&conn)?;
+            .get_result(&mut conn)?;
 
         Ok(p)
     }
 
     pub fn add_translation(phrase: Phrases) -> Result<Self, CustomError> {
-        let conn = database::connection()?;
+        let mut conn = database::connection()?;
         let p = diesel::insert_into(phrases::table)
             .values(phrase)
-            .get_result(&conn)?;
+            .get_result(&mut conn)?;
         Ok(p)
     }
 
     pub fn update(id: i32, phrase: &InsertablePhrase) -> Result<Self, CustomError> {
-        let conn = database::connection()?;
+        let mut conn = database::connection()?;
         let p = diesel::update(phrases::table)
             .filter(phrases::id.eq(id))
             .set(phrase)
-            .get_result(&conn)?;
+            .get_result(&mut conn)?;
         Ok(p)
     }
 
@@ -87,7 +87,7 @@ impl Phrases {
         let phrases = phrases::table
             .filter(phrases::id.eq_any(ids)
             .and(phrases::lang.eq(lang)))
-            .load::<Phrases>(&conn)?;
+            .load::<Phrases>(&mut conn)?;
 
             Ok(phrases)
     }
@@ -97,7 +97,7 @@ impl Phrases {
         let phrases = phrases::table
             .filter(phrases::id.eq_any(ids)
             .and(phrases::lang.eq(lang)))
-            .load::<Phrases>(&conn)?;
+            .load::<Phrases>(&mut conn)?;
 
         let mut treemap = BTreeMap::new();
 
@@ -113,7 +113,7 @@ impl Phrases {
         let phrases = phrases::table
             .filter(phrases::text.eq(text)
             .and(phrases::lang.eq(lang)))
-            .first(&conn)?;
+            .first(&mut conn)?;
 
             Ok(phrases)
     }
@@ -122,21 +122,21 @@ impl Phrases {
         let conn = database::connection()?;
         let phrase = phrases::table.filter(phrases::id.eq(id)
             .and(phrases::lang.eq(lang)))
-            .first(&conn)?;
+            .first(&mut conn)?;
 
         Ok(phrase)
     }
 
     pub fn find_all() -> Result<Vec<Self>, CustomError> {
-        let conn = database::connection()?;
-        let phrases = phrases::table.load::<Phrases>(&conn)?;
+        let mut conn = database::connection()?;
+        let phrases = phrases::table.load::<Phrases>(&mut conn)?;
 
         Ok(phrases)
     }
 
     pub fn delete(id: i32) -> Result<usize, CustomError> {
         let conn = database::connection()?;
-        let res = diesel::delete(phrases::table.filter(phrases::id.eq(id))).execute(&conn)?;
+        let res = diesel::delete(phrases::table.filter(phrases::id.eq(id))).execute(&mut conn)?;
         Ok(res)
     }
 }

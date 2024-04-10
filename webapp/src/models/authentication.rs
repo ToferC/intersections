@@ -52,7 +52,7 @@ impl EmailVerification {
                 email_verification_code::activation_code.eq(&e.activation_code),
                 email_verification_code::expires_on.eq(&e.expires_on),
             ))
-            .get_result(&conn)?;
+            .get_result(&mut conn)?;
         Ok(ev)
     }
 
@@ -60,7 +60,7 @@ impl EmailVerification {
         let conn = database::connection()?;
         let v = email_verification_code::table
             .filter(email_verification_code::email_address.eq(&email))
-            .first(&conn)?;
+            .first(&mut conn)?;
         Ok(v)
     }
 
@@ -68,7 +68,7 @@ impl EmailVerification {
         let conn = database::connection()?;
         let res = diesel::delete(email_verification_code::table.filter(
             email_verification_code::id.eq(id)
-        )).execute(&conn)?;
+        )).execute(&mut conn)?;
         Ok(res)
     }
 }
@@ -114,7 +114,7 @@ impl PasswordResetToken {
                 password_reset_token::reset_token.eq(&e.reset_token),
                 password_reset_token::expires_on.eq(&e.expires_on),
             ))
-            .get_result(&conn)?;
+            .get_result(&mut conn)?;
         Ok(ev)
     }
 
@@ -122,7 +122,7 @@ impl PasswordResetToken {
         let conn = database::connection()?;
         let v = password_reset_token::table
             .filter(password_reset_token::reset_token.eq(&token))
-            .first(&conn)?;
+            .first(&mut conn)?;
         Ok(v)
     }
 
@@ -130,7 +130,7 @@ impl PasswordResetToken {
         let conn = database::connection()?;
         let res = diesel::delete(password_reset_token::table.filter(
             password_reset_token::id.eq(id)
-        )).execute(&conn)?;
+        )).execute(&mut conn)?;
         Ok(res)
     }
 }

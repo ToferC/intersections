@@ -45,7 +45,7 @@ impl NewPerson {
     }
 }
 
-#[derive(Serialize, Deserialize, Queryable, Insertable, Debug, Associations, Identifiable, Clone, AsChangeset)]
+#[derive(Serialize, Deserialize, Queryable, Insertable, Debug, Identifiable, Clone, AsChangeset)]
 #[table_name = "people"]
 pub struct People {
     pub id: i32,
@@ -58,25 +58,25 @@ pub struct People {
 
 impl People {
     pub fn create(person: &NewPerson) -> Result<Self, CustomError> {
-        let conn = database::connection()?;
+        let mut conn = database::connection()?;
         let person = NewPerson::from(person);
         let person = diesel::insert_into(people::table)
             .values(person)
-            .get_result(&conn)?;
+            .get_result(&mut conn)?;
         Ok(person)
     }
 
     pub fn detailed_create(person: &People) -> Result<Self, CustomError> {
-        let conn = database::connection()?;
+        let mut conn = database::connection()?;
         let person = diesel::insert_into(people::table)
             .values(person)
-            .get_result(&conn)?;
+            .get_result(&mut conn)?;
         Ok(person)
     }
 
     pub fn find_all() -> Result<Vec<Self>, CustomError> {
-        let conn = database::connection()?;
-        let people = people::table.load::<People>(&conn)?;
+        let mut conn = database::connection()?;
+        let people = people::table.load::<People>(&mut conn)?;
         Ok(people)
     }
 
@@ -87,7 +87,7 @@ impl People {
         
         let people = people::table
             .filter(people::community_id.ne_all(test_commmunity_ids))
-            .load::<People>(&conn)?;
+            .load::<People>(&mut conn)?;
         Ok(people)
     }
 
@@ -99,20 +99,20 @@ impl People {
         let people_ids = people::table
             .select(people::id)
             .filter(people::community_id.ne_all(test_commmunity_ids))
-            .load::<i32>(&conn)?;
+            .load::<i32>(&mut conn)?;
 
         Ok(people_ids)
     }
 
     pub fn find(id: i32) -> Result<Self, CustomError> {
         let conn = database::connection()?;
-        let person = people::table.filter(people::id.eq(id)).first(&conn)?;
+        let person = people::table.filter(people::id.eq(id)).first(&mut conn)?;
         Ok(person)
     }
 
     pub fn find_from_code(code: &String) -> Result<Self, CustomError> {
         let conn = database::connection()?;
-        let person = people::table.filter(people::code.eq(code)).first(&conn)?;
+        let person = people::table.filter(people::code.eq(code)).first(&mut conn)?;
         Ok(person)
     }
 
@@ -121,7 +121,7 @@ impl People {
 
         let people = people::table
             .filter(people::community_id.eq(community_id))
-            .load::<People>(&conn)?;
+            .load::<People>(&mut conn)?;
 
         Ok(people)
     }
@@ -132,17 +132,17 @@ impl People {
         let people_ids = people::table
             .select(people::id)
             .filter(people::community_id.eq(community_id))
-            .load::<i32>(&conn)?;
+            .load::<i32>(&mut conn)?;
 
         Ok(people_ids)
     }
 
     pub fn update(id: i32, person: People) -> Result<Self, CustomError> {
-        let conn = database::connection()?;
+        let mut conn = database::connection()?;
         let person = diesel::update(people::table)
             .filter(people::id.eq(id))
             .set(person)
-            .get_result(&conn)?;
+            .get_result(&mut conn)?;
         Ok(person)
     }
 
@@ -170,7 +170,7 @@ impl People {
 
         // join experiences and nodes
         let experiences = Experiences::belonging_to(&people_vec)
-            .load::<Experiences>(&conn).expect("Unable to load experiences");
+            .load::<Experiences>(&mut conn).expect("Unable to load experiences");
 
         let mut xp = Vec::new();
 
@@ -193,7 +193,7 @@ impl People {
 
     pub fn delete(id: i32) -> Result<usize, CustomError> {
         let conn = database::connection()?;
-        let res = diesel::delete(people::table.filter(people::id.eq(id))).execute(&conn)?;
+        let res = diesel::delete(people::table.filter(people::id.eq(id))).execute(&mut conn)?;
         Ok(res)
     }
 }

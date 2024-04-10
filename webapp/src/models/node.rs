@@ -54,7 +54,7 @@ impl Node {
     }
 }
 
-#[derive(Serialize, Deserialize, Queryable, Insertable, PartialEq, PartialOrd, Eq, Ord, Debug, Clone, Associations, Identifiable)]
+#[derive(Serialize, Deserialize, Queryable, Insertable, PartialEq, PartialOrd, Eq, Ord, Debug, Clone, Identifiable)]
 #[table_name = "nodes"]
 pub struct Nodes {
     pub id: i32,
@@ -66,25 +66,25 @@ pub struct Nodes {
 
 impl Nodes {
     pub fn create(node: &Node) -> Result<Self, CustomError> {
-        let conn = database::connection()?;
+        let mut conn = database::connection()?;
         let n = Node::from(node);
         let n = diesel::insert_into(nodes::table)
             .values(n)
-            .get_result(&conn)?;
+            .get_result(&mut conn)?;
         Ok(n)
     }
 
     pub fn detailed_create(node: &Nodes) -> Result<Self, CustomError> {
-        let conn = database::connection()?;
+        let mut conn = database::connection()?;
         let node = diesel::insert_into(nodes::table)
             .values(node)
-            .get_result(&conn)?;
+            .get_result(&mut conn)?;
         Ok(node)
     }
 
     pub fn find_all() -> Result<Vec<Self>, CustomError> {
-        let conn = database::connection()?;
-        let nodes = nodes::table.load::<Nodes>(&conn)?;
+        let mut conn = database::connection()?;
+        let nodes = nodes::table.load::<Nodes>(&mut conn)?;
         Ok(nodes)
     }
 
@@ -94,7 +94,7 @@ impl Nodes {
             .on(nodes::node_name.eq(phrases::id)
             .and(phrases::lang.eq(lang))))
             .select(phrases::text)
-            .load::<String>(&conn)?;
+            .load::<String>(&mut conn)?;
 
         Ok(names)
     }
@@ -118,7 +118,7 @@ impl Nodes {
             .and(phrases::lang.eq(lang))))
             .filter(nodes::id.eq_any(node_ids))
             .select((phrases::text, nodes::slug))
-            .load::<(String, String)>(&conn)?;
+            .load::<(String, String)>(&mut conn)?;
 
         Ok(names)
     }
@@ -129,7 +129,7 @@ impl Nodes {
             .on(nodes::node_name.eq(phrases::id)
             .and(phrases::lang.eq(lang))))
             .filter(nodes::id.eq(id))
-            .first::<(Nodes, Phrases)>(&conn)?;
+            .first::<(Nodes, Phrases)>(&mut conn)?;
         Ok(node)
     }
 
@@ -139,22 +139,22 @@ impl Nodes {
         let conn = database::connection()?;
         let node = nodes::table
             .filter(nodes::slug.eq(node_slug))
-            .first::<Nodes>(&conn)?;
+            .first::<Nodes>(&mut conn)?;
         Ok(node)
     }
 
     pub fn update(id: i32, node: &Node) -> Result<Self, CustomError> {
-        let conn = database::connection()?;
+        let mut conn = database::connection()?;
         let node = diesel::update(nodes::table)
             .filter(nodes::id.eq(id))
             .set(node)
-            .get_result(&conn)?;
+            .get_result(&mut conn)?;
         Ok(node)
     }
 
     pub fn delete(id: i32) -> Result<usize, CustomError> {
         let conn = database::connection()?;
-        let res = diesel::delete(nodes::table.filter(nodes::id.eq(id))).execute(&conn)?;
+        let res = diesel::delete(nodes::table.filter(nodes::id.eq(id))).execute(&mut conn)?;
         Ok(res)
     }
 }
