@@ -30,11 +30,13 @@ pub struct DeleteCommunityForm {
 
 #[get("/{lang}/community_index")]
 pub async fn community_index(
-    web::Path(lang): web::Path<String>,
+    path: web::Path<String>,
     data: web::Data<AppData>,
     
     id: Identity,
     req:HttpRequest) -> impl Responder {
+
+    let lang = path.into_inner();
     
     let (mut ctx, _session_user, role, _lang) = generate_basic_context(id, &lang, req.uri().path());
     

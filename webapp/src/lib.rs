@@ -41,25 +41,31 @@ pub fn extract_session_data(session: &Session) -> (String, String) {
     (session_user, role)
 }
 
-pub fn extract_identity_data(id: &Identity) -> (String, String) {
+pub fn extract_identity_data(id: Option<Identity>) -> (String, String, Option<Identity>) {
 
-    let id_data = id.identity();
+    if let Some(id) = id {
 
-    let session_user = match id_data {
-        Some(u) => u,
-        None => "".to_string(),
-    };
-
-    let user = models::User::find_slim_from_slug(&session_user);
-
-    let role = match user {
-        Ok(u) => u.role,
-        _ => "".to_string()
-    };
-
-    println!("{}-{}", &session_user, &role);
-
-    (session_user, role)
+        let id_data = id.id();
+    
+        let session_user = match id_data {
+            Ok(u) => u,
+            Err(_e) => "".to_string(),
+        };
+    
+        let user = models::User::find_slim_from_slug(&session_user);
+    
+        let role = match user {
+            Ok(u) => u.role,
+            _ => "".to_string()
+        };
+    
+        println!("{}-{}", &session_user, &role);
+    
+        (session_user, role, Some(id))
+    } else {
+        ("".to_string(), "user".to_string(), None)
+    }
+    
 }
 
 /// Generate context, session_user, role and node_names from id and lang
@@ -72,7 +78,7 @@ pub fn generate_basic_context(
     let mut ctx = Context::new();
 
     // Get session data and add to context
-    let (session_user, role) = extract_identity_data(&id);
+    let (session_user, role, id) = extract_identity_data(Some(id));
     ctx.insert("session_user", &session_user);
     ctx.insert("role", &role);
 
@@ -102,7 +108,7 @@ pub fn generate_email_context(
 let mut ctx = Context::new();
 
 // Get session data and add to context
-let (session_user, role) = extract_identity_data(&id);
+let (session_user, role, id) = extract_identity_data(Some(id));
 ctx.insert("session_user", &session_user);
 ctx.insert("role", &role);
 

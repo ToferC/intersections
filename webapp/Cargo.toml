@@ -11,15 +11,15 @@ default-run = "webapp"
 [dependencies]
 
 # actix and web
-actix-web = "3.3.2"
+actix-web = "4.4.0"
 actix-web-httpauth = { git = "https://github.com/actix/actix-web-httpauth" }
 actix-web-static-files = "3.0.1"
 actix-rt = "1"
 tokio = { version = "0.2", features = ["full"] }
-actix-service = "2.0.0"
+actix-service = "2.0.2"
 actix-multipart = "0.3.0"
 actix-session = "0.4.0"
-actix-identity = "0.3.0"
+actix-identity = "0.6.0"
 actix-files = "0.5.0"
 tera = "1.5.0"
 tera-text-filters = "1.0"
@@ -27,16 +27,16 @@ Inflector = "0.5.1"
 env_logger = "0.8.2"
 
 # database and data
-derive_more = "0.99.2"
 diesel = { version = "2.1.4", features = ["postgres", "extras", "uuid", "r2d2", "chrono", "64-column-tables"]}
 diesel_migrations = "2.1.0"
 r2d2 = "0.8.10"
 lazy_static = "1.4"
 uuid = { version = "0.8.1", features = ["serde", "v4"] }
 chrono = { version = "0.4.11", features = ["serde"] }
-serde = "1.0"
-serde_derive = "1.0"
-serde_json = "1.0"
+serde = "1.0.136"
+serde_derive = "1.0.136"
+derive_more = "0.99.8"
+serde_json = "1.0.78"
 
 # misc
 bigdecimal = { version = "0.4.3", features = ["serde"] }
@@ -72,4 +72,5 @@ database = { path = "../database"}
 error_handler = { path = "../error_handler" }
 
 [build-dependencies]
-actix-web-static-files = "3.0.1"
+actix-web-static-files = "4.0"
+static-files = "0.2.1"
