@@ -195,7 +195,7 @@ pub async fn edit_user_post(
             let mut user_name_changed = false;
 
             // update user email
-            if &form.email.to_lower_case().trim() != &user.email {
+            if &form.email.to_lowercase().trim() != &user.email {
                 user.email = form.email.to_lowercase().trim().to_owned();
                 user.validated = false;
                 email_changed = true;
@@ -322,10 +322,10 @@ pub async fn admin_edit_user_post(
             };
 
             user.validated = validated;
-            user.role = form.role.to_lower_case().trim().to_owned();
+            user.role = form.role.to_lowercase().trim().to_owned();
 
             // update user email
-            if &form.email.to_lower_case().trim() != &user.email {
+            if &form.email.to_lowercase().trim() != &user.email {
                 user.email = form.email.to_lowercase().trim().to_owned();
 
                 // update contact email in owned communities

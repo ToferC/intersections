@@ -414,7 +414,7 @@ pub async fn add_handle_experience_form_input(
 
     let node = Node::new(
         raw_exp.name_id,
-        form.name.to_lower_case().trim().to_owned(),
+        form.name.to_lowercase().trim().to_owned(),
         DOMAINS[p.experiences as usize].to_owned(),
     );
 

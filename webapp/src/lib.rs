@@ -133,6 +133,7 @@ pub fn generate_unique_code(mut characters: usize, dashes: bool) -> String {
     let mut rand_string: String = thread_rng()
         .sample_iter(&Alphanumeric)
         .take(characters)
+        .map(char::from)
         .collect();
 
     if dashes {
