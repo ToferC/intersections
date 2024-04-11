@@ -18,12 +18,13 @@ use crate::schema::{experiences};
 
 #[get("/{lang}/node/{node_slug}")]
 pub async fn node_page(
-    web::Path((lang, node_slug)): web::Path<(String, String)>, 
+    path: web::Path<(String, String)>, 
     data: web::Data<AppData>, 
     
     req:HttpRequest,
-    id: Identity,
+    id: Option<Identity>,
 ) -> impl Responder {
+    let (lang, node_slug) = path.into_inner();
     
     let (mut ctx, _session_user, _role, _lang) = generate_basic_context(id, &lang, req.uri().path());
 
@@ -52,7 +53,7 @@ pub async fn node_page(
         
         
             // add experiences for the people connected by node
-            let connected_experiences = experiences::table.filter(experiences::person_id.eq_any(&people_id_vec))
+            let mut connected_experiences = experiences::table.filter(experiences::person_id.eq_any(&people_id_vec))
                 .load::<Experiences>(&mut conn)
                 .expect("Unable to load experiences");
             
@@ -115,12 +116,13 @@ pub async fn node_page(
 
 #[get("/{lang}/community_node/{community_slug}/{node_slug}")]
 pub async fn community_node_page(
-    web::Path((lang, community_slug, node_slug)): web::Path<(String, String, String)>, 
+    path: web::Path<(String, String, String)>, 
     data: web::Data<AppData>, 
     
     req:HttpRequest,
-    id: Identity,
+    id: Option<Identity>,
 ) -> impl Responder {
+    let (lang, community_slug, node_slug) = path.into_inner();
 
     let (mut ctx, session_user, _role, _lang) = generate_basic_context(id, &lang, req.uri().path());
 
@@ -152,7 +154,7 @@ pub async fn community_node_page(
             ctx.insert("owner", &owner);
             
             // connect to db --> move this into helper function
-            let conn = database::connection().expect("Unable to connect to db");
+            let mut conn = database::connection().expect("Unable to connect to db");
             
             // get ids of people in the community
             let community_people_ids = People::find_ids_from_community(community.id).expect("Unable to find community members");
@@ -185,7 +187,7 @@ pub async fn community_node_page(
                     println!("People ID VEC: {:?}", &people_id_vec);
                 
                     // add experiences for the people connected by node
-                    let connected_experiences = experiences::table
+                    let mut connected_experiences = experiences::table
                         .filter(experiences::person_id.eq_any(&people_id_vec))
                         .load::<Experiences>(&mut conn)
                         .expect("Unable to load experiences");
@@ -268,16 +270,17 @@ pub async fn community_node_page(
 
 #[get("/{lang}/node_graph/{node_slug}")]
 pub async fn node_graph(
-    web::Path((lang, node_slug)): web::Path<(String, String)>,
-    
+    path: web::Path<(String, String)>,
     data: web::Data<AppData>,
     req: HttpRequest,
-    id: Identity,
+    id: Option<Identity>,
 ) -> impl Responder {
+    let (lang, node_slug) = path.into_inner();
+
     
     let (mut ctx, _session_user, _role, _lang) = generate_basic_context(id, &lang, req.uri().path());
 
-    let conn = database::connection().expect("Unable to connect to db");
+    let mut conn = database::connection().expect("Unable to connect to db");
     
     let node_select = Nodes::find_by_slug(&node_slug);
 
@@ -348,12 +351,14 @@ pub async fn node_graph(
 #[get("/{lang}/community_node_graph/{community_slug}/{node_slug}")]
 pub async fn community_node_graph(
     // Rework this as a connected node graph
-    web::Path((lang, community_slug, node_slug)): web::Path<(String, String, String)>, 
+    path: web::Path<(String, String, String)>, 
     data: web::Data<AppData>,
     
     req: HttpRequest,
-    id: Identity,
+    id: Option<Identity>,
 ) -> impl Responder {
+    let (lang, community_slug, node_slug) = path.into_inner();
+
     
     let (mut ctx, session_user, _role, _lang) = generate_basic_context(id, &lang, req.uri().path());
 
@@ -393,7 +398,7 @@ pub async fn community_node_graph(
         
             ctx.insert("owner", &owner);
         
-            let conn = database::connection().expect("Unable to connect to db");
+            let mut conn = database::connection().expect("Unable to connect to db");
             
             let node_select = Nodes::find_by_slug(&node_slug);
 

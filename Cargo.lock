@@ -277,7 +277,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "36e1cc6f95e245b2f3c6995df4e1c0c697704c48c28ec325d135a3ca039d4952"
 dependencies = [
  "actix-service 2.0.2",
- "actix-session 0.8.0",
+ "actix-session",
  "actix-utils 3.0.1",
  "actix-web 4.5.1",
  "derive_more",
@@ -431,21 +431,6 @@ dependencies = [
  "futures-core",
  "paste",
  "pin-project-lite 0.2.14",
-]
-
-[[package]]
-name = "actix-session"
-version = "0.4.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "559b815f2b3ad84f8a17256069d7df16c3ee8069635c86758729521d62ca891d"
-dependencies = [
- "actix-service 1.0.6",
- "actix-web 3.3.2",
- "derive_more",
- "futures-util",
- "serde",
- "serde_json",
- "time 0.2.26",
 ]
 
 [[package]]
@@ -729,20 +714,6 @@ dependencies = [
  "base64 0.11.0",
  "bytes 0.5.6",
  "futures",
-]
-
-[[package]]
-name = "actix-web-static-files"
-version = "3.0.5"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "8b5bced189d398750426bd73719acfa63e2b3707e3804891e82e9cfa189ce9c8"
-dependencies = [
- "actix-service 1.0.6",
- "actix-web 3.3.2",
- "derive_more",
- "futures",
- "mime_guess",
- "path-slash",
 ]
 
 [[package]]
@@ -5283,11 +5254,10 @@ dependencies = [
  "actix-multipart",
  "actix-rt 1.1.1",
  "actix-service 2.0.2",
- "actix-session 0.4.1",
+ "actix-session",
  "actix-web 4.5.1",
  "actix-web-httpauth",
- "actix-web-static-files 3.0.5",
- "actix-web-static-files 4.0.1",
+ "actix-web-static-files",
  "alcoholic_jwt",
  "bdays",
  "bigdecimal",

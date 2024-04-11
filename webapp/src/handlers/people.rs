@@ -10,13 +10,14 @@ use crate::models::AggregateExperience;
 
 #[get("/{lang}/person/{code}")]
 pub async fn person_page(
-    web::Path((lang, code)): web::Path<(String, String)>, 
+    path: web::Path<(String, String)>, 
     data: web::Data<AppData>,
     
     req:HttpRequest,
-    id: Identity,
+    id: Option<Identity>,
 ) -> impl Responder {
-    
+    let (lang, code) = path.into_inner();
+
     let (mut ctx, _session_user, _role, _lang) = generate_basic_context(id, &lang, req.uri().path());
 
     let person_select = People::find_from_code(&code);
@@ -139,12 +140,13 @@ pub async fn person_graph(
 
 #[get("/{lang}/delete_person/{code}")]
 pub async fn delete_person(
-    web::Path((lang, code)): web::Path<(String, String)>,
+    path: web::Path<(String, String)>,
     data: web::Data<AppData>,
     
     req: HttpRequest,
-    id: Identity,
+    id: Option<Identity>,
 ) -> impl Responder {
+    let (lang, code) = path.into_inner();
 
     let (mut ctx, _session_user, _role, _lang) = generate_basic_context(id, &lang, req.uri().path());
 
@@ -168,12 +170,13 @@ pub async fn delete_person(
 
 #[post("/{lang}/delete_person/{code}")]
 pub async fn delete_person_post(
-    web::Path((lang, code)): web::Path<(String, String)>,
+    path: web::Path<(String, String)>,
     _data: web::Data<AppData>,
     _req: HttpRequest,
     _id: Identity,
     form: web::Form<DeleteForm>,
 ) -> impl Responder {
+    let (lang, code) = path.into_inner();
 
     let person = People::find_from_code(&code);
         

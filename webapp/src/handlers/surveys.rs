@@ -77,11 +77,13 @@ impl RenderPerson {
 #[get("/{lang}/survey_intro/{community_code}")]
 pub async fn survey_intro(
     data: web::Data<AppData>,
-    web::Path((lang, community_code)): web::Path<(String, String)>, 
+    path: web::Path<(String, String)>, 
     req:HttpRequest,
     
-    id: Identity,
+    id: Option<Identity>,
 ) -> impl Responder {
+    let (lang, community_code) = path.into_inner();
+
     println!("Access index");
 
     // Validate community
@@ -114,11 +116,12 @@ pub async fn survey_intro(
 #[get("/{lang}/first_experience_form/{community_code}")]
 pub async fn experience_form_handler(
     data: web::Data<AppData>,
-    web::Path((lang, community_code)): web::Path<(String, String)>, 
+    path: web::Path<(String, String)>, 
     
     req:HttpRequest,
-    id: Identity,
+    id: Option<Identity>,
 ) -> impl Responder {
+    let (lang, community_code) = path.into_inner();
     
     // Validate community
     let community_result = Communities::find_from_code(&community_code);
@@ -148,10 +151,12 @@ pub async fn experience_form_handler(
 pub async fn handle_experience_form_input(
     _data: web::Data<AppData>,
     
-    web::Path((lang, community_code)): web::Path<(String, String)>, 
+    path: web::Path<(String, String)>, 
     req: HttpRequest, 
     form: web::Form<AddExperienceForm>,
 ) -> impl Responder {
+    let (lang, community_code) = path.into_inner();
+
     println!("Handling Post Request: {:?}", req);
 
     let community_result = Communities::find_from_code(&community_code);
@@ -312,12 +317,14 @@ pub async fn handle_experience_form_input(
 
 #[get("/{lang}/add_experience_form/{code}")]
 pub async fn add_experience_form_handler(
-    web::Path((lang, code)): web::Path<(String, String)>, 
+    path: web::Path<(String, String)>, 
     data: web::Data<AppData>,
     
     req:HttpRequest,
-    id: Identity,
+    id: Option<Identity>,
 ) -> impl Responder {
+    let (lang, code) = path.into_inner();
+
     let (mut ctx, _session_user, _role, _lang) = generate_basic_context(id, &lang, req.uri().path());
 
     let p = People::find_from_code(&code).unwrap();
@@ -354,12 +361,13 @@ pub async fn add_experience_form_handler(
 
 #[post("/{lang}/add_experience_form/{code}")]
 pub async fn add_handle_experience_form_input(
-    web::Path((lang, code)): web::Path<(String, String)>,
+    path: web::Path<(String, String)>,
     _data: web::Data<AppData>,
     
     _req: HttpRequest, 
     form: web::Form<AddExperienceForm>,
 ) -> impl Responder {
+    let (lang, code) = path.into_inner();
 
     // validate form has data or re-load form
     if form.name.is_empty() || form.response_1.is_empty() {

@@ -43,7 +43,7 @@ impl InsertableVerification {
 
 impl EmailVerification {
     pub fn create(e: &InsertableVerification) -> Result<Self, CustomError> {
-        let conn = database::connection()?;
+        let mut conn = database::connection()?;
         let ev = diesel::insert_into(email_verification_code::table)
             .values(e)
             .on_conflict(email_verification_code::email_address)
@@ -57,7 +57,7 @@ impl EmailVerification {
     }
 
     pub fn find_by_email(email: &String) -> Result<Self, CustomError> {
-        let conn = database::connection()?;
+        let mut conn = database::connection()?;
         let v = email_verification_code::table
             .filter(email_verification_code::email_address.eq(&email))
             .first(&mut conn)?;
@@ -65,7 +65,7 @@ impl EmailVerification {
     }
 
     pub fn delete(id: i32) -> Result<usize, CustomError> {
-        let conn = database::connection()?;
+        let mut conn = database::connection()?;
         let res = diesel::delete(email_verification_code::table.filter(
             email_verification_code::id.eq(id)
         )).execute(&mut conn)?;
@@ -105,7 +105,7 @@ impl InsertablePasswordResetToken {
 
 impl PasswordResetToken {
     pub fn create(e: &InsertablePasswordResetToken) -> Result<Self, CustomError> {
-        let conn = database::connection()?;
+        let mut conn = database::connection()?;
         let ev = diesel::insert_into(password_reset_token::table)
             .values(e)
             .on_conflict(password_reset_token::email_address)
@@ -119,7 +119,7 @@ impl PasswordResetToken {
     }
 
     pub fn find_by_token(token: &String) -> Result<Self, CustomError> {
-        let conn = database::connection()?;
+        let mut conn = database::connection()?;
         let v = password_reset_token::table
             .filter(password_reset_token::reset_token.eq(&token))
             .first(&mut conn)?;
@@ -127,7 +127,7 @@ impl PasswordResetToken {
     }
 
     pub fn delete(id: i32) -> Result<usize, CustomError> {
-        let conn = database::connection()?;
+        let mut conn = database::connection()?;
         let res = diesel::delete(password_reset_token::table.filter(
             password_reset_token::id.eq(id)
         )).execute(&mut conn)?;

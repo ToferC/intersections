@@ -123,7 +123,7 @@ impl Communities {
     }
 
     pub fn find_all_real() -> Result<Vec<Self>, CustomError> {
-        let conn = database::connection()?;
+        let mut conn = database::connection()?;
         let communities = communities::table
             .filter(communities::test.eq(false))
             .load::<Communities>(&mut conn)?;
@@ -131,7 +131,7 @@ impl Communities {
     }
 
     pub fn find_test_ids() -> Result<Vec<i32>, CustomError> {
-        let conn = database::connection()?;
+        let mut conn = database::connection()?;
         let community_ids = communities::table
             .select(communities::id)
             .filter(communities::test.eq(true))
@@ -140,7 +140,7 @@ impl Communities {
     }
 
     pub fn find_all_open() -> Result<Vec<Self>, CustomError> {
-        let conn = database::connection()?;
+        let mut conn = database::connection()?;
         let communities = communities::table
             .filter(communities::open.eq(true))
             .load::<Communities>(&mut conn)?;
@@ -148,32 +148,32 @@ impl Communities {
     }
 
     pub fn find(id: i32) -> Result<Self, CustomError> {
-        let conn = database::connection()?;
+        let mut conn = database::connection()?;
         let community = communities::table.filter(communities::id.eq(id)).first(&mut conn)?;
         Ok(community)
     }
 
     pub fn find_by_owner_user_id(id: &i32) -> Result<Vec<Self>, CustomError> {
-        let conn = database::connection()?;
+        let mut conn = database::connection()?;
         let community = communities::table.filter(communities::user_id.eq(id))
             .load(&mut conn)?;
         Ok(community)
     }
 
     pub fn find_from_code(code: &String) -> Result<Self, CustomError> {
-        let conn = database::connection()?;
+        let mut conn = database::connection()?;
         let community = communities::table.filter(communities::code.eq(code)).first(&mut conn)?;
         Ok(community)
     }
 
     pub fn find_from_slug(slug: &String) -> Result<Self, CustomError> {
-        let conn = database::connection()?;
+        let mut conn = database::connection()?;
         let community = communities::table.filter(communities::slug.eq(slug)).first(&mut conn)?;
         Ok(community)
     }
 
     pub fn get_tag_slugs(lang: &str) -> Result<Vec<(String, String)>, CustomError> {
-        let conn = database::connection()?;
+        let mut conn = database::connection()?;
         let index = communities::table.inner_join(phrases::table
             .on(communities::tag.eq(phrases::id)
             .and(phrases::lang.eq(lang))))
@@ -206,7 +206,7 @@ impl Communities {
     }
 
     pub fn delete(id: i32) -> Result<usize, CustomError> {
-        let conn = database::connection()?;
+        let mut conn = database::connection()?;
         let res = diesel::delete(communities::table.filter(communities::id.eq(id))).execute(&mut conn)?;
         Ok(res)
     }

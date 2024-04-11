@@ -70,7 +70,7 @@ pub fn extract_identity_data(id: Option<Identity>) -> (String, String, Option<Id
 
 /// Generate context, session_user, role and node_names from id and lang
 pub fn generate_basic_context(
-        id: Identity,
+        id: Option<Identity>,
         lang: &str,
         path: &str,
     ) -> (Context, String, String, String) 
@@ -78,7 +78,7 @@ pub fn generate_basic_context(
     let mut ctx = Context::new();
 
     // Get session data and add to context
-    let (session_user, role, id) = extract_identity_data(Some(id));
+    let (session_user, role, id) = extract_identity_data(id);
     ctx.insert("session_user", &session_user);
     ctx.insert("role", &role);
 
@@ -101,16 +101,16 @@ pub fn generate_basic_context(
 
 /// Generate context, session_user and role from id and lang
 pub fn generate_email_context(
-    id: Identity,
+    session_user: &str,
+    role: &str,
     lang: &str,
     path: &str,) -> (Context, String, String, String) 
 {    
 let mut ctx = Context::new();
 
 // Get session data and add to context
-let (session_user, role, id) = extract_identity_data(Some(id));
-ctx.insert("session_user", &session_user);
-ctx.insert("role", &role);
+ctx.insert("session_user", session_user);
+ctx.insert("role", role);
 
 let validated_lang = match lang {
     "fr" => "fr",
@@ -121,7 +121,7 @@ let validated_lang = match lang {
 ctx.insert("lang", &validated_lang);
 ctx.insert("path", &path);
 
-(ctx, session_user, role, lang.to_owned())
+(ctx, session_user.to_string(), role.to_string(), lang.to_owned())
 }
 
 pub fn generate_unique_code(mut characters: usize, dashes: bool) -> String {

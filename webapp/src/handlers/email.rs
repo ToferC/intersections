@@ -7,7 +7,7 @@ use serde::{Deserialize};
 use regex::Regex;
 
 use crate::{AppData, generate_email_context};
-use crate::models::{Communities, CommunityData, Email, People};
+use crate::models::{Communities, CommunityData, Email, People, User};
 
 // for for single email address
 #[derive(Debug, Deserialize)]
@@ -22,12 +22,13 @@ pub struct EmailsForm {
 
 #[post("/{lang}/person/{code}")]
 pub async fn email_person_info(
-    web::Path((lang, code)): web::Path<(String, String)>,
+    path: web::Path<(String, String)>,
     data: web::Data<AppData>,
     req: HttpRequest,
-    id: Identity,
+    id: Option<Identity>,
     form: web::Form<EmailForm>,
 ) -> impl Responder {
+    let (lang, code) = path.into_inner();
 
     // validate form has data or re-load form
     if form.email.is_empty() {
@@ -38,7 +39,7 @@ pub async fn email_person_info(
 
     match person {
         Ok(person) => {
-            let (mut ctx, _, _, _) = generate_email_context(id, &lang, req.uri().path());
+            let (mut ctx, _, _, _) = generate_email_context("anonymous", "user", &lang, req.uri().path());
 
             let community = Communities::find(person.community_id).unwrap();
 
@@ -86,12 +87,13 @@ pub async fn email_person_info(
 
 #[post("/{lang}/send_community_email/{slug}")]
 pub async fn send_community_email(
-    web::Path((lang, slug)): web::Path<(String, String)>,
+    path: web::Path<(String, String)>,
     data: web::Data<AppData>,
     req: HttpRequest,
     id: Identity,
     form: web::Form<EmailsForm>,
 ) -> impl Responder {
+    let (lang, slug) = path.into_inner();
 
     // instantiate regex
     let re = Regex::new(r"([a-zA-Z0-9+._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9_-]+)").unwrap();
@@ -111,7 +113,9 @@ pub async fn send_community_email(
 
     match community {
         Ok(mut community) => {
-            let (mut ctx, _, _, _) = generate_email_context(id, &lang, req.uri().path());
+
+            let user = User::find_from_slug(&id.id().unwrap()).expect("Unable to find user from id");
+            let (mut ctx, _, _, _) = generate_email_context(&user.slug, &user.role, &lang, req.uri().path());
 
             let mut comm_data: CommunityData = serde_json::from_value(community.data.to_owned()).expect("Unable to retrieve community data");
 

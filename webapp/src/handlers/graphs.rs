@@ -1,9 +1,8 @@
 use std::{sync::Mutex};
 
-use actix_web::{web, get, HttpResponse, Responder, HttpRequest};
+use actix_web::{web, get, HttpResponse, Responder, HttpRequest, ResponseError};
 use actix_identity::Identity;
 use crate::{AppData, generate_basic_context};
-use error_handler::error_handler::CustomError;
 
 use std::collections::HashMap;
 
@@ -13,16 +12,15 @@ use crate::models::{CytoGraph, generate_node_cyto_graph};
 
 #[get("/{lang}/data_global_graph")]
 pub async fn data_global_graph(
-    web::Path(lang): web::Path<String>,
+    path: web::Path<String>,
     // no longer using appdata to hold graph
     // this function is a placeholder in case we go back here
     data: web::Data<AppData>,
     graph: web::Data<Mutex<CytoGraph>>,
-    
     req: HttpRequest,
-  
-    id: Identity,
+    id: Option<Identity>,
 ) -> impl Responder {
+    let lang = path.into_inner();
 
     let g = graph.lock().unwrap().clone();
         
@@ -43,14 +41,14 @@ pub async fn data_global_graph(
 
 #[get("/{lang}/global_graph")]
 pub async fn global_graph(
-    web::Path(lang): web::Path<String>,
+    path: web::Path<String>,
     data: web::Data<AppData>,
     
-    id:Identity,
+    id:Option<Identity>,
     req: HttpRequest,
   
 ) -> impl Responder {
-        
+    let lang = path.into_inner();
     let experience_vec = Experiences::find_all_real().expect("Unable to load experiences");
 
     // create vec of bridge connections from people
@@ -83,10 +81,11 @@ pub async fn global_graph(
 #[get("/{lang}/full_community_graph/{community_slug}")]
 pub async fn full_community_node_graph(
     data: web::Data<AppData>,
-    web::Path((lang, community_slug)): web::Path<(String, String)>,
+    path: web::Path<(String, String)>,
     req: HttpRequest,
-    id: Identity,
+    id: Option<Identity>,
 ) -> impl Responder {
+    let (lang, community_slug) = path.into_inner();
 
     // Validate community
     let community_result = Communities::find_from_slug(&community_slug);

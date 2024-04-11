@@ -89,7 +89,7 @@ impl Nodes {
     }
 
     pub fn find_all_names(lang: &str) -> Result<Vec<String>, CustomError> {
-        let conn = database::connection()?;
+        let mut conn = database::connection()?;
         let names = nodes::table.inner_join(phrases::table
             .on(nodes::node_name.eq(phrases::id)
             .and(phrases::lang.eq(lang))))
@@ -109,7 +109,7 @@ impl Nodes {
     pub fn find_all_linked_names_slugs(lang: &str) -> Result<Vec<(String, String)>, CustomError> {
         // return string and slug for all nodes created outside of demo community
         
-        let conn = database::connection()?;
+        let mut conn = database::connection()?;
 
         let node_ids = Experiences::find_real_node_ids().expect("Unable to load experiences");
 
@@ -124,7 +124,7 @@ impl Nodes {
     }
 
     pub fn find(id: i32, lang: &str) -> Result<(Self, Phrases), CustomError> {
-        let conn = database::connection()?;
+        let mut conn = database::connection()?;
         let node = nodes::table.inner_join(phrases::table
             .on(nodes::node_name.eq(phrases::id)
             .and(phrases::lang.eq(lang))))
@@ -136,7 +136,7 @@ impl Nodes {
     pub fn find_by_slug(node_slug: &String) -> Result<Self, CustomError> {
         // returns a node and localized name based on a slug and language call
         // note that the slug is not localized
-        let conn = database::connection()?;
+        let mut conn = database::connection()?;
         let node = nodes::table
             .filter(nodes::slug.eq(node_slug))
             .first::<Nodes>(&mut conn)?;
@@ -153,7 +153,7 @@ impl Nodes {
     }
 
     pub fn delete(id: i32) -> Result<usize, CustomError> {
-        let conn = database::connection()?;
+        let mut conn = database::connection()?;
         let res = diesel::delete(nodes::table.filter(nodes::id.eq(id))).execute(&mut conn)?;
         Ok(res)
     }

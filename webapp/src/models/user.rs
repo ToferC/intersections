@@ -100,7 +100,7 @@ impl From<UserData> for InsertableUser {
 
 impl User {
     pub fn create(user_data: UserData) -> Result<Self, CustomError> {
-        let conn = database::connection()?;
+        let mut conn = database::connection()?;
         let insertable_user = InsertableUser::from(user_data.clone());
         let user = diesel::insert_into(users::table)
             .values(insertable_user)
@@ -121,7 +121,7 @@ impl User {
     }
 
     pub fn find_admins() -> Result<Vec<Self>, CustomError> {
-        let conn = database::connection()?;
+        let mut conn = database::connection()?;
         let users = users::table
             .filter(users::role.eq("admin"))
             .load::<User>(&mut conn)?;
@@ -129,19 +129,19 @@ impl User {
     }
 
     pub fn find(id: i32) -> Result<Self, CustomError> {
-        let conn = database::connection()?;
+        let mut conn = database::connection()?;
         let user = users::table.filter(users::id.eq(id)).first(&mut conn)?;
         Ok(user)
     }
 
     pub fn find_from_email(email: &String) -> Result<Self, CustomError> {
-        let conn = database::connection()?;
+        let mut conn = database::connection()?;
         let user: User = users::table.filter(users::email.eq(email)).first(&mut conn)?;
         Ok(user)
     }
 
     pub fn find_slim_from_email(email: &String) -> Result<SlimUser, CustomError> {
-        let conn = database::connection()?;
+        let mut conn = database::connection()?;
         let user: User = users::table.filter(users::email.eq(email)).first(&mut conn)?;
 
         let sl = SlimUser::from(user);
@@ -149,25 +149,25 @@ impl User {
     }
 
     pub fn find_from_slug(slug: &String) -> Result<User, CustomError> {
-        let conn = database::connection()?;
+        let mut conn = database::connection()?;
         let user: User = users::table.filter(users::slug.eq(slug)).first(&mut conn)?;
         Ok(user)
     }
 
     pub fn find_id_from_slug(slug: &String) -> Result<i32, CustomError> {
-        let conn = database::connection()?;
+        let mut conn = database::connection()?;
         let id: i32 = users::table.select(users::id).filter(users::slug.eq(slug)).first(&mut conn)?;
         Ok(id)
     }
 
     pub fn find_slim_from_slug(slug: &String) -> Result<SlimUser, CustomError> {
-        let conn = database::connection()?;
+        let mut conn = database::connection()?;
         let user: User = users::table.filter(users::slug.eq(slug)).first(&mut conn)?;
         Ok(SlimUser::from(user))
     }
 
     pub fn find_from_user_name(user_name: &String) -> Result<SlimUser, CustomError> {
-        let conn = database::connection()?;
+        let mut conn = database::connection()?;
         let user: User = users::table.filter(users::user_name.eq(user_name)).first(&mut conn)?;
         let sl = SlimUser::from(user);
         Ok(sl)
@@ -198,7 +198,7 @@ impl User {
     }
 
     pub fn delete(id: i32) -> Result<usize, CustomError> {
-        let conn = database::connection()?;
+        let mut conn = database::connection()?;
         let res = diesel::delete(users::table.filter(users::id.eq(id))).execute(&mut conn)?;
         Ok(res)
     }

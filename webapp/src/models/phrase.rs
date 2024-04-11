@@ -53,7 +53,7 @@ impl Phrases {
     }
 
     pub fn update_or_create(phrase: &InsertablePhrase) -> Result<Self, CustomError> {
-        let conn = database::connection()?;
+        let mut conn = database::connection()?;
 
         let p = diesel::insert_into(phrases::table)
             .values(phrase)
@@ -83,7 +83,7 @@ impl Phrases {
     }
 
     pub fn get_phrases_from_ids(ids: Vec<i32>, lang: &str) -> Result<Vec<Self>, CustomError> {
-        let conn = database::connection()?;
+        let mut conn = database::connection()?;
         let phrases = phrases::table
             .filter(phrases::id.eq_any(ids)
             .and(phrases::lang.eq(lang)))
@@ -93,7 +93,7 @@ impl Phrases {
     }
 
     pub fn get_phrase_map(ids: Vec<i32>, lang: &str) -> Result<BTreeMap<i32, String>, CustomError> {
-        let conn = database::connection()?;
+        let mut conn = database::connection()?;
         let phrases = phrases::table
             .filter(phrases::id.eq_any(ids)
             .and(phrases::lang.eq(lang)))
@@ -109,7 +109,7 @@ impl Phrases {
     }
 
     pub fn find_from_text(text: &str, lang: &str) -> Result<Self, CustomError> {
-        let conn = database::connection()?;
+        let mut conn = database::connection()?;
         let phrases = phrases::table
             .filter(phrases::text.eq(text)
             .and(phrases::lang.eq(lang)))
@@ -119,7 +119,7 @@ impl Phrases {
     }
 
     pub fn find(id: i32, lang: &str) -> Result<Self, CustomError> {
-        let conn = database::connection()?;
+        let mut conn = database::connection()?;
         let phrase = phrases::table.filter(phrases::id.eq(id)
             .and(phrases::lang.eq(lang)))
             .first(&mut conn)?;
@@ -135,7 +135,7 @@ impl Phrases {
     }
 
     pub fn delete(id: i32) -> Result<usize, CustomError> {
-        let conn = database::connection()?;
+        let mut conn = database::connection()?;
         let res = diesel::delete(phrases::table.filter(phrases::id.eq(id))).execute(&mut conn)?;
         Ok(res)
     }

@@ -1,6 +1,8 @@
 use std::env;
 use actix_web::{App, HttpServer, middleware, web, guard};
-use actix_identity::{CookieIdentityPolicy, IdentityService};
+use actix_web::cookie::Key;
+use actix_identity::IdentityMiddleware;
+use actix_session::{SessionMiddleware, storage::CookieSessionStore};
 use actix_web_static_files;
 use tera::Tera;
 use tera_text_filters::snake_case;
@@ -31,7 +33,10 @@ async fn main() -> std::io::Result<()> {
     env_logger::init();
     
     let environment = env::var("ENVIRONMENT");
-    let cookie_secret_key = env::var("COOKIE_SECRET").expect("Cant load cookie secret variable");
+
+    let cookie_secret = env::var("COOKIE_SECRET_KEY").expect("Unable to find secret key");
+
+    let cookie_secret_key: Key = Key::from(&cookie_secret.as_bytes());
 
     let environment = match environment {
         Ok(v) => v,
@@ -99,9 +104,15 @@ async fn main() -> std::io::Result<()> {
             
         let generated = generate();
 
+        let data = web::Data::new(AppData {
+            tmpl: tera,
+            mail_client: sg,
+        });
+
         App::new()
             .wrap(middleware::Logger::default())
             .configure(handlers::init_routes)
+            .app_data(data.clone())
             .service(actix_web_static_files::ResourceFiles::new(
                 "/static", generated,
             ))
@@ -110,15 +121,14 @@ async fn main() -> std::io::Result<()> {
                     .guard(guard::Not(guard::Get()))
                     .to(handlers::f404),
             )
-            .data(AppData {
-                tmpl: tera,
-                mail_client: sg,
-            })
             // .app_data(web::Data::from(graph))
-            .wrap(IdentityService::new(
-                CookieIdentityPolicy::new(&cookie_secret_key.as_bytes())
-            .name("user-auth")
-            .secure(false)))
+            .wrap(IdentityMiddleware::default())
+            .wrap(
+                SessionMiddleware::builder(
+                    CookieSessionStore::default(), cookie_secret_key.clone())
+                    .cookie_secure(false)
+                    .build()
+                )
     })
     .bind(format!("{}:{}", host, port))?
     .run()

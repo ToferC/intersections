@@ -2,8 +2,8 @@
 
 use std::env;
 
-use actix_web::{HttpRequest, HttpResponse, Responder, get, post, web};
-use actix_session::{Session, UserSession};
+use actix_web::{get, post, web, HttpMessage, HttpRequest, HttpResponse, Responder};
+use actix_session::{Session, SessionExt};
 use actix_identity::{Identity};
 use serde::{Deserialize};
 
@@ -39,12 +39,13 @@ pub struct PasswordForm {
 
 #[get("/{lang}/log_in")]
 pub async fn login_handler(
-    web::Path(lang): web::Path<String>,
+    path: web::Path<String>,
     data: web::Data<AppData>,
     
     req:HttpRequest,
-    id: Identity,
+    id: Option<Identity>,
 ) -> impl Responder {
+    let lang = path.into_inner();
 
     let (ctx, _session_user, _role, _lang) = generate_basic_context(id, &lang, req.uri().path());
 
@@ -54,18 +55,20 @@ pub async fn login_handler(
 
 #[post("/{lang}/log_in")]
 pub async fn login_form_input(
-    web::Path(lang): web::Path<String>,
+    path: web::Path<String>,
     _data: web::Data<AppData>,
-    _req: HttpRequest, 
+    req: HttpRequest, 
     form: web::Form<LoginForm>,
     _session: Session,
-    id: Identity,
+    _id: Option<Identity>,
 ) -> impl Responder {
+
+    let lang = path.into_inner();
 
     // validate form has data or re-load form
     if form.email.is_empty() || form.password.is_empty() {
         println!("Form is empty");
-        return HttpResponse::Found().header("Location", format!("/{}/log_in", &lang)).finish()
+        return HttpResponse::Found().append_header(("Location", format!("/{}/log_in", &lang))).finish()
     };
     
     let user = User::find_from_email(&form.email.to_lowercase().trim().to_string());
@@ -78,18 +81,18 @@ pub async fn login_form_input(
             if verify(&user, &form.password.trim().to_string()) {
                 println!("Verified");
 
-                id.remember(user.slug.to_owned());
+                actix_identity::Identity::login(&req.extensions(), user.slug.to_owned()).unwrap();
                         
-                return HttpResponse::Found().header("Location", format!("/{}/user/{}", &lang, user.slug)).finish()
+                return HttpResponse::Found().append_header(("Location", format!("/{}/user/{}", &lang, user.slug))).finish()
             } else {
                 // Invalid login
                 println!("User not verified");
-                return HttpResponse::Found().header("Location", format!("/{}/log_in", &lang)).finish()
+                return HttpResponse::Found().append_header(("Location", format!("/{}/log_in", &lang))).finish()
             }
         },
         _ => {
             println!("User not verified");
-            return HttpResponse::Found().header("Location", format!("/{}/log_in", &lang)).finish()
+            return HttpResponse::Found().append_header(("Location", format!("/{}/log_in", &lang))).finish()
         },
     };
 
@@ -97,12 +100,13 @@ pub async fn login_form_input(
 
 #[get("/{lang}/register")]
 pub async fn register_handler(
-     web::Path(lang): web::Path<String>,
+    path: web::Path<String>,
     data: web::Data<AppData>,
     
     req:HttpRequest,
-    id: Identity,
+    id: Option<Identity>,
 ) -> impl Responder {
+    let lang = path.into_inner();
     
     let (ctx, _session_user, _role, _lang) = generate_basic_context(id, &lang, req.uri().path());
 
@@ -112,12 +116,13 @@ pub async fn register_handler(
 
 #[get("/{lang}/registration_error")]
 pub async fn registration_error(
-    web::Path(lang): web::Path<String>,
+    path: web::Path<String>,
     data: web::Data<AppData>,
     
     req:HttpRequest,
-    id: Identity,
-) -> impl Responder {
+    id: Option<Identity>,
+) -> impl Responder {    
+    let lang = path.into_inner();
     
     let (ctx, _session_user, _role, _lang) = generate_basic_context(id, &lang, req.uri().path());
 
@@ -127,12 +132,14 @@ pub async fn registration_error(
 
 #[post("/{lang}/register")]
 pub async fn register_form_input(
-    web::Path(lang): web::Path<String>,
+    path: web::Path<String>,
     data: web::Data<AppData>,
     req: HttpRequest, 
     form: web::Form<RegisterForm>,
     id: Identity,
 ) -> impl Responder {
+    let lang = path.into_inner();
+
     println!("Handling Post Request: {:?}", req);
 
     // validate form has data or re-load form
@@ -158,17 +165,17 @@ pub async fn register_form_input(
         
             let session = req.get_session();
         
-            session.set("role", user.role.to_owned()).expect("Unable to set role cookie");
-            session.set("session_user", user.slug.to_owned()).expect("Unable to set user name");
+            session.insert("role", user.role.to_owned()).expect("Unable to set role cookie");
+            session.insert("session_user", user.slug.to_owned()).expect("Unable to set user name");
         
-            id.remember(user.slug.to_owned());
+            actix_identity::Identity::login(&req.extensions(), user.slug.to_owned()).unwrap();
 
             // send verification email
             let verification = EmailVerification::create(
                 &InsertableVerification::new(&user.email)
             ).expect("Unable to create verification");
 
-            let (mut email_ctx, _, _, _) = generate_email_context(id, &lang, req.uri().path());
+            let (mut email_ctx, _, _, _) = generate_email_context(&user.slug, &user.role, &lang, req.uri().path());
             email_ctx.insert("user", &user);
             email_ctx.insert("verification", &verification);
 
@@ -210,14 +217,15 @@ pub async fn register_form_input(
 
 #[get("/{lang}/email_verification")]
 pub async fn email_verification(
-    web::Path(lang): web::Path<String>,
+    path: web::Path<String>,
     data: web::Data<AppData>,
     
     req:HttpRequest,
-    id: Identity,
+    id: Option<Identity>,
 ) -> impl Responder {
+    let lang = path.into_inner();
     
-    let (mut ctx, session_user, role, _lang) = generate_basic_context(id.clone(), &lang, req.uri().path());
+    let (mut ctx, session_user, role, _lang) = generate_basic_context(id, &lang, req.uri().path());
 
     if session_user == "".to_string() && role != "admin".to_string() {
         // person signed in shouldn't be here
@@ -242,13 +250,14 @@ pub async fn email_verification(
 
 #[get("/{lang}/resend_email_verification")]
 pub async fn resend_email_verification(
-    web::Path(lang): web::Path<String>,
+    path: web::Path<String>,
     data: web::Data<AppData>,
     req:HttpRequest,
-    id: Identity,
+    id: Option<Identity>,
 ) -> impl Responder {
+    let lang = path.into_inner();
     
-    let (mut ctx, session_user, role, _lang) = generate_basic_context(id.clone(), &lang, req.uri().path());
+    let (mut ctx, session_user, role, _lang) = generate_basic_context(id, &lang, req.uri().path());
 
     if session_user == "".to_string() && role != "admin".to_string() {
         // person signed in shouldn't be here
@@ -266,7 +275,7 @@ pub async fn resend_email_verification(
                 &InsertableVerification::new(&user.email)
             ).expect("Unable to create verification");
 
-            let (mut email_ctx, _, _, _) = generate_email_context(id, &lang, req.uri().path());
+            let (mut email_ctx, _, _, _) = generate_email_context(&session_user, &role, &lang, req.uri().path());
             email_ctx.insert("user", &user);
             email_ctx.insert("verification", &verification);
 
@@ -309,16 +318,18 @@ pub async fn resend_email_verification(
 
 #[post("/{lang}/verify_code")]
 pub async fn verify_code(
-    web::Path(lang): web::Path<String>,
+    path: web::Path<String>,
     _data: web::Data<AppData>,
     req: HttpRequest, 
     form: web::Form<VerifyForm>,
     id: Identity,
 ) -> impl Responder {
+    let lang = path.into_inner();
+
     println!("Handling Post Request: {:?}", req);
 
     // Get session data and add to context
-    let (session_user, _role) = extract_identity_data(&id);
+    let (session_user, _role, _id) = extract_identity_data(Some(id));
 
     // validate form has data or re-load form
     if form.code.is_empty() || session_user == "".to_string() {
@@ -348,29 +359,32 @@ pub async fn verify_code(
 
 #[get("/{lang}/log_out")]
 pub async fn logout(
-     web::Path(lang): web::Path<String>,
+    path: web::Path<String>,
     _data: web::Data<AppData>,
     req: HttpRequest,
     id: Identity,
 ) -> impl Responder {
+    let lang = path.into_inner();
+
     println!("Handling Post Request: {:?}", req);
 
     let session = req.get_session();
 
     session.clear();
-    id.forget();
+    id.logout();
 
     HttpResponse::Found().header("Location", format!("/{}", &lang)).finish()
 }
 
 #[get("/{lang}/request_password_reset")]
 pub async fn request_password_reset(
-    web::Path(lang): web::Path<String>,
+    path: web::Path<String>,
     data: web::Data<AppData>,
     
     req:HttpRequest,
-    id: Identity,
+    id: Option<Identity>,
 ) -> impl Responder {
+    let lang = path.into_inner();
     
     let (ctx, _session_user, _role, _lang) = generate_basic_context(id, &lang, req.uri().path());
 
@@ -380,21 +394,23 @@ pub async fn request_password_reset(
 
 #[post("/{lang}/request_password_reset")]
 pub async fn request_password_reset_post(
-    web::Path(lang): web::Path<String>,
+    path: web::Path<String>,
     data: web::Data<AppData>,
     req: HttpRequest, 
     form: web::Form<EmailForm>,
     
     id: Identity,
 ) -> impl Responder {
+    let lang = path.into_inner();
+
     println!("Handling Post Request: {:?}", req);
 
     // Get session data and add to context
-    let (_session_user, _role) = extract_identity_data(&id);
+    let (_session_user, _role, id) = extract_identity_data(Some(id));
 
     // validate form has data or re-load form
     if form.email.is_empty() {
-        return HttpResponse::Found().header("Location", format!("/{}/email_verification", &lang)).finish()
+        return HttpResponse::Found().append_header(("Location", format!("/{}/email_verification", &lang))).finish()
     };
 
     // load user
@@ -458,12 +474,13 @@ pub async fn request_password_reset_post(
 
 #[get("/{lang}/password_email_sent")]
 pub async fn password_email_sent(
-     web::Path(lang): web::Path<String>,
+    path: web::Path<String>,
     data: web::Data<AppData>,
     
     req:HttpRequest,
-    id: Identity,
+    id: Option<Identity>,
 ) -> impl Responder {
+    let lang = path.into_inner();
     
     let (ctx, _session_user, _role, _lang) = generate_basic_context(id, &lang, req.uri().path());
 
@@ -473,12 +490,14 @@ pub async fn password_email_sent(
 
 #[get("/{lang}/password_reset/{token}")]
 pub async fn password_reset(
-    web::Path((lang, token)): web::Path<(String, String)>,
+    path: web::Path<(String, String)>,
     data: web::Data<AppData>,
     
     req:HttpRequest,
-    id: Identity,
+    id: Option<Identity>,
 ) -> impl Responder {
+    let (lang, token) = path.into_inner();
+
 
     let result = PasswordResetToken::find_by_token(&token);
 
@@ -504,12 +523,13 @@ pub async fn password_reset(
 
 #[post("/{lang}/password_reset/{token}")]
 pub async fn password_reset_post(
-    web::Path((lang, token)): web::Path<(String, String)>,
+    path: web::Path<(String, String)>,
     _data: web::Data<AppData>,
-    _req: HttpRequest, 
+    req: HttpRequest, 
     form: web::Form<PasswordForm>,
     id: Identity,
 ) -> impl Responder {
+    let (lang, token) = path.into_inner();
 
     // validate form has data or re-load form
     if form.password.is_empty() || &token == "" {
@@ -539,7 +559,7 @@ pub async fn password_reset_post(
                     PasswordResetToken::delete(reset_token.id).expect("Unable to delete token");
 
                     // log in user
-                    id.remember(user.slug.to_owned());
+                    actix_identity::Identity::login(&req.extensions(), user.slug.to_owned()).unwrap();
                         
                     return HttpResponse::Found().header("Location", format!("/{}/user/{}", &lang, user.slug)).finish()
                 },

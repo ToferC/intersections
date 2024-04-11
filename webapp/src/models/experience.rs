@@ -125,7 +125,7 @@ impl Experiences {
 
     pub fn find_real_node_ids() -> Result<Vec<i32>, CustomError> {
         // return vec of user entered node IDs
-        let conn = database::connection()?;
+        let mut conn = database::connection()?;
 
         let real_people_ids = People::find_real_ids().expect("Unable to load real people");
 
@@ -138,7 +138,7 @@ impl Experiences {
     }
 
     pub fn load_api_data() -> Result<Vec<(People, Vec<(Experiences, Nodes)>)>, CustomError> {
-        let conn = database::connection()?;
+        let mut conn = database::connection()?;
         let mut people = People::find_all()?;
 
         for mut person in people.iter_mut() {
@@ -165,14 +165,14 @@ impl Experiences {
     }
 
     pub fn find(id: i32) -> Result<Self, CustomError> {
-        let conn = database::connection()?;
+        let mut conn = database::connection()?;
         let experience = experiences::table.filter(experiences::id.eq(id)).first(&mut conn)?;
         Ok(experience)
     }
 
     /*
     pub fn find_from_node_id(id: i32, lang: &str) -> Result<(Vec<(Self, Phrases)>, Vec<Phrases>), CustomError> {
-        let conn = database::connection()?;
+        let mut conn = database::connection()?;
         /*
         let experience_vec = experiences::table.filter(experiences::node_id.eq(id))
             .load::<Experiences>(&mut conn)?;
@@ -198,7 +198,7 @@ impl Experiences {
     */
 
     pub fn find_from_node_id(id: i32, lang: &str) -> Result<Vec<(Self, Phrases)>, CustomError> {
-        let conn = database::connection()?;
+        let mut conn = database::connection()?;
         /*
         let experience_vec = experiences::table.filter(experiences::node_id.eq(id))
             .load::<Experiences>(&mut conn)?;
@@ -214,7 +214,7 @@ impl Experiences {
     }
 
     pub fn find_from_people_id(id: i32) -> Result<Vec<Self>, CustomError> {
-        let conn = database::connection()?;
+        let mut conn = database::connection()?;
         let experience_vec = experiences::table.filter(experiences::person_id.eq(id))
             .load::<Experiences>(&mut conn)?;
         
@@ -231,7 +231,7 @@ impl Experiences {
     }
 
     pub fn delete(id: i32) -> Result<usize, CustomError> {
-        let conn = database::connection()?;
+        let mut conn = database::connection()?;
         let res = diesel::delete(experiences::table.filter(experiences::id.eq(id))).execute(&mut conn)?;
         Ok(res)
     }

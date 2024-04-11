@@ -27,8 +27,9 @@ mod utility {
 
     #[get("/toggle_language/{lang}")]
     pub async fn toggle_language_index(
-        web::Path(lang): web::Path<String>,
+        path: web::Path<String>,
     ) -> impl Responder {
+        let lang = path.into_inner();
 
         let new_lang = match lang.as_str() {
             "fr" => "en",
@@ -46,9 +47,10 @@ mod utility {
 
     #[get("/toggle_language/{lang}/{url}")]
     pub async fn toggle_language(
-        web::Path((lang, url)): web::Path<(String, String)>,
+       path: web::Path<(String, String)>,
         _req: HttpRequest,
     ) -> impl Responder {
+        let (lang, url) = path.into_inner();
         println!("url: {}", &url);
 
         let new_lang = if lang.as_str() == "en" {
@@ -69,9 +71,10 @@ mod utility {
 
     #[get("/toggle_language/{lang}/{url}/{url2}")]
     pub async fn toggle_language_two(
-        web::Path((lang, url, url2)): web::Path<(String, String, String)>,
+        path: web::Path<(String, String, String)>,
         _req: HttpRequest,
     ) -> impl Responder {
+        let (lang, url, url2) = path.into_inner();
         println!("url: {}/{}", &url, &url2);
 
         let new_lang = if lang.as_str() == "en" {
@@ -89,9 +92,10 @@ mod utility {
 
     #[get("/toggle_language/{lang}/{url}/{url2}/{url3}")]
     pub async fn toggle_language_three(
-        web::Path((lang, url, url2, url3)): web::Path<(String, String, String, String)>,
+        path: web::Path<(String, String, String, String)>,
         _req: HttpRequest,
     ) -> impl Responder {
+        let (lang, url, url2, url3) = path.into_inner();
         println!("url: {}/{}/{}", &url, &url2, &url3);
 
         let new_lang = if lang.as_str() == "en" {

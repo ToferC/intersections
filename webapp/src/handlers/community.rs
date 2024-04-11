@@ -4,8 +4,9 @@
 use std::env;
 use std::sync::Arc;
 
-use actix_web::{HttpRequest, HttpResponse, Responder, get, post, web};
+use actix_web::{HttpRequest, HttpResponse, ResponseError, Responder, get, post, web};
 use actix_identity::Identity;
+use error_handler::error_handler::CustomError;
 use inflector::Inflector;
 use serde::Deserialize;
 
@@ -13,7 +14,6 @@ use qrcode_generator::QrCodeEcc;
 
 use crate::{AppData, extract_identity_data, generate_basic_context, models::Phrases};
 use crate::models::{Communities, NewCommunity, User, generate_phrases, translate_phrases};
-use error_handler::error_handler::CustomError;
 
 #[derive(Deserialize, Debug)]
 pub struct CommunityForm {
@@ -33,7 +33,7 @@ pub async fn community_index(
     path: web::Path<String>,
     data: web::Data<AppData>,
     
-    id: Identity,
+    id: Option<Identity>,
     req:HttpRequest) -> impl Responder {
 
     let lang = path.into_inner();
@@ -79,11 +79,13 @@ pub async fn community_index(
 
 #[get("/{lang}/open_community_index")]
 pub async fn open_community_index(
-    web::Path(lang): web::Path<String>,
+    path: web::Path<String>,
     data: web::Data<AppData>,
     
-    id: Identity,
+    id: Option<Identity>,
     req:HttpRequest) -> impl Responder {
+
+    let lang = path.into_inner();
     
     let (mut ctx, _session_user, _role, _lang) = generate_basic_context(id, &lang, req.uri().path());
 
@@ -119,14 +121,16 @@ pub async fn open_community_index(
 
 #[get("/{lang}/community/{community_slug}")]
 pub async fn view_community(
-    web::Path((lang, community_slug)): web::Path<(String, String)>,
+    path: web::Path<(String, String)>,
     data: web::Data<AppData>,
     
     req:HttpRequest,
     id: Identity,
 ) -> impl Responder {
-    
-    let (mut ctx, session_user, _role, _lang) = generate_basic_context(id, &lang, req.uri().path());
+
+    let (lang, community_slug) = path.into_inner();
+
+    let (mut ctx, session_user, _role, _lang) = generate_basic_context(Some(id), &lang, req.uri().path());
     
     let community_select = Communities::find_from_slug(&community_slug);
 
@@ -203,14 +207,16 @@ pub async fn view_community(
 
 #[get("/{lang}/add_community")]
 pub async fn add_community(
-    web::Path(lang): web::Path<String>,
+    path: web::Path<String>,
     data: web::Data<AppData>,
     
     req:HttpRequest,
     id: Identity,
 ) -> impl Responder {
+
+    let lang = path.into_inner();
     
-    let (ctx, session_user, _role, _lang) = generate_basic_context(id, &lang, req.uri().path());
+    let (ctx, session_user, _role, _lang) = generate_basic_context(Some(id), &lang, req.uri().path());
 
     if session_user != "" {
         let rendered = data.tmpl.render("communities/add_community.html", &ctx).unwrap();
@@ -227,21 +233,24 @@ pub async fn add_community(
 
 #[post("/{lang}/add_community")]
 pub async fn add_community_form_input(
-    web::Path(lang): web::Path<String>,
+    path: web::Path<String>,
     _data: web::Data<AppData>,
     req: HttpRequest, 
     form: web::Form<CommunityForm>,
     id: Identity,
 ) -> impl Responder {
+
+    let lang = path.into_inner();
+
     println!("Handling Post Request: {:?}", req);
 
     // validate form has data or re-load form
     if form.community_name.is_empty() || form.description.is_empty() {
-        return HttpResponse::Found().header("Location", format!("/{}/add_community", &lang)).finish()
+        return HttpResponse::Found().append_header(("Location", format!("/{}/add_community", &lang))).finish()
     };
 
     // validate user
-    let user = User::find_from_slug(&id.identity().unwrap());
+    let user = User::find_from_slug(&id.id().unwrap());
         
     match user {
         Ok(u) => {
@@ -300,13 +309,15 @@ pub async fn add_community_form_input(
 
 #[get("/{lang}/edit_community/{community_slug}")]
 pub async fn edit_community(
-    web::Path((lang, community_slug)): web::Path<(String, String)>,
+    path: web::Path<(String, String)>,
     data: web::Data<AppData>,
     
     req:HttpRequest,
     id: Identity,
 ) -> impl Responder {
-    let (mut ctx, session_user, _role, _lang) = generate_basic_context(id, &lang, req.uri().path());
+    let (lang, community_slug) = path.into_inner();
+
+    let (mut ctx, session_user, _role, _lang) = generate_basic_context(Some(id), &lang, req.uri().path());
 
     // validate user
     let user = User::find_from_slug(&session_user);
@@ -350,12 +361,14 @@ pub async fn edit_community(
 
 #[post("/{lang}/edit_community/{community_slug}")]
 pub async fn edit_community_form_input(
-    web::Path((lang, community_slug)): web::Path<(String, String)>,
+    path: web::Path<(String, String)>,
     _data: web::Data<AppData>,
     req: HttpRequest, 
     form: web::Form<CommunityForm>,
     id: Identity,
 ) -> impl Responder {
+    let (lang, community_slug) = path.into_inner();
+
     println!("Handling Post Request: {:?}", req);
 
     // validate form has data or re-load form
@@ -364,7 +377,7 @@ pub async fn edit_community_form_input(
     };
 
     // validate user
-    let user = User::find_from_slug(&id.identity().unwrap());
+    let user = User::find_from_slug(&id.id().unwrap());
         
     match user {
         Ok(u) => {
@@ -437,14 +450,15 @@ pub async fn edit_community_form_input(
 
 #[get("/{lang}/delete_community/{code}")]
 pub async fn delete_community(
-    web::Path((lang, code)): web::Path<(String, String)>,
+    path: web::Path<(String, String)>,
     data: web::Data<AppData>,
     
     req: HttpRequest,
     id: Identity,
 ) -> impl Responder {
+    let (lang, code) = path.into_inner();
 
-    let (mut ctx, session_user, role, _lang) = generate_basic_context(id, &lang, req.uri().path());
+    let (mut ctx, session_user, role, _lang) = generate_basic_context(Some(id), &lang, req.uri().path());
     
     let user = match User::find_from_slug(&session_user){
         Ok(u) => u,
@@ -482,14 +496,15 @@ pub async fn delete_community(
 
 #[post("/{lang}/delete_community/{code}")]
 pub async fn delete_community_form(
-    web::Path((lang, code)): web::Path<(String, String)>,
+    path: web::Path<(String, String)>,
     _data: web::Data<AppData>,
     _req: HttpRequest,
     id: Identity,
     form: web::Form<DeleteCommunityForm>,
 ) -> impl Responder {
+    let (lang, code) = path.into_inner();
 
-    let (session_user, role) = extract_identity_data(&id);
+    let (session_user, role, id) = extract_identity_data(Some(id));
     
     let user = match User::find_from_slug(&session_user){
         Ok(u) => u,

@@ -12,11 +12,13 @@ use crate::schema::{nodes};
 #[get("/{lang}/api")]
 pub async fn api_base(
     data: web::Data<AppData>,
-    web::Path(lang): web::Path<String>,
+    path: web::Path<String>,
      
     req:HttpRequest,
-    id: Identity,
+    id: Option<Identity>,
 ) -> impl Responder {
+
+    let lang = path.into_inner();
     
     let (ctx, _, _, _) = generate_basic_context(id, &lang, req.uri().path());
     
@@ -51,8 +53,10 @@ pub async fn api_phrases() -> impl Responder {
 
 #[get("/api/person/{code}")]
 pub async fn person_api(
-    web::Path(code): web::Path<String>,
+    path: web::Path<String>,
 ) -> impl Responder {
+
+    let code = path.into_inner();
     
     let mut conn = database::connection().expect("Unable to connect to db");
 
@@ -91,8 +95,10 @@ pub async fn person_api(
 }
 
 #[get("/api//experience/{id}")]
-pub async fn find_experience(web::Path(id): web::Path<i32>) -> impl Responder {
+pub async fn find_experience(path: web::Path<i32>) -> impl Responder {
     
+    let id = path.into_inner();
+
     HttpResponse::Ok().json(Experiences::find(id).unwrap())
 }
 

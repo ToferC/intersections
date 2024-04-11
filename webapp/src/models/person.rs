@@ -81,7 +81,7 @@ impl People {
     }
 
     pub fn find_all_real() -> Result<Vec<Self>, CustomError> {
-        let conn = database::connection()?;
+        let mut conn = database::connection()?;
 
         let test_commmunity_ids = Communities::find_test_ids().expect("Unable to load communities");
         
@@ -92,7 +92,7 @@ impl People {
     }
 
     pub fn find_real_ids() -> Result<Vec<i32>, CustomError> {
-        let conn = database::connection()?;
+        let mut conn = database::connection()?;
 
         let test_commmunity_ids = Communities::find_test_ids().expect("Unable to load communities");
         
@@ -105,19 +105,19 @@ impl People {
     }
 
     pub fn find(id: i32) -> Result<Self, CustomError> {
-        let conn = database::connection()?;
+        let mut conn = database::connection()?;
         let person = people::table.filter(people::id.eq(id)).first(&mut conn)?;
         Ok(person)
     }
 
     pub fn find_from_code(code: &String) -> Result<Self, CustomError> {
-        let conn = database::connection()?;
+        let mut conn = database::connection()?;
         let person = people::table.filter(people::code.eq(code)).first(&mut conn)?;
         Ok(person)
     }
 
     pub fn find_from_community(community_id: i32) -> Result<Vec<Self>, CustomError> {
-        let conn = database::connection()?;
+        let mut conn = database::connection()?;
 
         let people = people::table
             .filter(people::community_id.eq(community_id))
@@ -127,7 +127,7 @@ impl People {
     }
 
     pub fn find_ids_from_community(community_id: i32) -> Result<Vec<i32>, CustomError> {
-        let conn = database::connection()?;
+        let mut conn = database::connection()?;
 
         let people_ids = people::table
             .select(people::id)
@@ -148,7 +148,7 @@ impl People {
 
     pub fn get_experiences(&self, related: bool, lang: &str) -> Result<Vec<(People, Vec<(Experiences, Vec<Phrases>)>)>, CustomError> {
 
-        let conn = database::connection()?;
+        let mut conn = database::connection()?;
 
         let mut people_vec: Vec<People> = Vec::new();
 
@@ -192,7 +192,7 @@ impl People {
     }
 
     pub fn delete(id: i32) -> Result<usize, CustomError> {
-        let conn = database::connection()?;
+        let mut conn = database::connection()?;
         let res = diesel::delete(people::table.filter(people::id.eq(id))).execute(&mut conn)?;
         Ok(res)
     }

@@ -1,3 +1,5 @@
+use std::path;
+
 use actix_web::{web, get, HttpResponse, HttpRequest, Responder};
 use actix_identity::Identity;
 use crate::{AppData, generate_basic_context};
@@ -16,12 +18,12 @@ pub async fn raw_index(
 #[get("/{lang}")]
 pub async fn index(
     data: web::Data<AppData>,
-    web::Path(lang): web::Path<String>,
+    path: web::Path<String>,
      
     req:HttpRequest,
-    id: Identity,
+    id: Option<Identity>,
 ) -> impl Responder {
-    
+        let lang = path.into_inner();
     let (ctx, _, _, _) = generate_basic_context(id, &lang, req.uri().path());
     
     let rendered = data.tmpl.render("index.html", &ctx).unwrap();
@@ -31,12 +33,12 @@ pub async fn index(
 #[get("/{lang}/about")]
 pub async fn about(
     data: web::Data<AppData>,
-    web::Path(lang): web::Path<String>,
+    path: web::Path<String>,
      
     req:HttpRequest,
-    id: Identity,
+    id: Option<Identity>,
 ) -> impl Responder {
-
+    let lang = path.into_inner();
     let (ctx, _, _, _) = generate_basic_context(id, &lang, req.uri().path());
 
     let rendered = data.tmpl.render("about.html", &ctx).unwrap();
