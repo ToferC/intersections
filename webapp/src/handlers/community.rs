@@ -125,12 +125,12 @@ pub async fn view_community(
     data: web::Data<AppData>,
     
     req:HttpRequest,
-    id: Identity,
+    id: Option<Identity>,
 ) -> impl Responder {
 
     let (lang, community_slug) = path.into_inner();
 
-    let (mut ctx, session_user, _role, _lang) = generate_basic_context(Some(id), &lang, req.uri().path());
+    let (mut ctx, session_user, _role, _lang) = generate_basic_context(id, &lang, req.uri().path());
     
     let community_select = Communities::find_from_slug(&community_slug);
 

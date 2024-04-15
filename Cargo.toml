@@ -7,4 +7,6 @@ members = [
     "error_handler",
 ]
 
+resolver = "2"
+
 default-members = ["webapp", "databaseutils"]
